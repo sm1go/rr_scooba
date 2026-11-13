@@ -5,6 +5,7 @@ Applies to every human and AI agent working in this repository.
 ## Project
 
 - Junction hackathon — City of Espoo challenge "Rethinking Recruitment".
+- Event: Junction 2026 (13–15 Nov 2026, Espoo). **Final submission Sun 15 Nov 10:00** Europe/Helsinki; submissions open Sat 14 Nov 12:00. Tech-partner challenges can be stacked on top of the Espoo track.
 - Remote: https://github.com/sm1go/rr_scooba (branch `main`). Local working copy: `C:\Users\kacpe\OneDrive\Pulpit\junction`.
 
 ## Owner's working agreement
