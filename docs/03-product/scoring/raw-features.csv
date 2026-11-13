@@ -1,0 +1,59 @@
+id,author,name,journey_stage,primary_users,pain_points,prototype,self_j1,self_j2,self_j3
+PM-01,PM,Need Interview → Challenge Card,Pre-event,Company | Organizer,"P2, P10, P9, P1",S,5.0,4.0,5.0
+PM-02,PM,Pool Preview — see the evidence before you commit,Pre-event,Company | Organizer,"P1, P2, P3",S,4.0,4.0,4.0
+PM-03,PM,"Evidence Card — AI as interviewer, not ghostwriter",Pre-event,Company | Talent,"P5, P6, P3, P10",M,5.0,4.0,4.0
+PM-04,PM,Three Signals — scarcity makes interest credible,Pre-event,Company | Talent,"P4, P6, P7, P10",S,5.0,5.0,5.0
+PM-05,PM,"Fair Agenda Builder — 1:1s, Circles and remote seats",Pre-event | During event,Company | Talent | Organizer,"P4, P7, P9, P10",M,4.0,4.0,5.0
+PM-06,PM,"Challenge Conversations — 15 minutes, 3 questions, 1 thumb",During event,Company | Talent,"P6, P3, P10, P4",S,4.0,4.0,5.0
+PM-07,PM,Peak-proof Event Pass — the day needs no login,During event,Company | Talent | Organizer,"P8, P7",S,3.0,4.0,5.0
+PM-08,PM,72-hour Closure + Next-Step Desk,Post-event,Company | Talent | Organizer,"P1, P9, P5, P10",S,5.0,4.0,4.0
+PM-09,PM,Organizer Control Tower with Second Look,Cross-cutting,Company | Talent | Organizer,"P2, P1, P3, P10",M,4.0,3.0,5.0
+RAI-01,RAI,Reveal Ladder — double-blind capability cards until mutual interest,"Pre-event, During event","Company, Talent, Organizer","P4, P10, P3, P6",M,5.0,4.0,5.0
+RAI-02,RAI,Mutual-Choice Scheduler — stable matching with a fairness floor (no AI),"Pre-event, During event","Company, Talent, Organizer","P4, P7, P10, P1",S,5.0,4.0,5.0
+RAI-03,RAI,Quote-Backed Cards — talent-owned AI interview with a no-inflation guard and provenance ribbons,"Pre-event, During event","Talent, Company","P5, P6, P9, P3",M,5.0,5.0,4.0
+RAI-04,RAI,Necessity Lint — fairness-checked need cards with a pool-impact preview,Pre-event,"Company, Organizer","P2, P10, P1",S,4.0,4.0,5.0
+RAI-05,RAI,Pool Proof — a k-anonymous preview of the City's talent pool,Pre-event,"Company, Organizer","P1, P2, P3",S,4.0,4.0,5.0
+RAI-06,RAI,"Glass Notes — structured, shareable conversation notes; AI transcribes, never judges","During event, Post-event","Company, Talent, Organizer","P5, P4, P6, P3",S,4.0,4.0,5.0
+RAI-07,RAI,"Voluntariness Firewall — event data never feeds benefit supervision; opt-in ""count this as an application""",Cross-cutting,"Talent, Organizer","P6, P10, P4",S,3.0,5.0,4.0
+RAI-08,RAI,Fairness Twin Lab — synthetic counterfactual audits as a release gate,"Pre-event, Cross-cutting",Organizer,"P10, P1, P3",M,3.0,5.0,5.0
+RAI-09,RAI,"Glass Box — receipts, a contest button and a living AI register",Cross-cutting,"Talent, Company, Organizer","P10, P1, P7, P3",S,3.0,3.0,5.0
+STR-01,STR,"Pool Proof — live, anonymous talent-supply counter with requirement elasticity",Pre-event,"Company, Organizer","P1, P2, P3, P10",S,5.0,4.0,4.0
+STR-02,STR,"Commitment Ladder — commit early, get curated",Pre-event,"Company, Organizer","P2, P1, P4, P8",S,5.0,3.0,5.0
+STR-03,STR,Incentive Stack — the free service that pays you back (with a privacy firewall),"Pre-event, Post-event","Company, Organizer","P1, P9, P10, P2",S,5.0,4.0,4.0
+STR-04,STR,"Signal Tokens — scarce, equal ""I really mean it"" tickets","Pre-event, During event","Talent, Company, Organizer","P4, P6, P3, P7",S,4.0,5.0,5.0
+STR-05,STR,"Impact Ledger — proof of value for companies, public value for the City","Post-event, Cross-cutting","Company, Organizer","P1, P3, P10",M,4.0,3.0,4.0
+STR-06,STR,Fair Recruiter Pledge — accountability as the City's currency,Cross-cutting,"Company, Talent, Organizer","P1, P4, P5, P10",S,4.0,4.0,5.0
+STR-07,STR,Demand Radar — events as a year-round demand-sensing pipeline,Cross-cutting,"Organizer, Company","P2, P3, P5, P1",M,4.0,3.0,5.0
+STR-08,STR,"Challenge Market — post a problem, not a job title (hire, contract or partner)","Pre-event, During event","Company, Talent, Organizer","P2, P5, P6, P1",M,4.0,4.0,4.0
+STR-09,STR,Shared Hire — pooling fractional SME needs into real jobs,"Pre-event, Post-event","Company, Talent, Organizer","P2, P1, P5",S,3.0,5.0,3.0
+TAL-01,TAL,Role Reality Card (12-minute hiring-manager intake),Pre-event,"Company, Organizer","P2, P3, P10",S,5.0,3.0,5.0
+TAL-02,TAL,Language Reality Check,"Pre-event, During event","Company, Talent, Organizer","P2, P9, P10, P4",S,4.0,4.0,5.0
+TAL-03,TAL,Sponsorship-First International Hiring,"Pre-event, During event, Post-event","Company, Talent, Organizer","P9, P10, P1, P4",S,4.0,4.0,5.0
+TAL-04,TAL,Proof Stories & the Signal Ladder,"Pre-event, During event","Company, Talent, Organizer","P5, P3, P6, P10, P1",M,4.0,3.0,4.0
+TAL-05,TAL,Three Signals,"Pre-event, During event","Company, Talent","P4, P6, P1",S,4.0,5.0,5.0
+TAL-06,TAL,Work-Sample Tasters,"Pre-event, During event","Company, Talent, Organizer","P3, P6, P5, P10",M,5.0,4.0,4.0
+TAL-07,TAL,Seven-Minute Structured Conversations,During event,"Company, Talent","P3, P4, P10, P7",S,5.0,4.0,5.0
+TAL-08,TAL,"Redirect, Don't Reject","During event, Post-event","Company, Talent, Organizer","P4, P1, P10, P5",S,4.0,5.0,5.0
+TAL-09,TAL,Hire-Smarter Bundle,"Pre-event, Post-event","Company, Organizer","P1, P9, P2",S,4.0,3.0,5.0
+TAL-10,TAL,Project Lane,"Pre-event, During event, Post-event","Company, Talent, Organizer","P2, P1, P5",S,3.0,4.0,4.0
+TECH-01,TECH,Need Compiler,Pre-event,"Company, Organizer","P2, P1, P10, P4",M,5.0,4.0,4.0
+TECH-02,TECH,Evidence-Linked Skill Passport,"Pre-event, Post-event","Talent, Organizer","P5, P6, P3, P10",M,5.0,4.0,4.0
+TECH-03,TECH,Bridge Finder,Pre-event,"Talent, Company","P5, P10, P3, P4",S,4.0,4.0,4.0
+TECH-04,TECH,"Rank Needs, Not People","Pre-event, During event","Talent, Company, Organizer","P4, P6, P10, P8, P3",M,4.0,5.0,5.0
+TECH-05,TECH,Fit Sheet,"Pre-event, During event","Talent, Company","P4, P5, P10, P3",S,4.0,4.0,5.0
+TECH-06,TECH,Proof Conversations,"During event, Post-event","Company, Talent, Organizer","P4, P6, P3, P5",S,5.0,4.0,5.0
+TECH-07,TECH,Witnessed-Skill Credentials,"During event, Post-event","Talent, Company, Organizer","P6, P3, P9, P10, P1",S,4.0,5.0,4.0
+TECH-08,TECH,Intent Tokens,"Pre-event, During event","Talent, Company","P4, P6, P5",S,4.0,4.0,5.0
+TECH-09,TECH,Peak-Proof Event Pass,"Pre-event, During event","Organizer, Talent, Company","P8, P7, P4",M,3.0,3.0,5.0
+TECH-10,TECH,Supply Radar,Pre-event,"Company, Organizer","P1, P2, P3, P10",S,5.0,4.0,4.0
+TECH-11,TECH,Synthetic Twin Fairness Dry-Run,"Pre-event, Cross-cutting","Organizer, Company","P10, P3, P2, P6",S,3.0,4.0,5.0
+UX-01,UX,"Story Interview — ""Tell it, don't type it""",Pre-event,"Talent, Organizer","P5, P6, P3, P7, P10",M,5.0,4.0,4.0
+UX-02,UX,"Problem Cards with live Pool Preview — ""Bring a problem, not a profile""",Pre-event,"Company, Organizer","P2, P1, P3, P4",S,5.0,4.0,4.0
+UX-03,UX,Language Reality Layer,Cross-cutting,"Talent, Company, Organizer","P9, P10, P5",S,4.0,4.0,5.0
+UX-04,UX,"Sparks — ""Point, don't write"" meeting requests","Pre-event, During event","Talent, Company","P4, P6, P10, P5",M,5.0,5.0,4.0
+UX-05,UX,Signal Ladder — provenance chips instead of AI detectors,Cross-cutting,"Company, Talent, Organizer","P6, P3, P10",S,4.0,4.0,5.0
+UX-06,UX,"""Ask me about"" badges & Story Cards — the No-CV event",During event,"Talent, Company","P5, P6, P4, P10",S,4.0,5.0,5.0
+UX-07,UX,"Challenge Tables & Table Tents — problem-first, structured conversations",During event,"Company, Talent, Organizer","P6, P3, P4, P10, P9",M,5.0,5.0,4.0
+UX-08,UX,Zero-login event day & floor choreography,"During event, Cross-cutting","Talent, Company, Organizer","P8, P7, P4, P10",S,4.0,3.0,5.0
+UX-09,UX,Connector Desk — human matchmakers with an AI clipboard,"Pre-event, During event","Organizer, Talent, Company","P1, P3, P4, P10",M,5.0,4.0,4.0
+UX-10,UX,"Closure Loop — no ghosting, fading data",Post-event,"Talent, Company, Organizer","P1, P5, P10",S,4.0,4.0,5.0
