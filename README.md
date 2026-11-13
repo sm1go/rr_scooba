@@ -41,7 +41,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 
 ## Key documents
 
-- [Challenge brief](docs/00-challenge/challenge-brief.md)
+- [Challenge brief](docs/00-challenge/challenge-brief.md) · [Tech challenges (stackable)](docs/00-challenge/tech-challenges.md)
 - Research: [Espoo & TalentMatch](docs/01-research/01-context-espoo-and-talentmatch.md) · [AI in hiring](docs/01-research/02-ai-in-hiring-evidence.md) · [Regulation](docs/01-research/03-regulatory-fact-sheet.md) · [Market & data](docs/01-research/04-market-and-data-sources.md) · [Junction tech partners](docs/01-research/05-junction-2026-tech-partners.md) · [Prior art](docs/01-research/06-prior-art-open-source.md)
 - [Ideation method](docs/02-ideation/README.md) · [Round 1 digest — all 58 raw ideas](docs/02-ideation/round-1-digest.md) · [Round 2 brief](docs/02-ideation/round-2-brief.md)
 - [Decision log](docs/decisions/decision-log.md)

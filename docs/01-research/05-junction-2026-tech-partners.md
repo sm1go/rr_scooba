@@ -1,60 +1,70 @@
-# 05 — Junction 2026 tech partners: what we could plug in
+# 05 — Junction 2026 tech partners: what we plug in
 
-**Status:** preliminary (14 Nov 2026, 01:40). Based on the public pages only. The tech-challenge
-briefs and prize criteria live on the Junction Platform behind login
-(`hackjunction.app/participate/45/challenges`) and still have to be pasted into this repo by the team.
+**Status:** updated 14 Nov 2026, 02:00, after the team pasted the prize-bearing tech challenges
+(verbatim in `docs/00-challenge/tech-challenges.md`).
 
 ## Verified facts
 
 - Junction 2026: 13–15 Nov 2026, Hype Areena, Espoo. Teams of 1–4.
-- Platform schedule: preliminary submission **Fri 13 Nov 23:55**; submissions open **Sat 14 Nov 12:00**;
+- Platform schedule: preliminary submission Fri 13 Nov 23:55; submissions open **Sat 14 Nov 12:00**;
   **final submission Sun 15 Nov 10:00**; final ceremony Sun 14:00 (challenge winners 15:10).
-- "Companies provide credits to their platforms, and some of them award prizes to the best use cases
-  of their technologies. **Tech challenges run across every track, so any team can take them on
-  alongside their track.**" → tech challenges can be stacked on top of the Espoo challenge.
-- Each Challenge Partner (incl. City of Espoo) picks its own winners against its own criteria; the
-  main-event winner is chosen by peer review (top 5) and a grand jury.
-- Submissions are open-sourced under the MIT licence.
+- "Tech challenges run across every track, so any team can take them on alongside their track." Modal's
+  brief adds: "The same project can enter other tech challenges too."
+- Each Challenge Partner (incl. City of Espoo) picks its own winners; the main-event winner is chosen by
+  peer review (top 5) and a grand jury. Submissions are open-sourced under MIT.
+- NVIDIA Build's public model list (checked 14 Nov 2026) includes `nvidia/nemotron-3.5-super-vl-120b-a12b`
+  (the model the Nemotron challenge requires), `nvidia/nemotron-3.5-content-safety`,
+  `nvidia/nemotron-parse-2.0`, `nvidia/nemotron-3.5-embed-1b`/`-8b`, and Gemma models
+  (`google/gemma-4-31b-it`, `google/gemma-3-12b-it`, `google/gemma-3-4b-it`). One OpenAI-compatible
+  endpoint can therefore serve both Nemotron and Gemma in the demo (free tier ≈ 40 requests/min per key).
 
-## Fit with our direction
+## Prize-bearing tech challenges — fit with our concept
 
-Our direction so far (Round 1 convergence): voice-to-structured **need cards** for companies, **story /
-evidence cards** for talent, scarce **intent tokens**, anonymous **pool counts**, explainable
-"why this conversation" sheets, **structured conversations**, an **offline event pass**, and a
-**fairness dry-run on synthetic twins**. Fit is judged against that.
+Our direction (Round 1 convergence): voice-to-structured **need cards** for companies, **story / evidence
+cards** for talent, scarce **intent tokens**, anonymous **pool counts**, explainable "why this
+conversation" sheets, **structured conversations**, an **offline event pass**, and a **fairness dry-run
+on synthetic twins**.
 
-| Partner | What it is | How we could use it | Fit | Effort |
-|---|---|---|---|---|
-| **Aiven** | Finnish managed open-source data platform (PostgreSQL, OpenSearch, Valkey, Kafka…) | Primary database: PostgreSQL + pgvector for ESCO skill embeddings, hosted in an EU/Finnish region | **High** | Low |
-| **Featherless** | Serverless inference for open-weight models, OpenAI-compatible API | Need-card compiler, story → evidence extraction, proxy-requirement lint, labelled translation. Hosts **LumiOpen Llama-Poro-2-8B/70B-Instruct** (Finnish–English, AMD Silo AI + TurkuNLP + HPLT) and Unbabel Tower-Plus-9B (translation) | **High** | Low |
-| **Modal** | Serverless GPU/CPU for Python | Whisper speech-to-text for voice memos and story interviews; embeddings; batch synthetic-twin fairness runs; ESCO extraction service | **High / Medium** | Medium |
-| **IronShard** | S3-compatible storage for AI agents (MCP), per-agent access control, signed immutable audit log, GDPR geo-pinning | Store consent records and AI-suggestion logs with a signed audit trail — evidence of human oversight and record-keeping | Medium / High (J3) | Low |
-| **CRACI** | Secure CI runners with build-time SBOMs and vulnerability monitoring | Run our GitHub Actions on CRACI → SBOM and supply-chain story for public-sector procurement | Medium (J3) | Very low |
-| **Cloudinary** | Media API (upload, transform, image/video) | Generate printable "ask me about" badges, story cards and table tents with QR codes; handle voice uploads with auto-deletion | Medium | Low–Medium |
-| **NVIDIA** | NIM APIs, Nemotron models, Riva speech, NeMo Guardrails (offer to verify) | Alternative ASR/LLM endpoint; guardrails for PII and protected attributes | Medium | Low–Medium |
-| **OpenAI / Codex**, **Anthropic**, **Google DeepMind** | Coding agents and LLM APIs (DeepMind teases something for winning teams) | Build tooling; optional LLM/ASR provider behind the same adapter | Medium | Low |
-| **Context.dev** | Web context API: scrape, brand/company data (also people enrichment) | Prefill a company card from its domain (logo, description, industry) → less effort for companies (P2). **Never** use people enrichment on talent (C3/C4) | Medium | Low |
-| **Oxylabs** | Web scraping and proxy APIs | Aggregate public job ads (no personal data) to calibrate need cards, e.g. "similar roles in Uusimaa accept English" | Low / Medium | Medium |
-| Qualia, Scailab, Wendy, Atech.dev, Arduino | Robot-data understanding, synthetic perception data, edge/physical-AI OS, plug-and-play hardware, Hardware Lab | Only a stretch: a physical "spark" tap point or table timer at in-person events | Low | High |
+| Challenge | What must be true | Natural role in our product | Fit | Effort | Verdict |
+|---|---|---|---|---|---|
+| **Modal** | Modal does the heavy lifting of a working AI system behind a public URL | Hosts the backend and demo URL; serves open models on GPU (Whisper speech-to-text for voice memos and interviews, Gemma / EmbeddingGemma); fans out the synthetic-twin fairness audit as a batch job | High | Medium | **Go** |
+| **Nemotron** (2× RTX 5080) | Nemotron 3.5 Super VL central and visible; write-up on what it does and how outputs were improved | **Need Compiler agent** for companies: reads a pasted job ad, screenshot or PDF (vision), asks follow-up questions, maps needs to ESCO through tools, flags proxy requirements ("native Finnish", degree, nationality), checks k-anonymous pool counts through a tool, drafts evidence questions for structured conversations. An eval set of synthetic job ads with planted proxy requirements gives measured precision/recall across prompt iterations | High | Medium | **Go** |
+| **Gemma** | Innovative, impactful use of Gemma open models | Privacy layer: EmbeddingGemma for multilingual matching of need items ↔ evidence — ideally in the talent's browser, so the City never computes a ranking of people (TECH-04) — or on Modal; Gemma for labelled translation of cards | Medium / High | Medium | **Go (scoped)** |
+| **Codex** | Codex meaningfully used in the development process, and shown | Second engineering agent: independent review of each milestone, test generation, synthetic-data generator; every use logged in the repo | Medium | Low (needs credits + login) | **Go if credits are claimed** |
+| **Gemini API** | "Beyond simply adding an LLM"; explain why Gemini matters | Voice-first story interview in the talent's strongest language (native audio understanding / Live API) → story cards with quoted evidence | Medium | Medium / High | **Stretch** — overlaps with Whisper + Nemotron/Gemma and adds a proprietary provider to the privacy story |
+| **ElevenLabs** (MLH, earbuds) | ElevenLabs voices in the project | Spoken prompts in the interview; audio version of the event pass for accessibility | Low / Medium | Low | **Skip** unless time remains |
 
-Verda (Finnish GPU cloud, "AI Infrastructure Track") could host open-weight models in Finland, but it is
-presented as a track, not a stackable tech challenge — to verify.
+## Other partners (credits or tools, no prize challenge pasted)
 
-## Preliminary recommendation (pending the prize criteria)
+| Partner | Possible use | Note |
+|---|---|---|
+| Aiven | Managed PostgreSQL (+ pgvector) in an EU/Finnish region | Use only if SQLite on a Modal Volume is not enough |
+| Featherless | Hosted open-weight models incl. Finnish **Poro 2** and Gemma | Fallback provider behind the same adapter |
+| IronShard | S3 storage with a signed audit log and EU geo-pinning | Nice-to-have evidence of record-keeping |
+| CRACI | CI runners with build-time SBOMs | One-line change in CI; procurement-security story |
+| Cloudinary | Printable badges, cards and table tents with QR codes | Optional UX |
+| Context.dev | Prefill a company card from its domain | **Never** use its people enrichment on talent (C3/C4) |
+| Oxylabs | Aggregate public job ads (no personal data) | Low priority |
+| Qualia, Scailab, Wendy, Atech.dev, Arduino, Verda | Robotics / hardware / GPU infrastructure | Not relevant (Verda only as an EU GPU host) |
 
-1. **Core:** Aiven (database) + Featherless (Poro 2) + Modal (Whisper and embeddings). All three
-   reinforce the responsible-AI story — EU/Finnish infrastructure, open weights the City could
-   self-host later, data residency — at low integration cost.
-2. **Cheap J3 add-ons:** CRACI (SBOM in CI) and IronShard (signed audit log of AI suggestions and consents).
-3. **Optional UX:** Cloudinary for printable badges and cards.
-4. **Design rule:** every AI call goes through one provider-agnostic adapter (OpenAI-compatible base
-   URL), so the demo can switch between Featherless, NVIDIA NIM, OpenAI or a local mock without code changes.
-5. Take on at most 2–3 tech challenges, and only where the partner's technology is visible in the demo.
+## Recommendation
+
+1. **Core stack: Modal + Nemotron + Gemma**, each with one clearly visible job — Nemotron is the
+   company-side Need Compiler agent (tools + vision), Gemma the privacy-preserving matching and
+   translation layer, Modal the infrastructure (public URL, GPU inference, fairness batch).
+2. **Codex:** use it for reviews and tests during the build and log every use — almost no extra product work.
+3. **Gemini and ElevenLabs:** only if the core demo works by Saturday evening.
+4. **Responsible-AI framing:** Nemotron and Gemma are open-weight models, so the City could later
+   self-host them in the EU without lock-in; the demo uses hosted APIs with synthetic data only.
+5. **Engineering rules:** one provider-agnostic adapter (OpenAI-compatible base URL) for all model calls;
+   retries with backoff and response caching for the 40 requests/min free tier; each teammate uses
+   their own key; a mock provider so that the demo never depends on the network.
 
 ## Sources
 
-- [Junction 2026 website](https://2026.hackjunction.com/) — partners, schedule, tracks, tech challenges, FAQ.
-- [Junction Platform — Junction 2026](https://hackjunction.app/hackathons/junction-2026) — schedule, team size, sponsors.
-- [Aiven](https://aiven.io) · [Featherless](https://featherless.ai) · [Llama-Poro-2-8B-Instruct on Featherless](https://featherless.ai/models/LumiOpen/Llama-Poro-2-8B-Instruct) · [Llama-Poro-2-70B-Instruct on Featherless](https://featherless.ai/models/LumiOpen/Llama-Poro-2-70B-Instruct) · [Finnish models on Featherless](https://featherless.ai/models?languages=fi)
-- [Modal](https://modal.com) · [IronShard](https://www.ironshard.ai/) · [CRACI](https://craci.com) · [Cloudinary](https://cloudinary.com/) · [NVIDIA](https://www.nvidia.com/en-us/) · [Context.dev](https://www.context.dev/) · [Oxylabs](https://oxylabs.io)
+- [Junction 2026 website](https://2026.hackjunction.com/) · [Junction Platform — Junction 2026](https://hackjunction.app/hackathons/junction-2026) · tech-challenge briefs: `docs/00-challenge/tech-challenges.md`
+- [NVIDIA Build model list](https://integrate.api.nvidia.com/v1/models) (public endpoint, queried 14 Nov 2026)
+- [Modal](https://modal.com) · [Gemma docs](https://ai.google.dev/gemma/docs) · [Gemini API docs](https://ai.google.dev/gemini-api/docs) · [OpenAI Codex](https://developers.openai.com/codex)
+- [Featherless — Llama-Poro-2-8B-Instruct](https://featherless.ai/models/LumiOpen/Llama-Poro-2-8B-Instruct) · [Finnish models on Featherless](https://featherless.ai/models?languages=fi)
+- [Aiven](https://aiven.io) · [IronShard](https://www.ironshard.ai/) · [CRACI](https://craci.com) · [Cloudinary](https://cloudinary.com/) · [Context.dev](https://www.context.dev/) · [Oxylabs](https://oxylabs.io)
 - [Qualia](https://qualiastudios.dev) · [Scailab](https://www.scailab.se/) · [Wendy](https://wendy.dev/) · [Atech.dev](https://atech.dev)
