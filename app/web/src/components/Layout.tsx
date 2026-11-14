@@ -7,6 +7,7 @@ import {
   Briefcase, Inbox, ClipboardList, Building2, ListChecks, CalendarDays, HandCoins, X,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
+import { useConfig } from '../lib/config'
 import { useA11y } from '../lib/a11y'
 import { useDialog } from '../lib/useDialog'
 import { useI18n, LANGS, type Lang } from '../i18n/i18n'
@@ -132,6 +133,44 @@ function LangSwitch() {
   )
 }
 
+/** Demo bar (§8.5): one-click sign-in as a demo persona. */
+function DemoBar() {
+  const { t } = useI18n()
+  const { user, login, logout } = useAuth()
+  const nav = useNavigate()
+  const cfg = useConfig()
+  if (!cfg.demo) return null
+  const go = async (email: string, to: string) => {
+    try {
+      if (user) await logout()
+      if (email) { await login(email, 'demo1234') }
+      nav(to)
+    } catch { /* demo only */ }
+  }
+  const personas: { email: string; to: string; key: Key; role: string }[] = [
+    { email: 'aino@example.com', to: '/events/ev-2027-03',
+      key: 'demo.jobseeker', role: 'resident' },
+    { email: 'sanna@example.com', to: '/employer/events/ev-2027-03',
+      key: 'demo.employer', role: 'employer' },
+    { email: 'advisor@example.com', to: '/advisor/events/ev-2027-03',
+      key: 'demo.organizer', role: 'advisor' },
+  ]
+  return (
+    <div className="demo-bar" role="region" aria-label="Demo">
+      <span>{t('demo.see')}</span>
+      {personas.map((p) => (
+        <button key={p.key} type="button"
+                aria-pressed={user?.role === p.role}
+                onClick={() => go(p.email, p.to)}>
+          {t(p.key)}</button>
+      ))}
+      <button type="button" aria-pressed={!user}
+              onClick={() => go('', '/events/ev-2027-03')}>
+        {t('demo.signedout')}</button>
+    </div>
+  )
+}
+
 export default function Layout() {
   const { user, logout } = useAuth()
   const { open, setOpen } = useA11y()
@@ -156,6 +195,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       <a href="#main" className="skip-link">{t('nav.skiptocontent')}</a>
+      <DemoBar />
       <header className="border-b"
               style={{ borderColor: 'var(--color-hairline)', background: 'var(--color-card)' }}>
         <div className="w-full px-4 sm:px-6 py-3 flex items-center gap-3">

@@ -62,6 +62,12 @@
   {
     "event_id": "ev-2027-03",
     "employer_id": "emp-market-olari",
+    "registration_id": "tr-e1-001",
+    "days_ago": 10
+  },
+  {
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
     "registration_id": "tr-e1-036",
     "days_ago": 10
   },
@@ -81,12 +87,6 @@
     "event_id": "ev-2027-03",
     "employer_id": "emp-market-olari",
     "registration_id": "tr-e1-030",
-    "days_ago": 10
-  },
-  {
-    "event_id": "ev-2027-03",
-    "employer_id": "emp-market-olari",
-    "registration_id": "tr-e1-026",
     "days_ago": 10
   },
   {

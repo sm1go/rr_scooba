@@ -77,7 +77,8 @@ def _reset_rate_limit() -> None:
 def config():
     """Feature flags — the UI only shows controls that can work."""
     return {"ai": settings.ai_enabled(),
-            "commute": settings.commute_enabled()}
+            "commute": settings.commute_enabled(),
+            "demo": settings.demo_mode()}
 
 
 def _require_ai():

@@ -278,7 +278,7 @@ def test_organizer_board_and_reminder(client, advisor):
                     json={"employer_id": "emp-hymy"})
     assert r.status_code == 200
     assert r.json()["reminders_sent"] == before + 1
-    assert d["talent"]["meetings"] == 40
+    assert d["talent"]["meetings"] == 39
 
 
 # --- AI card helper ----------------------------------------------------------------
@@ -311,3 +311,98 @@ def test_ai_event_card_off_is_disabled(client, aino, monkeypatch):
     r = client.post("/api/ai/event-card", headers=aino,
                     json={"items": ["hello"]})
     assert r.status_code in (403, 503)
+
+
+# --- §8 simplify: meeting in responses, demo flag, seeded demo conditions ----
+
+def test_interest_response_includes_meeting_key(client):
+    h, _ = _reg(client, "meeting-key@example.com")
+    r = client.put(f"/api/events/{E1}/interests/emp-hymy", headers=h,
+                   json={"meets": [], "language_levels": {}})
+    assert r.status_code == 201
+    assert "meeting" in r.json()          # None while not mutual
+
+
+def test_invite_response_includes_meeting_key(client, sanna):
+    _, reg = _reg(client, "invite-key@example.com")
+    r = client.post(f"/api/employer/events/{E1}/invites", headers=sanna,
+                    json={"registration_id": reg["id"]})
+    assert r.status_code == 201
+    body = r.json()
+    assert "meeting" in body and "invites_used" in body
+
+
+def test_invite_then_interest_books_and_returns_meeting(client, sanna):
+    h, reg = _reg(client, "mutual-key@example.com")
+    r = client.post(f"/api/employer/events/{E1}/invites", headers=sanna,
+                    json={"registration_id": reg["id"]})
+    assert r.json()["meeting"] is None    # one-sided so far
+    emp = db_mod.connect().execute(
+        "SELECT employer_id FROM user WHERE id='u-sanna'"
+    ).fetchone()["employer_id"]
+    r = client.put(f"/api/events/{E1}/interests/{emp}", headers=h,
+                   json={"meets": [], "language_levels": {}})
+    assert r.status_code == 201
+    m = r.json()["meeting"]
+    assert m and m["status"] == "booked" and m["starts_at"]
+
+
+def test_config_has_demo_flag(client):
+    body = client.get("/api/config").json()
+    assert isinstance(body.get("demo"), bool)
+
+
+def test_seed_aino_has_unchosen_inviter_and_cards(client, aino):
+    """§8 demo seed: Aino can trigger a match and has ≥4 cards to swipe."""
+    conn = db_mod.connect()
+    chosen = {r["employer_id"] for r in conn.execute(
+        "SELECT employer_id FROM event_plan WHERE event_id=? AND user_id=?",
+        (E1, "u-aino"))}
+    invited = [r["employer_id"] for r in conn.execute(
+        "SELECT i.employer_id FROM event_invite i"
+        " JOIN talent_registration r ON r.id=i.registration_id"
+        " WHERE i.event_id=? AND r.user_id=?", (E1, "u-aino"))]
+    assert any(e not in chosen for e in invited)
+    cards = [r["employer_id"] for r in conn.execute(
+        "SELECT employer_id FROM employer_event WHERE event_id=?"
+        " AND need_card IS NOT NULL", (E1,))]
+    assert len([e for e in cards if e not in chosen]) >= 4
+
+
+def test_seed_sanna_has_unchosen_fan_and_invites_left(client, sanna):
+    """§8 demo seed: someone chose Sanna's booth and was not invited yet."""
+    conn = db_mod.connect()
+    emp = conn.execute("SELECT employer_id FROM user WHERE id='u-sanna'"
+                      ).fetchone()["employer_id"]
+    reg_by_user = {r["user_id"]: r["id"] for r in conn.execute(
+        "SELECT id,user_id FROM talent_registration WHERE event_id=?"
+        " AND status='registered'", (E1,))}
+    fans = [r["user_id"] for r in conn.execute(
+        "SELECT user_id FROM event_plan WHERE event_id=? AND employer_id=?",
+        (E1, emp))]
+    invited = {r["registration_id"] for r in conn.execute(
+        "SELECT registration_id FROM event_invite WHERE event_id=?"
+        " AND employer_id=?", (E1, emp))}
+    assert any(reg_by_user.get(u) not in invited
+               for u in fans if u in reg_by_user)
+    slots = conn.execute("SELECT slots FROM employer_event WHERE event_id=?"
+                        " AND employer_id=?", (E1, emp)).fetchone()["slots"]
+    assert len(invited) < slots
+
+
+def test_aino_choosing_seeded_inviter_returns_meeting(client, aino):
+    """The seeded invite makes Aino's choice book a real meeting."""
+    conn = db_mod.connect()
+    chosen = {r["employer_id"] for r in conn.execute(
+        "SELECT employer_id FROM event_plan WHERE event_id=? AND user_id=?",
+        (E1, "u-aino"))}
+    target = next(r["employer_id"] for r in conn.execute(
+        "SELECT i.employer_id FROM event_invite i"
+        " JOIN talent_registration r ON r.id=i.registration_id"
+        " WHERE i.event_id=? AND r.user_id=?", (E1, "u-aino"))
+        if r["employer_id"] not in chosen)
+    r = client.put(f"/api/events/{E1}/interests/{target}", headers=aino,
+                   json={"meets": [], "language_levels": {}})
+    assert r.status_code == 201, r.text
+    m = r.json()["meeting"]
+    assert m and m["status"] == "booked" and m["starts_at"]

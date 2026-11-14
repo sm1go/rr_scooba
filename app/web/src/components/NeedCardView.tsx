@@ -18,12 +18,13 @@ function Fit({ f }: { f: { key: string; [k: string]: unknown } }) {
 
 /** Employer need card — used on event pages and the company profile. */
 export default function NeedCardView({ e, registered, onToggleInterest,
-  interestCount, limit }: {
+  interestCount, limit, onMeetsChange }: {
   e: NeedEntry
   registered?: boolean
   interestCount?: number
   limit?: number
   onToggleInterest?: (e: NeedEntry) => void
+  onMeetsChange?: (meets: number[]) => void
 }) {
   const { t } = useI18n()
   const card = e.need!.card
@@ -94,10 +95,13 @@ export default function NeedCardView({ e, registered, onToggleInterest,
                   {registered && e.interested !== undefined && (
                     <label className="need-fitsme">
                       <input type="checkbox" checked={meets.includes(i)}
-                             onChange={() =>
-                               setMeets(meets.includes(i)
+                             onChange={() => {
+                               const next = meets.includes(i)
                                  ? meets.filter((x) => x !== i)
-                                 : [...meets, i])} />
+                                 : [...meets, i]
+                               setMeets(next)
+                               onMeetsChange?.(next)
+                             }} />
                       <span>{t('ev.thisisme')}</span>
                     </label>
                   )}

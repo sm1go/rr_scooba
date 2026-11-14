@@ -748,6 +748,9 @@ def main() -> int:
     # demo residents are interested in the employers they will talk to
     forced = [("u-aino", "emp-cafe-koivu"), ("u-pekka", "emp-freight"),
               ("u-amira", "emp-aurora-care")]
+    # §8.5: an employer who invited Aino but she has not chosen it yet —
+    # choosing it in the demo produces the match moment
+    forced_inv = [("u-aino", "emp-market-olari")]
     for uid, eid in forced:
         mh = NEED.get(eid, {}).get("must_haves", [])
         e1_plans.append({"user_id": uid, "event_id": E1,
@@ -789,7 +792,7 @@ def main() -> int:
         cands = sorted(by_emp.get(eid, []), key=lambda u: _rank(eid + u))
         # ~4-5 per card employer, fewer for the missing-card ones
         want = 5 if eid in NEED else 3
-        first = [u for u, e in forced if e == eid]
+        first = [u for u, e in forced + forced_inv if e == eid]
         for uid in first + [u for u in cands if u not in first][:want - len(first)]:
             invites.append({"event_id": E1, "employer_id": eid,
                             "registration_id": reg_by_user[uid],

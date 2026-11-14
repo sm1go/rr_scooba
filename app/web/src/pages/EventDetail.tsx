@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, ApiError } from '../lib/api'
@@ -14,11 +14,14 @@ import type {
 } from '../types'
 import { DAYS, PARTS } from '../types'
 import { ErrorBox, ErrorState, Section, Toggle } from '../components/ui'
-import { Tabs } from '../components/Tabs'
 import ScanBox from '../components/ScanBox'
 import CompanyLogo from '../components/CompanyLogo'
 import BoothPlan from '../components/BoothPlan'
 import NeedCardView from '../components/NeedCardView'
+import Stepper from '../components/Stepper'
+import CardChooser from '../components/CardChooser'
+import type { Meeting } from '../components/CardChooser'
+import PassInline from '../components/PassInline'
 import { useConfig } from '../lib/config'
 import EventPage from './EventPage'
 
@@ -174,6 +177,8 @@ export default function EventDetail() {
   const [afterData, setAfterData] = useState<EventAfterData | null>(null)
   const [err, setErr] = useState<unknown>(null)
   const [showForm, setShowForm] = useState(false)
+  const [step, setStep] = useState(-1)
+  const meetsRef = useRef<Record<string, number[]>>({})
 
   const isResident = user?.role === 'resident'
 
@@ -206,37 +211,55 @@ export default function EventDetail() {
   const interestCount = my?.interests.length ?? 0
   const limit = my?.interest_limit ?? 5
 
-  const toggleInterest = async (e: NeedEntry) => {
-    try {
-      if (e.interested) {
-        await api(`/api/events/${id}/interests/${e.employer_id}`, { method: 'DELETE' })
-      } else {
-        await api(`/api/events/${id}/interests/${e.employer_id}`,
-          { body: { meets: e.meets ?? [], language_levels: {} } })
-      }
-      const m = await api<MyEventData>(`/api/events/${id}/my`); setMy(m)
-      const d = await api<{ cards: NeedEntry[] }>(`/api/events/${id}/needs`)
-      setNeeds(d.cards)
-    } catch (e2) { alert(e2 instanceof ApiError ? e2.message : t('common.error')) }
+  const refreshMy = async () => {
+    const m = await api<MyEventData>(`/api/events/${id}/my`); setMy(m)
+    const d = await api<{ cards: NeedEntry[] }>(`/api/events/${id}/needs`)
+    setNeeds(d.cards)
   }
 
-  const before = (
-    <div className="grid gap-6">
-      {ev.description && <p className="max-w-prose">{ev.description}</p>}
+  const chooseInterest = async (e: NeedEntry) => {
+    try {
+      const r = await api<{ meeting?: Meeting | null }>(
+        `/api/events/${id}/interests/${e.employer_id}`,
+        { method: 'PUT',
+          body: { meets: meetsRef.current[e.employer_id] ?? e.meets ?? [],
+                  language_levels: {} } })
+      await refreshMy()
+      return r
+    } catch (e2) {
+      alert(e2 instanceof ApiError ? e2.message : t('common.error'))
+      return {}
+    }
+  }
+  const takeBackInterest = async (e: NeedEntry) => {
+    try {
+      await api(`/api/events/${id}/interests/${e.employer_id}`,
+                { method: 'DELETE' })
+      await refreshMy()
+    } catch (e2) {
+      alert(e2 instanceof ApiError ? e2.message : t('common.error'))
+    }
+  }
+  // list-view toggle on a card (same endpoints as the chooser)
+  const toggleInterest = async (e: NeedEntry) => {
+    if (e.interested) await takeBackInterest(e)
+    else await chooseInterest(e)
+  }
 
-      {ev.programme.length > 0 && (
-        <Section title={t('ev.programme')}>
-          <ul className="m-0 ps-5">
-            {ev.programme.map((p, i) => (
-              <li key={i}>
-                {fmtTime(p.start)}{p.end ? `–${fmtTime(p.end)}` : ''} — {p.title || t(`ev.prog.${p.kind}` as Key)}
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
+  const programmeSection = ev.programme.length > 0 && (
+    <Section title={t('ev.programme')}>
+      <ul className="m-0 ps-5">
+        {ev.programme.map((p, i) => (
+          <li key={i}>
+            {fmtTime(p.start)}{p.end ? `–${fmtTime(p.end)}` : ''} — {p.title || t(`ev.prog.${p.kind}` as Key)}
+          </li>
+        ))}
+      </ul>
+    </Section>
+  )
 
-      <Section title={t('ev.employers.title', { n: ev.employers.length })}>
+  const tilesSection = (
+    <Section title={t('ev.employers.title', { n: ev.employers.length })}>
         <ul className="m-0 p-0 list-none grid emp-tiles">
           {ev.employers.map((e) => {
             const firstLine = e.need?.card.first_week?.[0]
@@ -280,51 +303,40 @@ export default function EventDetail() {
             )
           })}
         </ul>
-      </Section>
+    </Section>
+  )
 
-      <Section title={t('ev.needs')}>
-        {!needs ? (
-          <p>{t('ev.needs.soon', { d: fmtDate(ev.publish_date) })}</p>
-        ) : (
-          <div className="grid gap-3">
-            {reg && needs.length > 0 && (
-              <p className="m-0 text-secondary">
-                {t('ev.limit', { n: limit })}</p>
-            )}
-            {needs.map((e) => (
-              <NeedCardView key={e.employer_id} e={e} registered={!!reg}
-                            interestCount={interestCount} limit={limit}
-                            onToggleInterest={toggleInterest} />
-            ))}
-            {needs.length === 0 && <p>{t('ev.needs.none')}</p>}
-          </div>
-        )}
-      </Section>
-
-      {reg && (
-        <Section title={t('ev.meetings')}>
-          {my!.meetings.length === 0 ? <p>{t('ev.meetings.none')}</p> : (
-            <ul className="m-0 ps-5">
-              {my!.meetings.map((m) => (
-                <li key={m.id}>{fmtTime(m.starts_at)} — {m.employer_name}
-                  {m.booth ? ` (${t('ev.booth')} ${m.booth})` : ''}</li>
-              ))}
-            </ul>
-          )}
-        </Section>
+  const needsGrid = !needs ? (
+    <p>{t('ev.needs.soon', { d: fmtDate(ev.publish_date) })}</p>
+  ) : (
+    <div className="grid gap-3">
+      {reg && needs.length > 0 && (
+        <p className="m-0 text-secondary">
+          {t('ev.limit', { n: limit })}</p>
       )}
+      {needs.map((e) => (
+        <NeedCardView key={e.employer_id} e={e} registered={!!reg}
+                      interestCount={interestCount} limit={limit}
+                      onToggleInterest={toggleInterest} />
+      ))}
+      {needs.length === 0 && <p>{t('ev.needs.none')}</p>}
+    </div>
+  )
+  const needsList = <Section title={t('ev.needs')}>{needsGrid}</Section>
 
-      {!user && (
-        <div className="card p-4">
-          <p className="mt-0">{t('ev.signin.cta')}</p>
-          <div className="flex gap-2 flex-wrap">
-            <Link to={`/sign-in?back=${encodeURIComponent(`/events/${id}`)}`}
-                  className="btn btn-primary">{t('nav.signin')}</Link>
-            <Link to="/help" className="btn btn-secondary">{t('ev.advisor.help')}</Link>
-          </div>
-        </div>
-      )}
-      {user && !isResident && <p className="text-secondary">{t('ev.resident.only')}</p>}
+  const signinBlock = !user && (
+    <div className="card p-4">
+      <p className="mt-0">{t('ev.signin.cta')}</p>
+      <div className="flex gap-2 flex-wrap">
+        <Link to={`/sign-in?back=${encodeURIComponent(`/events/${id}`)}`}
+              className="btn btn-primary">{t('nav.signin')}</Link>
+        <Link to="/help" className="btn btn-secondary">{t('ev.advisor.help')}</Link>
+      </div>
+    </div>
+  )
+
+  const registerBlock = (
+    <div className="grid gap-4">
       {isResident && !reg && !showForm && (
         <button type="button" className="btn btn-primary" onClick={() => setShowForm(true)}>
           {t('ev.register')}
@@ -335,7 +347,7 @@ export default function EventDetail() {
       )}
       {isResident && reg && (
         <div className="card p-4 flex gap-3 items-center flex-wrap">
-          <strong>{reg.status === 'waitlist' ? t('ev.waitlist') : t('ev.registered')}</strong>
+          <strong>{reg.status === 'waitlist' ? t('ev.waitlist') : t('ev.registered.summary')}</strong>
           <span className="text-secondary">
             {t('ev.timegroup')}: {ev.time_groups.find((g) => g.id === reg.time_group)?.entry ?? reg.time_group}
           </span>
@@ -367,18 +379,7 @@ export default function EventDetail() {
         <p className="text-secondary">{t('ev.signin.cta')}</p>
       ) : (
         <>
-          {my.visitor_code && (
-            <div className="card p-4">
-              <strong className="text-2xl tracking-widest block">
-                {t('event.number')}: {my.visitor_code}
-              </strong>
-              <p className="text-secondary m-0">{t('event.numberwhy')}</p>
-              <p className="m-0">
-                <Link to={`/events/${id}/pass`} className="btn btn-quiet">
-                  {t('pass.show')}</Link>
-              </p>
-            </div>
-          )}
+          <PassInline eventId={id!} />
           <ScanBox eventId={id!} />
           {my.entry && my.registration && (
             <p className="m-0 font-medium">
@@ -564,6 +565,84 @@ export default function EventDetail() {
     </div>
   )
 
+  // §8.1 default step + §8.2 next step — same data drives both.
+  const talksAnswered = my?.talks.filter((tk) => tk.outcome).length ?? 0
+  const defaultStep = !reg ? 0
+    : ev.phase === 'finished' ? 3
+    : ev.phase === 'today' ? 2 : 1
+  const active = step >= 0 ? step : defaultStep
+  const next = !reg
+    ? { text: t('next.register'), btn: t('next.register.btn'), to: 0 }
+    : ev.phase === 'finished'
+    ? { text: t('next.answers', { n: talksAnswered }),
+        btn: t('next.answers.btn'), to: 3 }
+    : ev.phase === 'today'
+    ? { text: t('next.meet', { n: my?.meetings.length ?? 0,
+                              d: fmtDate(ev.date) }),
+        btn: t('next.meet.btn'), to: 2 }
+    : { text: t('next.choose', { n: limit, c: interestCount }),
+        btn: t('next.choose.btn'), to: 1 }
+
+  const about = (
+    <details className="card p-4">
+      <summary className="font-medium">{t('ev.about')}</summary>
+      <div className="grid gap-6 mt-4">
+        {programmeSection}
+        {tilesSection}
+        <BoothPlan
+          employers={ev.employers.map((e) => ({
+            id: e.employer_id, name: e.employer_name ?? '',
+            booth: e.booth, field: e.field, logo_color: e.logo_color }))}
+          inPlan={new Set(my?.interests.map((i) => i.employer_id) ?? [])}
+        />
+      </div>
+    </details>
+  )
+
+  const choose = needs ? (
+    <div className="grid gap-3">
+      <p className="m-0 text-secondary">{t('ev.limit', { n: limit })}</p>
+      <CardChooser<NeedEntry>
+        items={needs.filter((e) => !e.interested)}
+        chosen={needs.filter((e) => e.interested)}
+        idOf={(e) => e.employer_id}
+        storageKey={`ev-choose-${id}-${user!.id}`}
+        chosenCount={interestCount}
+        limit={limit}
+        chooseLabel={t('choose.meet')}
+        skipLabel={t('choose.skip')}
+        counter={(i, n) => t('choose.of', { i, n })}
+        counterChosen={(a, b) => t('choose.chosen', { a, b })}
+        listLabel={t('choose.list')}
+        cardsLabel={t('choose.cards')}
+        maxText={t('choose.max', { n: limit })}
+        renderCard={(e) => (
+          <NeedCardView e={e} registered
+                        onMeetsChange={(m) => {
+                          meetsRef.current[e.employer_id] = m }} />
+        )}
+        renderChosenRow={(e) => <>{e.employer_name}</>}
+        onChoose={chooseInterest}
+        onTakeBack={takeBackInterest}
+        listView={needsGrid}
+        match={(m, e) => ({
+          title: t('match.title'),
+          body: t('match.talent', {
+            name: e.employer_name ?? '',
+            d: fmtDate(m.starts_at.slice(0, 10)),
+            t: fmtTime(m.starts_at),
+            b: m.booth ?? e.booth ?? '' }) })}
+      />
+    </div>
+  ) : needsList
+
+  const steps = [
+    registerBlock,
+    choose,
+    day,
+    after,
+  ]
+
   return (
     <div className="grid gap-4">
       <Link to="/" className="text-secondary">{`← ${t('common.back')}`}</Link>
@@ -578,11 +657,42 @@ export default function EventDetail() {
           {ev.registered > 0 ? ` · ${ev.registered} ${t('ev.going')}` : ''}
         </p>
       </div>
-      <Tabs label={ev.name}
-            initial={ev.phase === 'today' ? 1 : ev.phase === 'finished' ? 2 : 0}
-            labels={[t('ev.tab.before'), t('ev.tab.day'), t('ev.tab.after')]}>
-        {[before, day, after]}
-      </Tabs>
+
+      {!isResident ? (
+        // §8.1 anonymous overview — no stepper, tiles stay open
+        <div className="grid gap-6">
+          {ev.description && (
+            <p className="max-w-prose">{ev.description}</p>)}
+          {tilesSection}
+          {needsList}
+          {signinBlock}
+          {user && <p className="text-secondary">{t('ev.resident.only')}</p>}
+        </div>
+      ) : (
+        <>
+          <Stepper label={t('ev.step.label')}
+                   current={active}
+                   doneBefore={defaultStep}
+                   onSelect={setStep}
+                   steps={[t('ev.step.register'), t('ev.step.choose'),
+                           t('ev.step.meet'), t('ev.step.answers')]} />
+          <div className="card p-4 flex gap-3 items-center flex-wrap"
+               style={{ borderColor: 'var(--color-brand)' }}>
+            <strong className="text-secondary uppercase"
+                    style={{ fontSize: '.8rem', letterSpacing: '.04em' }}>
+              {t('next.title')}</strong>
+            <span className="flex-1" style={{ minWidth: 160 }}>
+              {next.text}</span>
+            <button type="button" className="btn btn-primary"
+                    onClick={() => setStep(next.to)}>
+              {next.btn}</button>
+          </div>
+          {active === 0 && ev.description && (
+            <p className="max-w-prose m-0">{ev.description}</p>)}
+          {steps[active]}
+          {about}
+        </>
+      )}
     </div>
   )
 }

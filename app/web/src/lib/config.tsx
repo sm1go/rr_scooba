@@ -5,6 +5,7 @@ import { api } from './api'
 export interface FeatureConfig {
   ai: boolean
   commute: boolean
+  demo?: boolean
 }
 
 const Ctx = createContext<FeatureConfig>({ ai: false, commute: false })

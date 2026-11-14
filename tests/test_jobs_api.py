@@ -146,8 +146,11 @@ def test_order_confirmed_desc(client):
 def test_stale_flag(client):
     jobs = _jobs(client)
     stale = [j for j in jobs if j["stale"]]
-    assert len(stale) == 17
+    # expected count is date-dependent: stale == confirmed > 14 days ago
+    assert len(stale) == len(
+        [j for j in jobs if j["confirmed_days_ago"] > 14])
     assert all(j["confirmed_days_ago"] > 14 for j in stale)
+    assert all(j["stale"] or j["confirmed_days_ago"] <= 14 for j in jobs)
 
 
 def test_get_one_job(client):

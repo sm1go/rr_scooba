@@ -84,7 +84,9 @@ def _rate_reset():
 def test_config_flags_off_without_keys(client, no_keys):
     r = client.get("/api/config")
     assert r.status_code == 200
-    assert r.json() == {"ai": False, "commute": False}
+    body = r.json()
+    assert body["ai"] is False and body["commute"] is False
+    assert isinstance(body.get("demo"), bool)
 
 
 @pytest.fixture()

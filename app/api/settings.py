@@ -55,3 +55,8 @@ def ai_enabled() -> bool:
 
 def commute_enabled() -> bool:
     return bool(digitransit_api_key())
+
+
+def demo_mode() -> bool:
+    """Demo strip with one-click sign-in (env DEMO_MODE, default on)."""
+    return get("DEMO_MODE") not in ("0", "false", "no")

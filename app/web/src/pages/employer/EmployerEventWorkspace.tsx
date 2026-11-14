@@ -5,9 +5,11 @@ import { api, ApiError } from '../../lib/api'
 import { fmtDate } from '../../lib/format'
 import { useI18n } from '../../i18n/i18n'
 import type { Key } from '../../i18n/en'
-import type { AnonTalentCard, EmployerDay, EmployerWorkspace, EventTalk, Job, NeedCard } from '../../types'
+import type { AnonTalentCard, EmployerDay, EmployerWorkspace, EventDetailData, EventTalk, Job, NeedCard } from '../../types'
 import { ErrorBox, ErrorState, Section, Toggle } from '../../components/ui'
-import { Tabs } from '../../components/Tabs'
+import Stepper from '../../components/Stepper'
+import CardChooser from '../../components/CardChooser'
+import type { Meeting } from '../../components/CardChooser'
 import ScanBox from '../../components/ScanBox'
 import EmployerEventPage from './EmployerEvent'
 
@@ -162,10 +164,11 @@ export function FitChip({ f }: { f: { key: string; [k: string]: unknown } }) {
   )
 }
 
-function CardTile({ c, onInvite, slotsLeft, districts }: {
+function CardTile({ c, onInvite, slotsLeft, districts, hideAction }: {
   c: AnonTalentCard; slotsLeft: boolean
   onInvite: (id: string) => void
   districts: { id: string; name: string }[]
+  hideAction?: boolean
 }) {
   const { t } = useI18n()
   return (
@@ -205,19 +208,21 @@ function CardTile({ c, onInvite, slotsLeft, districts }: {
           ))}
         </div>
       )}
-      <div>
-        {c.invited ? (
-          <span className="font-medium" style={{ color: 'var(--color-brand)' }}>
-            {t('ev.card.invited')}
-          </span>
-        ) : slotsLeft ? (
-          <button type="button" className="btn btn-primary" onClick={() => onInvite(c.id)}>
-            {t('ev.card.invite')}
-          </button>
-        ) : (
-          <span className="text-secondary">{t('ev.card.full')}</span>
-        )}
-      </div>
+      {!hideAction && (
+        <div>
+          {c.invited ? (
+            <span className="font-medium" style={{ color: 'var(--color-brand)' }}>
+              {t('ev.card.invited')}
+            </span>
+          ) : slotsLeft ? (
+            <button type="button" className="btn btn-primary" onClick={() => onInvite(c.id)}>
+              {t('ev.card.invite')}
+            </button>
+          ) : (
+            <span className="text-secondary">{t('ev.card.full')}</span>
+          )}
+        </div>
+      )}
     </article>
   )
 }
@@ -478,6 +483,8 @@ export default function EmployerEventWorkspace() {
   const [draft, setDraft] = useState<NeedCardDraft>(EMPTY_NEED)
   const [busy, setBusy] = useState(false)
   const [formErr, setFormErr] = useState('')
+  const [step, setStep] = useState(-1)
+  const [evFull, setEvFull] = useState<EventDetailData | null>(null)
 
   const load = () => {
     setErr(null)
@@ -496,7 +503,9 @@ export default function EmployerEventWorkspace() {
       .then((d) => setJobs(d.jobs.filter((j) => j.status === 'open'))).catch(() => {})
     api<{ districts: { id: string; name: string }[] }>('/api/catalog')
       .then((c) => setDistricts(c.districts)).catch(() => {})
-  }, [])
+    api<EventDetailData>(`/api/events/${id}`)
+      .then(setEvFull).catch(() => {})
+  }, [id])
 
   if (err) return <ErrorState err={err} goneLabel={t('ev.gone')} retryLabel={t('err.retry')} onRetry={load} backTo="/employer" backLabel={t('common.back')} />
   if (!ws) return <p>{t('common.loading')}</p>
@@ -529,87 +538,120 @@ export default function EmployerEventWorkspace() {
 
   const invite = async (registrationId: string) => {
     try {
-      await api(`/api/employer/events/${id}/invites`,
+      const r = await api<{ meeting?: Meeting | null }>(
+        `/api/employer/events/${id}/invites`,
         { body: { registration_id: registrationId } })
       const d = await api<{ cards: AnonTalentCard[] }>(
         `/api/employer/events/${id}/cards${allCards ? '?all=1' : ''}`)
       setCards(d.cards); load()
-    } catch (e) { alert(e instanceof ApiError ? e.message : t('common.error')) }
+      return r
+    } catch (e) {
+      alert(e instanceof ApiError ? e.message : t('common.error'))
+      return {}
+    }
   }
 
   const slotsLeft = (ws.invites_used ?? 0) < (ws.slots ?? 0)
 
-  const before = (
-    <div className="grid gap-6">
-      {!ws.joined ? (
-        <div className="card p-4">
-          <p className="mt-0">{t('ev.emp.join')}</p>
-          <button type="button" className="btn btn-primary" onClick={join}>
-            {t('ev.emp.join.btn')}
-          </button>
+  const joinBlock = !ws.joined && (
+    <div className="card p-4">
+      <p className="mt-0">{t('ev.emp.join')}</p>
+      <button type="button" className="btn btn-primary" onClick={join}>
+        {t('ev.emp.join.btn')}
+      </button>
+    </div>
+  )
+
+  const needStep = !ws.joined ? joinBlock : (
+    <Section title={t('ev.emp.need')}>
+      {ev.need_deadline && (
+        <p className="text-secondary">
+          {t('ev.emp.deadline', {
+            d: fmtDate(ev.need_deadline, lang),
+            n: Math.max(0, Math.round(
+              (Date.parse(ev.need_deadline) - Date.now()) / 86400000)),
+          })}
+        </p>
+      )}
+      {ws.need && !editing ? (
+        <div className="card p-4 grid gap-2">
+          <NeedCardRead card={ws.need.card} />
+          <p className="text-secondary m-0">
+            {ws.need.need_by === 'advisor' ? t('ev.byadvisor') + ' · ' : ''}
+            {t('ev.emp.sent', { d: fmtDate(ws.need.submitted_at, lang) })}
+          </p>
+          <button type="button" className="btn btn-secondary justify-self-start"
+                  onClick={() => {
+                    setDraft({
+                      first_week: ws.need!.card.first_week,
+                      must_haves: ws.need!.card.must_haves,
+                      will_teach: ws.need!.card.will_teach,
+                      languages: ws.need!.card.languages,
+                      job_ids: ws.need!.card.job_ids,
+                    })
+                    setEditing(true)
+                  }}>{t('common.edit')}</button>
         </div>
       ) : (
-        <>
-          <Section title={t('ev.emp.need')}>
-            {ev.need_deadline && (
-              <p className="text-secondary">
-                {t('ev.emp.deadline', {
-                  d: fmtDate(ev.need_deadline, lang),
-                  n: Math.max(0, Math.round(
-                    (Date.parse(ev.need_deadline) - Date.now()) / 86400000)),
-                })}
-              </p>
-            )}
-            {ws.need && !editing ? (
-              <div className="card p-4 grid gap-2">
-                <NeedCardRead card={ws.need.card} />
-                <p className="text-secondary m-0">
-                  {ws.need.need_by === 'advisor' ? t('ev.byadvisor') + ' · ' : ''}
-                  {t('ev.emp.sent', { d: fmtDate(ws.need.submitted_at, lang) })}
-                </p>
-                <button type="button" className="btn btn-secondary justify-self-start"
-                        onClick={() => {
-                          setDraft({
-                            first_week: ws.need!.card.first_week,
-                            must_haves: ws.need!.card.must_haves,
-                            will_teach: ws.need!.card.will_teach,
-                            languages: ws.need!.card.languages,
-                            job_ids: ws.need!.card.job_ids,
-                          })
-                          setEditing(true)
-                        }}>{t('common.edit')}</button>
-              </div>
-            ) : (
-              <NeedCardForm draft={draft} setDraft={setDraft} onSubmit={submitNeed}
-                            busy={busy} err={formErr} jobs={jobs}
-                            submitLabel={t('ev.emp.need.send')} />
-            )}
-          </Section>
-
-          <Section title={t('ev.emp.cards')}>
-            <div className="flex gap-3 items-center mb-3 flex-wrap">
-              <span>{t('ev.emp.cards.count', {
-                n: cards?.length ?? 0,
-              })}</span>
-              <Toggle pressed={allCards} onClick={() => setAllCards(!allCards)}>
-                {t('ev.emp.cards.all')}
-              </Toggle>
-              <span className="text-secondary">
-                {t('ev.emp.invites.used', { n: ws.invites_used ?? 0, of: ws.slots ?? 0 })}
-              </span>
-            </div>
-            {!cards ? <p>{t('common.loading')}</p> : (
-              <div className="grid gap-3">
-                {cards.map((c) => (
-                  <CardTile key={c.id} c={c} slotsLeft={slotsLeft} onInvite={invite} districts={districts} />
-                ))}
-                {cards.length === 0 && <p>{t('ev.emp.cards.none')}</p>}
-              </div>
-            )}
-          </Section>
-        </>
+        <NeedCardForm draft={draft} setDraft={setDraft} onSubmit={submitNeed}
+                      busy={busy} err={formErr} jobs={jobs}
+                      submitLabel={t('ev.emp.need.send')} />
       )}
+    </Section>
+  )
+
+  const cardsList = !cards ? <p>{t('common.loading')}</p> : (
+    <div className="grid gap-3">
+      {cards.map((c) => (
+        <CardTile key={c.id} c={c} slotsLeft={slotsLeft}
+                  onInvite={(cid) => { void invite(cid) }}
+                  districts={districts} />
+      ))}
+      {cards.length === 0 && <p>{t('ev.emp.cards.none')}</p>}
     </div>
+  )
+
+  const chooseStep = !ws.joined ? joinBlock : (
+    <Section title={t('ev.emp.cards')}>
+      <div className="flex gap-3 items-center mb-3 flex-wrap">
+        <span>{t('ev.emp.cards.count', { n: cards?.length ?? 0 })}</span>
+        <Toggle pressed={allCards} onClick={() => setAllCards(!allCards)}>
+          {t('ev.emp.cards.all')}
+        </Toggle>
+      </div>
+      {!cards ? <p>{t('common.loading')}</p> : (
+        <CardChooser<AnonTalentCard>
+          items={cards.filter((c) => !c.invited)}
+          chosen={cards.filter((c) => c.invited)}
+          idOf={(c) => c.id}
+          storageKey={`emp-choose-${id}-${allCards ? 'all' : 'chose'}`}
+          chosenCount={ws.invites_used ?? 0}
+          limit={ws.slots ?? 0}
+          chooseLabel={t('choose.invite')}
+          skipLabel={t('choose.skip')}
+          counter={(i, n) => t('choose.of', { i, n })}
+          counterChosen={(a, b) => t('choose.invites', { a, b })}
+          listLabel={t('choose.list')}
+          cardsLabel={t('choose.cards')}
+          maxText={t('choose.max.emp', { n: ws.slots ?? 0 })}
+          renderCard={(c) => (
+            <CardTile c={c} slotsLeft={slotsLeft} hideAction
+                      onInvite={(cid) => { void invite(cid) }}
+                      districts={districts} />
+          )}
+          renderChosenRow={(c) => (
+            <>{t('ev.card.n', { n: c.id.split('-').pop() ?? c.id })}</>
+          )}
+          onChoose={(c) => invite(c.id)}
+          listView={cardsList}
+          match={(m, c) => ({
+            title: t('match.title'),
+            body: t('match.emp', {
+              name: t('ev.card.n', { n: c.id.split('-').pop() ?? c.id }),
+              t: fmtTime(m.starts_at) }) })}
+        />
+      )}
+    </Section>
   )
 
   const day = id === 'ev-2026-11' ? <EmployerEventPage /> : (
@@ -621,6 +663,55 @@ export default function EmployerEventWorkspace() {
     <AfterTalks talks={ws.talks ?? []} onDone={load} />
   )
 
+  // §8.1 employer defaults + §8.2 next step
+  const unanswered = (ws.talks ?? []).filter((tk) => !tk.outcome).length
+  const defaultStep = !ws.joined || !ws.need ? 0
+    : ev.phase === 'finished' ? 3
+    : ev.phase === 'today' ? 2 : 1
+  const active = step >= 0 ? step : defaultStep
+  const invitesLeft = Math.max(0, (ws.slots ?? 0) - (ws.invites_used ?? 0))
+  const next = !ws.joined
+    ? { text: t('ev.emp.join'), btn: t('ev.emp.join.btn'), to: 0 }
+    : !ws.need
+    ? { text: t('next.emp.need'), btn: t('next.emp.need.btn'), to: 0 }
+    : ev.phase === 'finished'
+    ? { text: t('next.emp.answer', { n: unanswered }),
+        btn: t('next.emp.answer.btn'), to: 3 }
+    : ev.phase === 'today'
+    ? { text: t('next.emp.meet'), btn: t('emp.step.meet'), to: 2 }
+    : { text: t('next.emp.choose', { n: invitesLeft }),
+        btn: t('next.emp.choose.btn'), to: 1 }
+
+  const about = evFull && (
+    <details className="card p-4">
+      <summary className="font-medium">{t('ev.about')}</summary>
+      <div className="grid gap-4 mt-4">
+        {evFull.programme.length > 0 && (
+          <Section title={t('ev.programme')}>
+            <ul className="m-0 ps-5">
+              {evFull.programme.map((p, i) => (
+                <li key={i}>
+                  {fmtTime(p.start)}{p.end ? `–${fmtTime(p.end)}` : ''} — {p.title || t(`ev.prog.${p.kind}` as Key)}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        )}
+        <Section title={t('ev.employers.title', { n: evFull.employers.length })}>
+          <ul className="m-0 ps-5">
+            {evFull.employers.map((e) => (
+              <li key={e.employer_id}>
+                {e.employer_name}{e.booth ? ` (${t('ev.booth')} ${e.booth})` : ''}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      </div>
+    </details>
+  )
+
+  const steps = [needStep, chooseStep, day, after]
+
   return (
     <div className="grid gap-4">
       <div>
@@ -628,11 +719,24 @@ export default function EmployerEventWorkspace() {
         <p className="m-0">{fmtDate(ev.date, lang)} · {ev.venue}</p>
         {ws.booth && <p className="m-0 text-secondary">{t('ev.booth')} {ws.booth}</p>}
       </div>
-      <Tabs label={ev.name}
-            initial={ev.phase === 'today' ? 1 : ev.phase === 'finished' ? 2 : 0}
-            labels={[t('ev.tab.before'), t('ev.tab.day'), t('ev.tab.after')]}>
-        {[before, day, after]}
-      </Tabs>
+      <Stepper label={t('ev.step.label')}
+               current={active}
+               doneBefore={defaultStep}
+               onSelect={setStep}
+               steps={[t('emp.step.need'), t('emp.step.choose'),
+                       t('emp.step.meet'), t('emp.step.answer')]} />
+      <div className="card p-4 flex gap-3 items-center flex-wrap"
+           style={{ borderColor: 'var(--color-brand)' }}>
+        <strong className="text-secondary uppercase"
+                style={{ fontSize: '.8rem', letterSpacing: '.04em' }}>
+          {t('next.title')}</strong>
+        <span className="flex-1" style={{ minWidth: 160 }}>{next.text}</span>
+        <button type="button" className="btn btn-primary"
+                onClick={() => setStep(next.to)}>
+          {next.btn}</button>
+      </div>
+      {steps[active]}
+      {about}
     </div>
   )
 }
