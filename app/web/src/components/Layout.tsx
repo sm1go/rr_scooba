@@ -158,7 +158,7 @@ export default function Layout() {
       <a href="#main" className="skip-link">{t('nav.skiptocontent')}</a>
       <header className="border-b"
               style={{ borderColor: 'var(--color-hairline)', background: 'var(--color-card)' }}>
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="w-full px-4 sm:px-6 py-3 flex items-center gap-3">
           <Link to="/" className="no-underline" style={{ color: 'var(--color-ink)' }}>
             <span className="font-display" style={{ fontSize: '1.4rem' }}>{t('app.name')}</span>
           </Link>
@@ -184,7 +184,7 @@ export default function Layout() {
               <LangSwitch />
               {user ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-secondary truncate hidden 2xl:block" style={{ maxWidth: 200 }} title={user.name}>{user.name}</span>
+                  <span className="text-secondary whitespace-nowrap hidden 2xl:block" title={user.name}>{user.name}</span>
                   <button type="button" className="btn btn-secondary" style={{ minHeight: 44 }}
                           onClick={async () => { await logout(); nav('/') }}>
                     {t('nav.signout')}
