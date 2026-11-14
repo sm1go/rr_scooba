@@ -27,7 +27,9 @@ def _employer(user):
 
 
 def _event(conn) -> sqlite3.Row | None:
-    return conn.execute("SELECT * FROM event ORDER BY date LIMIT 1").fetchone()
+    return conn.execute(
+        "SELECT * FROM event WHERE ends_at >= ? ORDER BY date LIMIT 1",
+        (datetime.now(timezone.utc).isoformat(timespec="seconds"),)).fetchone()
 
 
 def _visitor_code(conn, user_id: str, event_id: str) -> str:
@@ -202,6 +204,8 @@ def record_talk(payload: TalkIn,
         "INSERT INTO event_talk (id,event_id,user_id,employer_id,status,"
         "talked_at) VALUES (?,?,?,?,'talked',?)",
         (talk_id, ev["id"], vis["user_id"], user["employer_id"], now))
+    from .events import _award_attended
+    _award_attended(conn, ev["id"], vis["user_id"])
     db_mod.audit(conn, user["id"], "event_talk", talk_id)
     conn.commit()
     r = conn.execute("SELECT * FROM event_talk WHERE id=?",
@@ -225,6 +229,8 @@ def answer_talk(talk_id: str, payload: TalkAnswerIn,
         " answered_at=? WHERE id=?",
         (payload.outcome, payload.employer_note,
          datetime.now(timezone.utc).isoformat(timespec="seconds"), talk_id))
+    from .events import _maybe_award_employer_answered
+    _maybe_award_employer_answered(conn, r["event_id"], user["employer_id"])
     db_mod.audit(conn, user["id"], "event_talk_answered",
                  f"{talk_id}:{payload.outcome}")
     conn.commit()

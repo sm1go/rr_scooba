@@ -8,6 +8,7 @@ import type { Key } from '../../i18n/en'
 import type { AnonTalentCard, EmployerDay, EmployerWorkspace, EventTalk, Job, NeedCard } from '../../types'
 import { ErrorBox, ErrorState, Section, Toggle } from '../../components/ui'
 import { Tabs } from '../../components/Tabs'
+import ScanBox from '../../components/ScanBox'
 import EmployerEventPage from './EmployerEvent'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
@@ -195,6 +196,15 @@ function CardTile({ c, onInvite, slotsLeft, districts }: {
       {c.fit && c.fit.length > 0 && (
         <div className="flex gap-2 flex-wrap">{c.fit.map((f, i) => <FitChip key={i} f={f} />)}</div>
       )}
+      {(c.kudos ?? []).length > 0 && (
+        <div className="flex gap-2 flex-wrap">
+          {c.kudos!.map((k) => (
+            <span key={k.label} className="chip">
+              {t(`badge.${k.label}` as Key)}{k.count > 1 ? ` ×${k.count}` : ''}
+            </span>
+          ))}
+        </div>
+      )}
       <div>
         {c.invited ? (
           <span className="font-medium" style={{ color: 'var(--color-brand)' }}>
@@ -274,6 +284,7 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
 
   return (
     <div className="grid gap-4">
+      <ScanBox eventId={id} allowVisitorCode />
       {day.booth && (
         <p className="m-0 font-medium">{t('ev.booth')} {day.booth}</p>
       )}

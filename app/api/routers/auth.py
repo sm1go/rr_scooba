@@ -114,7 +114,10 @@ def profile_out(conn: sqlite3.Connection, user) -> dict:
                      "max_hours_per_week": row["max_hours_per_week"],
                      "needs": json.loads(row["needs"] or "[]"),
                      "languages": json.loads(row["languages"] or "[]"),
-                     "about": row["about"]})
+                     "about": row["about"],
+                     "share_email": bool(row["share_email"]),
+                     "share_phone": bool(row["share_phone"]),
+                     "public_link": row["public_link"] or ""})
     base["name"] = user["name"]
     base["email"] = user["email"]
     base["phone"] = user["phone"]
@@ -151,6 +154,12 @@ def put_profile(payload: ProfileIn,
          payload.max_hours_per_week,
          json.dumps(payload.needs, ensure_ascii=False),
          json.dumps(payload.languages, ensure_ascii=False), payload.about))
+    conn.execute(
+        "UPDATE resident_profile SET share_email=?, share_phone=?,"
+        " public_link=? WHERE user_id=?",
+        (1 if payload.share_email else 0,
+         1 if payload.share_phone else 0,
+         payload.public_link or "", user["id"]))
     if payload.name is not None or payload.email is not None \
             or payload.phone is not None:
         conn.execute(

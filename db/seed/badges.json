@@ -1,0 +1,312 @@
+[
+  {
+    "id": "bd-e0-att-aino",
+    "user_id": "u-aino",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-pekka",
+    "user_id": "u-pekka",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-amira",
+    "user_id": "u-amira",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent01",
+    "user_id": "u-talent01",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent02",
+    "user_id": "u-talent02",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent03",
+    "user_id": "u-talent03",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent04",
+    "user_id": "u-talent04",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent05",
+    "user_id": "u-talent05",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent06",
+    "user_id": "u-talent06",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent07",
+    "user_id": "u-talent07",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent08",
+    "user_id": "u-talent08",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent09",
+    "user_id": "u-talent09",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent10",
+    "user_id": "u-talent10",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent11",
+    "user_id": "u-talent11",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-att-talent12",
+    "user_id": "u-talent12",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "attended",
+    "label": "attended",
+    "given_by": "system",
+    "created_at": "2026-10-08T15:00:00"
+  },
+  {
+    "id": "bd-e0-k001",
+    "user_id": "u-aino",
+    "employer_id": "emp-cafe-koivu",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "explains_clearly",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k002",
+    "user_id": "u-aino",
+    "employer_id": "emp-market-olari",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "helped_others",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k003",
+    "user_id": "u-talent02",
+    "employer_id": "emp-cafe-koivu",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "customer_focus",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k004",
+    "user_id": "u-talent03",
+    "employer_id": "emp-market-olari",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "reliable",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k005",
+    "user_id": "u-amira",
+    "employer_id": "emp-aurora-care",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "team_player",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k006",
+    "user_id": "u-talent05",
+    "employer_id": "emp-aurora-care",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "learns_fast",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k007",
+    "user_id": "u-talent09",
+    "employer_id": "emp-aurora-care",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "customer_focus",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k008",
+    "user_id": "u-pekka",
+    "employer_id": "emp-freight",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "reliable",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k009",
+    "user_id": "u-talent04",
+    "employer_id": "emp-freight",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "solved_task",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k010",
+    "user_id": "u-talent01",
+    "employer_id": "emp-siivouspot",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "learns_fast",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k011",
+    "user_id": "u-talent08",
+    "employer_id": "emp-rantala",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "team_player",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-k012",
+    "user_id": "u-talent11",
+    "employer_id": "emp-rantala",
+    "event_id": "ev-2026-10",
+    "kind": "kudos",
+    "label": "explains_clearly",
+    "given_by": "u-sanna",
+    "created_at": "2026-10-08T16:00:00"
+  },
+  {
+    "id": "bd-e0-h01",
+    "user_id": "u-pekka",
+    "employer_id": "emp-freight",
+    "event_id": "ev-2026-10",
+    "kind": "hired",
+    "label": "hired",
+    "given_by": "u-advisor",
+    "created_at": "2026-10-20T09:00:00"
+  },
+  {
+    "id": "bd-e0-h02",
+    "user_id": "u-talent05",
+    "employer_id": "emp-aurora-care",
+    "event_id": "ev-2026-10",
+    "kind": "hired",
+    "label": "hired",
+    "given_by": "u-advisor",
+    "created_at": "2026-10-22T09:00:00"
+  },
+  {
+    "id": "bd-e0-o01",
+    "user_id": "u-aino",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "organizer",
+    "label": "pitched",
+    "given_by": "u-advisor",
+    "created_at": "2026-10-08T14:00:00"
+  },
+  {
+    "id": "bd-e0-o02",
+    "user_id": "u-talent12",
+    "employer_id": null,
+    "event_id": "ev-2026-10",
+    "kind": "organizer",
+    "label": "volunteer",
+    "given_by": "u-advisor",
+    "created_at": "2026-10-08T14:00:00"
+  }
+]

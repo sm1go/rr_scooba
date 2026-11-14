@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 10;
+PRAGMA user_version = 11;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -11,6 +11,9 @@ CREATE TABLE user (
     role          TEXT NOT NULL CHECK (role IN ('resident','employer','advisor')),
     name          TEXT NOT NULL DEFAULT '',
     employer_id   TEXT REFERENCES employer(id),
+    share_email   INTEGER NOT NULL DEFAULT 0,
+    share_phone   INTEGER NOT NULL DEFAULT 0,
+    public_link   TEXT NOT NULL DEFAULT '',
     created_at    TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -29,7 +32,10 @@ CREATE TABLE resident_profile (
     max_hours_per_week INTEGER,
     needs              TEXT NOT NULL DEFAULT '[]',
     languages          TEXT NOT NULL DEFAULT '[]',
-    about              TEXT NOT NULL DEFAULT ''
+    about              TEXT NOT NULL DEFAULT '',
+    share_email        INTEGER NOT NULL DEFAULT 0,
+    share_phone        INTEGER NOT NULL DEFAULT 0,
+    public_link        TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE employer (
@@ -328,3 +334,51 @@ CREATE TABLE event_queue (
         ('waiting','called','left')),
     PRIMARY KEY (event_id, employer_id, user_id)
 );
+
+-- personal QR pass for event participants (v11)
+CREATE TABLE event_pass (
+    token      TEXT PRIMARY KEY,
+    event_id   TEXT NOT NULL REFERENCES event(id),
+    user_id    TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (event_id, user_id)
+);
+
+-- one row per scan of a pass (v11)
+CREATE TABLE event_scan (
+    id         TEXT PRIMARY KEY,
+    event_id   TEXT NOT NULL REFERENCES event(id),
+    scanner_id TEXT NOT NULL REFERENCES user(id),
+    scanned_id TEXT NOT NULL REFERENCES user(id),
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (event_id, scanner_id, scanned_id)
+);
+
+-- positive-only badges; person controls visibility (v11)
+CREATE TABLE badge (
+    id          TEXT PRIMARY KEY,
+    user_id     TEXT REFERENCES user(id) ON DELETE CASCADE,
+    employer_id TEXT REFERENCES employer(id),
+    event_id    TEXT NOT NULL REFERENCES event(id),
+    kind        TEXT NOT NULL CHECK (kind IN
+        ('attended','kudos','hired','organizer','employer_answered')),
+    label       TEXT NOT NULL DEFAULT '',
+    note        TEXT NOT NULL DEFAULT '',
+    given_by    TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    hidden      INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (user_id, employer_id, event_id, kind, label)
+);
+
+-- connections between event participants (v11)
+CREATE TABLE connection (
+    user_a     TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    user_b     TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    event_id   TEXT NOT NULL REFERENCES event(id),
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    note_a     TEXT NOT NULL DEFAULT '',
+    note_b     TEXT NOT NULL DEFAULT '',
+    PRIMARY KEY (user_a, user_b, event_id)
+);
+
+PRAGMA user_version = 11;

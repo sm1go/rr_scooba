@@ -114,6 +114,9 @@ export interface Profile {
   name: string
   email: string | null
   phone: string | null
+  share_email: boolean
+  share_phone: boolean
+  public_link: string
 }
 
 export interface Application {
@@ -181,6 +184,10 @@ export interface EmployerProfile {
   contact_name: string
   contact_email: string
   contact_phone: string
+  share_email: boolean
+  share_phone: boolean
+  public_link: string
+  badges: { id: string; kind: string; label: string; note: string }[]
   event: { name: string; date: string; venue: string; booth: string } | null
 }
 
@@ -365,6 +372,7 @@ export interface NeedEntry {
   fit?: { key: string; [k: string]: unknown }[]
   interested?: boolean; meets?: number[]
   language_levels?: Record<string, string>
+  company_badges?: string[]
 }
 export interface EventDetailData extends EventSummary {
   employers: NeedEntry[]; needs_published: boolean
@@ -402,6 +410,7 @@ export interface AnonTalentCard {
   district: string; credentials: string[]; time_group: string
   interested: boolean; invited: boolean; invited_at?: string | null
   fit?: { key: string; [k: string]: unknown }[]
+  kudos?: { label: string; count: number }[]
 }
 export interface EmployerWorkspace {
   event: EventSummary; joined: boolean; booth?: string
@@ -453,4 +462,16 @@ export interface AdvisorBoard {
   }[]
   talent: { by_time_group: Record<string, number>; waitlist: number;
             mutual_matches: number; meetings: number }
+}
+
+export interface Connection {
+  user_id: string; name: string; role: string
+  company: string | null; event_id: string; event_name: string
+  connected_at: string; my_note: string
+  email?: string; phone?: string; public_link?: string
+}
+export interface MyBadge {
+  id: string; kind: string; label: string; note: string
+  hidden: boolean; created_at: string
+  event_name: string; event_id: string; giver_name: string | null
 }

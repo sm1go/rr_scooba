@@ -15,6 +15,7 @@
   --color-btn-text: #fbfaf9;
 
   --color-yes: #0f7a58;
+  --color-brand: #0f7a58;
   --color-yes-bg: #e3f4ee;
   --color-wait: #b4530b;
   --color-wait-bg: #fdeedd;
@@ -108,6 +109,7 @@ html[data-contrast="high"] {
   --color-ink: #000000;
   --color-secondary: #000000;
   --color-yes: #000000;
+  --color-brand: #000000;
   --color-yes-bg: #ffffff;
   --color-wait: #000000;
   --color-wait-bg: #ffffff;

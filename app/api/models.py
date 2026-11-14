@@ -33,6 +33,9 @@ class ProfileIn(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
     phone: Optional[str] = None
+    share_email: bool = False
+    share_phone: bool = False
+    public_link: str = ""
 
 
 class EmployerProfileIn(BaseModel):
@@ -41,6 +44,9 @@ class EmployerProfileIn(BaseModel):
     contact_name: str = ""
     contact_email: str = ""
     contact_phone: str = ""
+    share_email: bool = False
+    share_phone: bool = False
+    public_link: str = ""
 
 
 class LanguageNeed(BaseModel):
@@ -158,6 +164,9 @@ class EmployerNewIn(BaseModel):
     contact_name: str = ""
     contact_email: str = ""
     contact_phone: str = ""
+    share_email: bool = False
+    share_phone: bool = False
+    public_link: str = ""
 
 
 # --- v3 additions ------------------------------------------------------------

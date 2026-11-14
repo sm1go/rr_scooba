@@ -490,5 +490,105 @@
     "need_deadline": "",
     "publish_date": "",
     "time_groups": []
+  },
+  {
+    "id": "ev-2026-10",
+    "name": "Työnantajatreffit at Iso Omena — autumn 2026 (demo)",
+    "date": "2026-10-08",
+    "venue": "Iso Omena library (demo)",
+    "advisor_note": "",
+    "format": "treffit",
+    "language": "fi",
+    "starts_at": "2026-10-08T12:00:00",
+    "ends_at": "2026-10-08T15:00:00",
+    "address": "Suomenlahdentie 1, Espoo",
+    "description": "A past recruitment afternoon at Iso Omena library.",
+    "programme": [
+      {
+        "start": "12:00",
+        "end": "12:30",
+        "title": "Employer presentation",
+        "kind": "presentation"
+      },
+      {
+        "start": "12:30",
+        "end": "15:00",
+        "title": "Walk-in interviews",
+        "kind": "walk_in"
+      }
+    ],
+    "capacity": 0,
+    "slot_minutes": 10,
+    "need_deadline": "",
+    "publish_date": "",
+    "time_groups": [],
+    "employers": [
+      {
+        "employer_id": "emp-cafe-koivu",
+        "booth": "B1",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null
+      },
+      {
+        "employer_id": "emp-market-olari",
+        "booth": "B2",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null
+      },
+      {
+        "employer_id": "emp-aurora-care",
+        "booth": "B3",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null
+      },
+      {
+        "employer_id": "emp-freight",
+        "booth": "B4",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null
+      },
+      {
+        "employer_id": "emp-siivouspot",
+        "booth": "B5",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null
+      },
+      {
+        "employer_id": "emp-rantala",
+        "booth": "B6",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null
+      }
+    ]
   }
 ]

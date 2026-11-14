@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 11
 
 SEED_REQUIRED = [
     "events.json", "employers.json", "jobs.json", "users.json",
@@ -313,6 +313,39 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
         " WHERE t.meeting_id=m.id) AND m.starts_at = (SELECT MAX("
         "starts_at) FROM event_meeting WHERE employer_id=m.employer_id"
         " AND event_id='ev-2027-03'))")
+    for p in opt("event_passes.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO event_pass (token,event_id,user_id,"
+            "created_at) VALUES (?,?,?,?)",
+            (p["token"], p["event_id"], p["user_id"],
+             p.get("created_at") or now.isoformat()))
+    for b in opt("badges.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO badge (id,user_id,employer_id,event_id,"
+            "kind,label,note,given_by,created_at) VALUES (?,?,?,?,?,?,?,?,?)",
+            (b["id"], b.get("user_id"), b.get("employer_id"), b["event_id"],
+             b["kind"], b.get("label", ""), b.get("note", ""),
+             b.get("given_by"), b.get("created_at") or now.isoformat()))
+    # company badge for employers that answered every event talk
+    # within 7 days (same rule as the runtime hook)
+    conn.execute(
+        "INSERT OR IGNORE INTO badge (id,user_id,employer_id,event_id,"
+        "kind,label,note,given_by,created_at)"
+        " SELECT 'bd-ea-'||t.employer_id||'-'||t.event_id, NULL,"
+        " t.employer_id, t.event_id, 'employer_answered',"
+        " 'employer_answered', '', 'system', ?"
+        " FROM (SELECT DISTINCT employer_id, event_id FROM event_talk) t"
+        " WHERE NOT EXISTS (SELECT 1 FROM event_talk x"
+        "   WHERE x.employer_id=t.employer_id AND x.event_id=t.event_id"
+        "   AND (x.answered_at IS NULL"
+        "        OR julianday(x.answered_at) - julianday(x.talked_at) > 7))",
+        (now.isoformat(),))
+    for c in opt("connections.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO connection (user_a,user_b,event_id,"
+            "created_at) VALUES (?,?,?,?)",
+            (c["user_a"], c["user_b"], c["event_id"],
+             c.get("created_at") or now.isoformat()))
 
 
 def _write_profile(conn: sqlite3.Connection, user_id: str, p: dict) -> None:
@@ -377,7 +410,8 @@ def new_id(conn: sqlite3.Connection, prefix: str) -> str:
     table = {"ap": "application", "job": "job", "hr": "help_request",
              "u": "user", "emp": "employer", "et": "event_talk",
              "cred": "credential", "hire": "contract_hire",
-             "mt": "event_meeting", "tr": "talent_registration"}[prefix]
+             "mt": "event_meeting", "tr": "talent_registration",
+             "bd": "badge", "sc": "event_scan"}[prefix]
     n = 0
     for r in conn.execute(
             "SELECT id FROM {} WHERE id LIKE ?".format(table),

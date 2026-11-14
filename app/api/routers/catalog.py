@@ -38,7 +38,7 @@ def catalog(conn: sqlite3.Connection = Depends(get_conn)):
 def event(conn: sqlite3.Connection = Depends(get_conn)):
     """The next event with participating employers, booths and their open
     jobs (spec v3 §8)."""
-    ev = conn.execute("SELECT * FROM event ORDER BY date LIMIT 1").fetchone()
+    ev = conn.execute("SELECT * FROM event WHERE ends_at >= datetime('now') ORDER BY date LIMIT 1").fetchone()
     if not ev:
         return {"event": None, "employers": []}
     employers = [dict(r) for r in conn.execute(

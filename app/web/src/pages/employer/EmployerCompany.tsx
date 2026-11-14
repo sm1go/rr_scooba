@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { api, ApiError } from '../../lib/api'
 import { useI18n } from '../../i18n/i18n'
 import type { EmployerProfile } from '../../types'
-import { ErrorBox, Field, Section } from '../../components/ui'
+import { ErrorBox, Field, Section, Toggle } from '../../components/ui'
+import type { Key } from '../../i18n/en'
 
 export default function EmployerCompany() {
   const { t } = useI18n()
@@ -57,6 +58,37 @@ export default function EmployerCompany() {
                  onChange={(e) => setP({ ...p, contact_phone: e.target.value })} />
         </Field>
       </Section>
+
+      <Section title={t('profile.share')}>
+        <p className="text-secondary mt-0">{t('profile.share.hint')}</p>
+        <div className="grid gap-2">
+          <Toggle pressed={p.share_email}
+                  onClick={() => setP({ ...p, share_email: !p.share_email })}>
+            {t('profile.share.email')}
+          </Toggle>
+          <Toggle pressed={p.share_phone}
+                  onClick={() => setP({ ...p, share_phone: !p.share_phone })}>
+            {t('profile.share.phone')}
+          </Toggle>
+          <Field label={t('profile.share.link')} id="ec-link">
+            <input id="ec-link" value={p.public_link ?? ''}
+                   placeholder="https://"
+                   onChange={(e) => setP({ ...p, public_link: e.target.value })} />
+          </Field>
+        </div>
+      </Section>
+
+      {(p.badges ?? []).length > 0 && (
+        <Section title={t('profile.badges')}>
+          <ul className="m-0 p-0 list-none grid gap-2">
+            {p.badges.map((b) => (
+              <li key={b.id} className="card p-3">
+                {t(`badge.${b.label}` as Key)}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       {p.event && (
         <Section title={t('employer.event')}>

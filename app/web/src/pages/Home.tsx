@@ -45,6 +45,10 @@ export default function Home() {
       <div>
         <h1 data-page-title tabIndex={-1}>{t('home.title')}</h1>
         <p className="text-lg max-w-prose">{t('home.sub')}</p>
+        <p className="m-0 mt-4 font-display"
+           style={{ color: 'var(--color-brand)', fontSize: '1.9rem', lineHeight: 1.2 }}>{t('home.tagline')}</p>
+        <p className="m-0 max-w-prose text-secondary">
+          {t('home.tagline.sub')}</p>
       </div>
 
       <Section title={t('home.events')}>

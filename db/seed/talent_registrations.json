@@ -1207,5 +1207,155 @@
       ]
     },
     "days_ago": 12
+  },
+  {
+    "id": "tr-e0-001",
+    "event_id": "ev-2026-10",
+    "user_id": "u-aino",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-002",
+    "event_id": "ev-2026-10",
+    "user_id": "u-pekka",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-003",
+    "event_id": "ev-2026-10",
+    "user_id": "u-amira",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-004",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent01",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-005",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent02",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-006",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent03",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-007",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent04",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-008",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent05",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-009",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent06",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-010",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent07",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-011",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent08",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-012",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent09",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-013",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent10",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-014",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent11",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
+  },
+  {
+    "id": "tr-e0-015",
+    "event_id": "ev-2026-10",
+    "user_id": "u-talent12",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {},
+    "days_ago": 50
   }
 ]

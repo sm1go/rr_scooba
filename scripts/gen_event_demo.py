@@ -19,6 +19,7 @@ SEED = ROOT / "db" / "seed"
 
 E1 = "ev-2027-03"
 E2 = "ev-2026-11"
+E0 = "ev-2026-10"
 
 
 def _load(name: str):
@@ -93,6 +94,93 @@ E2_EVENT = {
     "need_deadline": "", "publish_date": "",
     "time_groups": [],
 }
+
+E0_EVENT = {
+    "id": E0,
+    "name": "Työnantajatreffit at Iso Omena — autumn 2026 (demo)",
+    "date": "2026-10-08",
+    "venue": "Iso Omena library (demo)",
+    "advisor_note": "",
+    "format": "treffit", "language": "fi",
+    "starts_at": "2026-10-08T12:00:00", "ends_at": "2026-10-08T15:00:00",
+    "address": "Suomenlahdentie 1, Espoo",
+    "description": "A past recruitment afternoon at Iso Omena library.",
+    "programme": [
+        {"start": "12:00", "end": "12:30", "title": "Employer presentation",
+         "kind": "presentation"},
+        {"start": "12:30", "end": "15:00", "title": "Walk-in interviews",
+         "kind": "walk_in"},
+    ],
+    "capacity": 0, "slot_minutes": 10,
+    "need_deadline": "", "publish_date": "",
+    "time_groups": [],
+}
+
+E0_EMPLOYERS = ["emp-cafe-koivu", "emp-market-olari", "emp-aurora-care",
+                "emp-freight", "emp-siivouspot", "emp-rantala"]
+
+# E0 participants: demo residents + talent users (15 people)
+E0_TALENT = ["u-aino", "u-pekka", "u-amira"] +     [f"u-talent{i:02d}" for i in range(1, 13)]
+
+# ~15 E0 conversations (employer, talent) — all answered within 7 days
+E0_TALKS = [
+    ("emp-cafe-koivu",  "u-aino",     "next_step"),
+    ("emp-cafe-koivu",  "u-talent02", "not_now"),
+    ("emp-cafe-koivu",  "u-talent07", "next_step"),
+    ("emp-market-olari","u-aino",     "next_step"),
+    ("emp-market-olari","u-talent03", "not_now"),
+    ("emp-aurora-care", "u-amira",    "next_step"),
+    ("emp-aurora-care", "u-talent05", "next_step"),
+    ("emp-aurora-care", "u-talent09", "not_now"),
+    ("emp-freight",     "u-pekka",    "next_step"),
+    ("emp-freight",     "u-talent04", "not_now"),
+    ("emp-siivouspot",  "u-talent01", "next_step"),
+    ("emp-siivouspot",  "u-talent06", "not_now"),
+    ("emp-rantala",     "u-talent08", "next_step"),
+    ("emp-rantala",     "u-talent10", "not_now"),
+    ("emp-rantala",     "u-talent11", "next_step"),
+]
+
+# ~12 kudos given at E0 (label set from the fixed list)
+E0_KUDOS = [
+    ("emp-cafe-koivu",  "u-aino",     "explains_clearly"),
+    ("emp-market-olari","u-aino",     "helped_others"),
+    ("emp-cafe-koivu",  "u-talent02", "customer_focus"),
+    ("emp-market-olari","u-talent03", "reliable"),
+    ("emp-aurora-care", "u-amira",    "team_player"),
+    ("emp-aurora-care", "u-talent05", "learns_fast"),
+    ("emp-aurora-care", "u-talent09", "customer_focus"),
+    ("emp-freight",     "u-pekka",    "reliable"),
+    ("emp-freight",     "u-talent04", "solved_task"),
+    ("emp-siivouspot",  "u-talent01", "learns_fast"),
+    ("emp-rantala",     "u-talent08", "team_player"),
+    ("emp-rantala",     "u-talent11", "explains_clearly"),
+]
+
+# 20 connections (event, person a, person b) — canonical order is set by
+# the loader; a mix of employer-talent and talent-talent
+E0_CONNECTIONS = [
+    ("u-sanna",    "u-aino"),     ("u-sanna",    "u-talent02"),
+    ("u-sanna",    "u-talent07"), ("u-aino",     "u-pekka"),
+    ("u-aino",     "u-amira"),    ("u-aino",     "u-talent03"),
+    ("u-pekka",    "u-talent04"), ("u-amira",    "u-talent05"),
+    ("u-talent01", "u-talent02"), ("u-talent03", "u-talent04"),
+    ("u-talent05", "u-talent06"), ("u-talent07", "u-talent08"),
+    ("u-talent09", "u-talent10"), ("u-talent11", "u-talent12"),
+    ("u-sanna",    "u-talent01"), ("u-aino",     "u-talent07"),
+    ("u-pekka",    "u-talent06"), ("u-amira",    "u-talent09"),
+    ("u-talent08", "u-talent12"), ("u-sanna",    "u-pekka"),
+]
+
+E1_CONNECTIONS = [
+    ("u-sanna",    "u-aino"),     ("u-aino",     "u-talent02"),
+]
+
+
+def _pass_token(event_id: str, user_id: str) -> str:
+    import hashlib
+    return hashlib.sha256(
+        f"pass:{event_id}:{user_id}".encode()).hexdigest()[:22]
 
 # --- need cards (9 submitted, 2 late, 3 missing) -----------------------------------
 
@@ -391,6 +479,11 @@ def main() -> int:
             "user_id": f"u-talent{i + 1:02d}", "time_group": groups[i],
             "status": "registered", "card_language": lang,
             "card": _card_for(i, lang), "days_ago": 15 - (i % 12)})
+    for k, uid in enumerate(E0_TALENT):
+        regs.append({"id": f"tr-e0-{k + 1:03d}", "event_id": E0,
+                     "user_id": uid, "time_group": "",
+                     "status": "registered", "card_language": "fi",
+                     "card": {}, "days_ago": 50})
     _dump("talent_registrations.json", regs)
 
     # employers on the event
@@ -405,7 +498,13 @@ def main() -> int:
          "last_reminder_at": "2027-02-20T10:00:00"
          if submitted is None else None}
         for eid, booth, slots, fmts, submitted in E1_EMPLOYERS]
-    _dump("events.json", [e1, dict(E2_EVENT)])
+    e0 = dict(E0_EVENT)
+    e0["employers"] = [{"employer_id": eid, "booth": f"B{i+1}",
+                        "slots": 8, "formats": ["walk_in"],
+                        "need_card": None, "need_submitted_at": None,
+                        "need_by": None}
+                       for i, eid in enumerate(E0_EMPLOYERS)]
+    _dump("events.json", [e1, dict(E2_EVENT), e0])
 
     # interests ~70: reg index -> employer picks (deterministic)
     emp_ids = [e[0] for e in E1_EMPLOYERS]
@@ -422,7 +521,8 @@ def main() -> int:
                          "language_levels": {l["name"]: l["level"]
                                              for l in NEED.get(eid, {})
                                              .get("languages", [])}})
-    for ri, reg in enumerate(regs):
+    for ri, reg in enumerate(
+            r for r in regs if r["event_id"] == E1):
         uid, rid = reg["user_id"], reg["id"]
         n = [2, 1, 2, 1, 2, 2, 1, 2][ri % 8]        # avg ~1.9 -> ~70
         order = sorted(emp_ids, key=lambda e: _rank(uid + e))
@@ -443,7 +543,8 @@ def main() -> int:
     interest_pairs = {(p["user_id"], p["employer_id"])
                       for p in e1_plans}
     by_emp: dict[str, list[str]] = {}
-    reg_by_user = {r["user_id"]: r["id"] for r in regs}
+    reg_by_user = {r["user_id"]: r["id"] for r in regs
+                   if r["event_id"] == E1}
     for p in e1_plans:
         by_emp.setdefault(p["employer_id"], []).append(p["user_id"])
     invites = []
@@ -492,6 +593,17 @@ def main() -> int:
                 "Not this time — needs more spoken Finnish for the till.")
             t["days_ago_answered"] = 1 + (k % 2)
         talks.append(t)
+    for k, (eid, uid, outcome) in enumerate(E0_TALKS):
+        talks.append({"id": f"et-e0-{k + 1:03d}", "event_id": E0,
+                      "user_id": uid, "employer_id": eid,
+                      "observed": [],
+                      "status": "answered", "outcome": outcome,
+                      "employer_note":
+                          "Kiitos jutusta — otetaan yhteyttä."
+                          if outcome == "next_step" else
+                          "Ei tällä kertaa, mutta pidetään yhteys.",
+                      "days_ago_talked": 37,
+                      "days_ago_answered": 34})
     _dump("event_talks.json", talks)
 
     # visitor codes for every E1 registration (4-digit, deterministic)
@@ -501,6 +613,64 @@ def main() -> int:
              "code": f"{1000 + int(r['id'].rsplit('-', 1)[1]) * 37 % 9000:04d}"}
             for r in regs if r["event_id"] == E1]
     _dump("event_visitors.json", vis)
+
+    # --- people first: passes, badges, connections --------------------
+    passes = []
+    for r in regs:
+        if r["event_id"] == E1 and r["status"] == "registered":
+            passes.append({"token": _pass_token(E1, r["user_id"]),
+                           "event_id": E1, "user_id": r["user_id"]})
+    for u in _load("users.json"):
+        if u["role"] == "employer" and any(
+                e["employer_id"] == u.get("employer_id")
+                for e in e1["employers"]):
+            passes.append({"token": _pass_token(E1, u["id"]),
+                           "event_id": E1, "user_id": u["id"]})
+    _dump("event_passes.json", passes)
+
+    badges = []
+    for uid in E0_TALENT:
+        badges.append({"id": f"bd-e0-att-{uid.split('-')[1]}",
+                       "user_id": uid, "employer_id": None,
+                       "event_id": E0, "kind": "attended",
+                       "label": "attended", "given_by": "system",
+                       "created_at": "2026-10-08T15:00:00"})
+    for k, (eid, uid, label) in enumerate(E0_KUDOS):
+        badges.append({"id": f"bd-e0-k{k + 1:03d}", "user_id": uid,
+                       "employer_id": eid, "event_id": E0, "kind": "kudos",
+                       "label": label, "given_by": "u-sanna",
+                       "created_at": "2026-10-08T16:00:00"})
+    badges.append({"id": "bd-e0-h01", "user_id": "u-pekka",
+                   "employer_id": "emp-freight", "event_id": E0,
+                   "kind": "hired", "label": "hired",
+                   "given_by": "u-advisor",
+                   "created_at": "2026-10-20T09:00:00"})
+    badges.append({"id": "bd-e0-h02", "user_id": "u-talent05",
+                   "employer_id": "emp-aurora-care", "event_id": E0,
+                   "kind": "hired", "label": "hired",
+                   "given_by": "u-advisor",
+                   "created_at": "2026-10-22T09:00:00"})
+    badges.append({"id": "bd-e0-o01", "user_id": "u-aino",
+                   "employer_id": None, "event_id": E0,
+                   "kind": "organizer", "label": "pitched",
+                   "given_by": "u-advisor",
+                   "created_at": "2026-10-08T14:00:00"})
+    badges.append({"id": "bd-e0-o02", "user_id": "u-talent12",
+                   "employer_id": None, "event_id": E0,
+                   "kind": "organizer", "label": "volunteer",
+                   "given_by": "u-advisor",
+                   "created_at": "2026-10-08T14:00:00"})
+    _dump("badges.json", badges)
+
+    conns = [{"user_a": a, "user_b": b, "event_id": E0,
+              "created_at": "2026-10-08T14:30:00"}
+             for a, b in E0_CONNECTIONS]
+    conns += [{"user_a": a, "user_b": b, "event_id": E1,
+               "created_at": "2027-03-19T15:00:00"}
+              for a, b in E1_CONNECTIONS]
+    _dump("connections.json", conns)
+    print(f"passes: {len(passes)}, badges: {len(badges)}, "
+          f"connections: {len(conns)}")
 
     n_mutual = sum(1 for m in mutual)
     from collections import Counter

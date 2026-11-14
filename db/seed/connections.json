@@ -1,0 +1,134 @@
+[
+  {
+    "user_a": "u-sanna",
+    "user_b": "u-aino",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-sanna",
+    "user_b": "u-talent02",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-sanna",
+    "user_b": "u-talent07",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-aino",
+    "user_b": "u-pekka",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-aino",
+    "user_b": "u-amira",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-aino",
+    "user_b": "u-talent03",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-pekka",
+    "user_b": "u-talent04",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-amira",
+    "user_b": "u-talent05",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent01",
+    "user_b": "u-talent02",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent03",
+    "user_b": "u-talent04",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent05",
+    "user_b": "u-talent06",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent07",
+    "user_b": "u-talent08",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent09",
+    "user_b": "u-talent10",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent11",
+    "user_b": "u-talent12",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-sanna",
+    "user_b": "u-talent01",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-aino",
+    "user_b": "u-talent07",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-pekka",
+    "user_b": "u-talent06",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-amira",
+    "user_b": "u-talent09",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-talent08",
+    "user_b": "u-talent12",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-sanna",
+    "user_b": "u-pekka",
+    "event_id": "ev-2026-10",
+    "created_at": "2026-10-08T14:30:00"
+  },
+  {
+    "user_a": "u-sanna",
+    "user_b": "u-aino",
+    "event_id": "ev-2027-03",
+    "created_at": "2027-03-19T15:00:00"
+  },
+  {
+    "user_a": "u-aino",
+    "user_b": "u-talent02",
+    "event_id": "ev-2027-03",
+    "created_at": "2027-03-19T15:00:00"
+  }
+]

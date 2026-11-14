@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import secrets
 import re
 import sqlite3
 from datetime import date, datetime, timedelta, timezone
@@ -281,7 +282,11 @@ def _need_cards(conn, ev, include_employer_names=True) -> list[dict]:
         item = {"employer_id": ee["employer_id"], "booth": ee["booth"],
                 "slots": ee["slots"],
                 "formats": json.loads(ee["formats"] or "[]"),
-                "need": need}
+                "need": need,
+                "company_badges": [r["kind"] for r in conn.execute(
+                    "SELECT kind FROM badge WHERE employer_id=? AND"
+                    " user_id IS NULL AND hidden=0",
+                    (ee["employer_id"],))]}
         if include_employer_names:
             item["employer_name"] = ee["emp_name"]
         out.append(item)
@@ -393,6 +398,7 @@ def update_registration(event_id: str, payload: RegistrationPatch,
         conn.execute(
             "UPDATE talent_registration SET card_language=? WHERE id=?",
             (payload.card_language, reg["id"]))
+    _issue_pass(conn, event_id, user["id"])
     conn.commit()
     return {"registration": _reg_out(conn, reg["id"])}
 
@@ -613,6 +619,7 @@ def join_event(event_id: str, payload: dict | None = None,
             "formats) VALUES (?,?,?,?,?)",
             (user["employer_id"], event_id, body.get("booth", ""), slots,
              json.dumps(formats)))
+    _issue_pass(conn, event_id, user["id"])
     db_mod.audit(conn, user["id"], "event_joined", event_id)
     conn.commit()
     return employer_workspace(event_id, conn, user)
@@ -668,6 +675,7 @@ def _anon_card(conn, ev, reg, ee_row, employer_id: str,
         "language_levels": langs,
         "credentials": creds,
         "fit": _fit_reasons(conn, ev, employer_id, need, reg, meets, langs, creds),
+        "kudos": _kudos_for_card(conn, reg["user_id"]),
     }
 
 
@@ -1074,6 +1082,8 @@ def record_meeting_talk(event_id: str, meeting_id: str,
     conn.execute(
         "UPDATE event_meeting SET status='done' WHERE id=?",
         (meeting_id,))
+    _award_attended(conn, event_id, m["user_id"])
+    _maybe_award_employer_answered(conn, event_id, user["employer_id"])
     db_mod.audit(conn, user["id"], "event_talk", talk_id)
     conn.commit()
     return {"talk_id": talk_id}
@@ -1290,3 +1300,538 @@ def organizer_report(event_id: str,
     return {"event": _event_out(ev, conn), "booths": booths,
             "need_cards_on_time_pct": cards_pct,
             "answers_in_7d_pct": ans7_pct, "fairness": fairness}
+
+
+# --- People first: passes, scans, badges, connections (v11) ---------------------
+
+KUDOS_LABELS = ["explains_clearly", "solved_task", "customer_focus",
+                "team_player", "learns_fast", "reliable", "helped_others"]
+ORGANIZER_LABELS = ["pitched", "workshop", "volunteer"]
+KUDOS_PER_EMPLOYER_EVENT = 10
+
+
+def _new_pass_token() -> str:
+    return secrets.token_urlsafe(16)          # 22 url-safe chars
+
+
+def _issue_pass(conn, event_id: str, user_id: str) -> str:
+    row = conn.execute(
+        "SELECT token FROM event_pass WHERE event_id=? AND user_id=?",
+        (event_id, user_id)).fetchone()
+    if row:
+        return row["token"]
+    token = _new_pass_token()
+    conn.execute(
+        "INSERT INTO event_pass (token,event_id,user_id) VALUES (?,?,?)",
+        (token, event_id, user_id))
+    return token
+
+
+def _award_attended(conn, event_id: str, user_id: str) -> None:
+    """Idempotent 'attended' badge once per person per event."""
+    exists = conn.execute(
+        "SELECT 1 FROM badge WHERE user_id=? AND event_id=?"
+        " AND kind='attended'", (user_id, event_id)).fetchone()
+    if not exists:
+        conn.execute(
+            "INSERT OR IGNORE INTO badge (id,user_id,employer_id,event_id,"
+            "kind,label,note,given_by) VALUES (?,?,NULL,?,'attended',"
+            "'attended','','system')",
+            (db_mod.new_id(conn, "bd"), user_id, event_id))
+
+
+def _maybe_award_employer_answered(conn, event_id: str,
+                                   employer_id: str) -> None:
+    """Company badge when every talk of the event was answered within
+    7 days of talked_at."""
+    open_talks = conn.execute(
+        "SELECT talked_at,answered_at FROM event_talk WHERE event_id=?"
+        " AND employer_id=?", (event_id, employer_id)).fetchall()
+    if not open_talks:
+        return
+    for t in open_talks:
+        if not t["answered_at"]:
+            return
+        d0 = date.fromisoformat(t["talked_at"][:10])
+        d1 = date.fromisoformat(t["answered_at"][:10])
+        if (d1 - d0).days > 7:
+            return
+    if not conn.execute(
+            "SELECT 1 FROM badge WHERE employer_id=? AND event_id=? AND"
+            " kind='employer_answered' AND user_id IS NULL",
+            (employer_id, event_id)).fetchone():
+        conn.execute(
+            "INSERT OR IGNORE INTO badge (id,user_id,employer_id,event_id,"
+            "kind,label,note,given_by) VALUES (?,NULL,?,?,"
+            "'employer_answered','employer_answered','','system')",
+            (db_mod.new_id(conn, "bd"), employer_id, event_id))
+
+
+def _visible_badges(conn, user_id: str, include_hidden=False) -> list[dict]:
+    q = ("SELECT b.id,b.kind,b.label,b.note,b.hidden,b.created_at,"
+         " e.name event_name, b.event_id, em.name giver_name FROM badge b"
+         " JOIN event e ON e.id=b.event_id"
+         " LEFT JOIN employer em ON em.id=b.employer_id"
+         " WHERE b.user_id=?")
+    if not include_hidden:
+        q += " AND b.hidden=0"
+    q += " ORDER BY b.created_at"
+    out = []
+    for r in conn.execute(q, (user_id,)):
+        d = dict(r)
+        d["hidden"] = bool(d["hidden"])
+        out.append(d)
+    return out
+
+
+def _kudos_for_card(conn, user_id: str) -> list[dict]:
+    """Kudos label counts over all events — the only badge data that may
+    appear on an anonymous card."""
+    return [dict(r) for r in conn.execute(
+        "SELECT label, COUNT(*) count FROM badge WHERE user_id=?"
+        " AND kind='kudos' AND hidden=0 GROUP BY label ORDER BY label",
+        (user_id,))]
+
+
+def _participant(conn, event_id: str, user) -> bool:
+    """Viewer is part of this event: registered talent, joined employer
+    user, or advisor."""
+    if user["role"] == "advisor":
+        return True
+    if user["role"] == "employer" and user["employer_id"]:
+        return _ee(conn, event_id, user["employer_id"]) is not None
+    reg = conn.execute(
+        "SELECT 1 FROM talent_registration WHERE event_id=? AND user_id=?"
+        " AND status != 'cancelled'", (event_id, user["id"])).fetchone()
+    return reg is not None
+
+
+def _shared_contact(user_row, profile_row=None) -> dict:
+    """Contact fields the person chose to share. Employer users use the
+    employer contact fields + their own share toggles."""
+    out = {"public_link": ""}
+    if profile_row is not None:                    # resident
+        if profile_row["share_email"]:
+            out["email"] = user_row["email"]
+        if profile_row["share_phone"]:
+            out["phone"] = user_row["phone"]
+        out["public_link"] = profile_row["public_link"] or ""
+    else:                                          # employer rep
+        emp = user_row["employer_id"]
+        if user_row["share_email"] and emp:
+            out["email"] = emp[0]
+        if user_row["share_phone"] and emp:
+            out["phone"] = emp[1]
+        out["public_link"] = user_row["public_link"] or ""
+    return out
+
+
+def _event_profile(conn, ev, subject) -> dict:
+    """The profile a scanner sees — only what spec 7.2 lists."""
+    first = (subject["name"] or "").split(" ")[0]
+    base = {"role": subject["role"], "first_name": first,
+            "event_id": ev["id"], "event_name": ev["name"]}
+    if subject["role"] == "employer" and subject["employer_id"]:
+        ee = _ee(conn, ev["id"], subject["employer_id"])
+        card = (json.loads(ee["need_card"]) if ee and ee["need_card"]
+                else None)
+        contact = {}
+        if subject["share_email"]:
+            contact["email"] = subject["contact_email"]
+        if subject["share_phone"]:
+            contact["phone"] = subject["contact_phone"]
+        contact["public_link"] = subject["public_link"] or ""
+        cbadges = [dict(r) for r in conn.execute(
+            "SELECT kind,label,note FROM badge WHERE employer_id=?"
+            " AND user_id IS NULL AND hidden=0 ORDER BY created_at",
+            (subject["employer_id"],))]
+        base.update({"name": subject["name"],
+                     "company": subject["employer_name"],
+                     "employer_id": subject["employer_id"],
+                     "need_card": card, "contact": contact,
+                     "badges": cbadges})
+        return base
+    # talent
+    prof = conn.execute(
+        "SELECT * FROM resident_profile WHERE user_id=?",
+        (subject["id"],)).fetchone()
+    contact = {"public_link": (prof["public_link"] if prof else "")}
+    if prof and prof["share_email"]:
+        contact["email"] = subject["email"]
+    if prof and prof["share_phone"]:
+        contact["phone"] = subject["phone"]
+    reg = conn.execute(
+        "SELECT card FROM talent_registration WHERE event_id=?"
+        " AND user_id=?", (ev["id"], subject["id"])).fetchone()
+    card = json.loads(reg["card"]) if reg and reg["card"] else {}
+    creds = [r["label"] for r in conn.execute(
+        "SELECT label FROM credential WHERE user_id=?", (subject["id"],))]
+    records = [{"employer": r["employer"], "date": r["talked_at"][:10],
+                "observed": json.loads(r["observed"])}
+               for r in conn.execute(
+                   "SELECT t.talked_at,t.observed,e.name employer"
+                   " FROM event_talk t JOIN employer e"
+                   " ON e.id=t.employer_id WHERE t.user_id=?"
+                   " AND t.observed != '[]' ORDER BY t.talked_at",
+                   (subject["id"],))]
+    base.update({"looking_for": card.get("looking_for", ""),
+                 "done": card.get("done", []),
+                 "credentials": creds,
+                 "contact": contact,
+                 "badges": _visible_badges(conn, subject["id"]),
+                 "event_records": records,
+                 "user_id": subject["id"]})
+    return base
+
+
+@router.get("/me/events/{event_id}/pass")
+def my_pass(event_id: str,
+            conn: sqlite3.Connection = Depends(get_conn),
+            user=Depends(current_user)):
+    """Issue (or return) the caller's QR pass for this event."""
+    ev = _get_event(conn, event_id)
+    if not _participant(conn, event_id, user):
+        raise HTTPException(403, "Only people taking part in the event "
+                                 "get a pass.")
+    token = _issue_pass(conn, event_id, user["id"])
+    code = conn.execute(
+        "SELECT code FROM event_visitor WHERE event_id=? AND user_id=?",
+        (event_id, user["id"])).fetchone()
+    conn.commit()
+    return {"token": token, "event_id": ev["id"], "name": ev["name"],
+            "first_name": (user["name"] or "").split(" ")[0],
+            "visitor_code": code["code"] if code else None}
+
+
+@router.get("/p/{token}")
+def scanned_profile(token: str,
+                    conn: sqlite3.Connection = Depends(get_conn),
+                    user=Depends(current_user)):
+    """What the scanner sees. Records the scan + creates a connection."""
+    p = conn.execute(
+        "SELECT * FROM event_pass WHERE token=?", (token,)).fetchone()
+    if not p:
+        raise HTTPException(404, "No such pass.")
+    event_id = p["event_id"]
+    if not _participant(conn, event_id, user):
+        raise HTTPException(403, "Only people taking part in this event "
+                                 "can view this page.")
+    ev = _get_event(conn, event_id)
+    sub = conn.execute(
+        "SELECT u.*, e.name employer_name, e.contact_email, e.contact_phone"
+        " FROM user u LEFT JOIN employer e ON e.id=u.employer_id"
+        " WHERE u.id=?", (p["user_id"],)).fetchone()
+    if not sub:
+        raise HTTPException(404, "No such person.")
+    if user["id"] != sub["id"]:
+        conn.execute(
+            "INSERT OR IGNORE INTO event_scan (id,event_id,scanner_id,"
+            "scanned_id) VALUES (?,?,?,?)",
+            (db_mod.new_id(conn, "sc"), event_id, user["id"], sub["id"]))
+        a, b = sorted([user["id"], sub["id"]])
+        conn.execute(
+            "INSERT OR IGNORE INTO connection (user_a,user_b,event_id)"
+            " VALUES (?,?,?)", (a, b, event_id))
+        _award_attended(conn, event_id, sub["id"])
+        conn.commit()
+    profile = _event_profile(conn, ev, sub)
+    profile["viewer_employer"] = user["role"] == "employer"
+    return profile
+
+
+def _met_at_event(conn, event_id: str, employer_id: str,
+                  user_id: str) -> bool:
+    """Employer may give a kudos only to someone they met, talked to or
+    scanned at this event."""
+    if conn.execute(
+            "SELECT 1 FROM event_meeting WHERE event_id=? AND employer_id=?"
+            " AND user_id=? AND status='done'",
+            (event_id, employer_id, user_id)).fetchone():
+        return True
+    if conn.execute(
+            "SELECT 1 FROM event_talk WHERE event_id=? AND employer_id=?"
+            " AND user_id=?", (event_id, employer_id, user_id)).fetchone():
+        return True
+    scanner = conn.execute(
+        "SELECT id FROM user WHERE employer_id=? AND role='employer'",
+        (employer_id,)).fetchall()
+    return any(conn.execute(
+        "SELECT 1 FROM event_scan WHERE event_id=? AND scanner_id=?"
+        " AND scanned_id=?", (event_id, s["id"], user_id)).fetchone()
+        for s in scanner)
+
+
+@router.post("/employer/events/{event_id}/kudos", status_code=201)
+def give_kudos(event_id: str, payload: dict,
+               conn: sqlite3.Connection = Depends(get_conn),
+               user=Depends(current_user)):
+    _employer(user)
+    _get_event(conn, event_id)
+    if not _ee(conn, event_id, user["employer_id"]):
+        raise HTTPException(404, "Join the event first.")
+    target = conn.execute("SELECT id,role FROM user WHERE id=?",
+                          (payload.get("user_id") or "",)).fetchone()
+    if not target or target["role"] != "resident":
+        raise HTTPException(404, "No such person.")
+    label = payload.get("label") or ""
+    if label not in KUDOS_LABELS:
+        raise HTTPException(422, "Pick a badge from the list.")
+    note = (payload.get("note") or "").strip()[:140]
+    if note:
+        issues = lint.blocking_issues({"qualifications": [note]})
+        for tip_id, pattern, why, suggestion in lint.TIPS:
+            if tip_id != "native_language":
+                continue
+            m = re.search(pattern, note, re.I)
+            if m:
+                issues.append({"rule": tip_id, "field": "note",
+                               "trigger": m.group(0), "why": why,
+                               "suggestion": suggestion})
+        if issues:
+            raise HTTPException(422, issues)
+    if not _met_at_event(conn, event_id, user["employer_id"],
+                         target["id"]):
+        raise HTTPException(403, "You can only give a badge to someone "
+                                 "you met at this event.")
+    if conn.execute(
+            "SELECT 1 FROM badge WHERE employer_id=? AND user_id=? AND"
+            " event_id=? AND kind='kudos' AND label=?",
+            (user["employer_id"], target["id"], event_id,
+             label)).fetchone():
+        raise HTTPException(409, "You already gave this badge to this "
+                                 "person at this event.")
+    n = conn.execute(
+        "SELECT COUNT(*) c FROM badge WHERE employer_id=? AND event_id=?"
+        " AND kind='kudos'", (user["employer_id"], event_id)).fetchone()["c"]
+    if n >= KUDOS_PER_EMPLOYER_EVENT:
+        raise HTTPException(409, "You have used your badges for this event.")
+    bid = db_mod.new_id(conn, "bd")
+    conn.execute(
+        "INSERT INTO badge (id,user_id,employer_id,event_id,kind,label,"
+        "note,given_by) VALUES (?,?,?,?,'kudos',?,?,?)",
+        (bid, target["id"], user["employer_id"], event_id, label, note,
+         user["id"]))
+    db_mod.audit(conn, user["id"], "badge_given", bid)
+    conn.commit()
+    return {"id": bid}
+
+
+@router.post("/advisor/events/{event_id}/badges", status_code=201)
+def advisor_badge(event_id: str, payload: dict,
+                  conn: sqlite3.Connection = Depends(get_conn),
+                  user=Depends(current_user)):
+    """Advisor gives an organizer badge (pitched / workshop / volunteer)
+    or a hired badge."""
+    _advisor(user)
+    _get_event(conn, event_id)
+    kind = payload.get("kind") or ""
+    target = conn.execute("SELECT id,role FROM user WHERE id=?",
+                          (payload.get("user_id") or "",)).fetchone()
+    if not target or target["role"] != "resident":
+        raise HTTPException(404, "No such person.")
+    if kind == "organizer":
+        label = payload.get("label") or ""
+        if label not in ORGANIZER_LABELS:
+            raise HTTPException(422, "Pick a badge from the list.")
+        key = (target["id"], None, event_id, "organizer", label)
+    elif kind == "hired":
+        employer_id = payload.get("employer_id")
+        if not employer_id:
+            raise HTTPException(422, "Pick the hiring employer.")
+        key = (target["id"], employer_id, event_id, "hired", "hired")
+        label = "hired"
+    else:
+        raise HTTPException(422, "Unknown badge kind.")
+    if conn.execute(
+            "SELECT 1 FROM badge WHERE user_id=? AND employer_id IS ?"
+            " AND event_id=? AND kind=? AND label=?",
+            (key[0], key[1], key[2], key[3], key[4])).fetchone():
+        raise HTTPException(409, "This badge already exists.")
+    bid = db_mod.new_id(conn, "bd")
+    conn.execute(
+        "INSERT INTO badge (id,user_id,employer_id,event_id,kind,label,"
+        "note,given_by) VALUES (?,?,?,?,?,?,?,?)",
+        (bid, target["id"], key[1], event_id, kind, label,
+         payload.get("note") or "", user["id"]))
+    db_mod.audit(conn, user["id"], "badge_given", bid)
+    conn.commit()
+    return {"id": bid}
+
+
+@router.get("/me/badges")
+def my_badges(conn: sqlite3.Connection = Depends(get_conn),
+              user=Depends(current_user)):
+    return {"badges": _visible_badges(conn, user["id"],
+                                    include_hidden=True)}
+
+
+@router.put("/me/badges/{badge_id}/hide")
+def hide_badge(badge_id: str, payload: dict,
+               conn: sqlite3.Connection = Depends(get_conn),
+               user=Depends(current_user)):
+    b = conn.execute("SELECT user_id FROM badge WHERE id=?",
+                     (badge_id,)).fetchone()
+    if not b or b["user_id"] != user["id"]:
+        raise HTTPException(404, "Badge not found.")
+    conn.execute("UPDATE badge SET hidden=? WHERE id=?",
+                 (1 if payload.get("hidden") else 0, badge_id))
+    conn.commit()
+    return {"ok": True}
+
+
+@router.get("/me/connections")
+def my_connections(conn: sqlite3.Connection = Depends(get_conn),
+                   user=Depends(current_user)):
+    """People the user connected with at events. Shows only the contact
+    fields the other side chose to share."""
+    out = []
+    for c in conn.execute(
+            "SELECT * FROM connection WHERE user_a=? OR user_b=?"
+            " ORDER BY created_at DESC", (user["id"], user["id"])):
+        other_id = c["user_b"] if c["user_a"] == user["id"] else c["user_a"]
+        u = conn.execute(
+            "SELECT u.*, e.name employer_name FROM user u"
+            " LEFT JOIN employer e ON e.id=u.employer_id WHERE u.id=?",
+            (other_id,)).fetchone()
+        if not u:
+            continue
+        ev = conn.execute("SELECT name,date FROM event WHERE id=?",
+                          (c["event_id"],)).fetchone()
+        item = {"user_id": u["id"], "name": u["name"], "role": u["role"],
+                "company": u["employer_name"], "event_id": c["event_id"],
+                "event_name": ev["name"] if ev else c["event_id"],
+                "connected_at": c["created_at"],
+                "my_note": (c["note_a"] if c["user_a"] == user["id"]
+                            else c["note_b"])}
+        if u["role"] == "resident":
+            prof = conn.execute(
+                "SELECT share_email,share_phone,public_link"
+                " FROM resident_profile WHERE user_id=?",
+                (u["id"],)).fetchone()
+            if prof:
+                if prof["share_email"]:
+                    item["email"] = u["email"]
+                if prof["share_phone"]:
+                    item["phone"] = u["phone"]
+                item["public_link"] = prof["public_link"]
+        else:
+            emp = conn.execute(
+                "SELECT contact_email,contact_phone FROM employer"
+                " WHERE id=?", (u["employer_id"],)).fetchone()
+            if u["share_email"] and emp:
+                item["email"] = emp["contact_email"]
+            if u["share_phone"] and emp:
+                item["phone"] = emp["contact_phone"]
+            item["public_link"] = u["public_link"]
+        out.append(item)
+    return {"connections": out}
+
+
+@router.put("/me/connections/{event_id}/{other_id}/note")
+def connection_note(event_id: str, other_id: str, payload: dict,
+                    conn: sqlite3.Connection = Depends(get_conn),
+                    user=Depends(current_user)):
+    """Private note on a connection — never shown to the other side."""
+    a, b = sorted([user["id"], other_id])
+    row = conn.execute(
+        "SELECT * FROM connection WHERE user_a=? AND user_b=?"
+        " AND event_id=?", (a, b, event_id)).fetchone()
+    if not row:
+        raise HTTPException(404, "No such connection.")
+    col = "note_a" if row["user_a"] == user["id"] else "note_b"
+    conn.execute(
+        f"UPDATE connection SET {col}=? WHERE user_a=? AND user_b=?"
+        " AND event_id=?",
+        ((payload.get("note") or "")[:140], a, b, event_id))
+    conn.commit()
+    return {"ok": True}
+
+
+@router.delete("/me/connections/{event_id}/{other_id}")
+def drop_connection(event_id: str, other_id: str,
+                    conn: sqlite3.Connection = Depends(get_conn),
+                    user=Depends(current_user)):
+    a, b = sorted([user["id"], other_id])
+    conn.execute(
+        "DELETE FROM connection WHERE user_a=? AND user_b=? AND event_id=?",
+        (a, b, event_id))
+    conn.commit()
+    return {"ok": True}
+
+
+@router.post("/employer/events/{event_id}/talk", status_code=201)
+def qr_talk(event_id: str, payload: dict,
+            conn: sqlite3.Connection = Depends(get_conn),
+            user=Depends(current_user)):
+    """'Record a talk' after scanning a pass: opens (or returns) the
+    event_talk for this pair so the 7-day rule applies."""
+    _employer(user)
+    _get_event(conn, event_id)
+    if not _ee(conn, event_id, user["employer_id"]):
+        raise HTTPException(404, "Join the event first.")
+    target = conn.execute("SELECT id FROM user WHERE id=? AND role='resident'",
+                          (payload.get("user_id") or "",)).fetchone()
+    if not target:
+        raise HTTPException(404, "No such person.")
+    t = conn.execute(
+        "SELECT id FROM event_talk WHERE event_id=? AND user_id=?"
+        " AND employer_id=?", (event_id, target["id"],
+                              user["employer_id"])).fetchone()
+    if t:
+        return {"talk_id": t["id"]}
+    tid = db_mod.new_id(conn, "et")
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    conn.execute(
+        "INSERT INTO event_talk (id,event_id,user_id,employer_id,status,"
+        "talked_at) VALUES (?,?,?,?,'talked',?)",
+        (tid, event_id, target["id"], user["employer_id"], now))
+    _award_attended(conn, event_id, target["id"])
+    db_mod.audit(conn, user["id"], "event_talk", tid)
+    conn.commit()
+    return {"talk_id": tid}
+
+
+@router.get("/events/{event_id}/pass-by-code/{code}")
+def pass_by_code(event_id: str, code: str,
+                 conn: sqlite3.Connection = Depends(get_conn),
+                 user=Depends(current_user)):
+    """Visitor number -> pass token, for the typed scan fallback."""
+    ev = _get_event(conn, event_id)
+    if not _participant(conn, event_id, user):
+        raise HTTPException(403, "Only people taking part in this event "
+                                 "can use visitor numbers.")
+    vis = conn.execute(
+        "SELECT user_id FROM event_visitor WHERE event_id=? AND code=?",
+        (ev["id"], code)).fetchone()
+    if not vis:
+        raise HTTPException(404, "No visitor has that number.")
+    token = _issue_pass(conn, event_id, vis["user_id"])
+    conn.commit()
+    return {"token": token}
+
+
+@router.post("/employer/events/{event_id}/hired", status_code=201)
+def hired_badge(event_id: str, payload: dict,
+                conn: sqlite3.Connection = Depends(get_conn),
+                user=Depends(current_user)):
+    """'Hired after an event' badge — one per employer-person pair."""
+    _employer(user)
+    _get_event(conn, event_id)
+    target = conn.execute("SELECT id FROM user WHERE id=? AND role='resident'",
+                          (payload.get("user_id") or "",)).fetchone()
+    if not target:
+        raise HTTPException(404, "No such person.")
+    if conn.execute(
+            "SELECT 1 FROM badge WHERE user_id=? AND employer_id=?"
+            " AND kind='hired'",
+            (target["id"], user["employer_id"])).fetchone():
+        raise HTTPException(409, "This badge already exists.")
+    bid = db_mod.new_id(conn, "bd")
+    conn.execute(
+        "INSERT INTO badge (id,user_id,employer_id,event_id,kind,label,"
+        "note,given_by) VALUES (?,?,?,?,'hired','hired',?,?)",
+        (bid, target["id"], user["employer_id"], event_id,
+         payload.get("note") or "", user["id"]))
+    db_mod.audit(conn, user["id"], "badge_given", bid)
+    conn.commit()
+    return {"id": bid}

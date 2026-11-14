@@ -19,6 +19,7 @@ export default function SignIn() {
   const nav = useNavigate()
   const [params] = useSearchParams()
   const back = params.get('back') || '/'
+  const next = params.get('next')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [err, setErr] = useState('')
@@ -28,8 +29,8 @@ export default function SignIn() {
     setBusy(true); setErr('')
     try {
       const u = await login(em, pw)
-      nav(u.role === 'employer' ? '/employer'
-        : u.role === 'advisor' ? '/advisor' : back)
+      nav(next || (u.role === 'employer' ? '/employer'
+        : u.role === 'advisor' ? '/advisor' : back))
     } catch (e) {
       setErr(e instanceof ApiError ? e.message : t('auth.wrong'))
     } finally {

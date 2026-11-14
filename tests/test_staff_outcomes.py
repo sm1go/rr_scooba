@@ -46,8 +46,8 @@ def test_outcome_panel_counts(client, advisor):
         assert o["applications"] >= o["applications_by_advisor"]
     assert all_["applications"] >= o7["applications"]
     # 2 seeded talks for ev-2026-11 + 15 for ev-2027-03
-    assert all_["event_talks"]["recorded"] == 17
-    assert all_["event_talks"]["answered"] == 11
+    assert all_["event_talks"]["recorded"] == 32
+    assert all_["event_talks"]["answered"] == 26
     assert all_["event_talks"]["unanswered"] == 6
     assert all_["employer_calls"]["no_answer"] == 0
 

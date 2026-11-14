@@ -4,7 +4,7 @@ import { api, ApiError } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import type { Catalog, Profile } from '../types'
+import type { Catalog, Connection, MyBadge, Profile } from '../types'
 import { CEFR, DAYS, PARTS } from '../types'
 import { ErrorBox, Field, Section, Toggle } from '../components/ui'
 
@@ -41,6 +41,8 @@ export default function ProfilePage() {
     setDocBusy(false)
   }
   const [cat, setCat] = useState<Catalog | null>(null)
+  const [badges, setBadges] = useState<MyBadge[]>([])
+  const [conns, setConns] = useState<Connection[]>([])
   const [err, setErr] = useState('')
   const [savedMsg, setSavedMsg] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -56,6 +58,10 @@ export default function ProfilePage() {
       }
     }).catch((e) => setErr(e instanceof ApiError ? e.message : t('common.error')))
     api<Catalog>('/api/catalog').then(setCat).catch(() => {})
+    api<{ badges: MyBadge[] }>('/api/me/badges')
+      .then((d) => setBadges(d.badges)).catch(() => {})
+    api<{ connections: Connection[] }>('/api/me/connections')
+      .then((d) => setConns(d.connections)).catch(() => {})
   }, [t])
 
   if (!p) return <p>{err || t('common.loading')}</p>
@@ -314,8 +320,94 @@ export default function ProfilePage() {
         </button>
       </Section>
 
+      <Section title={t('profile.share')}>
+        <p className="text-secondary mt-0">{t('profile.share.hint')}</p>
+        <div className="grid gap-2">
+          <Toggle pressed={p.share_email}
+                  onClick={() => setP({ ...p, share_email: !p.share_email })}>
+            {t('profile.share.email')}
+          </Toggle>
+          <Toggle pressed={p.share_phone}
+                  onClick={() => setP({ ...p, share_phone: !p.share_phone })}>
+            {t('profile.share.phone')}
+          </Toggle>
+          <Field label={t('profile.share.link')} id="pf-link">
+            <input id="pf-link" value={p.public_link ?? ''}
+                   placeholder="https://"
+                   onChange={(e) => setP({ ...p, public_link: e.target.value })} />
+          </Field>
+        </div>
+      </Section>
+
       <button type="button" className="btn btn-primary w-full"
               onClick={() => patch(p)}>{t('profile.save')}</button>
+
+      <Section title={t('profile.badges')}>
+        {badges.length === 0 ? (
+          <p className="text-secondary">{t('profile.badges.none')}</p>
+        ) : (
+          <ul className="m-0 p-0 list-none grid gap-2">
+            {badges.map((b) => (
+              <li key={b.id} className="card p-3 flex flex-wrap gap-2 items-center">
+                <span className="font-medium">
+                  {b.kind === 'attended'
+                    ? t('badge.attended', { event: b.event_name })
+                    : t(`badge.${b.label}` as Key)}
+                </span>
+                {b.giver_name &&
+                  <span className="text-secondary"> — {b.giver_name}</span>}
+                <button type="button" className="btn btn-quiet ms-auto"
+                        style={{ minHeight: 40 }}
+                        onClick={async () => {
+                          await api(`/api/me/badges/${b.id}/hide`,
+                                    { method: 'PUT',
+                                      body: { hidden: !b.hidden } })
+                          setBadges(badges.map((x) =>
+                            x.id === b.id ? { ...x, hidden: !x.hidden } : x))
+                        }}>
+                  {b.hidden ? t('badge.show') : t('badge.hide')}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
+
+      <Section title={t('profile.connections')}>
+        {conns.length === 0 ? (
+          <p className="text-secondary">{t('profile.connections.none')}</p>
+        ) : (
+          <ul className="m-0 p-0 list-none grid gap-2">
+            {conns.map((c) => (
+              <li key={`${c.event_id}-${c.user_id}`}
+                  className="card p-3 flex flex-wrap gap-2 items-center">
+                <div>
+                  <strong>{c.name}</strong>
+                  {c.company &&
+                    <span className="text-secondary"> — {c.company}</span>}
+                  <span className="block text-secondary">{c.event_name}</span>
+                  {(c.email || c.phone || c.public_link) && (
+                    <span className="block">
+                      {[c.email, c.phone, c.public_link]
+                        .filter(Boolean).join(' · ')}</span>
+                  )}
+                </div>
+                <button type="button" className="btn btn-quiet ms-auto"
+                        style={{ minHeight: 40 }}
+                        onClick={async () => {
+                          await api(`/api/me/connections/${c.event_id}/${c.user_id}`,
+                                    { method: 'DELETE' })
+                          setConns(conns.filter((x) =>
+                            !(x.event_id === c.event_id
+                              && x.user_id === c.user_id)))
+                        }}>
+                  {t('conn.remove')}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
 
       <Section title={t('profile.documents')}>
         <div id="documents" />

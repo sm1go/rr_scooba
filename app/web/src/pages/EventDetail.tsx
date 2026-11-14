@@ -6,6 +6,7 @@ import { useAuth } from '../lib/auth'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import type {
+  Connection,
   EventRecord,
   EventDetailData, EventSummary, MyEventData,
   NeedEntry, TalentCardData,
@@ -13,6 +14,8 @@ import type {
 import { DAYS, PARTS } from '../types'
 import { ErrorBox, ErrorState, Section, Toggle } from '../components/ui'
 import { Tabs } from '../components/Tabs'
+import ScanBox from '../components/ScanBox'
+import { useConfig } from '../lib/config'
 import EventPage from './EventPage'
 
 const CARD_LANGS = ['en', 'fi', 'sv', 'ru', 'ar', 'et', 'fa', 'sq', 'uk']
@@ -56,6 +59,10 @@ function NeedCardView({ e, registered, onToggleInterest, interestCount, limit }:
   return (
     <article className="card p-4 grid gap-2">
       <h3 className="m-0">{e.employer_name}</h3>
+      {e.company_badges?.includes('employer_answered') && (
+        <span className="chip" style={{ background: 'var(--color-yes-bg)' }}>
+          {t('badge.employer_answered')}</span>
+      )}
       {e.need!.need_by === 'advisor' && (
         <p className="text-secondary m-0">{t('ev.byadvisor')}</p>
       )}
@@ -139,6 +146,8 @@ function RegisterForm({ ev, onDone }: {
   const [districts, setDistricts] = useState<{ id: string; name: string }[]>([])
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
+  const [aiBusy, setAiBusy] = useState(false)
+  const cfg = useConfig()
 
   useEffect(() => {
     api<{ districts: { id: string; name: string }[] }>('/api/catalog')
@@ -196,6 +205,23 @@ function RegisterForm({ ev, onDone }: {
                  onChange={(e) => setDone(done.map((d, j) => j === i ? e.target.value : d))} />
         </label>
       ))}
+      {cfg.ai && (
+        <button type="button" className="link text-left"
+                onClick={async () => {
+                  setAiBusy(true); setErr('')
+                  try {
+                    const r = await api<{ lines: string[] }>(
+                      '/api/ai/event-card',
+                      { body: { items: done.filter((d) => d.trim()).slice(0, 3) } })
+                    setDone(done.map((d, i) => r.lines[i] ?? d))
+                  } catch (e2) {
+                    setErr(e2 instanceof ApiError ? e2.message : t('common.error'))
+                  } finally { setAiBusy(false) }
+                }}
+                disabled={aiBusy || !done.some((d) => d.trim())}>
+          {t('ev.ai.help')}
+        </button>
+      )}
       <label className="grid gap-1">
         <span className="font-medium">{t('ev.district')}</span>
         <select className="input" style={{ maxWidth: 260 }} value={district}
@@ -239,6 +265,7 @@ export default function EventDetail() {
   const [ev, setEv] = useState<EventDetailData | null>(null)
   const [needs, setNeeds] = useState<NeedEntry[] | null>(null)
   const [my, setMy] = useState<MyEventData | null>(null)
+  const [conns, setConns] = useState<Connection[]>([])
   const [records, setRecords] = useState<EventRecord[]>([])
   const [err, setErr] = useState<unknown>(null)
   const [showForm, setShowForm] = useState(false)
@@ -250,6 +277,8 @@ export default function EventDetail() {
     api<EventDetailData>(`/api/events/${id}`).then(setEv).catch(setErr)
     if (isResident) {
       api<MyEventData>(`/api/events/${id}/my`).then(setMy).catch(() => setMy(null))
+    api<{ connections: Connection[] }>('/api/me/connections')
+      .then((d) => setConns(d.connections)).catch(() => {})
     api<{ records: EventRecord[] }>('/api/me/event-records')
       .then((r) => setRecords(r.records)).catch(() => setRecords([]))
     }
@@ -393,8 +422,13 @@ export default function EventDetail() {
                 {t('event.number')}: {my.visitor_code}
               </strong>
               <p className="text-secondary m-0">{t('event.numberwhy')}</p>
+              <p className="m-0">
+                <Link to={`/events/${id}/pass`} className="btn btn-quiet">
+                  {t('pass.show')}</Link>
+              </p>
             </div>
           )}
+          <ScanBox eventId={id!} />
           {my.entry && my.registration && (
             <p className="m-0 font-medium">
               {t('ev.day.entry', { t: my.entry, g: my.registration.time_group })}
@@ -460,6 +494,24 @@ export default function EventDetail() {
           </ul>
         </Section>
       ) : <p className="text-secondary">{t('ev.talks.none')}</p>}
+      {conns.filter((c) => c.event_id === id).length > 0 && (
+        <Section title={t('ev.after.met')}>
+          <ul className="grid gap-2 p-0 list-none">
+            {conns.filter((c) => c.event_id === id).map((c) => (
+              <li key={c.user_id} className="card p-3">
+                <strong>{c.name}</strong>
+                {c.company &&
+                  <span className="text-secondary"> — {c.company}</span>}
+                {(c.email || c.phone || c.public_link) && (
+                  <span className="block">
+                    {[c.email, c.phone, c.public_link]
+                      .filter(Boolean).join(' · ')}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
       {records.length > 0 && (
         <Section title={t('ev.after.seen')}>
           <ul className="grid gap-2 p-0 list-none">

@@ -23,17 +23,26 @@ def _employer(user) -> None:
         raise HTTPException(403, "Your account is not linked to a company.")
 
 
-def _employer_out(conn: sqlite3.Connection, employer_id: str) -> dict:
+def _employer_out(conn: sqlite3.Connection, employer_id: str,
+                  user=None) -> dict:
     row = conn.execute("SELECT * FROM employer WHERE id=?",
                        (employer_id,)).fetchone()
     out = dict(row)
     ev = conn.execute(
         "SELECT e.name,e.date,e.venue,ee.booth FROM employer_event ee"
-        " JOIN event e ON e.id=ee.event_id WHERE ee.employer_id=?",
+        " JOIN event e ON e.id=ee.event_id WHERE ee.employer_id=?"
+        " ORDER BY e.date DESC",
         (employer_id,)).fetchone()
     out["event"] = ({"name": ev["name"], "date": ev["date"],
                      "venue": ev["venue"], "booth": ev["booth"]}
                     if ev else None)
+    if user is not None:
+        out["share_email"] = bool(user["share_email"])
+        out["share_phone"] = bool(user["share_phone"])
+        out["public_link"] = user["public_link"] or ""
+        out["badges"] = [dict(r) for r in conn.execute(
+            "SELECT id,kind,label,note FROM badge WHERE employer_id=?"
+            " AND user_id IS NULL AND hidden=0", (employer_id,))]
     return out
 
 
@@ -41,7 +50,7 @@ def _employer_out(conn: sqlite3.Connection, employer_id: str) -> dict:
 def get_employer(conn: sqlite3.Connection = Depends(get_conn),
                  user=Depends(auth_mod.current_user)):
     _employer(user)
-    return _employer_out(conn, user["employer_id"])
+    return _employer_out(conn, user["employer_id"], user)
 
 
 @router.put("/employer")
@@ -54,9 +63,17 @@ def put_employer(payload: EmployerProfileIn,
         " contact_email=?, contact_phone=? WHERE id=?",
         (payload.name, payload.about, payload.contact_name,
          payload.contact_email, payload.contact_phone, user["employer_id"]))
+    conn.execute(
+        "UPDATE user SET share_email=?, share_phone=?, public_link=?"
+        " WHERE id=?",
+        (1 if payload.share_email else 0,
+         1 if payload.share_phone else 0,
+         payload.public_link or "", user["id"]))
     db_mod.audit(conn, user["id"], "employer_updated", user["employer_id"])
     conn.commit()
-    return _employer_out(conn, user["employer_id"])
+    row = conn.execute("SELECT * FROM user WHERE id=?",
+                       (user["id"],)).fetchone()
+    return _employer_out(conn, user["employer_id"], row)
 
 
 @router.get("/employer/jobs")
