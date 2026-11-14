@@ -1,0 +1,254 @@
+[
+  {
+    "id": "emp-cafe-koivu",
+    "name": "Kahvila Koivu",
+    "about": "A small café next to Tapiola library.",
+    "contact_name": "Sanna Lehto",
+    "contact_email": "info@cafe-koivu.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "A1"
+  },
+  {
+    "id": "emp-siivouspot",
+    "name": "SiivouSpoT Oy",
+    "about": "Office cleaning across Espoo.",
+    "contact_name": "Mikko Halme",
+    "contact_email": "info@siivouspot.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "A2"
+  },
+  {
+    "id": "emp-kajo",
+    "name": "Kajo Siivouspalvelu",
+    "about": "School and daycare cleaning.",
+    "contact_name": "Tarja Niemi",
+    "contact_email": "info@kajo.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-market-olari",
+    "name": "K-Market Olari",
+    "about": "Neighbourhood grocery shop.",
+    "contact_name": "Minna Voutilainen",
+    "contact_email": "info@market-olari.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "A3"
+  },
+  {
+    "id": "emp-kivimaa",
+    "name": "Kivimäen Kauppa",
+    "about": "Small supermarket in Matinkylä.",
+    "contact_name": "Jarmo Lehto",
+    "contact_email": "info@kivimaa.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-mallas",
+    "name": "Ravintola Mallas",
+    "about": "Lunch restaurant in Tapiola.",
+    "contact_name": "Sirkka Aho",
+    "contact_email": "info@mallas.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "B1"
+  },
+  {
+    "id": "emp-bistro",
+    "name": "Bistro Niitty",
+    "about": "Café-bistro at Niittykumpu metro.",
+    "contact_name": "Olli Rinne",
+    "contact_email": "info@bistro.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-aurora-care",
+    "name": "Hoivakoti Aurora",
+    "about": "A 40-resident care home in Leppävaara.",
+    "contact_name": "Päivi Kettunen",
+    "contact_email": "info@aurora-care.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "B2"
+  },
+  {
+    "id": "emp-kotisatama",
+    "name": "Kotisatama Palvelutalo",
+    "about": "Home care and a service house in Espoonlahti.",
+    "contact_name": "Eero Pakkanen",
+    "contact_email": "info@kotisatama.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-freight",
+    "name": "Nordic Freight Oy",
+    "about": "Warehouse and distribution in Kera.",
+    "contact_name": "Timo Rajala",
+    "contact_email": "info@freight.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "B3"
+  },
+  {
+    "id": "emp-vire",
+    "name": "Lähettipalvelu Vire",
+    "about": "Parcel delivery from Kilo depot.",
+    "contact_name": "Hanna Sallinen",
+    "contact_email": "info@vire.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-avara",
+    "name": "Toimistopalvelu Avara",
+    "about": "Office support for small firms.",
+    "contact_name": "Leena Koski",
+    "contact_email": "info@avara.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "C1"
+  },
+  {
+    "id": "emp-kanto",
+    "name": "Tilitoimisto Kanto",
+    "about": "Bookkeeping office in Espoon keskus.",
+    "contact_name": "Vesa Tolonen",
+    "contact_email": "info@kanto.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-linja",
+    "name": "Asiakaspalvelu Linja",
+    "about": "Phone and chat customer service, Leppävaara.",
+    "contact_name": "Riina Palo",
+    "contact_email": "info@linja.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "C2"
+  },
+  {
+    "id": "emp-koulutus",
+    "name": "Koulutuskeskus Avara",
+    "about": "Adult courses in Karakallio.",
+    "contact_name": "Päivi Kettunen",
+    "contact_email": "info@koulutus.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-library",
+    "name": "Espoo city library",
+    "about": "Iso Omena and Matinkylä libraries.",
+    "contact_name": "Sara Lind",
+    "contact_email": "info@library.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "C3"
+  },
+  {
+    "id": "emp-tiima",
+    "name": "Rakennus Tiima Oy",
+    "about": "Renovation sites around Espoo.",
+    "contact_name": "Jussi Ranta",
+    "contact_email": "info@tiima.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "D1"
+  },
+  {
+    "id": "emp-oivo",
+    "name": "Maalaus Oivo",
+    "about": "Painting and small repair work.",
+    "contact_name": "Antti Sarlin",
+    "contact_email": "info@oivo.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-lumo",
+    "name": "Lumo Systems Oy",
+    "about": "Booking software for tradespeople, Otaniemi.",
+    "contact_name": "Sanna Virtanen",
+    "contact_email": "info@lumo.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "D2"
+  },
+  {
+    "id": "emp-otava",
+    "name": "Otava Cloud Oy",
+    "about": "Cloud hosting in Keilaniemi.",
+    "contact_name": "Mikael Sund",
+    "contact_email": "info@otava.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-vihrea",
+    "name": "Puutarhapalvelu Vihreä",
+    "about": "Parks and garden work for the city.",
+    "contact_name": "Outi Niemelä",
+    "contact_email": "info@vihrea.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": "D3"
+  },
+  {
+    "id": "emp-rantaraitti",
+    "name": "Rantaraitti kiosks",
+    "about": "Ice-cream kiosks on the waterfront.",
+    "contact_name": "Daniel Roth",
+    "contact_email": "info@rantaraitti.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-merituuli",
+    "name": "Hotelli Merituuli",
+    "about": "Small hotel in Kauklahti.",
+    "contact_name": "Emma Salonen",
+    "contact_email": "info@merituuli.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-paja",
+    "name": "Liikuntakeskus Paja",
+    "about": "Community sports centre, Espoon keskus.",
+    "contact_name": "Petteri Ahola",
+    "contact_email": "info@paja.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-apteekki",
+    "name": "Apteekki Leppävaara",
+    "about": "Pharmacy in Sello shopping centre.",
+    "contact_name": "Kirsi Laakso",
+    "contact_email": "info@apteekki.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-taikinapuu",
+    "name": "Leipomo Taikinapuu",
+    "about": "Bakery-café in Olari.",
+    "contact_name": "Tuomo Heikkilä",
+    "contact_email": "info@taikinapuu.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-raikas",
+    "name": "Pesula Raikas",
+    "about": "Laundry service in Niittykumpu.",
+    "contact_name": "Anne Mäki",
+    "contact_email": "info@raikas.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  },
+  {
+    "id": "emp-weegee",
+    "name": "Näyttelykeskus WeeGee",
+    "about": "Exhibition centre in Tapiola.",
+    "contact_name": "Leena Koski",
+    "contact_email": "info@weegee.example.com",
+    "contact_phone": "+358 40 000 0000",
+    "booth": null
+  }
+]

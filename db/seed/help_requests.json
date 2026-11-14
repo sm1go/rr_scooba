@@ -1,0 +1,18 @@
+[
+  {
+    "id": "hr-001",
+    "user_id": "u-amira",
+    "name": "Amira Haddad",
+    "contact_method": "sms",
+    "contact_value": "+358 44 777 8889",
+    "job_id": "job-cs-desk",
+    "kind": "check_conditions",
+    "condition_keys": [
+      "step_free_entrance"
+    ],
+    "message": "Please check if the entrance and desk are step-free before I apply.",
+    "consent": 1,
+    "status": "new",
+    "days_ago": 1
+  }
+]

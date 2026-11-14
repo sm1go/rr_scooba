@@ -1,0 +1,138 @@
+[
+  {
+    "id": "u-aino",
+    "email": "aino@example.com",
+    "phone": "+358 40 111 2223",
+    "password": "demo1234",
+    "role": "resident",
+    "name": "Aino Korhonen",
+    "profile": {
+      "contact_method": "email",
+      "district": "otaniemi",
+      "fields": [
+        "restaurant",
+        "cleaning",
+        "retail"
+      ],
+      "availability": [
+        "mon-evening",
+        "tue-evening",
+        "wed-evening",
+        "thu-evening",
+        "fri-evening",
+        "sat-morning",
+        "sat-afternoon",
+        "sat-evening",
+        "sun-morning",
+        "sun-afternoon",
+        "sun-evening"
+      ],
+      "max_hours_per_week": 20,
+      "needs": [],
+      "languages": [
+        {
+          "language": "Finnish",
+          "level": "C2"
+        },
+        {
+          "language": "English",
+          "level": "B2"
+        }
+      ],
+      "about": "Second-year student at Aalto. I can work evenings and weekends around my lectures."
+    }
+  },
+  {
+    "id": "u-pekka",
+    "email": "pekka@example.com",
+    "phone": "+358 50 444 5556",
+    "password": "demo1234",
+    "role": "resident",
+    "name": "Pekka Mäkinen",
+    "profile": {
+      "contact_method": "phone",
+      "district": "matinkyla",
+      "fields": [
+        "education",
+        "retail"
+      ],
+      "availability": [
+        "mon-morning",
+        "wed-morning"
+      ],
+      "max_hours_per_week": 10,
+      "needs": [],
+      "languages": [
+        {
+          "language": "Finnish",
+          "level": "C2"
+        },
+        {
+          "language": "Swedish",
+          "level": "B1"
+        }
+      ],
+      "about": "Retired electrician. I would like a few easy hours a week, mostly to meet people."
+    }
+  },
+  {
+    "id": "u-amira",
+    "email": "amira@example.com",
+    "phone": "+358 44 777 8889",
+    "password": "demo1234",
+    "role": "resident",
+    "name": "Amira Haddad",
+    "profile": {
+      "contact_method": "sms",
+      "district": "leppavaara",
+      "fields": [
+        "customer_service",
+        "office"
+      ],
+      "availability": [
+        "mon-morning",
+        "mon-afternoon",
+        "wed-morning",
+        "wed-afternoon",
+        "fri-morning"
+      ],
+      "max_hours_per_week": 25,
+      "needs": [
+        "step_free_entrance",
+        "seated_work"
+      ],
+      "languages": [
+        {
+          "language": "Arabic",
+          "level": "C2"
+        },
+        {
+          "language": "English",
+          "level": "B2"
+        },
+        {
+          "language": "Finnish",
+          "level": "B1"
+        }
+      ],
+      "about": "Customer service and office work. I use a wheelchair and need a step-free entrance and seated work."
+    }
+  },
+  {
+    "id": "u-sanna",
+    "email": "sanna@example.com",
+    "phone": "+358 40 222 3334",
+    "password": "demo1234",
+    "role": "employer",
+    "name": "Sanna Lehto",
+    "employer_id": "emp-cafe-koivu"
+  },
+  {
+    "id": "u-advisor",
+    "email": "advisor@example.com",
+    "phone": "+358 40 999 0001",
+    "password": "demo1234",
+    "role": "advisor",
+    "name": "Leena, Employment Espoo"
+  }
+]

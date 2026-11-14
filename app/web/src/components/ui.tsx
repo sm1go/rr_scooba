@@ -1,116 +1,117 @@
-import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react'
-import { useState } from 'react'
-import { Info } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { ApiError } from '../lib/api'
+import { useI18n } from '../i18n/i18n'
 
-type Variant = 'primary' | 'secondary' | 'quiet'
-
-const variants: Record<Variant, string> = {
-  primary: 'bg-nordic text-white hover:bg-nordic-dark border border-nordic hover:border-nordic-dark',
-  secondary: 'bg-white text-nordic border border-nordic hover:bg-lake',
-  quiet: 'bg-transparent text-nordic border border-transparent hover:bg-lake underline-offset-2',
+export function Chip({
+  children, tone, title, style,
+}: {
+  children: ReactNode; tone?: 'yes' | 'wait' | 'no'; title?: string
+  style?: React.CSSProperties
+}) {
+  return (
+    <span className={`chip ${tone ?? ''}`} title={title} style={style}>
+      <span className="dot" aria-hidden="true" />
+      {children}
+    </span>
+  )
 }
 
-export function Button({
-  variant = 'primary',
-  className = '',
-  big = false,
-  ...rest
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; big?: boolean }) {
+export function Field({
+  label, children, hint, id,
+}: { label: string; children: ReactNode; hint?: string; id?: string }) {
+  return (
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
+      {children}
+      {hint && <p className="text-secondary mt-1" style={{ fontSize: '1rem' }}>{hint}</p>}
+    </div>
+  )
+}
+
+export function Section({
+  title, children, action,
+}: { title: string; children: ReactNode; action?: ReactNode }) {
+  return (
+    <section className="card p-5 mb-5">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <h2 className="m-0">{title}</h2>
+        {action}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+export function Toggle({
+  pressed, onClick, children, className = '',
+}: {
+  pressed: boolean; onClick: () => void; children: ReactNode
+  className?: string
+}) {
   return (
     <button
       type="button"
-      {...rest}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-        big ? 'min-h-12 px-6 text-base' : 'min-h-10 px-4 text-sm'
-      } ${variants[variant]} ${className}`}
-    />
+      aria-pressed={pressed}
+      onClick={onClick}
+      className={`btn ${pressed ? 'btn-primary' : 'btn-quiet'} ${className}`}
+      style={{ minHeight: 48 }}
+    >
+      {children}
+    </button>
   )
 }
 
-export function Panel({ children, className = '', tint = false }: { children: ReactNode; className?: string; tint?: boolean }) {
+export function ErrorBox({ children }: { children: ReactNode }) {
   return (
-    <section className={`rounded-lg border border-line p-5 sm:p-6 ${tint ? 'bg-lake' : 'bg-white'} ${className}`}>{children}</section>
-  )
-}
-
-export function PageTitle({ step, title, lead }: { step?: string; title: string; lead?: string }) {
-  return (
-    <header className="mb-6">
-      {step && <p className="mb-1 text-sm font-medium text-muted">{step}</p>}
-      <h1 className="text-2xl sm:text-3xl">{title}</h1>
-      {lead && <p className="mt-2 max-w-2xl text-muted">{lead}</p>}
-    </header>
-  )
-}
-
-type ChipTone = 'neutral' | 'blue' | 'green' | 'red'
-const tones: Record<ChipTone, string> = {
-  neutral: 'bg-birch text-ink',
-  blue: 'bg-lake text-nordic-dark',
-  green: 'bg-moss-tint text-moss',
-  red: 'bg-lingon-tint text-lingon',
-}
-
-export function Chip({ children, tone = 'neutral' }: { children: ReactNode; tone?: ChipTone }) {
-  return <span className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>
-}
-
-/** Required label on every AI output, with a small "Why am I seeing this?" disclosure. */
-export function SuggestedLabel({ why }: { why?: string }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="text-sm">
-      <span className="font-medium text-muted">Suggested — you decide</span>
-      {why && (
-        <>
-          {' · '}
-          <button type="button" className="text-nordic underline underline-offset-2" aria-expanded={open} onClick={() => setOpen(!open)}>
-            Why am I seeing this?
-          </button>
-          {open && <p className="mt-1 text-muted">{why}</p>}
-        </>
-      )}
-    </div>
-  )
-}
-
-export function Note({
-  children,
-  tone = 'blue',
-  ...rest
-}: HTMLAttributes<HTMLDivElement> & { children: ReactNode; tone?: 'blue' | 'green' | 'red' }) {
-  const cls = tone === 'green' ? 'bg-moss-tint border-moss' : tone === 'red' ? 'bg-lingon-tint border-lingon' : 'bg-lake border-nordic'
-  return (
-    <div {...rest} className={`flex gap-2 rounded-lg border-l-4 p-3 text-sm ${cls}`} role={rest.role ?? 'note'}>
-      <Info aria-hidden className="mt-0.5 h-4 w-4 shrink-0" />
-      <div>{children}</div>
-    </div>
-  )
-}
-
-export function Loading({ label = 'Loading…' }: { label?: string }) {
-  return (
-    <p className="py-8 text-muted" role="status" aria-live="polite">
-      {label}
-    </p>
-  )
-}
-
-export function Field({ label, hint, id, children }: { label: string; hint?: string; id: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
-      {hint && (
-        <p id={`${id}-hint`} className="text-sm text-muted">
-          {hint}
-        </p>
-      )}
+    <div role="alert" className="card p-4 mb-4"
+         style={{ borderColor: 'var(--color-no)', background: 'var(--color-no-bg)' }}>
       {children}
     </div>
   )
 }
 
-export const inputCls =
-  'w-full rounded-lg border border-line bg-white px-3 py-2 text-base text-ink placeholder:text-muted focus-visible:border-nordic'
+/** Full-page error: specific message for offline / gone / generic,
+    always with a way forward. */
+export function ErrorState({
+  err, gone, goneLabel, retryLabel, onRetry, backTo, backLabel,
+}: {
+  err: unknown
+  gone?: string
+  goneLabel: string
+  retryLabel: string
+  onRetry?: () => void
+  backTo: string
+  backLabel: string
+}) {
+  const { t } = useI18n()
+  const status = err instanceof ApiError ? err.status : null
+  const msg = status === 404 ? gone
+    : status === 0 ? t('err.offline')
+    : t('common.error')
+  void goneLabel
+  return (
+    <div className="card p-6 max-w-xl mx-auto text-center" role="alert">
+      <p className="font-medium mt-0">{msg}</p>
+      <div className="flex gap-2 justify-center flex-wrap">
+        {status === 0 && onRetry && (
+          <button type="button" className="btn btn-primary" onClick={onRetry}>
+            {retryLabel}
+          </button>
+        )}
+        <Link to={backTo} className="btn btn-secondary">{backLabel}</Link>
+      </div>
+    </div>
+  )
+}
+
+/** Inline help offer inside a job list — quiet card, not floating. */
+export function HelpCard() {
+  const { t } = useI18n()
+  return (
+    <div className="card p-5 mb-3 flex flex-wrap items-center justify-between gap-3">
+      <p className="m-0">{t('jobs.helpcard')}</p>
+      <Link to="/help" className="btn btn-secondary">{t('jobs.askadvisor')}</Link>
+    </div>
+  )
+}

@@ -1,0 +1,168 @@
+{
+  "fields": [
+    {
+      "id": "cleaning",
+      "name": "Cleaning"
+    },
+    {
+      "id": "retail",
+      "name": "Retail"
+    },
+    {
+      "id": "restaurant",
+      "name": "Restaurant and café"
+    },
+    {
+      "id": "care",
+      "name": "Care work"
+    },
+    {
+      "id": "logistics",
+      "name": "Logistics and driving"
+    },
+    {
+      "id": "office",
+      "name": "Office work"
+    },
+    {
+      "id": "customer_service",
+      "name": "Customer service"
+    },
+    {
+      "id": "education",
+      "name": "Education and library"
+    },
+    {
+      "id": "construction",
+      "name": "Construction"
+    },
+    {
+      "id": "tech",
+      "name": "ICT and specialist"
+    },
+    {
+      "id": "seasonal",
+      "name": "Seasonal work"
+    }
+  ],
+  "districts": [
+    {
+      "id": "leppavaara",
+      "name": "Leppävaara",
+      "lat": 60.2198,
+      "lon": 24.8135
+    },
+    {
+      "id": "tapiola",
+      "name": "Tapiola",
+      "lat": 60.176,
+      "lon": 24.805
+    },
+    {
+      "id": "otaniemi",
+      "name": "Otaniemi",
+      "lat": 60.186,
+      "lon": 24.8278
+    },
+    {
+      "id": "matinkyla",
+      "name": "Matinkylä",
+      "lat": 60.16,
+      "lon": 24.738
+    },
+    {
+      "id": "olari",
+      "name": "Olari",
+      "lat": 60.1715,
+      "lon": 24.745
+    },
+    {
+      "id": "niittykumpu",
+      "name": "Niittykumpu",
+      "lat": 60.169,
+      "lon": 24.773
+    },
+    {
+      "id": "espoon_keskus",
+      "name": "Espoon keskus",
+      "lat": 60.2055,
+      "lon": 24.656
+    },
+    {
+      "id": "espoonlahti",
+      "name": "Espoonlahti",
+      "lat": 60.149,
+      "lon": 24.66
+    },
+    {
+      "id": "kauklahti",
+      "name": "Kauklahti",
+      "lat": 60.188,
+      "lon": 24.601
+    },
+    {
+      "id": "kalajarvi",
+      "name": "Kalajärvi",
+      "lat": 60.295,
+      "lon": 24.57
+    }
+  ],
+  "condition_keys": [
+    {
+      "id": "step_free_entrance",
+      "label": "Step-free entrance"
+    },
+    {
+      "id": "lift",
+      "label": "Lift"
+    },
+    {
+      "id": "accessible_toilet",
+      "label": "Accessible toilet"
+    },
+    {
+      "id": "seated_work",
+      "label": "Work can be done seated"
+    },
+    {
+      "id": "flexible_breaks",
+      "label": "Breaks when you need them"
+    },
+    {
+      "id": "quiet_environment",
+      "label": "Quiet work environment"
+    },
+    {
+      "id": "written_instructions",
+      "label": "Written instructions available"
+    },
+    {
+      "id": "sign_language_ok",
+      "label": "Sign language is welcome"
+    },
+    {
+      "id": "assistive_tech_ok",
+      "label": "You can use your own assistive technology"
+    },
+    {
+      "id": "adjustments_negotiable",
+      "label": "Adjustments can be agreed together"
+    }
+  ],
+  "contract_types": [
+    "permanent",
+    "fixed_term",
+    "seasonal",
+    "gig",
+    "summer_job",
+    "traineeship"
+  ],
+  "language_levels": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ]
+}

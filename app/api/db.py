@@ -1,9 +1,11 @@
 """SQLite access: connect, schema, seed loading.
 
 `db/talentmatch.sqlite` is a build artifact (git-ignored). It is rebuilt from
-`db/schema.sql` + `db/seed/*.json` on startup whenever the file is missing, and
-the seed itself is regenerated via `scripts/generate_synthetic.py` if absent.
-Override the path with the env var `TM_DB_PATH` (used by tests).
+`db/schema.sql` + `db/seed/*.json` on startup whenever the file is missing or
+its `PRAGMA user_version` is older than SCHEMA_VERSION (synthetic data only —
+rebuilds are safe). The seed itself is regenerated via
+`scripts/generate_synthetic.py` if absent. Override the path with the env var
+`TM_DB_PATH` (used by tests).
 """
 
 from __future__ import annotations
@@ -13,7 +15,7 @@ import json
 import os
 import sqlite3
 from contextlib import closing
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -22,11 +24,14 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
+SCHEMA_VERSION = 3
 
 SEED_REQUIRED = [
-    "event.json", "companies.json", "cards.json", "talents.json",
-    "identities.json", "sparks.json", "meetings.json", "closures.json",
+    "event.json", "employers.json", "jobs.json", "users.json",
+    "applications.json", "help_requests.json", "saved_jobs.json",
 ]
+
+DEMO_PASSWORD = "demo1234"   # seeded demo accounts; documented in READMEs
 
 
 def db_path() -> Path:
@@ -47,29 +52,22 @@ def _run_generator() -> None:
 
 
 def ensure_db(path: Path | None = None) -> Path:
-    """Create + seed the database file if it does not exist. Returns the path."""
+    """Create + seed the database file if it does not exist or is an older
+    schema version. Returns the path."""
     path = path or db_path()
     if path.exists():
-        # Apply the one additive migration needed by databases from earlier runs.
         with closing(sqlite3.connect(path)) as conn:
-            conn.executescript("""
-                CREATE TABLE IF NOT EXISTS evidence_proposal (
-                    id TEXT PRIMARY KEY,
-                    talent_id TEXT NOT NULL REFERENCES talent(id),
-                    payload TEXT NOT NULL,
-                    created_at TEXT NOT NULL DEFAULT (datetime('now'))
-                );
-                CREATE INDEX IF NOT EXISTS idx_proposal_talent
-                    ON evidence_proposal(talent_id);
-            """)
-        return path
+            version = conn.execute("PRAGMA user_version").fetchone()[0]
+        if version >= SCHEMA_VERSION:
+            return path
+        path.unlink()                       # rebuild from schema + seed
     path.parent.mkdir(parents=True, exist_ok=True)
 
     missing_seed = any(not (SEED_DIR / f).exists() for f in SEED_REQUIRED)
     if missing_seed:
         _run_generator()
 
-    now = datetime.now().astimezone()
+    now = datetime.now(timezone.utc)
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     try:
@@ -84,126 +82,155 @@ def ensure_db(path: Path | None = None) -> Path:
 def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
     ev = _load_seed("event.json", seed_dir)
     conn.execute(
-        "INSERT INTO event VALUES (:id,:name,:date,:format,:companies_declared,:talents_registered)",
-        ev)
+        "INSERT INTO event (id,name,date,venue,advisor_note)"
+        " VALUES (:id,:name,:date,:venue,:advisor_note)", ev)
 
-    for c in _load_seed("companies.json", seed_dir):
+    for e in _load_seed("employers.json", seed_dir):
         conn.execute(
-            "INSERT INTO company (id,event_id,name,size,city,contact_name,slots)"
-            " VALUES (:id,:event_id,:name,:size,:city,:contact_name,:slots)", c)
-
-    for card in _load_seed("cards.json", seed_dir):
-        _insert_card(conn, card)
-
-    for t in _load_seed("talents.json", seed_dir):
-        conn.execute(
-            "INSERT INTO talent (id,pseudonym,languages,availability,pool_consent)"
-            " VALUES (:id,:pseudonym,:languages,:availability,:pool_consent)",
-            {**t, "languages": json.dumps(t["languages"], ensure_ascii=False)})
-        conn.execute("INSERT INTO evidence_card (talent_id,headline) VALUES (?,?)",
-                     (t["id"], t.get("headline", "")))
-        for cl in t.get("claims", []):
+            "INSERT INTO employer (id,name,about,contact_name,contact_email,"
+            "contact_phone) VALUES (:id,:name,:about,:contact_name,"
+            ":contact_email,:contact_phone)", e)
+        if e.get("booth"):
             conn.execute(
-                "INSERT INTO evidence_claim (id,talent_id,text,quote,esco_uri,esco_label,"
-                "evidence_level,confirmed,original_language,translated)"
-                " VALUES (:id,:talent_id,:text,:quote,:esco_uri,:esco_label,"
-                ":evidence_level,:confirmed,:original_language,:translated)",
-                {**cl, "talent_id": t["id"]})
+                "INSERT INTO employer_event (employer_id,event_id,booth)"
+                " VALUES (?,?,?)", (e["id"], ev["id"], e["booth"]))
 
-    for i in _load_seed("identities.json", seed_dir):
-        conn.execute("INSERT INTO talent_identity VALUES (:talent_id,:name,:city)", i)
-
-    for s in _load_seed("sparks.json", seed_dir):
-        deadline = now + timedelta(hours=s["deadline_hours"])
+    for j in _load_seed("jobs.json", seed_dir):
+        confirmed = (now - timedelta(days=j.get("confirmed_days_ago", 0))).date()
         conn.execute(
-            "INSERT INTO spark (id,talent_id,card_id,claim_id,requirement_id,note,status,"
-            "deadline,reason_chip,revealed_name,slot,created_at)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-            (s["id"], s["talent_id"], s["card_id"], s["claim_id"], s["requirement_id"],
-             s.get("note"), s["status"], deadline.isoformat(), s.get("reason_chip"),
-             None, s.get("slot"), now.isoformat()))
+            "INSERT INTO job (id,employer_id,title,field,duties,address,district,"
+            "lat,lon,work_mode,pay_amount,pay_unit,pay_note,shifts,"
+            "schedule_flexible,hours_min,hours_max,contract,experience,"
+            "experience_note,qualifications,onboarding,languages,lifting,"
+            "apply_question,cv_required,positions,status,source,confirmed_at)"
+            " VALUES (:id,:employer_id,:title,:field,:duties,:address,:district,"
+            ":lat,:lon,:work_mode,:pay_amount,:pay_unit,:pay_note,:shifts,"
+            ":schedule_flexible,:hours_min,:hours_max,:contract,:experience,"
+            ":experience_note,:qualifications,:onboarding,:languages,:lifting,"
+            ":apply_question,:cv_required,:positions,:status,:source,"
+            ":confirmed_at)",
+            {**j,
+             "duties": json.dumps(j.get("duties", []), ensure_ascii=False),
+             "shifts": json.dumps(j.get("shifts", []), ensure_ascii=False),
+             "qualifications": json.dumps(j.get("qualifications", []),
+                                          ensure_ascii=False),
+             "languages": json.dumps(j.get("languages", []), ensure_ascii=False),
+             "confirmed_at": confirmed.isoformat()})
+        _write_conditions(conn, j["id"], j.get("conditions", {}), "employer")
 
-    for m in _load_seed("meetings.json", seed_dir):
+    from . import auth as auth_mod
+    for u in _load_seed("users.json", seed_dir):
         conn.execute(
-            "INSERT INTO meeting (id,spark_id,company_id,card_id,talent_id,slot,created_at)"
-            " VALUES (?,?,?,?,?,?,?)",
-            (m["id"], m["spark_id"], m["company_id"], m["card_id"], m["talent_id"],
-             m.get("slot"), now.isoformat()))
-        # accepted seeded sparks get their revealed name + slot persisted
-        ident = conn.execute("SELECT name FROM talent_identity WHERE talent_id=?",
-                             (m["talent_id"],)).fetchone()
-        conn.execute("UPDATE spark SET revealed_name=?, slot=? WHERE id=?",
-                     (ident["name"] if ident else None, m.get("slot"), m["spark_id"]))
+            "INSERT INTO user (id,email,phone,password_hash,role,name,"
+            "employer_id) VALUES (?,?,?,?,?,?,?)",
+            (u["id"], u.get("email"), u.get("phone"),
+             auth_mod.hash_password(u.get("password") or DEMO_PASSWORD),
+             u["role"], u.get("name", ""), u.get("employer_id")))
+        profile = u.get("profile")
+        if profile:
+            _write_profile(conn, u["id"], profile)
 
-    for cl in _load_seed("closures.json", seed_dir):
-        created = now - timedelta(hours=cl.get("created_hours_ago", 0))
+    for a in _load_seed("applications.json", seed_dir):
+        created = now - timedelta(days=a.get("days_ago", 0))
         conn.execute(
-            "INSERT INTO closure (id,meeting_id,outcome,reason_chips,next_step,"
-            "redirect_company_id,message_to_talent,support_banner,created_at)"
-            " VALUES (?,?,?,?,?,?,?,?,?)",
-            (cl["id"], cl["meeting_id"], cl["outcome"], json.dumps(cl["reason_chips"]),
-             cl.get("next_step"), cl.get("redirect_company_id"),
-             cl.get("message_to_talent", ""), cl.get("support_banner"),
-             created.isoformat()))
+            "INSERT INTO application (id,job_id,user_id,name,contact_method,"
+            "contact_value,availability_note,answer,cv_text,shared_needs,"
+            "meet_at_event,status,status_note,created_by_advisor,created_at,"
+            "updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (a["id"], a["job_id"], a.get("user_id"), a["name"],
+             a.get("contact_method", ""), a.get("contact_value", ""),
+             a.get("availability_note", ""), a["answer"], a.get("cv_text"),
+             json.dumps(a.get("shared_needs", []), ensure_ascii=False),
+             int(a.get("meet_at_event", 0)), a["status"],
+             a.get("status_note", ""), int(a.get("created_by_advisor", 0)),
+             created.isoformat(), created.isoformat()))
+
+    for h in _load_seed("help_requests.json", seed_dir):
+        created = now - timedelta(days=h.get("days_ago", 0))
+        conn.execute(
+            "INSERT INTO help_request (id,user_id,name,contact_method,"
+            "contact_value,job_id,kind,condition_keys,message,consent,status,"
+            "advisor_id,advisor_reply,created_at,updated_at)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (h["id"], h.get("user_id"), h.get("name", ""),
+             h.get("contact_method", ""), h.get("contact_value", ""),
+             h.get("job_id"), h["kind"],
+             json.dumps(h.get("condition_keys", []), ensure_ascii=False),
+             h.get("message", ""), int(h.get("consent", 0)), h["status"],
+             h.get("advisor_id"), h.get("advisor_reply", ""),
+             created.isoformat(), created.isoformat()))
+
+    for s in _load_seed("saved_jobs.json", seed_dir):
+        conn.execute("INSERT OR IGNORE INTO saved_job (user_id,job_id)"
+                     " VALUES (?,?)", (s["user_id"], s["job_id"]))
 
 
-def _insert_card(conn: sqlite3.Connection, card: dict) -> None:
+def _write_profile(conn: sqlite3.Connection, user_id: str, p: dict) -> None:
     conn.execute(
-        "INSERT OR REPLACE INTO challenge_card (id,company_id,title,problem_90d,"
-        "nice_to_haves,languages,work_mode,status,company_minutes_spent)"
-        " VALUES (:id,:company_id,:title,:problem_90d,:nice_to_haves,:languages,"
-        ":work_mode,:status,:company_minutes_spent)",
-        {**card,
-         "nice_to_haves": json.dumps(card.get("nice_to_haves", []), ensure_ascii=False),
-         "languages": json.dumps(card.get("languages", []), ensure_ascii=False)})
-    conn.execute("DELETE FROM card_requirement WHERE card_id=?", (card["id"],))
-    for pos, r in enumerate(card.get("must_haves", [])):
-        existing = conn.execute(
-            "SELECT card_id FROM card_requirement WHERE id=?", (r["id"],)
-        ).fetchone()
-        if existing and existing["card_id"] != card["id"]:
-            r["id"] = f"{card['id']}::{r['id']}"
+        "INSERT INTO resident_profile (user_id,contact_method,district,fields,"
+        "availability,max_hours_per_week,needs,languages,about)"
+        " VALUES (?,?,?,?,?,?,?,?,?)",
+        (user_id, p.get("contact_method"), p.get("district"),
+         json.dumps(p.get("fields", []), ensure_ascii=False),
+         json.dumps(p.get("availability", []), ensure_ascii=False),
+         p.get("max_hours_per_week"),
+         json.dumps(p.get("needs", []), ensure_ascii=False),
+         json.dumps(p.get("languages", []), ensure_ascii=False),
+         p.get("about", "")))
+
+
+def _write_conditions(conn: sqlite3.Connection, job_id: str,
+                      conditions: dict, source: str) -> None:
+    for key, val in conditions.items():
+        if isinstance(val, dict):
+            value, note = val.get("value"), val.get("note", "")
+        else:
+            value, note = val, ""
+        if value not in ("yes", "no"):
+            continue                      # 'unknown' = simply no row
         conn.execute(
-            "INSERT OR REPLACE INTO card_requirement (id,card_id,position,text,"
-            "how_we_check,esco_uri,esco_label) VALUES (?,?,?,?,?,?,?)",
-            (r["id"], card["id"], pos, r["text"], r.get("how_we_check", ""),
-             r.get("esco_uri"), r.get("esco_label")))
-
-
-def save_card(conn: sqlite3.Connection, card: dict) -> None:
-    _insert_card(conn, card)
-
-
-def card_from_row(conn: sqlite3.Connection, row: sqlite3.Row) -> dict:
-    reqs = conn.execute(
-        "SELECT id,text,how_we_check,esco_uri,esco_label FROM card_requirement"
-        " WHERE card_id=? ORDER BY position", (row["id"],)).fetchall()
-    return {
-        "id": row["id"], "company_id": row["company_id"], "title": row["title"],
-        "problem_90d": row["problem_90d"],
-        "must_haves": [dict(r) for r in reqs],
-        "nice_to_haves": json.loads(row["nice_to_haves"] or "[]"),
-        "languages": json.loads(row["languages"] or "[]"),
-        "work_mode": row["work_mode"], "status": row["status"],
-        "company_minutes_spent": row["company_minutes_spent"],
-    }
-
-
-def get_card(conn: sqlite3.Connection, card_id: str) -> dict | None:
-    row = conn.execute("SELECT * FROM challenge_card WHERE id=?",
-                       (card_id,)).fetchone()
-    return card_from_row(conn, row) if row else None
+            "INSERT OR REPLACE INTO job_condition (job_id,key,value,source,"
+            "checked_at,note) VALUES (?,?,?,?,?,?)",
+            (job_id, key, value, source,
+             datetime.now(timezone.utc).date().isoformat(), note))
 
 
 def connect(path: Path | None = None) -> sqlite3.Connection:
-    """Fresh connection per use; rebuilds the DB file first if missing."""
+    """Fresh connection per use; rebuilds the DB file first if needed."""
     db_file = ensure_db(path)
-    conn = sqlite3.connect(db_file)
+    # anyio may run the dependency's setup and teardown on different
+    # worker threads; each request still owns its connection exclusively.
+    conn = sqlite3.connect(db_file, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
 
-def audit(conn: sqlite3.Connection, actor: str, action: str, detail: str = "") -> None:
+def get_conn():
+    """FastAPI dependency: one connection per request, closed on exit."""
+    conn = connect()
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+def audit(conn: sqlite3.Connection, actor: str, action: str,
+          detail: str = "") -> None:
     conn.execute("INSERT INTO audit_log (actor,action,detail) VALUES (?,?,?)",
                  (actor, action, detail))
+
+
+def new_id(conn: sqlite3.Connection, prefix: str) -> str:
+    """Short sequential id: ap-101, job-061, ... — takes the max numeric
+    suffix, ignoring slug ids like 'job-cafe-weekend'."""
+    table = {"ap": "application", "job": "job", "hr": "help_request",
+             "u": "user", "emp": "employer"}[prefix]
+    n = 0
+    for r in conn.execute(
+            "SELECT id FROM {} WHERE id LIKE ?".format(table),
+            (f"{prefix}-%",)).fetchall():
+        tail = r["id"].rsplit("-", 1)[1]
+        if tail.isdigit():
+            n = max(n, int(tail))
+    return f"{prefix}-{n + 1:03d}"

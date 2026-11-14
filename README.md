@@ -15,7 +15,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 | 1. Research & problem analysis | Done — 7 notes incl. Junction tech partners and prior art |
 | 2. Multi-agent ideation (3 rounds) | Done — 58 raw ideas → 20 consolidated features → final vote |
 | 3. Feature catalog & shortlist | Done — *TalentMatch Signal* selected for the first prototype |
-| 4. MVP build (`app/` + `db/`) | First usable prototype implemented; synthetic demo running locally |
+| 4. MVP build (`app/` + `db/`) | **Espoo Work Map (v2)** rebuilt per `docs/03-product/app-v2-spec.md`; v1 preserved in git tag `demo-v1` |
 
 ## Timeline (Junction 2026, Europe/Helsinki)
 
@@ -34,7 +34,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 | `docs/02-ideation/` | Multi-agent ideation: method, Round 1 proposals, Round 2 cross-reviews, Round 3 votes |
 | `docs/03-product/` | Consolidated feature catalog, scoring outputs, shortlist |
 | `docs/decisions/` | Decision log |
-| `app/` | Application code (MVP) |
+| `app/` | Application code — Espoo Work Map v2 (`app/api` FastAPI, `app/web` React) |
 | `db/` | Database schema, migrations, synthetic seed data |
 | `scripts/` | Helper scripts (e.g. score aggregation) |
 | `AGENTS.md` | Working agreement and conventions for the team and AI agents |
@@ -45,7 +45,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 - Research: [Espoo & TalentMatch](docs/01-research/01-context-espoo-and-talentmatch.md) · [AI in hiring](docs/01-research/02-ai-in-hiring-evidence.md) · [Regulation](docs/01-research/03-regulatory-fact-sheet.md) · [Market & data](docs/01-research/04-market-and-data-sources.md) · [Junction tech partners](docs/01-research/05-junction-2026-tech-partners.md) · [Prior art](docs/01-research/06-prior-art-open-source.md) · [Espoo mentor validation](docs/01-research/07-espoo-mentor-validation.md)
 - [Ideation method](docs/02-ideation/README.md) · [Round 1 digest — all 58 raw ideas](docs/02-ideation/round-1-digest.md) · [Round 2 brief](docs/02-ideation/round-2-brief.md)
 - Product: [Feature catalogue F01–F20](docs/03-product/feature-catalog.md) · [Shortlist & MVP](docs/03-product/shortlist.md) · [Architecture](docs/03-product/architecture.md) · [Scoring](docs/03-product/scoring/summary.md)
-- Build contract: [API contract](docs/03-product/api-contract.md) · [Finnish-style design guide](docs/03-product/design-guide.md)
+- Build contract: [App v2 spec (authoritative)](docs/03-product/app-v2-spec.md) · [API contract pointer](docs/03-product/api-contract.md) · [Finnish-style design guide](docs/03-product/design-guide.md)
 - [Decision log](docs/decisions/decision-log.md)
 
 ## Run the demo locally
@@ -63,8 +63,10 @@ npm install
 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
-Open `http://127.0.0.1:5173`. The app uses synthetic data only. The built-in
-chat model cannot be called from the app; AI actions currently use recorded,
-deterministic mock responses until an NVIDIA API key is configured. The fairness
-panel is explicitly marked as not run. This prototype has no authentication and
-must not be used with real candidate or employer data.
+Open `http://127.0.0.1:5173`. The app uses synthetic data only and no AI —
+all matching is deterministic rules from the spec.
+
+Demo accounts (password `demo1234`): `aino@example.com` (student),
+`pekka@example.com` (retiree), `amira@example.com` (access needs),
+`sanna@example.com` (employer), `advisor@example.com` (city advisor Leena).
+A demo panel on `/sign-in` logs in as any of them with one tap.

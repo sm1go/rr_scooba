@@ -1,200 +1,176 @@
-// Types mirror docs/03-product/api-contract.md (v1). Keep in sync with app/api.
-
-export type Band = 'fewer than 10' | '10–19' | '20–49' | '50+'
-export type Cefr = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'
-export const CEFR_LEVELS: Cefr[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-
-export type Provider = 'mock' | 'nvidia' | 'gemma'
-
-export type LanguageNeed = { language: string; level: Cefr; task: string; from_when: string }
-
-export type Requirement = {
-  id: string
-  text: string
-  how_we_check: string
-  esco_uri?: string
-  esco_label?: string
+export interface Condition {
+  key: string
+  value: 'yes' | 'no' | 'unknown'
+  source: 'employer' | 'advisor' | null
+  checked_at: string | null
+  note: string
 }
 
-export type LintHint = {
+export interface JobLabel {
+  id: string
+  why: string
+}
+
+export interface Shift {
+  day: string
+  start: string
+  end: string
+}
+
+export interface LanguageNeed {
+  language: string
+  level: string
+  task: string
+}
+
+export interface Job {
+  id: string
+  employer_id: string
+  title: string
+  field: string
+  duties: string[]
+  address: string
+  district: string
+  lat: number | null
+  lon: number | null
+  work_mode: 'on_site' | 'hybrid' | 'remote'
+  pay_amount: number | null
+  pay_unit: 'hour' | 'month' | null
+  pay_note: string
+  shifts: Shift[]
+  schedule_flexible: boolean
+  hours_min: number | null
+  hours_max: number | null
+  contract: string | null
+  experience: 'none' | 'some' | 'required' | null
+  experience_note: string
+  qualifications: string[]
+  onboarding: string
+  languages: LanguageNeed[]
+  lifting: string | null
+  apply_question: string
+  cv_required: boolean
+  positions: number
+  status: 'draft' | 'open' | 'closed'
+  source: 'employer' | 'advisor'
+  confirmed_at: string | null
+  employer: { id: string; name: string } | null
+  labels: JobLabel[]
+  conditions: Condition[]
+  event: { name: string; date: string; venue: string; booth: string } | null
+  confirmed_days_ago: number | null
+  stale: boolean
+  distance_km?: number
+  applications_count?: number
+}
+
+export interface Catalog {
+  fields: { id: string; name: string }[]
+  districts: { id: string; name: string; lat: number; lon: number }[]
+  condition_keys: { id: string; label: string }[]
+  contract_types: string[]
+  language_levels: string[]
+  labels: { id: string; name: string }[]
+  availability_parts: { id: string; hours: string }[]
+  employers: { id: string; name: string }[]
+}
+
+export interface User {
+  id: string
+  email: string | null
+  phone: string | null
+  role: 'resident' | 'employer' | 'advisor'
+  name: string
+  employer_id?: string
+  employer_name?: string
+}
+
+export interface Profile {
+  contact_method: 'phone' | 'sms' | 'email' | null
+  district: string | null
+  fields: string[]
+  availability: string[]
+  max_hours_per_week: number | null
+  needs: string[]
+  languages: { language: string; level: string }[]
+  about: string
+  name: string
+  email: string | null
+  phone: string | null
+}
+
+export interface Application {
+  id: string
+  job_id: string
+  name: string
+  contact_method: string
+  contact_value: string
+  availability_note: string
+  answer: string
+  shared_needs: string[]
+  meet_at_event: boolean
+  status: 'sent' | 'interview' | 'offer' | 'not_selected' | 'withdrawn' | 'job_closed'
+  status_note: string
+  created_by_advisor: boolean
+  created_at: string
+  updated_at: string
+  days_waiting: number
+  job?: { id: string; title: string; status: string; employer_name: string }
+  history?: { action: string; detail: string; created_at: string }[]
+}
+
+export interface HelpRequest {
+  id: string
+  user_id: string | null
+  name: string
+  contact_method: string
+  contact_value: string
+  job_id: string | null
+  kind: 'check_conditions' | 'prepare_application' | 'arrange_contact' | 'other'
+  condition_keys: string[]
+  message: string
+  status: 'new' | 'in_progress' | 'done'
+  advisor_reply: string
+  created_at: string
+  job?: {
+    id: string; title: string; employer_name: string
+    employer_contact_name?: string
+    employer_contact_email?: string
+    employer_contact_phone?: string
+  }
+}
+
+export interface WordingTip {
   id: string
   rule: string
+  field: string
   trigger: string
-  requirement_id?: string
   why: string
-  law?: string
   suggestion: string
-  pool_before: Band
-  pool_after: Band
 }
 
-export type Pool = {
-  band: Band
-  elasticity: { requirement_id: string; text: string; band_without: Band }[]
-}
-
-export type ChallengeCard = {
-  id: string
-  company_id: string
-  title: string
-  problem_90d: string
-  must_haves: Requirement[]
-  nice_to_haves: string[]
-  languages: LanguageNeed[]
-  work_mode: string
-  status: 'draft' | 'approved'
-  company_minutes_spent: number
-}
-
-export type TraceStep = { tool: string; input: unknown; output_summary: string; ms: number }
-
-export type EvidenceLevel = 'own words' | 'artefact' | 'witnessed live'
-
-export type Claim = {
-  id: string
-  text: string
-  quote: string
-  esco_uri?: string
-  esco_label?: string
-  evidence_level: EvidenceLevel
-  confirmed: boolean
-  original_language: string
-  translated: boolean
-}
-
-export type PublicClaim = Omit<Claim, 'original_language' | 'translated'> &
-  Partial<Pick<Claim, 'original_language' | 'translated'>>
-
-export type EvidenceCard = {
-  talent_id: string
-  pseudonym: string
-  headline: string
-  claims: Claim[]
-  languages: { language: string; level: Cefr }[]
-  availability: string
-}
-
-export type SparkStatus = 'sent' | 'accepted' | 'declined' | 'refunded'
-
-export type Spark = {
-  id: string
-  talent_id: string
-  card_id: string
-  claim_id: string
-  requirement_id: string
-  note?: string
-  status: SparkStatus
-  deadline: string
-  revealed_name?: string
-  slot?: string
-}
-
-// ---- Endpoint shapes ----
-
-export type EventInfo = {
+export interface EmployerProfile {
   id: string
   name: string
-  date: string
-  format: string
-  companies_declared: number
-  talents_registered_band: Band
-}
-
-export type Company = {
-  id: string
-  name: string
-  size: number
-  city: string
+  about: string
   contact_name: string
-  slots: number
+  contact_email: string
+  contact_phone: string
+  event: { name: string; date: string; venue: string; booth: string } | null
 }
 
-export type DraftResponse = {
-  card: ChallengeCard
-  followups: string[]
-  lint: LintHint[]
-  pool: Pool
-  trace: TraceStep[]
-  provider: Provider
+export interface Overview {
+  open_jobs: number
+  stale_jobs: { id: string; title: string; employer_name: string; confirmed_days_ago: number }[]
+  waiting_over_7_days: {
+    id: string; job_id: string; job_title: string; applicant_name: string
+    status: string; days_waiting: number
+    employer: { name: string; contact_email: string; contact_phone: string } | null
+  }[]
+  new_help_requests: number
+  applications_by_status: Record<string, number>
 }
 
-export type Talent = {
-  id: string
-  pseudonym: string
-  languages: { language: string; level: Cefr }[]
-  availability: string
-  spark_budget: number
-  sparks_used: number
-}
-
-export type FollowupsResponse = { questions: string[]; provider: Provider }
-
-export type ExtractResponse = {
-  claims: Claim[]
-  refused: { text: string; reason: string }[]
-  provider: Provider
-}
-
-export type InboxSpark = {
-  id: string
-  pseudonym: string
-  claim: PublicClaim
-  note?: string
-  status: SparkStatus
-  deadline: string
-  // Not in the contract list shape, but returned after accept in the UI state.
-  revealed_name?: string
-  slot?: string
-}
-
-export type CompanySparks = {
-  by_requirement: { requirement: Requirement; sparks: InboxSpark[] }[]
-  minutes_estimate: number
-}
-
-export type Meeting = { id: string; spark_id: string; talent_name: string; slot: string; card_id: string }
-
-export type Tick = { requirement_id: string; seen: boolean; note?: string }
-
-export type MeetingSheet = {
-  meeting_id: string
-  questions: { requirement_id: string; question: string; how_we_check: string }[]
-  ticks: Tick[]
-}
-
-export type ClosureRequest = {
-  outcome: 'next_step' | 'not_now'
-  reason_chips: string[]
-  next_step?: string
-  redirect_company_id?: string
-}
-
-export type ClosureResponse = {
-  closure: unknown
-  message_to_talent: string
-  support_banner?: string
-}
-
-export type OrganiserOverview = {
-  cards_approved: number
-  sparks_sent: number
-  sparks_answered_pct: number
-  meetings: number
-  closures_within_72h_pct: number
-  talents_without_meeting_band: Band
-  avg_company_minutes: number
-}
-
-export type TwinReport = {
-  runs: number
-  pairs: number
-  variants: { name: string; flip_rate_pct: number; n: number }[]
-  threshold_pct: number
-  passed: boolean
-  placeholder?: boolean
-  provider: Provider
-  generated_at: string | null
-  note?: string
-}
-
-export type AuditEvent = { at: string; actor: 'ai' | 'human'; action: string; detail: string }
+export const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
+export const PARTS = ['morning', 'afternoon', 'evening'] as const
+export const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const

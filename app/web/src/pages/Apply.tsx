@@ -1,0 +1,222 @@
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { api, ApiError } from '../lib/api'
+import { useAuth } from '../lib/auth'
+import { useI18n } from '../i18n/i18n'
+import type { Key } from '../i18n/en'
+import type { Application, Job, Profile } from '../types'
+import { ErrorBox, ErrorState, Field, Section, Toggle } from '../components/ui'
+import VoiceInput from '../components/VoiceInput'
+import { slotsText } from '../lib/format'
+
+type Method = 'phone' | 'sms' | 'email'
+
+export default function Apply() {
+  const { id } = useParams()
+  const { t } = useI18n()
+  const { user, ready } = useAuth()
+  const nav = useNavigate()
+  const [job, setJob] = useState<Job | null>(null)
+  const [loadErr, setLoadErr] = useState<unknown>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [method, setMethod] = useState<Method>('phone')
+  const [value, setValue] = useState('')
+  const [availability, setAvailability] = useState('')
+  const [answer, setAnswer] = useState('')
+  const [cv, setCv] = useState('')
+  const [share, setShare] = useState<Set<string>>(new Set())
+  const [event, setEvent] = useState(false)
+  const [review, setReview] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
+  const [done, setDone] = useState<Application | null>(null)
+  const [activeCount, setActiveCount] = useState<number | null>(null)
+
+  const loadJob = () => {
+    setLoadErr(null)
+    api<Job>(`/api/jobs/${id}`).then(setJob).catch((e) => setLoadErr(e))
+  }
+  useEffect(loadJob, [id])
+
+  useEffect(() => {
+    if (!ready) return
+    if (!user) {
+      nav(`/sign-in?back=${encodeURIComponent(`/jobs/${id}/apply`)}`, { replace: true })
+      return
+    }
+    api<Profile>('/api/me/profile').then((p) => {
+      setProfile(p)
+      setMethod(p.contact_method ?? 'phone')
+      setValue(p.contact_method === 'email'
+        ? (p.email ?? '') : (p.phone ?? p.email ?? ''))
+      setAvailability(slotsText(p.availability, t))
+    }).catch(() => {})
+    api<{ applications: Application[] }>('/api/me/applications')
+      .then((r) => setActiveCount(
+        r.applications.filter((a) => a.status === 'sent' || a.status === 'interview').length))
+      .catch(() => {})
+  }, [user, ready, id, nav])
+
+  if (loadErr) {
+    return (
+      <ErrorState err={loadErr} gone={t('err.gone')} goneLabel=""
+                  retryLabel={t('err.retry')} onRetry={loadJob}
+                  backTo="/" backLabel={t('nav.jobs')} />
+    )
+  }
+  if (!job) return <p>{t('common.loading')}</p>
+  if (done) {
+    return (
+      <div className="card p-6 max-w-xl mx-auto text-center">
+        <h1 data-page-title tabIndex={-1}>{t('apply.sent')}</h1>
+        <p>{t('apply.sentbody')}</p>
+        <Link to="/applications" className="btn btn-primary">
+          {t('nav.applications')}
+        </Link>
+      </div>
+    )
+  }
+
+  const submit = async () => {
+    setBusy(true); setErr('')
+    try {
+      const app = await api<Application>('/api/applications', {
+        body: {
+          job_id: job.id, contact_method: method, contact_value: value,
+          availability_note: availability, answer,
+          cv_text: job.cv_required ? cv : undefined,
+          shared_needs: [...share], meet_at_event: event,
+        },
+      })
+      setDone(app)
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : t('common.error'))
+      setReview(false)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const needs = profile?.needs ?? []
+
+  return (
+    <div className="max-w-2xl mx-auto pb-8">
+      <Link to={`/jobs/${job.id}`} className="text-secondary">{`← ${t('common.back')}`}</Link>
+      <h1 data-page-title tabIndex={-1} className="mt-2">{t('apply.title')}: {job.title}</h1>
+      {activeCount != null && (
+        <p className="text-secondary">{activeCount} {t('apply.used')}</p>
+      )}
+      {err && <ErrorBox>{err}</ErrorBox>}
+
+      {!review ? (
+        <>
+          <Section title={t('apply.reachme')}>
+            <div className="flex gap-2 mb-3">
+              {(['phone', 'sms', 'email'] as Method[]).map((m) => (
+                <Toggle key={m} pressed={method === m} onClick={() => setMethod(m)}>
+                  {t(`apply.${m}` as Key)}
+                </Toggle>
+              ))}
+            </div>
+            <Field label={t('apply.value')} id="apply-value">
+              <input id="apply-value" value={value}
+                     onChange={(e) => setValue(e.target.value)} />
+            </Field>
+          </Section>
+
+          <Section title={t('apply.availability')}>
+            <Field label={t('apply.availability')} id="apply-avail">
+              <textarea id="apply-avail" value={availability}
+                        onChange={(e) => setAvailability(e.target.value)} />
+            </Field>
+          </Section>
+
+          <Section title={t('apply.question')}>
+            <p className="font-medium mt-0">{job.apply_question}</p>
+            <Field label={t('apply.question')} id="apply-answer">
+              <textarea id="apply-answer" value={answer}
+                        onChange={(e) => setAnswer(e.target.value)} required />
+            </Field>
+            <VoiceInput targetId="apply-answer"
+                        onText={(txt) => setAnswer((a) => (a ? `${a} ` : '') + txt)} />
+          </Section>
+
+          {job.cv_required && (
+            <Section title={t('apply.cv')}>
+              <Field label={t('apply.cv')} id="apply-cv">
+                <textarea id="apply-cv" value={cv}
+                          onChange={(e) => setCv(e.target.value)} required />
+              </Field>
+              <VoiceInput targetId="apply-cv"
+                          onText={(txt) => setCv((a) => (a ? `${a} ` : '') + txt)} />
+            </Section>
+          )}
+
+          {needs.length > 0 && (
+            <Section title={t('apply.share')}>
+              <p className="text-secondary mt-0">{t('apply.sharehint')}</p>
+              <div className="flex flex-wrap gap-2">
+                {needs.map((k) => (
+                  <Toggle key={k} pressed={share.has(k)}
+                          onClick={() => setShare((s) => {
+                            const n = new Set(s)
+                            if (n.has(k)) n.delete(k); else n.add(k)
+                            return n
+                          })}>
+                    {t(`cond.${k}` as Key)}
+                  </Toggle>
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {job.event && (
+            <Section title={t('job.atevent')}>
+              <Toggle pressed={event} onClick={() => setEvent((v) => !v)}>
+                {t('apply.event')}
+              </Toggle>
+            </Section>
+          )}
+
+          <button type="button" className="btn btn-primary w-full"
+                  onClick={() => { setErr(answer.trim() ? '' : t('apply.question'))
+                                   if (answer.trim()) setReview(true) }}>
+            {t('common.next')}
+          </button>
+        </>
+      ) : (
+        <Section title={t('apply.review')}>
+          <dl className="m-0">
+            <dt className="font-medium mt-2">{t('apply.reachme')}</dt>
+            <dd className="m-0">{t(`apply.${method}` as Key)}: {value || '—'}</dd>
+            <dt className="font-medium mt-2">{t('apply.availability')}</dt>
+            <dd className="m-0">{availability || '—'}</dd>
+            <dt className="font-medium mt-2">{job.apply_question}</dt>
+            <dd className="m-0 whitespace-pre-wrap">{answer}</dd>
+            {job.cv_required && (
+              <>
+                <dt className="font-medium mt-2">{t('apply.cv')}</dt>
+                <dd className="m-0 whitespace-pre-wrap">{cv}</dd>
+              </>
+            )}
+            {share.size > 0 && (
+              <>
+                <dt className="font-medium mt-2">{t('apply.share')}</dt>
+                <dd className="m-0">{[...share].map((k) => t(`cond.${k}` as Key)).join(', ')}</dd>
+              </>
+            )}
+            {event && <dd className="m-0 mt-2">{t('apply.event')}</dd>}
+          </dl>
+          <div className="flex gap-2 mt-5">
+            <button type="button" className="btn btn-secondary flex-1"
+                    onClick={() => setReview(false)}>{t('common.back')}</button>
+            <button type="button" className="btn btn-primary flex-1"
+                    disabled={busy} onClick={submit}>
+              {t('common.send')}
+            </button>
+          </div>
+        </Section>
+      )}
+    </div>
+  )
+}

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
@@ -26,30 +25,60 @@ def conn(tmp_path, monkeypatch):
 def client(tmp_path, monkeypatch):
     db_file = tmp_path / "api.sqlite"
     monkeypatch.setenv("TM_DB_PATH", str(db_file))
-    monkeypatch.setenv("LLM_PROVIDER", "mock")
     from fastapi.testclient import TestClient
     from app.api.main import app
     with TestClient(app) as c:
         yield c
 
 
-@pytest.fixture()
-def lumo_card(conn):
-    from app.api import db
-    return db.get_card(conn, "card-co-lumo")
+def login(client, login: str, password: str = "demo1234") -> dict:
+    r = client.post("/api/auth/login",
+                    json={"login": login, "password": password})
+    assert r.status_code == 200, r.text
+    return {"Authorization": f"Bearer {r.json()['token']}"}
 
 
 @pytest.fixture()
-def draft_card():
-    """The recorded Lumo draft card (pre-rewrite, 'fluent' era)."""
-    import json
-    rec = json.loads((ROOT / "db" / "seed" / "recorded" / "ad_lumo.json")
-                     .read_text(encoding="utf-8"))
-    return rec["card"]
+def aino(client):
+    return login(client, "aino@example.com")
 
 
 @pytest.fixture()
-def amira_story():
-    import json
-    return json.loads((ROOT / "db" / "seed" / "recorded" / "amira_story.json")
-                      .read_text(encoding="utf-8"))
+def pekka(client):
+    return login(client, "pekka@example.com")
+
+
+@pytest.fixture()
+def amira(client):
+    return login(client, "amira@example.com")
+
+
+@pytest.fixture()
+def sanna(client):
+    return login(client, "sanna@example.com")
+
+
+@pytest.fixture()
+def advisor(client):
+    return login(client, "advisor@example.com")
+
+
+@pytest.fixture()
+def register_resident(client):
+    def _reg(email="new@example.com", name="Test Person", pw="password9"):
+        r = client.post("/api/auth/register", json={
+            "role": "resident", "name": name, "email": email, "password": pw})
+        assert r.status_code == 201, r.text
+        return {"Authorization": f"Bearer {r.json()['token']}"}
+    return _reg
+
+
+@pytest.fixture()
+def register_employer(client):
+    def _reg(email="boss@example.com", company="Uusi Firma Oy", pw="password9"):
+        r = client.post("/api/auth/register", json={
+            "role": "employer", "name": "Olli Omistaja", "email": email,
+            "password": pw, "employer_name": company})
+        assert r.status_code == 201, r.text
+        return {"Authorization": f"Bearer {r.json()['token']}"}
+    return _reg

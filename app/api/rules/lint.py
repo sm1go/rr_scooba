@@ -1,183 +1,138 @@
-"""Requirement Reality Check (F02): a deterministic, non-blocking rulebook.
-
-At most five hints. Each hint carries the legal reason (Non-Discrimination Act
-1325/2014, Equality Act 609/1986) where relevant, a suggested rewrite, and the
-pool band before/after applying that rewrite.
+"""Job wording check (spec section 3): plain-language tips shown to the
+employer while writing a job. Advisory only — `POST /api/jobs/check-wording`
+returns tips; publishing is blocked (422) only when a protected-ground
+requirement (age, health, gender, nationality, religion, family) is stated
+in `experience_note` or `qualifications`.
 """
 
 from __future__ import annotations
 
-import copy
 import re
-import sqlite3
-from typing import Callable
-
-from . import pool as pool_mod
 
 NONDECR = "Non-Discrimination Act 1325/2014"
 EQUALITY = "Equality Act 609/1986"
 
-
-def _text_fields(card: dict):
-    """Yield (field, requirement_id_or_None, text) for every wording surface."""
-    yield "title", None, card.get("title", "")
-    yield "problem_90d", None, card.get("problem_90d", "")
-    for r in card.get("must_haves", []):
-        yield "must_have", r["id"], r.get("text", "")
-        yield "must_have", r["id"], r.get("how_we_check", "")
-    for s in card.get("nice_to_haves", []):
-        yield "nice_to_have", None, s
-
-
-def _find(pattern: str, card: dict):
-    rx = re.compile(pattern, re.I)
-    for field, req_id, text in _text_fields(card):
-        m = rx.search(text or "")
-        if m:
-            return m.group(0), req_id
-    return None
-
-
-def _fluent_language_need(card: dict) -> dict | None:
-    """A language need set at near-native level with no stated task is the
-    structured equivalent of writing 'fluent <language>'."""
-    for need in card.get("languages", []):
-        if need.get("level") in ("C1", "C2") and not need.get("task", "").strip():
-            return need
-    return None
-
-
-def _language_rewrite(need_language: str) -> Callable[[dict], dict]:
-    def apply(card: dict) -> dict:
-        c = copy.deepcopy(card)
-        for n in c.get("languages", []):
-            if n["language"].lower() == need_language.lower():
-                n["level"] = "B1"
-                if not n.get("task", "").strip():
-                    n["task"] = "customer calls"
-                n["from_when"] = "by month 6"
-        return c
-    return apply
-
-
-def _identity_rewrite(card: dict) -> dict:
-    return card
-
-
-# rule order is stable; the first five hits become the hints
-RULES = [
-    {
-        "rule": "language_proxy",
-        "why": "Asking for native-level language without naming the task screens "
-               "out capable international talent and can mask origin-based "
-               "discrimination.",
-        "law": NONDECR,
-        "suggestion": "Keep the team English-speaking; set Finnish at B1 for "
-                      "customer calls by month 6 (course paid).",
-    },
-    {
-        "rule": "nationality",
-        "pattern": r"\b(citizenship|citizens?|nationality|nationals?)\b",
-        "why": "Nationality or citizenship requirements discriminate on origin "
-               "unless a law specifically demands them.",
-        "law": NONDECR,
-        "suggestion": "Remove it — ask only about the right to work in Finland.",
-    },
-    {
-        "rule": "age_words",
-        "pattern": r"\b(young|digital native|recent graduate|junior spirit|energetic team)\b",
-        "why": "Age-coded words signal preference for a certain age group, which "
-               "the law treats as discrimination.",
-        "law": NONDECR,
-        "suggestion": "Describe the team by what it does, not its age — e.g. "
-                      "'a small team that ships weekly'.",
-    },
-    {
-        "rule": "gendered_words",
-        "pattern": r"\b(salesman|chairman|foreman|manpower|he will|she will|"
-                   r"guys\b|ninja|rockstar)\b",
-        "why": "Gendered or stereotype-coded words deter whole groups from "
-               "applying.",
-        "law": EQUALITY,
-        "suggestion": "Use the neutral form — 'sales representative', 'the team', "
-                      "'you'.",
-    },
-    {
-        "rule": "photo",
-        "pattern": r"\b(photo|picture|headshot)\b",
-        "why": "Requesting a photo invites appearance- and origin-based bias "
-               "before any evidence is seen.",
-        "law": NONDECR,
-        "suggestion": "Drop the photo request; evaluate evidence of skill instead.",
-    },
-    {
-        "rule": "degree_without_reason",
-        "pattern": r"\b(master'?s|bachelor'?s|degree|diploma|phd)\b",
-        "why": "A degree requirement without a stated reason shrinks the pool "
-               "and can indirectly discriminate where the degree is not needed "
-               "for the task.",
-        "law": NONDECR,
-        "suggestion": "Name the skill the degree was meant to prove — e.g. "
-                      "'can design a database schema' — and check that instead.",
-    },
-    {
-        "rule": "no_gaps",
-        "pattern": r"\bno (unexplained )?gaps|gap[- ]free|uninterrupted (career|cv|employment)\b",
-        "why": "Demanding gap-free histories penalises parental leave, illness "
-               "and migration — protected grounds.",
-        "law": NONDECR,
-        "suggestion": "Remove it; ask what the person can do now.",
-    },
-    {
-        "rule": "cultural_fit",
-        "pattern": r"\bcultural fit|fit(s|ting)? our culture|company culture fit|"
-                   r"fit(s)? right in\b",
-        "why": "'Culture fit' is an undefined proxy that replicates the existing "
-               "team and hides bias.",
-        "law": NONDECR,
-        "suggestion": "Name the observable behaviour instead — e.g. 'writes "
-                      "things down for the team'.",
-    },
+# (id, pattern, tip, suggestion)
+TIPS = [
+    ("age_words",
+     r"\b(young|digital native|recent graduate|junior spirit|energetic team|"
+     r"older applicants|retiree[s]?\s+only|age\s+\d+|over\s+\d{2}|under\s+\d{2})\b",
+     "Age-coded words screen people out and can be illegal.",
+     "Describe the work, not the age — e.g. 'a small team that ships weekly'."),
+    ("native_language",
+     r"\b(native speaker|native[- ]level|mother[- ]?tongue|fluent\s+\w+|"
+     r"perfect\s+(finnish|swedish|english))\b",
+     "Asking for native-level language screens out capable people — the law "
+     "treats it as possible origin discrimination.",
+     "Name the task and level instead — e.g. 'Finnish A2 to read the cleaning plan'."),
+    ("gendered_words",
+     r"\b(salesman|chairman|foreman|manpower|he will|she will|guys|ninja|rockstar|"
+     r"men only|women only|male|female)\b",
+     "Gendered words deter whole groups from applying.",
+     "Use the neutral form — 'sales assistant', 'the team', 'you'."),
+    ("health_words",
+     r"\b(healthy|fit and strong|physically fit|no disabilities|good health|"
+     r"drug[- ]free|clean bill of health)\b",
+     "Health or disability requirements are a protected ground — ask only "
+     "what the task really needs.",
+     "Name the concrete task — e.g. 'carries parcels up to 15 kg'."),
+    ("nationality_words",
+     r"\b(citizenship|citizens?|nationality|nationals?|finnish only|"
+     r"eu citizens? only|ethnic|origin)\b",
+     "Nationality or origin requirements are illegal unless a law demands them.",
+     "Ask only about the right to work in Finland."),
+    ("family_words",
+     r"\b(no children|childless|no plans to start a family|must not be pregnant|"
+     r"religion|religious|political views)\b",
+     "Family plans, pregnancy, religion and political views are protected grounds.",
+     "Remove it — ask about the work only."),
+    ("degree_without_reason",
+     r"\b(master'?s|bachelor'?s|degree|diploma|phd|university)\b",
+     "A degree requirement without a stated task shrinks who can apply.",
+     "Name what the person must be able to do — e.g. 'can write clear reports'."),
+    ("no_gaps",
+     r"\bno (unexplained )?gaps|gap[- ]free|uninterrupted (career|cv|employment)\b",
+     "Demanding gap-free histories penalises parental leave, illness and migration.",
+     "Remove it — ask what the person can do now."),
+    ("photo",
+     r"\b(photo|picture|headshot)\b",
+     "Requesting a photo invites bias before anything else is seen.",
+     "Drop the photo request."),
 ]
 
 
-def lint_card(conn: sqlite3.Connection, card: dict, max_hints: int = 5) -> list[dict]:
-    hints: list[dict] = []
-    pool_before = pool_mod.band_for(pool_mod.count_pool(conn, card))
+def _text_fields(job: dict):
+    """Every wording surface of a job payload."""
+    for key in ("title", "pay_note", "experience_note", "onboarding",
+                "apply_question", "lifting"):
+        yield key, job.get(key) or ""
+    for i, d in enumerate(job.get("duties") or []):
+        yield f"duties[{i}]", d or ""
+    for i, q in enumerate(job.get("qualifications") or []):
+        yield f"qualifications[{i}]", q or ""
 
-    def emit(rule, trigger, req_id, rewrite):
-        after = pool_mod.band_for(pool_mod.count_pool(conn, rewrite(card)))
-        hints.append({
-            "id": f"hint-{len(hints) + 1:02d}-{rule['rule']}",
-            "rule": rule["rule"], "trigger": trigger, "requirement_id": req_id,
-            "why": rule["why"], "law": rule["law"],
-            "suggestion": rule["suggestion"],
-            "pool_before": pool_before, "pool_after": after,
-        })
 
-    for rule in RULES:
-        if len(hints) >= max_hints:
+def check_wording(job: dict, max_tips: int = 5) -> list[dict]:
+    """Advisory tips over the whole job payload."""
+    tips = []
+    seen = set()
+    for tip_id, pattern, why, suggestion in TIPS:
+        rx = re.compile(pattern, re.I)
+        for field, text in _text_fields(job):
+            m = rx.search(text)
+            if m and tip_id not in seen:
+                seen.add(tip_id)
+                tips.append({"id": f"tip-{tip_id}", "rule": tip_id,
+                             "field": field, "trigger": m.group(0),
+                             "why": why, "suggestion": suggestion})
+                break
+        if len(tips) >= max_tips:
             break
-        if rule["rule"] == "language_proxy":
-            # literal wording first, then the structured C1/C2-without-task check
-            hit = _find(r"\b(native speaker|native[- ]level|mother[- ]?tongue|"
-                        r"fluent\s+\w+)\b", card)
-            if hit:
-                trigger, req_id = hit
-                lang = "Finnish"
-                m = re.search(r"(finnish|swedish|english)", trigger, re.I)
-                if m:
-                    lang = m.group(1).capitalize()
-                elif _fluent_language_need(card):
-                    lang = _fluent_language_need(card)["language"]
-                emit(rule, trigger, req_id, _language_rewrite(lang))
-                continue
-            need = _fluent_language_need(card)
-            if need:
-                emit(rule, f"{need['language']} {need['level']} with no stated task",
-                     None, _language_rewrite(need["language"]))
+
+    # a high language level with no stated task is the structured form of
+    # 'fluent Finnish' — advisory like the literal wording above
+    if len(tips) < max_tips:
+        for need in job.get("languages") or []:
+            if need.get("level") in ("C1", "C2") \
+                    and not (need.get("task") or "").strip() \
+                    and "native_language" not in seen:
+                tips.append({
+                    "id": "tip-language_without_task", "rule": "language_without_task",
+                    "field": "languages",
+                    "trigger": f"{need.get('language')} {need.get('level')} with no task",
+                    "why": "A high language level without naming the task can be "
+                           "unnecessary — say what the language is for.",
+                    "suggestion": f"Add the task, e.g. '{need.get('language')} "
+                                  "B1 to answer the customer line'."})
+                break
+    return tips
+
+
+# blocking applies only to the free-text requirement fields
+_BLOCKED_FIELDS = ("experience_note", "qualifications")
+_BLOCKED_IDS = {"age_words", "health_words", "gendered_words",
+                "nationality_words", "family_words"}
+
+
+def blocking_issues(job: dict) -> list[dict]:
+    """Protected-ground requirements stated as a requirement. Publishing is
+    refused (422) while any of these remain."""
+    issues = []
+    for tip_id, pattern, why, suggestion in TIPS:
+        if tip_id not in _BLOCKED_IDS:
             continue
-        hit = _find(rule["pattern"], card)
-        if hit:
-            emit(rule, hit[0], hit[1], _identity_rewrite)
-    return hints
+        rx = re.compile(pattern, re.I)
+        for field in _BLOCKED_FIELDS:
+            texts = job.get(field) or []
+            if isinstance(texts, str):
+                texts = [texts]
+            for text in texts:
+                m = rx.search(text)
+                if m:
+                    issues.append({"rule": tip_id, "field": field,
+                                   "trigger": m.group(0), "why": why,
+                                   "suggestion": suggestion})
+                    break
+            if issues:
+                break
+    return issues

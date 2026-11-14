@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ap-001",
+    "job_id": "job-cafe-weekend",
+    "user_id": null,
+    "name": "Mikael Okafor",
+    "contact_method": "phone",
+    "contact_value": "+358 44 123 4567",
+    "availability_note": "Weekends work for me.",
+    "answer": "I served lunch at my school café for a year and I like busy counter work.",
+    "shared_needs": [],
+    "meet_at_event": 0,
+    "status": "sent",
+    "status_note": "",
+    "days_ago": 2
+  },
+  {
+    "id": "ap-002",
+    "job_id": "job-cafe-weekend",
+    "user_id": "u-aino",
+    "name": "Aino Korhonen",
+    "contact_method": "email",
+    "contact_value": "aino@example.com",
+    "availability_note": "Every weekend, and more in June.",
+    "answer": "I ran the coffee stand at our guild's spring fair — three busy days, two tills, a lot of customers.",
+    "shared_needs": [],
+    "meet_at_event": 1,
+    "status": "interview",
+    "status_note": "Come to the café on Thursday at 15:00 — ask for Sanna.",
+    "days_ago": 5
+  },
+  {
+    "id": "ap-003",
+    "job_id": "job-cafe-weekend",
+    "user_id": null,
+    "name": "Sara Kettunen",
+    "contact_method": "sms",
+    "contact_value": "+358 45 765 4321",
+    "availability_note": "Saturdays only at the moment.",
+    "answer": "I helped at our church café for two years.",
+    "shared_needs": [
+      "seated_work"
+    ],
+    "meet_at_event": 0,
+    "status": "not_selected",
+    "status_note": "We needed someone who could do both weekend days this time — thank you for applying.",
+    "days_ago": 9
+  },
+  {
+    "id": "ap-004",
+    "job_id": "job-linja-phone",
+    "user_id": null,
+    "name": "Yusuf Ali",
+    "contact_method": "phone",
+    "contact_value": "+358 46 111 2233",
+    "availability_note": "Weekdays after 14:00 as well.",
+    "answer": "I answered phones in a repair shop for two years.",
+    "shared_needs": [],
+    "meet_at_event": 0,
+    "status": "sent",
+    "status_note": "",
+    "days_ago": 9,
+    "created_by_advisor": 1
+  }
+]

@@ -1,183 +1,149 @@
-"""Pydantic models mirroring docs/03-product/api-contract.md shared types."""
+"""Pydantic request models for the Espoo Work Map API (spec section 3)."""
 
 from __future__ import annotations
 
-from typing import Any, Literal, Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
-Band = Literal["fewer than 10", "10–19", "20–49", "50+"]
-Cefr = Literal["A1", "A2", "B1", "B2", "C1", "C2"]
-Provider = Literal["mock", "nvidia", "gemma"]
+
+class RegisterIn(BaseModel):
+    role: Literal["resident", "employer"]
+    name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    password: str = Field(min_length=8)
+    employer_name: Optional[str] = None
+
+
+class LoginIn(BaseModel):
+    login: str
+    password: str
+
+
+class ProfileIn(BaseModel):
+    contact_method: Optional[Literal["phone", "sms", "email"]] = None
+    district: Optional[str] = None
+    fields: list[str] = []
+    availability: list[str] = []
+    max_hours_per_week: Optional[int] = None
+    needs: list[str] = []
+    languages: list[dict] = []
+    about: str = ""
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+
+
+class EmployerProfileIn(BaseModel):
+    name: Optional[str] = None
+    about: str = ""
+    contact_name: str = ""
+    contact_email: str = ""
+    contact_phone: str = ""
 
 
 class LanguageNeed(BaseModel):
     language: str
-    level: Cefr
+    level: str
     task: str = ""
-    from_when: str = ""
 
 
-class Requirement(BaseModel):
-    id: str
-    text: str
-    how_we_check: str = ""
-    esco_uri: Optional[str] = None
-    esco_label: Optional[str] = None
+class Shift(BaseModel):
+    day: Literal["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+    start: str
+    end: str
 
 
-class ChallengeCard(BaseModel):
-    id: str
-    company_id: str
+class JobIn(BaseModel):
     title: str
-    problem_90d: str
-    must_haves: list[Requirement] = []
-    nice_to_haves: list[str] = []
+    field: str = ""
+    duties: list[str] = []
+    address: str = ""
+    district: str = ""
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    work_mode: Literal["on_site", "hybrid", "remote"] = "on_site"
+    pay_amount: Optional[float] = None
+    pay_unit: Optional[Literal["hour", "month"]] = None
+    pay_note: str = ""
+    shifts: list[Shift] = []
+    schedule_flexible: bool = False
+    hours_min: Optional[int] = None
+    hours_max: Optional[int] = None
+    contract: Optional[Literal["permanent", "fixed_term", "seasonal", "gig",
+                               "summer_job", "traineeship"]] = None
+    experience: Optional[Literal["none", "some", "required"]] = None
+    experience_note: str = ""
+    qualifications: list[str] = []
+    onboarding: str = ""
     languages: list[LanguageNeed] = []
-    work_mode: str = ""
-    status: Literal["draft", "approved"] = "draft"
-    company_minutes_spent: int = 0
+    lifting: Optional[str] = None
+    apply_question: str = ""
+    cv_required: bool = False
+    positions: int = 1
+    status: Optional[Literal["draft", "open"]] = None   # None = keep / draft
+    conditions: dict[str, Literal["yes", "no", "unknown"]] = {}
+    employer_id: Optional[str] = None   # advisor posts for any employer
 
 
-class LintHint(BaseModel):
-    id: str
-    rule: str
-    trigger: str
-    requirement_id: Optional[str] = None
-    why: str
-    law: Optional[str] = None
-    suggestion: str
-    pool_before: Band
-    pool_after: Band
+class WordingCheckIn(BaseModel):
+    title: str = ""
+    pay_note: str = ""
+    experience_note: str = ""
+    onboarding: str = ""
+    apply_question: str = ""
+    lifting: Optional[str] = ""
+    duties: list[str] = []
+    qualifications: list[str] = []
+    languages: list[LanguageNeed] = []
 
 
-class Elasticity(BaseModel):
-    requirement_id: str
-    text: str
-    band_without: Band
+class ApplicationIn(BaseModel):
+    job_id: str
+    contact_method: Literal["phone", "sms", "email"]
+    contact_value: str
+    availability_note: str = ""
+    answer: str
+    cv_text: Optional[str] = None
+    shared_needs: list[str] = []
+    meet_at_event: bool = False
+    name: Optional[str] = None          # advisor applies for someone
+    consent: Optional[bool] = None      # required true for advisor applies
+    user_id: Optional[str] = None       # advisor may attach to an account
 
 
-class Pool(BaseModel):
-    band: Band
-    elasticity: list[Elasticity] = []
+class StatusIn(BaseModel):
+    status: Literal["interview", "offer", "not_selected"]
+    status_note: str
 
 
-class TraceStep(BaseModel):
-    tool: str
-    input: Any
-    output_summary: str
-    ms: int
+class HelpRequestIn(BaseModel):
+    job_id: Optional[str] = None
+    kind: Literal["check_conditions", "prepare_application",
+                  "arrange_contact", "other"]
+    condition_keys: list[str] = []
+    message: str = ""
+    consent: bool
+    name: Optional[str] = None
+    contact_method: Optional[Literal["phone", "sms", "email"]] = None
+    contact_value: Optional[str] = None
 
 
-EvidenceLevel = Literal["own words", "artefact", "witnessed live"]
+class HelpRequestUpdate(BaseModel):
+    status: Literal["new", "in_progress", "done"]
+    advisor_reply: str = ""
 
 
-class Claim(BaseModel):
-    id: str
-    text: str
-    quote: str
-    esco_uri: Optional[str] = None
-    esco_label: Optional[str] = None
-    evidence_level: EvidenceLevel = "own words"
-    confirmed: bool
-    original_language: str = "en"
-    translated: bool = False
+class ConditionCheckIn(BaseModel):
+    key: str
+    value: Literal["yes", "no"]
+    note: str = ""
 
 
-class RefusedClaim(BaseModel):
-    text: str
-    reason: str
-
-
-class Language(BaseModel):
-    language: str
-    level: Cefr
-
-
-class EvidenceCard(BaseModel):
-    talent_id: str
-    pseudonym: str
-    headline: str
-    claims: list[Claim] = []
-    languages: list[Language] = []
-    availability: str = ""
-
-
-class Spark(BaseModel):
-    id: str
-    talent_id: str
-    card_id: str
-    claim_id: str
-    requirement_id: str
-    note: Optional[str] = None
-    status: Literal["sent", "accepted", "declined", "refunded"] = "sent"
-    deadline: str
-    revealed_name: Optional[str] = None
-    slot: Optional[str] = None
-
-
-# --- request bodies -----------------------------------------------------------
-
-
-class DraftRequest(BaseModel):
-    company_id: str
-    text: Optional[str] = None
-    image_base64: Optional[str] = Field(default=None, max_length=12_000_000)
-
-
-class LintRequest(BaseModel):
-    card: ChallengeCard
-
-
-class PoolRequest(BaseModel):
-    card: ChallengeCard
-
-
-class ApproveCardRequest(BaseModel):
-    card: ChallengeCard
-
-
-class FollowupsRequest(BaseModel):
-    talent_id: str
-    transcript: str
-    language: str = "en"
-
-
-class ExtractRequest(BaseModel):
-    talent_id: str
-    transcript: str
-    language: str = "en"
-
-
-class EvidenceRequest(BaseModel):
-    claims: list[Claim]
-
-
-class SparkRequest(BaseModel):
-    talent_id: str
-    card_id: str
-    claim_id: str
-    requirement_id: str
-    note: Optional[str] = Field(default=None, max_length=140)
-
-
-class RespondRequest(BaseModel):
-    decision: Literal["accept", "decline"]
-    reason_chip: Optional[str] = None
-
-
-class Tick(BaseModel):
-    requirement_id: str
-    seen: bool
-    note: Optional[str] = None
-
-
-class TicksRequest(BaseModel):
-    ticks: list[Tick]
-
-
-class ClosureRequest(BaseModel):
-    outcome: Literal["next_step", "not_now"]
-    reason_chips: list[str] = []
-    next_step: Optional[str] = None
-    redirect_company_id: Optional[str] = None
+class EmployerNewIn(BaseModel):
+    name: str
+    about: str = ""
+    contact_name: str = ""
+    contact_email: str = ""
+    contact_phone: str = ""
