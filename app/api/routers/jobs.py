@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import sqlite3
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -46,6 +47,30 @@ def _decode(row: sqlite3.Row) -> dict:
     return job
 
 
+def _stem(term: str) -> str:
+    """'welder' -> 'weld', 'nurse' -> 'nurs': lets one word find its family."""
+    return term if len(term) <= 4 else term[:max(4, len(term) - 2)]
+
+
+def text_matches(q: str, hay: str) -> bool:
+    """q is a comma-separated list of words or phrases; any one may match
+    the start of a word in the job text (case-insensitive)."""
+    words = re.findall(r"\w+", hay.lower())
+    joined = " " + " ".join(words)
+    for term in (x.strip().lower() for x in q.split(",")):
+        if len(term) < 2:
+            continue
+        parts = re.findall(r"\w+", term)
+        if not parts:
+            continue
+        if len(parts) > 1:
+            if " " + " ".join(parts) in joined:
+                return True
+        elif any(w.startswith(_stem(parts[0])) for w in words):
+            return True
+    return False
+
+
 @router.get("/jobs")
 def list_jobs(
     label: list[str] = Query(default=[]),
@@ -67,6 +92,7 @@ def list_jobs(
     near_station: int | None = None,
     commute_max: int | None = None,
     q: str | None = None,
+    hours_min: int | None = None,
     conn: sqlite3.Connection = Depends(get_conn),
     user=Depends(optional_user),   # noqa: ARG001 — output identical either way
 ):
@@ -130,12 +156,16 @@ def list_jobs(
                               (job["employer_id"],)).fetchone()
             if not ev:
                 continue
+        if hours_min is not None and (job["hours_max"] is None
+                                      or job["hours_max"] < hours_min):
+            continue
         if q:
             emp = conn.execute("SELECT name FROM employer WHERE id=?",
                                (job["employer_id"],)).fetchone()
             hay = " ".join([job["title"], " ".join(job["duties"]),
-                            emp["name"] if emp else ""]).lower()
-            if q.lower() not in hay:
+                            " ".join(job.get("qualifications") or []),
+                            emp["name"] if emp else ""])
+            if not text_matches(q, hay):
                 continue
         if near_station:
             if job["work_mode"] == "remote" or job["lat"] is None:

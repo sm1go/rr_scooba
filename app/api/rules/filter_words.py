@@ -52,6 +52,57 @@ FIELD_WORDS = {
     "construction": ["construction", "rakennus", "maalari", "painter"],
     "tech": ["tech", "ict", "it ", "ohjelmisto", "tietotekniikka"],
     "seasonal": ["seasonal", "summer", "kesätyö", "kesätöitä", "summer job"],
+    "manufacturing": ["manufacturing", "factory", "metal work", "tehdas",
+                      "teollisuus", "metalli"],
+    "health": ["health care", "healthcare", "hospital", "terveydenhuolto",
+               "sairaala"],
+    "maintenance": ["property maintenance", "kiinteistöhuolto", "trades"],
+}
+# Job words -> search keywords for /api/jobs?q (prefix match on each word of
+# the user's text, so inflected forms such as "spawaczem" still hit).
+OCCUPATIONS = {
+    "welder": (["welder", "welding", "hitsaaja"],
+               ["welder", "welding", "hitsaaja", "hitsaus", "spawacz",
+                "svetsare", "сварщик", "зварювальник", "keevitaja"]),
+    "electrician": (["electrician", "electrical", "sähköasentaja"],
+                    ["electrician", "sähköasentaja", "sähkömies", "elektryk",
+                     "elektriker", "электрик", "електрик", "elektrik"]),
+    "plumber": (["plumber", "plumbing", "putkiasentaja"],
+                ["plumber", "putkiasentaja", "putkimies", "hydraulik",
+                 "rörmokare", "сантехник"]),
+    "machinist": (["machinist", "cnc", "koneistaja"],
+                  ["machinist", "cnc", "koneistaja", "tokarz", "frezer"]),
+    "carpenter": (["carpenter", "kirvesmies", "puuseppä"],
+                  ["carpenter", "kirvesmies", "puuseppä", "stolarz", "cieśla",
+                   "snickare", "плотник", "столяр"]),
+    "painter": (["painter", "maalari"], ["painter", "maalari", "malarz"]),
+    "mechanic": (["mechanic", "mekaanikko"],
+                 ["mechanic", "mekaanikko", "mechanik", "механик"]),
+    "nurse": (["nurse", "nursing", "hoitaja"],
+              ["nurse", "sairaanhoitaja", "lähihoitaja", "hoitaja",
+               "pielęgniar", "sjuksköterska", "медсестр", "медбрат"]),
+    "driver": (["driver", "driving", "kuljettaja"],
+               ["driver", "kuljettaja", "kierowc", "chaufför", "водител"]),
+    "cook": (["cook", "chef", "kokki"],
+             ["cook", "chef", "kokki", "kucharz", "kock", "повар", "кухар"]),
+    "developer": (["developer", "software", "ohjelmoija"],
+                  ["developer", "programmer", "ohjelmoija", "koodari",
+                   "programist", "разработчик", "програміст"]),
+    "accountant": (["accountant", "accounting", "kirjanpitäjä"],
+                   ["accountant", "kirjanpitäjä", "księgow", "бухгалтер"]),
+    "hairdresser": (["hairdresser", "kampaaja"],
+                    ["hairdresser", "kampaaja", "fryzjer", "парикмахер"]),
+    "security": (["security", "vartija"],
+                 ["security guard", "vartija", "ochroniarz", "охранник"]),
+    "forklift": (["forklift", "trukki"],
+                 ["forklift", "trukki", "wózek widłowy", "погрузчик"]),
+    "warehouse": (["warehouse", "varasto"],
+                  ["warehouse", "varasto", "magazyn", "склад"]),
+    "teacher": (["teacher", "opettaja"],
+                ["teacher", "opettaja", "nauczyciel", "учитель", "вчитель"]),
+    "cashier": (["cashier", "kassa"], ["cashier", "kasjer", "кассир"]),
+    "gardener": (["gardener", "garden", "puutarha"],
+                 ["gardener", "puutarhuri", "ogrodnik", "садовник"]),
 }
 DISTRICT_WORDS = {
     "leppavaara": ["leppävaara", "leppavaara"],
@@ -128,7 +179,17 @@ def parse(text: str) -> dict:
         filters["labels"] = labels
         expl.append("Job labels that match what you said.")
 
+    keywords: list[str] = []
+    for _occ, (kw, words) in OCCUPATIONS.items():
+        if any(re.search(rf"\b{re.escape(w)}", t) for w in words):
+            keywords += [k for k in kw if k not in keywords]
+    if keywords:
+        filters["keywords"] = keywords
+        expl.append("Jobs whose title or duties mention: "
+                    + ", ".join(keywords) + ".")
     for fid, words in FIELD_WORDS.items():
+        if keywords:
+            break
         if any(re.search(rf"\b{re.escape(w)}\b", t) for w in words):
             filters["field"] = fid
             expl.append("The kind of work you named.")
@@ -160,5 +221,9 @@ def parse(text: str) -> dict:
         not_understood.append(
             "lifting: please check each job's lifting information")
 
+    if not filters:
+        not_understood.append(
+            "We could not turn this into a search. Try a job title (cleaner, "
+            "welder, nurse), days and times, or an area of Espoo.")
     return {"filters": filters, "explanation": expl,
             "not_understood": not_understood}

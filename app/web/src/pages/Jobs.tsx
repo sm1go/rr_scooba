@@ -197,7 +197,8 @@ export default function JobsPage({
         p.set('needs', (f.needs as string[]).join(','))
         p.set('needs_mode', 'yes')
       }
-      for (const k of ['hours_max', 'pay_min', 'km', 'commute_max'] as const) {
+      if (Array.isArray(f.keywords) && f.keywords.length) p.set('q', (f.keywords as string[]).join(','))
+      for (const k of ['hours_max', 'hours_min', 'pay_min', 'km', 'commute_max'] as const) {
         if (typeof f[k] === 'number') p.set(k, String(f[k]))
       }
       if (f.near_station === true) p.set('near_station', '1')
@@ -215,6 +216,8 @@ export default function JobsPage({
       names.push({ key: 'slots', name: slotsText(params.get('slots')!.split(','), t) })
     if (params.get('hours_max'))
       names.push({ key: 'hours_max', name: `≤${params.get('hours_max')} ${t('common.hweek')}` })
+    if (params.get('hours_min'))
+      names.push({ key: 'hours_min', name: `≥${params.get('hours_min')} ${t('common.hweek')}` })
     if (params.get('pay_min'))
       names.push({ key: 'pay_min', name: `≥€${params.get('pay_min')}${t('common.perhour')}` })
     if (params.get('contract'))
@@ -232,11 +235,21 @@ export default function JobsPage({
       names.push({ key: 'commute_max',
                    name: t('jobs.commute.chip',
                            { m: params.get('commute_max')! }) })
-    if (params.get('q')) names.push({ key: 'q', name: `"${params.get('q')}"` })
+    if (params.get('q')) names.push({ key: 'q', name: t('jobs.chip.q', { q: params.get('q')!.split(',').join(' / ') }) })
     if (params.get('work_mode'))
       names.push({ key: 'work_mode', name: t(`common.${params.get('work_mode') === 'on_site' ? 'onsite' : params.get('work_mode')}` as Key) })
     return names
   }, [params, t, cat])
+
+  const toggleLittleFinnish = () => {
+    const p = new URLSearchParams(params)
+    if (p.get('language') === 'Finnish' && p.get('level_max') === 'A2') {
+      p.delete('language'); p.delete('level_max')
+    } else {
+      p.set('language', 'Finnish'); p.set('level_max', 'A2')
+    }
+    setParams(p)
+  }
 
   const removeFilter = (k: string) => {
     const p = new URLSearchParams(params)
@@ -247,6 +260,7 @@ export default function JobsPage({
     } else {
       p.delete(k)
       if (k === 'needs') p.delete('needs_mode')
+      if (k === 'language') p.delete('level_max')
     }
     setParams(p)
   }
@@ -447,6 +461,15 @@ export default function JobsPage({
               {labelText(l, t)}
             </Toggle>
           ))}
+          <Toggle pressed={params.get('language') === 'Finnish' && params.get('level_max') === 'A2'}
+                  onClick={toggleLittleFinnish} className="whitespace-nowrap">
+            {t('jobs.quick.littlefinnish')}
+          </Toggle>
+          <Toggle pressed={params.get('hours_min') === '35'}
+                  onClick={() => set('hours_min', params.get('hours_min') === '35' ? null : '35')}
+                  className="whitespace-nowrap">
+            {t('jobs.quick.fulltime')}
+          </Toggle>
           <Toggle pressed={!!params.get('near_station')}
                   onClick={() => set('near_station', params.get('near_station') ? null : '1')}
                   className="whitespace-nowrap">
@@ -509,6 +532,18 @@ export default function JobsPage({
           </div>
           </details>
           <div className="grid gap-4 md:grid-cols-3">
+            <Field label={t('jobs.keyword')} id="f-q">
+              <input id="f-q" type="search" defaultValue={params.get('q') ?? ''}
+                     key={params.get('q') ?? ''}
+                     placeholder={t('jobs.keyword.hint')}
+                     onKeyDown={(e) => { if (e.key === 'Enter') set('q', (e.target as HTMLInputElement).value.trim() || null) }}
+                     onBlur={(e) => set('q', e.target.value.trim() || null)} />
+            </Field>
+            <Field label={t('jobs.minhours')} id="f-hours-min">
+              <input id="f-hours-min" type="number" min="1" inputMode="numeric"
+                     value={params.get('hours_min') ?? ''}
+                     onChange={(e) => set('hours_min', e.target.value || null)} />
+            </Field>
             <Field label={t('jobs.maxhours')} id="f-hours">
               <input id="f-hours" type="number" min="1" inputMode="numeric"
                      value={params.get('hours_max') ?? ''}
@@ -614,12 +649,22 @@ export default function JobsPage({
             <p>{t('common.loading')}</p>
           )}
           {jobs?.length === 0 && (
-            <div className="card p-6">
-              <p className="font-medium">{t('jobs.empty')}</p>
+            <div className="card p-6" role="status">
+              {params.get('q') ? (
+                <QEmpty params={params} onShowAll={(q) => setParams(new URLSearchParams({ q }))} />
+              ) : <p className="m-0 font-medium">{t('jobs.empty')}</p>}
               <EmptyHint params={params} />
-              <Link to="/help" className="btn btn-primary mt-3">
-                {t('jobs.askadvisor')}
-              </Link>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Link to={params.get('q') ? `/help?q=${encodeURIComponent(params.get('q')!.split(',')[0])}` : '/help'}
+                      className="btn btn-primary">
+                  {t('jobs.askadvisor')}
+                </Link>
+                {activeFilterNames.length > 0 && (
+                  <button type="button" className="btn btn-secondary" onClick={clearAll}>
+                    {t('common.clearall')}
+                  </button>
+                )}
+              </div>
             </div>
           )}
           {jobs?.map((j, i) => (
@@ -662,12 +707,53 @@ export default function JobsPage({
   )
 }
 
+function QEmpty({ params, onShowAll }: { params: URLSearchParams; onShowAll: (q: string) => void }) {
+  const { t } = useI18n()
+  const q = params.get('q')!
+  const word = q.split(',')[0]
+  const onlyQ = [...params.keys()].every((k) => k === 'q')
+  const [found, setFound] = useState<{ q: string; n: number } | null>(null)
+  useEffect(() => {
+    if (onlyQ) return
+    let cancelled = false
+    api<{ count: number }>(`/api/jobs?${new URLSearchParams({ q }).toString()}`)
+      .then((r) => { if (!cancelled) setFound({ q, n: r.count }) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [q, onlyQ])
+  const n = !onlyQ && found?.q === q ? found.n : 0
+  if (n > 0) return (
+    <>
+      <p className="m-0 font-medium" style={{ fontSize: '1.15rem' }}>
+        {t('jobs.empty.q.filtered', { q: word, n })}
+      </p>
+      <button type="button" className="btn btn-primary mt-3" onClick={() => onShowAll(q)}>
+        {t('jobs.empty.q.showall', { q: word, n })}
+      </button>
+    </>
+  )
+  return (
+    <>
+      <p className="m-0 font-medium" style={{ fontSize: '1.15rem' }}>
+        {t('jobs.empty.q', { q: word })}
+      </p>
+      <p className="mt-2 mb-0">{t('jobs.empty.q.body')}</p>
+      <ul className="mt-2 mb-0 ps-5 list-disc">
+        <li>{t('jobs.empty.q.advisor')}</li>
+        <li>{t('jobs.empty.q.national')}{' '}
+          <a href="https://tyomarkkinatori.fi" target="_blank" rel="noreferrer">tyomarkkinatori.fi</a>
+        </li>
+        <li>{t('jobs.empty.q.tryout')}{' '}<Link to="/support">{t('jobs.support.link')}</Link></li>
+      </ul>
+    </>
+  )
+}
+
 function EmptyHint({ params }: { params: URLSearchParams }) {
   const { t } = useI18n()
   const [best, setBest] = useState<string | null>(null)
   useEffect(() => {
     let cancelled = false
-    const candidates = ['slots', 'needs', 'field', 'district', 'language']
+    const candidates = ['slots', 'needs', 'field', 'district', 'language', 'hours_min', 'hours_max', 'experience', 'contract']
       .filter((k) => params.get(k))
     Promise.all(candidates.map(async (k) => {
       const p = new URLSearchParams(params)
@@ -677,7 +763,7 @@ function EmptyHint({ params }: { params: URLSearchParams }) {
     })).then((rs) => {
       if (cancelled || !rs.length) return
       rs.sort((a, b) => b.count - a.count)
-      setBest(rs[0].k)
+      if (rs[0].count > 0) setBest(rs[0].k)
     }).catch(() => {})
     return () => { cancelled = true }
   }, [params])
@@ -685,6 +771,8 @@ function EmptyHint({ params }: { params: URLSearchParams }) {
   const names: Record<string, string> = {
     slots: t('jobs.whenwork'), needs: t('jobs.needs'), field: t('jobs.kind'),
     district: t('jobs.distance'), language: t('jobs.language'),
+    hours_min: t('jobs.minhours'), hours_max: t('jobs.maxhours'),
+    experience: t('jobs.experience'), contract: t('jobs.contract'),
   }
   return <p className="text-secondary mt-2">{t('jobs.emptyhint')} {names[best]}</p>
 }

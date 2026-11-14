@@ -36,7 +36,7 @@ FILTER_WHITELIST = {
     "labels": {"students", "retirement", "first_job", "side_job", "part_time"},
     "field": {"cleaning", "retail", "restaurant", "care", "logistics",
               "office", "customer_service", "education", "construction",
-              "tech", "seasonal"},
+              "tech", "seasonal", "manufacturing", "health", "maintenance"},
     "work_mode": {"on_site", "hybrid", "remote"},
     "experience": {"none"},
     "district": {"leppavaara", "tapiola", "otaniemi", "matinkyla", "olari",
@@ -98,7 +98,8 @@ def _ai(messages, conn, action):
 
 FIELD_ENUM = {"cleaning", "retail", "restaurant", "care", "logistics",
               "office", "customer_service", "education", "construction",
-              "tech", "seasonal", "other"}
+              "tech", "seasonal", "manufacturing", "health", "maintenance",
+              "other"}
 CONTRACT_ENUM = {"permanent", "fixed_term", "seasonal", "gig", "summer_job",
                  "traineeship"}
 EXPERIENCE_ENUM = {"none", "some", "required"}
@@ -257,7 +258,7 @@ def _clean_filters(raw: dict) -> dict:
             not_understood.append(note)
 
     for key, val in raw.items():
-        if key in ("explanation", "not_understood"):
+        if key in ("explanation", "not_understood") or val in (None, "", []):
             continue
         if key == "labels" and isinstance(val, list):
             ok = [x for x in val if x in FILTER_WHITELIST["labels"]]
@@ -287,7 +288,14 @@ def _clean_filters(raw: dict) -> dict:
                 filters["needs_mode"] = "yes"
             elif val:
                 drop(key)
-        elif key in ("hours_max", "km") and isinstance(val, int) \
+        elif key == "keywords" and isinstance(val, list):
+            ok = [x.strip()[:40] for x in val
+                  if isinstance(x, str) and len(x.strip()) >= 2][:8]
+            if ok:
+                filters["keywords"] = ok
+            elif val:
+                drop(key)
+        elif key in ("hours_max", "hours_min", "km") and isinstance(val, int) \
                 and not isinstance(val, bool):
             filters[key] = val
         elif key == "pay_min" and isinstance(val, (int, float)) \

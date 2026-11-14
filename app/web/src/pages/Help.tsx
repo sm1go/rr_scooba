@@ -21,7 +21,8 @@ export default function Help() {
     params.get('keys') ? 'check_conditions' : 'other')
   const [keys, setKeys] = useState<Set<string>>(
     new Set((params.get('keys') || '').split(',').filter(Boolean)))
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(() =>
+    params.get('q') ? t('help.prefill.q', { q: params.get('q')! }) : '')
   const [name, setName] = useState('')
   const [method, setMethod] = useState<'phone' | 'sms' | 'email'>('phone')
   const [value, setValue] = useState('')

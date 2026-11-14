@@ -26,7 +26,8 @@ Rules:
 6. Output one JSON object and nothing else, with exactly these keys:
    {"title": str|null, "employer_name": str|null, "field": one of
     ["cleaning","retail","restaurant","care","logistics","office","customer_service",
-     "education","construction","tech","seasonal","other"]|null,
+     "education","construction","tech","seasonal","manufacturing","health",
+     "maintenance","other"]|null,
     "duties": [str], "address": str|null,
     "work_mode": "on_site"|"hybrid"|"remote"|null,
     "pay_amount": number|null, "pay_unit": "hour"|"month"|null, "pay_note": str|null,
@@ -57,10 +58,13 @@ Rules:
 3. Output one JSON object and nothing else. Include only the keys that apply:
    {"labels": subset of ["students","retirement","first_job","side_job","part_time"],
     "field": one of ["cleaning","retail","restaurant","care","logistics","office",
-       "customer_service","education","construction","tech","seasonal"],
+       "customer_service","education","construction","tech","seasonal",
+       "manufacturing","health","maintenance"],
+    "keywords": [str],           # see rule 5
     "slots": list of "<day>-<part>" with day in mon..sun and part in
        morning (06-12), afternoon (12-17), evening (17-23),
-    "hours_max": int,            # hours per week
+    "hours_max": int,            # hours per week, at most
+    "hours_min": int,            # hours per week, at least (35 = full-time)
     "pay_min": number, "pay_unit": "hour"|"month",
     "work_mode": "on_site"|"hybrid"|"remote",
     "experience": "none",        # only when the person says they have no experience
@@ -78,6 +82,16 @@ Rules:
     "not_understood": [str]}
 4. "I cannot lift" or similar is not a filter here; put "lifting: please check each
    job's lifting information" in "not_understood".
+5. When the person names a specific job or occupation (welder, electrician, nurse,
+   bus driver, cook...), put 2-6 search words in "keywords": the English job title,
+   close synonyms of that title and the Finnish title, e.g. "spawacz" ->
+   ["welder","welding","hitsaaja"], "sähköasentaja" -> ["electrician","sähköasentaja"],
+   "kierowca autobusu" -> ["bus driver","bussinkuljettaja"]. Never add generic words
+   that appear in many jobs (driving, work, helper, customer, service, assistant).
+   Leave out every filter the person did not mention; do not output nulls or [].
+   Then do NOT set "field", unless the person also named a broad kind of work. The
+   explanation must name the job in the person's language, e.g. "Jobs that mention
+   welding, because you said welder."
 """
 
 SIMPLIFY_SYSTEM = """\
