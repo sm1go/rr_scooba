@@ -638,6 +638,9 @@ const ar: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'كيف سارت الفعاليات السابقة',
   'ev.after.sum': '{e} صاحب عمل · {p} مشاركًا · {t} محادثة · {n} خطوات تالية · {h} تعيين',
   'ev.after.sum7d': '{n}٪ أجابوا خلال 7 أيام',
+  'ev.firstweek.label': 'الأسابيع الأولى',
+  'ev.why': 'لماذا:',
+  'co.see': 'عرض الشركة ←',
 }
 
 export default ar

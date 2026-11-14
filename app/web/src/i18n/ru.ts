@@ -638,6 +638,9 @@ const ru: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'Как прошли прошлые мероприятия',
   'ev.after.sum': '{e} работодателей · {p} участников · {t} разговоров · {n} следующих шагов · {h} нанято',
   'ev.after.sum7d': '{n}% ответили за 7 дней',
+  'ev.firstweek.label': 'Первые недели',
+  'ev.why': 'Почему:',
+  'co.see': 'Перейти к компании →',
 }
 
 export default ru

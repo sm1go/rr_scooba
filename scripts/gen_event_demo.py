@@ -531,13 +531,13 @@ def _employer_need(eid: str, jobs: list, lang: str) -> dict | None:
             t = q.rstrip(".")
             if t and t not in {m["text"] for m in must}:
                 why = "needed from the first week on this job"
-                must.append({"text": t[0].lower() + t[1:], "why": why})
+                must.append({"text": t[0].upper() + t[1:], "why": why})
             if len(must) >= 3:
                 break
         if len(must) >= 3:
             break
     if not must:
-        must = [{"text": "you can work reliably to agreed times",
+        must = [{"text": "You can work reliably to agreed times",
                  "why": "the team plans shifts around it"}]
     teach = []
     for j in open_jobs:

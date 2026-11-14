@@ -638,6 +638,9 @@ const sq: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'Si shkuan ngjarjet e mëparshme',
   'ev.after.sum': '{e} punëdhënës · {p} pjesëmarrës · {t} biseda · {n} hapa të mëtejshëm · {h} të punësuar',
   'ev.after.sum7d': '{n}% u përgjigjën brenda 7 ditësh',
+  'ev.firstweek.label': 'Javët e para',
+  'ev.why': 'Pse:',
+  'co.see': 'Shiko kompaninë →',
 }
 
 export default sq

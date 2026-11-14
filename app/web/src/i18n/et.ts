@@ -638,6 +638,9 @@ const et: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'Kuidas varasematel üritustel läks',
   'ev.after.sum': '{e} tööandjat · {p} osalejat · {t} vestlust · {n} jätku · {h} tööle võetud',
   'ev.after.sum7d': '{n}% vastas 7 päevaga',
+  'ev.firstweek.label': 'Esimestel nädalatel',
+  'ev.why': 'Miks:',
+  'co.see': 'Vaata ettevõtet →',
 }
 
 export default et

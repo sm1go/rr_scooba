@@ -18,6 +18,7 @@ import { Tabs } from '../components/Tabs'
 import ScanBox from '../components/ScanBox'
 import CompanyLogo from '../components/CompanyLogo'
 import BoothPlan from '../components/BoothPlan'
+import NeedCardView from '../components/NeedCardView'
 import { useConfig } from '../lib/config'
 import EventPage from './EventPage'
 
@@ -35,108 +36,6 @@ function fmtTime(iso: string) {
 }
 const toggleIn = (arr: string[], v: string) =>
   arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
-
-/** One translated fit-reason chip. */
-function Fit({ f }: { f: { key: string; [k: string]: unknown } }) {
-  const { t } = useI18n()
-  const text = t(`ev.fit.${f.key}` as Key, f as Record<string, string>)
-  return (
-    <span className="chip" style={{ background: 'var(--color-yes-bg)' }}>
-      {text}
-    </span>
-  )
-}
-
-function NeedCardView({ e, registered, onToggleInterest, interestCount, limit }: {
-  e: NeedEntry
-  registered: boolean
-  interestCount: number
-  limit: number
-  onToggleInterest: (e: NeedEntry) => void
-}) {
-  const { t } = useI18n()
-  const card = e.need!.card
-  const [meets, setMeets] = useState<number[]>(e.meets ?? [])
-  const [open, setOpen] = useState(false)
-
-  return (
-    <article className="card p-4 grid gap-2">
-      <h3 className="m-0">
-        <Link to={`/companies/${e.employer_id}`}>{e.employer_name}</Link>
-      </h3>
-      {e.company_badges?.includes('employer_answered') && (
-        <span className="chip" style={{ background: 'var(--color-yes-bg)' }}>
-          {t('badge.employer_answered')}</span>
-      )}
-      {e.need!.need_by === 'advisor' && (
-        <p className="text-secondary m-0">{t('ev.byadvisor')}</p>
-      )}
-      {card.first_week.length > 0 && (
-        <div>
-          <strong>{t('ev.firstweek')}</strong>
-          <ul className="m-0 ps-5">{card.first_week.map((x, i) => <li key={i}>{x}</li>)}</ul>
-        </div>
-      )}
-      {card.must_haves.length > 0 && (
-        <div>
-          <strong>{t('ev.must')}</strong>
-          <ul className="m-0 ps-5">
-            {card.must_haves.map((m, i) => (
-              <li key={i}>{m.text}
-                {m.why && <span className="text-secondary"> — {m.why}</span>}
-                {registered && e.interested !== undefined && (
-                  <label className="ms-2 inline-flex items-center gap-1">
-                    <input type="checkbox" checked={meets.includes(i)}
-                           onChange={() =>
-                             setMeets(meets.includes(i)
-                               ? meets.filter((x) => x !== i) : [...meets, i])} />
-                    <span>{t('ev.thisisme')}</span>
-                  </label>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {card.languages.length > 0 && (
-        <p className="m-0"><strong>{t('ev.langs')}</strong>{' '}
-          {card.languages.map((l) => `${l.name} ${l.level}${l.task ? ` (${l.task})` : ''}`).join(', ')}
-        </p>
-      )}
-      {card.will_teach.length > 0 && (
-        <p className="m-0"><strong>{t('ev.teach')}</strong>{' '}{card.will_teach.join(' · ')}</p>
-      )}
-      {e.fit && e.fit.length > 0 && (
-        <div className="flex gap-2 flex-wrap">
-          {e.fit.map((f, i) => <Fit key={i} f={f} />)}
-        </div>
-      )}
-      {registered && (
-        <div className="flex gap-2 items-center flex-wrap">
-          {!e.interested && interestCount >= limit ? (
-            <span className="text-secondary">{t('ev.limit', { n: limit })}</span>
-          ) : !e.interested && !open ? (
-            <button type="button" className="btn btn-secondary"
-                    onClick={() => setOpen(true)}>{t('ev.interested')}</button>
-          ) : e.interested ? (
-            <>
-              <span className="font-medium" style={{ color: 'var(--color-brand)' }}>
-                {t('ev.interested_on')}
-              </span>
-              <button type="button" className="btn btn-secondary"
-                      onClick={() => onToggleInterest(e)}>{t('ev.notinterested')}</button>
-            </>
-          ) : (
-            <button type="button" className="btn btn-primary"
-                    onClick={() => onToggleInterest({ ...e, meets })}>
-              {t('ev.interested.send')}
-            </button>
-          )}
-        </div>
-      )}
-    </article>
-  )
-}
 
 function RegisterForm({ ev, onDone }: {
   ev: EventSummary; onDone: (r: MyEventData['registration']) => void
@@ -338,36 +237,44 @@ export default function EventDetail() {
       )}
 
       <Section title={t('ev.employers.title', { n: ev.employers.length })}>
-        <ul className="m-0 p-0 list-none grid gap-3 emp-tiles">
+        <ul className="m-0 p-0 list-none grid emp-tiles">
           {ev.employers.map((e) => {
             const firstLine = e.need?.card.first_week?.[0]
             return (
-              <li key={e.employer_id} className="card p-4"
-                  style={{ position: 'relative' }}>
+              <li key={e.employer_id} className="card p-5 emp-tile">
                 <Link to={`/companies/${e.employer_id}`}
-                      className="flex gap-3 items-start stretched-link">
-                  <CompanyLogo
-                    employer={{ name: e.employer_name ?? '',
-                                logo_color: e.logo_color, field: e.field }}
-                    size={44} />
-                  <span className="flex-1" style={{ minWidth: 0 }}>
-                    <span className="block font-medium">{e.employer_name}</span>
-                    {e.tagline &&
-                      <span className="block text-secondary">{e.tagline}</span>}
-                    <span className="block text-secondary">
-                      {[
-                        e.field ? t(`field.${e.field}` as Key) : '',
-                        e.booth ? `${t('ev.booth')} ${e.booth}` : '',
-                        e.open_jobs != null
-                          ? t('ev.openjobs.n', { n: e.open_jobs }) : '',
-                      ].filter(Boolean).join(' · ')}
-                    </span>
-                    {firstLine && (
-                      <span className="block mt-1">
-                        <strong>{t('ev.firstweek')}</strong> {firstLine}
-                      </span>
-                    )}
-                  </span>
+                      className="emp-tile-link">
+                  <div className="flex gap-3 items-start">
+                    <CompanyLogo
+                      employer={{ name: e.employer_name ?? '',
+                                  logo_color: e.logo_color,
+                                  field: e.field }}
+                      size={48} />
+                    <span className="flex-1 emp-tile-name">
+                      {e.employer_name}</span>
+                    {e.booth &&
+                      <span className="chip emp-booth">{e.booth}</span>}
+                  </div>
+                  {e.tagline &&
+                    <p className="m-0 mt-2 text-secondary clamp-2">
+                      {e.tagline}</p>}
+                  <div className="flex gap-2 flex-wrap mt-2">
+                    {e.field &&
+                      <span className="chip">
+                        {t(`field.${e.field}` as Key)}</span>}
+                    {e.open_jobs != null && (
+                      <span className="chip">
+                        {t('ev.openjobs.n', { n: e.open_jobs })}</span>)}
+                  </div>
+                  {firstLine && (
+                    <div className="mt-auto emp-tile-weeks">
+                      <span className="emp-tile-label">
+                        {t('ev.firstweek.label')}</span>
+                      <span className="block clamp-2">{firstLine}</span>
+                    </div>
+                  )}
+                  {!firstLine && <span className="mt-auto" />}
+                  <span className="emp-tile-cta">{t('co.see')}</span>
                 </Link>
               </li>
             )
@@ -380,6 +287,10 @@ export default function EventDetail() {
           <p>{t('ev.needs.soon', { d: fmtDate(ev.publish_date) })}</p>
         ) : (
           <div className="grid gap-3">
+            {reg && needs.length > 0 && (
+              <p className="m-0 text-secondary">
+                {t('ev.limit', { n: limit })}</p>
+            )}
             {needs.map((e) => (
               <NeedCardView key={e.employer_id} e={e} registered={!!reg}
                             interestCount={interestCount} limit={limit}

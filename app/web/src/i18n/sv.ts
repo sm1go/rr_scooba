@@ -631,6 +631,9 @@ const sv: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'Hur tidigare evenemang gick',
   'ev.after.sum': '{e} arbetsgivare · {p} deltagare · {t} samtal · {n} nästa steg · {h} anställda',
   'ev.after.sum7d': '{n} % svarade inom 7 dagar',
+  'ev.firstweek.label': 'Första veckorna',
+  'ev.why': 'Varför:',
+  'co.see': 'Se företaget →',
 }
 
 export default sv

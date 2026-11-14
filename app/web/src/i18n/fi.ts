@@ -968,6 +968,9 @@ const fi: Record<Key, string> = {
   'ev.after.howwent': 'Miten aiemmissa tapahtumissa kävi',
   'ev.after.sum': '{e} työnantajaa · {p} osallistujaa · {t} keskustelua · {n} jatkoa · {h} palkattu',
   'ev.after.sum7d': '{n} % vastasi 7 päivässä',
+  'ev.firstweek.label': 'Ensimmäiset viikot',
+  'ev.why': 'Miksi:',
+  'co.see': 'Katso yritys →',
 }
 
 export default fi

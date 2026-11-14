@@ -638,6 +638,9 @@ const fa: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'رویدادهای قبلی چگونه گذشت',
   'ev.after.sum': '{e} کارفرما · {p} شرکت\u200cکننده · {t} گفتگو · {n} قدم بعدی · {h} استخدام\u200cشده',
   'ev.after.sum7d': '{n}٪ ظرف ۷ روز پاسخ دادند',
+  'ev.firstweek.label': 'هفته\u200cهای اول',
+  'ev.why': 'چرا:',
+  'co.see': 'مشاهده شرکت ←',
 }
 
 export default fa

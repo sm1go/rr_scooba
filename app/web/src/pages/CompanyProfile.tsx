@@ -7,6 +7,7 @@ import type { Catalog, CompanyProfile } from '../types'
 import { districtName } from '../lib/format'
 import { Section, ErrorState } from '../components/ui'
 import CompanyLogo from '../components/CompanyLogo'
+import NeedCardView from '../components/NeedCardView'
 import JobRow from '../components/JobRow'
 import JobMap from '../components/JobMap'
 import { fmtDate } from '../lib/format'
@@ -127,18 +128,14 @@ export default function CompanyProfilePage() {
                 </div>
                 {ev.need_card && (
                   <div className="mt-2">
-                    {ev.need_card.first_week?.length > 0 && (
-                      <p className="m-0">
-                        <strong>{t('ev.firstweek')}</strong>{' '}
-                        {ev.need_card.first_week[0]}
-                      </p>
-                    )}
-                    {ev.need_card.will_teach && (
-                      <p className="m-0 text-secondary">
-                        <strong>{t('ev.teach')}</strong>{' '}
-                        {ev.need_card.will_teach}
-                      </p>
-                    )}
+                    <NeedCardView
+                      e={{ employer_id: co.id, employer_name: co.name,
+                           booth: null, slots: 0, formats: [],
+                           tagline: co.tagline, field: co.field,
+                           logo_color: co.logo_color,
+                           need: { card: ev.need_card,
+                                   submitted_at: '',
+                                   need_by: 'employer' } }} />
                   </div>
                 )}
               </div>

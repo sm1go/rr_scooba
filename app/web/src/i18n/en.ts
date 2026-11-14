@@ -965,6 +965,9 @@ const en = {
   'ev.after.howwent': 'How earlier events went',
   'ev.after.sum': '{e} employers · {p} people took part · {t} conversations · {n} next steps · {h} hired',
   'ev.after.sum7d': '{n}% answered within 7 days',
+  'ev.firstweek.label': 'First weeks',
+  'ev.why': 'Why:',
+  'co.see': 'See the company →',
 } as const
 
 export type Key = keyof typeof en

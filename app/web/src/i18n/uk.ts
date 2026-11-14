@@ -638,6 +638,9 @@ const uk: Partial<Record<Key, string>> = {
   'ev.after.howwent': 'Як пройшли попередні заходи',
   'ev.after.sum': '{e} роботодавців · {p} учасників · {t} розмов · {n} наступних кроків · {h} найнято',
   'ev.after.sum7d': '{n}% відповіли за 7 днів',
+  'ev.firstweek.label': 'Перші тижні',
+  'ev.why': 'Чому:',
+  'co.see': 'Перейти до компанії →',
 }
 
 export default uk
