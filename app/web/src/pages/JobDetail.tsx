@@ -220,14 +220,16 @@ export default function JobDetail() {
       <Section title={t('job.conditions')}>
         <ConditionTable job={job} />
         {unknownKeys.length > 0 && (
-          <div className="card p-4 mt-3 flex flex-wrap items-center justify-between gap-3"
+          <div className="card p-4 mt-3 flex flex-wrap items-end justify-between gap-3"
                style={{ background: 'var(--color-wait-bg)' }}>
             <div className="min-w-0 flex-1">
               <p className="m-0 font-medium">{t('job.unknownbanner', { n: unknownKeys.length })}</p>
-              <p className="m-0 mt-1">
-                {unknownKeys.map((k) => t(`cond.${k}` as Key)).join(', ')}
-                {!job.lifting && `, ${t('job.lifting').toLowerCase()}`}
-              </p>
+              <ul className="list-none p-0 m-0 mt-2 flex flex-wrap gap-2">
+                {[...unknownKeys.map((k) => t(`cond.${k}` as Key)),
+                  ...(job.lifting ? [] : [t('job.lifting')])].map((x) => (
+                  <li key={x} className="chip" style={{ background: '#fff' }}>{x}</li>
+                ))}
+              </ul>
             </div>
             <Link to={helpLink(job.id, unknownKeys)} className="btn btn-secondary">
               {t('job.unknownask')}
