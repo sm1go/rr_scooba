@@ -118,3 +118,63 @@ Decision D014. Research: `docs/01-research/10-espoo-events-today.md`.
   - Some talks already recorded with observed items and outcomes, so the On the day and After tabs have content.
   - Aino, Pekka and Amira are registered with cards; Sanna's company is a registered employer with a need card; Leena is the organizer.
 - **E2 "Työnantajatreffit at Sello library (demo)"**: Finnish, walk-in interview format, 26 Nov 2026 12:00–15:00. It is the current single event migrated, with its existing employers, plans and talks.
+
+## 7. People first: personal QR pass, badges, networking (v5, decision D015)
+
+**Tagline:** "From people, for people" (fi "Ihmisiltä ihmisille"). It is shown in the home hero, above the unchanged three-line How it works (Before / On the day / After). Under it a short line: "You choose employers by what they need. Employers choose you by what you have done. You meet when it is mutual." AI stays a small optional helper: the "Help me write this clearly" button becomes a quiet text link, and nothing in matching, cards or badges uses AI.
+
+**7.1 Personal QR pass**
+- Every registered talent and every employer representative of a joined employer gets a pass for each event.
+  - Table `event_pass(token PK, event_id, user_id, created_at)`; the token is 22 url-safe random chars.
+  - The QR encodes `<PUBLIC_BASE>/p/<token>` (same base logic as the paper notice).
+- The pass screen (`/events/:id/pass`) has a large black-on-white QR, the person's first name, the event name and the 4-digit visitor number as a fallback for people without a phone. It also has a "Print my pass" button and a brightness tip.
+  - It is reachable from My day, the event page and Profile.
+- Showing your QR means you agree to share your event profile with the person who scans it. That is said in plain words on the pass screen.
+- Scanning works in two ways:
+  - the phone camera opens `/p/<token>`;
+  - in the app, a "Scan" button uses BarcodeDetector where the browser supports it, otherwise "Use your phone camera, or type the visitor number".
+- `GET /api/p/{token}` requires the viewer to be signed in and part of the same event: registered talent, a joined employer's user, or an advisor. Otherwise 403, with a sign-in prompt in the UI.
+  - Every scan stores `event_scan(id, event_id, scanner_id, scanned_id, created_at)` and creates a connection.
+
+**7.2 Event profile (what the scanner sees)**
+- **Talent:**
+  - first name and the contact fields the person chose to share (Profile settings: share email yes/no, share phone yes/no, optional link e.g. LinkedIn);
+  - `looking_for` and the "things I have done";
+  - checked documents;
+  - visible badges;
+  - visible "Seen at the event" records.
+- **Employer representative:** name, company, the company's need card for that event, shared contact, company badges.
+- **Employer scanning a talent** gets three actions:
+  1. "Record a talk": opens/creates the `event_talk` for this pair, so the 7-day answer rule applies to QR talks too;
+  2. "Give a badge";
+  3. a private note for themselves (stored on the connection, never shown to the talent).
+
+**7.3 Badges (positive only, the person controls visibility)**
+
+Table `badge(id, user_id, employer_id NULL, event_id, kind, label, note, given_by, created_at, hidden 0/1)`.
+
+| kind | Given by | Rule |
+|---|---|---|
+| `attended` | system | Once per event, when the person has a done meeting, a recorded talk or was scanned at the event |
+| `kudos` | employer representative | Only to someone they met, talked to or scanned at that event. Label from a fixed list: explains_clearly, solved_task, customer_focus, team_player, learns_fast, reliable, helped_others. One label per employer per person per event; max 10 kudos per employer per event; optional note ≤ 140 chars, checked by the wording checker |
+| `hired` | employer or advisor | For someone hired after an event conversation; one per employer–person pair |
+| `organizer` | advisor | pitched, workshop, volunteer |
+| `employer_answered` (company badge) | system | Employer answered every talk of an event within 7 days |
+
+- **Where badges appear:**
+  - the talent's own Profile ("My badges", each with Hide / Show);
+  - the event profile after a scan;
+  - in employer anonymous cards, **only kudos labels with counts**, e.g. "Solved the task at a booth ×2", because they are evidence of skill. Attended, hired and organizer badges never appear in anonymous cards and never affect order or matching, so newcomers are not at a disadvantage;
+  - company badges on need cards.
+- No negative badges and no ratings. Badge givers are named on the profile ("from Kahvila Koivu, TalentMatch spring 2027").
+
+**7.4 Networking: connections**
+- Any scan between two event participants creates a connection both ways: `connection(user_a, user_b, event_id, created_at, note_a, note_b)`, unique per pair and event. Talent-to-talent networking works the same way.
+- "My connections" (Profile tab and the event After tab) lists the person, their role/company, the event and the contact they chose to share. Remove is allowed.
+- The event After tab for talent shows "People you met" (connections) next to the answers and the Seen-at-the-event records.
+
+**7.5 Demo data**
+- Add a past event **E0 "Työnantajatreffit at Iso Omena — autumn 2026 (demo)"** (finished, 8 Oct 2026) with a few talks, so badges have history.
+- Seed about 30 badges: attended for E0 participants, about 12 kudos from E0 employers, 2 hired, 2 organizer. Aino has attended + 2 kudos + organizer "pitched".
+- Seed about 20 connections, including talent-to-talent ones.
+- Passes for every E1 registration and E1 employer user.
