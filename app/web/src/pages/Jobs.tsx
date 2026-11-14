@@ -361,7 +361,10 @@ export default function JobsPage({
             <LifeBuoy size={22} aria-hidden="true" className="shrink-0 mt-0.5" />
             <span><strong>{t('jobs.human.title')}</strong> {t('jobs.human.body')}</span>
           </p>
-          <Link to="/help" className="btn btn-primary">{t('jobs.askadvisor')}</Link>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/support" className="btn btn-secondary">{t('jobs.support.link')}</Link>
+            <Link to="/help" className="btn btn-primary">{t('jobs.askadvisor')}</Link>
+          </div>
         </div>
       )}
 

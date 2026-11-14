@@ -32,11 +32,13 @@ export default function SupportPage() {
   const toggle = (id: string) =>
     setTicks((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n })
   const matches = programsFor(ticks, cat.programs)
+  const forYou = matches.filter((p) => p.paid_to !== 'employer')
+  const forEmployer = matches.filter((p) => p.paid_to === 'employer')
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 data-page-title tabIndex={-1}>{t('support.title')}</h1>
-      <p className="text-secondary">{cat.meta.disclaimer}</p>
+      <h1 data-page-title tabIndex={-1} className="no-print">{t('support.title')}</h1>
+      <p className="text-secondary no-print">{cat.meta.disclaimer}</p>
 
       {step === 1 && (
         <Section title={t('support.step1')}>
@@ -60,17 +62,38 @@ export default function SupportPage() {
 
       {step === 2 && (
         <>
-          <button type="button" className="btn btn-quiet mb-3"
+          <button type="button" className="btn btn-quiet mb-3 no-print"
                   onClick={() => setStep(1)}>
             {`← ${t('common.back')}`}
           </button>
-          <Section title={t('support.step2')}>
-            {matches.length === 0 && (
+          {matches.length === 0 && (
+            <Section title={t('support.step2')}>
               <p className="text-secondary">{t('support.none')}</p>
-            )}
-            {matches.map((p) => <ProgramCard key={p.id} p={p} />)}
-          </Section>
-          <p className="text-secondary mt-2">
+            </Section>
+          )}
+          {forYou.length > 0 && (
+            <div className="no-print">
+              <Section title={t('support.foryou')}>
+                {forYou.map((p) => <ProgramCard key={p.id} p={p} />)}
+              </Section>
+            </div>
+          )}
+          {forEmployer.length > 0 && (
+            <Section title={t('support.foremployer')}>
+              <p className="no-print">{t('support.foremployer.hint')}</p>
+              <button type="button" className="btn btn-primary mb-3 no-print"
+                      onClick={() => window.print()}>
+                {t('support.print')}
+              </button>
+              <div className="print-sheet">
+                {forEmployer.map((p) => <EmployerCard key={p.id} p={p} />)}
+                <p className="hidden print:block text-secondary">
+                  {t('support.sheet.contact')} {t('support.checked')}: {cat.meta.checked_on}. {t('support.disclaimer')}
+                </p>
+              </div>
+            </Section>
+          )}
+          <p className="text-secondary mt-2 no-print">
             {t('support.checked')}: {cat.meta.checked_on}
           </p>
         </>
@@ -87,10 +110,7 @@ function ProgramCard({ p }: { p: SupportProgram }) {
     <article className="card p-5 mb-3">
       <h3 className="m-0 font-display" style={{ fontSize: '1.2rem' }}>{p.name}</h3>
       <p className="m-0 mt-1 font-medium">{t('support.amount')}: {p.amount}</p>
-      <p className="m-0 mt-1 text-secondary">
-        {p.paid_to === 'resident' ? t('support.moneyto.you')
-          : p.paid_to === 'employer' ? t('support.moneyto.employer') : '—'}
-      </p>
+      {p.paid_to === 'resident' && <p className="m-0 mt-1 text-secondary">{t('support.moneyto.you')}</p>}
       <p className="m-0 mt-2">{p.for_resident || p.for_employer}</p>
       <p className="m-0 mt-2 text-secondary">
         <a href={p.source_url} target="_blank" rel="noreferrer">
@@ -101,6 +121,18 @@ function ProgramCard({ p }: { p: SupportProgram }) {
         <ListenButton text={listen} />
         <Link to="/help" className="btn btn-secondary">{t('support.ask')}</Link>
       </div>
+    </article>
+  )
+}
+
+function EmployerCard({ p }: { p: SupportProgram }) {
+  const { t } = useI18n()
+  return (
+    <article className="card p-5 mb-3">
+      <h3 className="m-0 font-display" style={{ fontSize: '1.2rem' }}>{p.name}</h3>
+      <p className="m-0 mt-1 font-medium">{t('support.amount')}: {p.amount}</p>
+      <p className="m-0 mt-2">{p.for_employer}</p>
+      <p className="m-0 mt-2 text-secondary">{t('support.source')}: {p.source_name} · {p.source_url}</p>
     </article>
   )
 }

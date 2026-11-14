@@ -28,7 +28,7 @@ export default function AdvisorSupport() {
   return (
     <div className="max-w-5xl mx-auto">
       <h1 data-page-title tabIndex={-1}>{t('advisor.support')}</h1>
-      <p className="text-secondary">
+      <p className="text-secondary mt-2">
         {t('support.checked')}: {cat.meta.checked_on} — {cat.meta.disclaimer}
       </p>
       <Section title={t('support.title')}>
@@ -36,7 +36,7 @@ export default function AdvisorSupport() {
           <table className="w-full" style={{ borderCollapse: 'collapse' }}>
             <thead>
               <tr className="text-left border-b" style={{ borderColor: 'var(--color-ink)' }}>
-                <th className="py-2 pe-3">{t('support.title')}</th>
+                <th className="py-2 pe-3" style={{ width: '55%' }}>{t('support.title')}</th>
                 <th className="py-2 pe-3">{t('support.amount')}</th>
                 <th className="py-2 pe-3">{t('empevent.person')}</th>
                 <th className="py-2 pe-3">{t('support.source')}</th>
@@ -50,7 +50,7 @@ export default function AdvisorSupport() {
                     <strong>{p.name}</strong>
                     <p className="m-0 text-secondary">{p.for_resident || p.for_employer}</p>
                   </td>
-                  <td className="py-3 pe-3 whitespace-nowrap">{p.amount}</td>
+                  <td className="py-3 pe-3">{p.amount}</td>
                   <td className="py-3 pe-3">
                     {p.paid_to === 'resident' ? t('support.moneyto.you')
                       : p.paid_to === 'employer' ? t('support.moneyto.employer') : '—'}
