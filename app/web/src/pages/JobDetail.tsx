@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { api, ApiError } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { useConfig } from '../lib/config'
@@ -12,6 +12,7 @@ import JobMap from '../components/JobMap'
 import ConditionTable from '../components/ConditionTable'
 import ListenButton from '../components/ListenButton'
 import { daysAgoText, districtName, hoursLine, payLine, shiftsLine } from '../lib/format'
+import { commuteLine, legText } from '../lib/commute'
 import { employerProgramsFor } from '../lib/support'
 
 export default function JobDetail() {
@@ -43,18 +44,26 @@ export default function JobDetail() {
     }
   }, [id, user])
 
-  // Commute: only when the routing service is connected; needs the
-  // resident's district as the trip origin (§5).
+  // Commute (§5): works signed out. Origin = ?district= from the list
+  // filter, else the resident's profile district.
+  const [search] = useSearchParams()
+  const [originId, setOriginId] = useState<string | null>(null)
   useEffect(() => {
     setCommute(null)
-    if (!cfg.commute || !job || user?.role !== 'resident') return
+    setOriginId(null)
+    if (!cfg.commute || !job || job.work_mode === 'remote') return
+    const fromUrl = search.get('district')
+    const fetchFor = (district: string) => {
+      setOriginId(district)
+      api<Commute>(`/api/commute?job_id=${job.id}&district=${district}`)
+        .then(setCommute).catch(() => undefined)
+    }
+    if (fromUrl) { fetchFor(fromUrl); return }
+    if (user?.role !== 'resident') return
     api<{ district: string | null }>('/api/me/profile')
-      .then((p) => p.district
-        ? api<Commute>(`/api/commute?job_id=${job.id}&district=${p.district}`)
-            .then(setCommute).catch(() => undefined)
-        : undefined)
+      .then((p) => { if (p.district) fetchFor(p.district) })
       .catch(() => undefined)
-  }, [cfg.commute, job, user])
+  }, [cfg.commute, job, user, search])
 
   // Quiet support line — employer-side programmes that fit this job (§7).
   useEffect(() => {
@@ -120,17 +129,24 @@ export default function JobDetail() {
           })}
         </p>
       )}
-      {commute && (
+      {commute && cat && originId && (
         <p className="text-secondary">
-          {t('jobs.commute', {
-            m: commute.minutes,
-            modes: commute.legs.filter((l) => l.mode !== 'WALK')
-              .map((l) => l.route ? `${l.mode} ${l.route}` : l.mode.toLowerCase())
-              .join(' + ') || 'walk',
-            district: cat && user ? districtName(job.district, cat.districts) : job.district,
-            t: commute.arrive_by.slice(11, 16),
-          })}
+          {commuteLine(commute, districtName(originId, cat.districts), t)}
+          {' '}
+          <span>({t('commute.arriving', { t: commute.arrive_by.slice(11, 16) })})</span>
         </p>
+      )}
+      {commute && cat && originId && (
+        <details className="mt-1">
+          <summary className="cursor-pointer text-secondary">
+            {t('commute.legs')}
+          </summary>
+          <ol className="m-0 mt-1 pl-5 text-secondary">
+            {commute.legs.map((l, i) => (
+              <li key={i}>{legText(l, districtName(originId, cat.districts), t)}</li>
+            ))}
+          </ol>
+        </details>
       )}
 
       <div className="flex gap-2 items-center flex-wrap mb-4">

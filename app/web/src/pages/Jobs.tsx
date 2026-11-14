@@ -36,10 +36,22 @@ export default function JobsPage({
   const [askText, setAskText] = useState('')
   const [askReply, setAskReply] = useState<FiltersReply | null>(null)
   const [askBusy, setAskBusy] = useState(false)
+  const [profileDistrict, setProfileDistrict] = useState<string | null>(null)
 
   useEffect(() => {
     api<Catalog>('/api/catalog').then(setCat).catch(() => {})
   }, [])
+
+  // commute origin (§5): the district filter wins, else the resident's
+  // own profile district — no sign-in needed for the filter path
+  useEffect(() => {
+    if (user?.role !== 'resident') { setProfileDistrict(null); return }
+    api<Profile>('/api/me/profile')
+      .then((p) => setProfileDistrict(p.district)).catch(() => undefined)
+  }, [user])
+  const originDistrict = params.get('district') || profileDistrict || undefined
+  const originName = cat && originDistrict
+    ? districtName(originDistrict, cat.districts) : undefined
 
   const qs = params.toString()
   const load = () => {
@@ -160,7 +172,9 @@ export default function JobsPage({
     if (params.get('at_event')) names.push({ key: 'at_event', name: t('jobs.atevent') })
     if (params.get('near_station')) names.push({ key: 'near_station', name: t('jobs.nearstation') })
     if (params.get('commute_max'))
-      names.push({ key: 'commute_max', name: `≤${params.get('commute_max')} min` })
+      names.push({ key: 'commute_max',
+                   name: t('jobs.commute.chip',
+                           { m: params.get('commute_max')! }) })
     if (params.get('q')) names.push({ key: 'q', name: `"${params.get('q')}"` })
     if (params.get('work_mode'))
       names.push({ key: 'work_mode', name: t(`common.${params.get('work_mode') === 'on_site' ? 'onsite' : params.get('work_mode')}` as Key) })
@@ -404,10 +418,23 @@ export default function JobsPage({
               </div>
             </Field>
             {cfg.commute && (
-              <Field label={t('jobs.commute')} id="f-commute">
-                <input id="f-commute" type="number" min="1" inputMode="numeric"
-                       value={params.get('commute_max') ?? ''} placeholder="min"
-                       onChange={(e) => set('commute_max', e.target.value || null)} />
+              <Field label={t('jobs.commute.filter')} id="f-commute">
+                {params.get('district') ? (
+                  <div className="flex gap-2 flex-wrap" role="radiogroup"
+                       aria-label={t('jobs.commute.filter')}>
+                    {[15, 30, 45, 60].map((m) => (
+                      <Toggle key={m}
+                              pressed={params.get('commute_max') === String(m)}
+                              onClick={() => set('commute_max',
+                                params.get('commute_max') === String(m)
+                                  ? null : String(m))}>
+                        {t('jobs.commute.tile', { m })}
+                      </Toggle>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-secondary m-0">{t('jobs.commute.first')}</p>
+                )}
               </Field>
             )}
           </div>
@@ -452,7 +479,12 @@ export default function JobsPage({
       <div className="grid gap-4 lg:grid-cols-[1fr_minmax(340px,42%)]">
         <section aria-label={t('jobs.list')}
                  className={view === 'map' ? 'hidden lg:block' : ''}>
-          {jobs == null && <p>{t('common.loading')}</p>}
+          {jobs == null && params.get('commute_max') && (
+            <p role="status">{t('jobs.commute.checking')}</p>
+          )}
+          {jobs == null && !params.get('commute_max') && (
+            <p>{t('common.loading')}</p>
+          )}
           {jobs?.length === 0 && (
             <div className="card p-6">
               <p className="font-medium">{t('jobs.empty')}</p>
@@ -469,6 +501,8 @@ export default function JobsPage({
                       saved={savedIds.has(j.id)}
                       onToggleSave={user?.role === 'resident' ? toggleSave : undefined}
                       actions={rowActions?.(j)}
+                      originDistrict={originDistrict}
+                      originName={originName}
                       districtName={cat ? districtName(j.district, cat.districts) : j.district} />
               {i === 2 && <HelpCard />}
             </div>

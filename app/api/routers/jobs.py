@@ -3,8 +3,13 @@
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
+import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
+
+logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
@@ -141,33 +146,64 @@ def list_jobs(
         out.append(job_out(conn, row, center))
         matched.append(row)
 
-    # commute_max needs a district as the trip origin (§5). Results come from
-    # the 7-day cache; missing ones are computed, at most 5 calls per request.
-    # Jobs whose commute cannot be computed are kept and marked commute: null.
-    if commute_max is not None:
-        if not district:
-            raise HTTPException(422,
-                                "commute_max needs a district to start from.")
+    # Commute (§5): with a district chosen, attach the cached estimate to
+    # every job (no network). commute_max additionally computes every
+    # missing one — up to 5 routing calls in parallel — then filters.
+    # Remote jobs and ones we cannot compute keep commute: null and are
+    # never filtered out.
+    if district:
         from . import commute as commute_mod
-        computed = 0
+        center = _district_center(district)
+        commutable = []
         for item, row in zip(out, matched):
             job = _decode(row)
-            payload = None
-            try:
-                if settings.commute_enabled() and computed < 5:
-                    payload = commute_mod.compute_commute(
-                        conn, job, district)
-                    computed += 1
-                elif settings.commute_enabled():
-                    payload = commute_mod.cached_commute(
-                        conn, job["id"], district)
-            except Exception:
-                payload = None
-            item["commute"] = payload
-        out = [j for j in out
-               if j["commute"] is None
-               or j["commute"].get("minutes") is None
-               or j["commute"]["minutes"] <= commute_max]
+            if job["work_mode"] == "remote" or job["lat"] is None \
+                    or not center:
+                item["commute"] = None
+                continue
+            payload = commute_mod.cached_commute(conn, job["id"], district)
+            if payload is not None:
+                item["commute"] = payload     # absent = "not tried yet"
+            else:
+                commutable.append((item, job))
+
+        if commute_max is None:
+            pass                        # cached values only
+        elif not settings.commute_enabled():
+            pass                        # no key: nothing to compute
+        elif commutable:
+            def fetch(job: dict):
+                try:
+                    return commute_mod.compute_commute_uncached(
+                        job, district, center)
+                except Exception as e:
+                    logger.warning("commute failed for job %s: %s",
+                                   job["id"], e)
+                    return None
+            # batches of 5 parallel calls, a short pause between batches
+            # so a cold cache doesn't hammer the routing service
+            todo = [j for _, j in commutable]
+            payloads = []
+            with ThreadPoolExecutor(max_workers=5) as pool:
+                for i in range(0, len(todo), 5):
+                    payloads.extend(pool.map(fetch, todo[i:i + 5]))
+                    if i + 5 < len(todo):
+                        time.sleep(0.2)
+            for (item, job), payload in zip(commutable, payloads):
+                if payload is not None:
+                    commute_mod.store_commute(conn, job["id"], district,
+                                              payload)
+                item["commute"] = payload
+            conn.commit()
+
+        if commute_max is not None:
+            out = [j for j in out
+                   if j.get("commute") is None
+                   or j["commute"].get("minutes") is None
+                   or j["commute"]["minutes"] <= commute_max]
+    elif commute_max is not None:
+        raise HTTPException(422,
+                            "commute_max needs a district to start from.")
 
     out.sort(key=lambda j: j["title"])
     out.sort(key=lambda j: j["confirmed_at"] or "", reverse=True)

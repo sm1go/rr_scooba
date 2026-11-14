@@ -72,34 +72,40 @@ def cached_commute(conn, job_id: str, district: str) -> dict | None:
     return json.loads(cached["payload"])
 
 
+def compute_commute_uncached(job: dict, district: str,
+                             center: tuple[float, float]) -> dict | None:
+    """Network only — safe to run in a worker thread (no DB connection).
+    Returns the payload or None when no itinerary is found. Raises
+    CommuteUnavailable when no key / the service is unreachable."""
+    when = arrive_by(job)
+    node = digitransit.get_client().plan(
+        center[0], center[1], job["lat"], job["lon"], when)
+    return digitransit.commute_out(node, when)
+
+
+def store_commute(conn, job_id: str, district: str, payload: dict) -> None:
+    """Write a computed payload to the cache (request thread only)."""
+    conn.execute(
+        "INSERT OR REPLACE INTO commute_cache (job_id,district,payload,"
+        "computed_at) VALUES (?,?,?,?)",
+        (job_id, district, json.dumps(payload, ensure_ascii=False),
+         datetime.now().isoformat(timespec="seconds")))
+    db_mod.audit(conn, "system", "commute_computed", f"{job_id}:{district}")
+
+
 def compute_commute(conn, job: dict, district: str) -> dict | None:
     """Cache lookup, else one Digitransit call; returns payload or None.
     Raises CommuteUnavailable when no key / service down."""
     center = _district_center(district)
     if not center or job.get("lat") is None:
         return None
-    when = arrive_by(job)
-    cached = conn.execute(
-        "SELECT payload, computed_at FROM commute_cache"
-        " WHERE job_id=? AND district=?", (job["id"], district)).fetchone()
-    if cached:
-        try:
-            at = datetime.fromisoformat(cached["computed_at"])
-            if datetime.now() - at < timedelta(days=CACHE_DAYS):
-                return json.loads(cached["payload"])
-        except ValueError:
-            pass
-    node = digitransit.get_client().plan(
-        center[0], center[1], job["lat"], job["lon"], when)
-    payload = digitransit.commute_out(node, when)
-    conn.execute(
-        "INSERT OR REPLACE INTO commute_cache (job_id,district,payload,"
-        "computed_at) VALUES (?,?,?,?)",
-        (job["id"], district, json.dumps(payload, ensure_ascii=False),
-         datetime.now().isoformat(timespec="seconds")))
-    db_mod.audit(conn, "system", "commute_computed",
-                 f"{job['id']}:{district}")
-    conn.commit()
+    cached = cached_commute(conn, job["id"], district)
+    if cached is not None:
+        return cached
+    payload = compute_commute_uncached(job, district, center)
+    if payload is not None:
+        store_commute(conn, job["id"], district, payload)
+        conn.commit()
     return payload
 
 

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Bookmark } from 'lucide-react'
 import type { Job } from '../types'
@@ -6,6 +7,8 @@ import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import { Chip } from './ui'
 import { daysAgoText, jobLine } from '../lib/format'
+import { commuteLine, getCommute } from '../lib/commute'
+import { useConfig } from '../lib/config'
 
 const LABEL_KEY = {
   students: 'label.students', retirement: 'label.retirement',
@@ -23,6 +26,7 @@ export function labelText(id: string, t: (k: Key) => string) {
     Max 3 neutral label chips + "+N more"; confirmed state top-right. */
 export default function JobRow({
   job, selected, onShowOnMap, districtName, saved, onToggleSave, actions,
+  originDistrict, originName,
 }: {
   job: Job
   selected?: boolean
@@ -31,15 +35,47 @@ export default function JobRow({
   saved?: boolean
   onToggleSave?: (j: Job) => void
   actions?: ReactNode
+  /** Where the trip starts (§5): id for the API, name for the line. */
+  originDistrict?: string
+  originName?: string
 }) {
   const { t } = useI18n()
+  const cfg = useConfig()
   const nav = useNavigate()
-  const open = () => nav(`/jobs/${job.id}`)
+  const ref = useRef<HTMLElement>(null)
+  const [commute, setCommute] = useState(job.commute ?? null)
+  const [asked, setAsked] = useState(job.commute !== undefined)
+  const url = `/jobs/${job.id}${originDistrict ? `?district=${originDistrict}` : ''}`
+  const open = () => nav(url)
   const shown = job.labels.slice(0, 3)
   const rest = job.labels.length - shown.length
 
+  // fetch the commute lazily when the row scrolls into view (§5);
+  // max 4 requests at a time, cached per job+district
+  useEffect(() => {
+    if (!cfg.commute || !originDistrict || asked || job.lat == null
+        || job.work_mode === 'remote')
+      return
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      getCommute(job.id, originDistrict)
+        .then((c) => { setCommute(c); setAsked(true) })
+      return
+    }
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        io.disconnect()
+        getCommute(job.id, originDistrict)
+          .then((c) => { setCommute(c); setAsked(true) })
+      }
+    }, { rootMargin: '250px' })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [cfg.commute, originDistrict, asked, job])
+
   return (
     <article
+      ref={ref}
       id={`job-row-${job.id}`}
       className="card p-5 mb-3 cursor-pointer"
       style={selected ? { outline: '3px solid var(--color-yes)' } : undefined}
@@ -48,7 +84,7 @@ export default function JobRow({
       onKeyDown={(e) => { if (e.key === 'Enter') open() }}>
       <div className="flex flex-wrap justify-between gap-3">
         <div className="min-w-0 flex-1" style={{ minWidth: 'min(100%, 340px)' }}>
-          <Link to={`/jobs/${job.id}`} className="no-underline"
+          <Link to={url} className="no-underline"
                 style={{ color: 'var(--color-ink)' }}
                 onClick={(e) => e.stopPropagation()}>
             <h3 className="m-0 font-display" style={{ fontSize: '1.25rem' }}>
@@ -60,6 +96,11 @@ export default function JobRow({
             {job.distance_km != null && ` · ${job.distance_km} km`}
           </p>
           <p className="m-0 mt-1">{jobLine(job, t)}</p>
+          {commute && originName && (
+            <p className="m-0 mt-1 text-secondary">
+              {commuteLine(commute, originName, t)}
+            </p>
+          )}
           <div className="flex flex-wrap gap-2 mt-2">
             {shown.map((l) => (
               <Chip key={l.id} title={l.why}>{labelText(l.id, t)}</Chip>

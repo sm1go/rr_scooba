@@ -81,10 +81,19 @@ def _rate_reset():
 
 # --- config -------------------------------------------------------------------
 
-def test_config_flags_off_without_keys(client):
+def test_config_flags_off_without_keys(client, no_keys):
     r = client.get("/api/config")
     assert r.status_code == 200
     assert r.json() == {"ai": False, "commute": False}
+
+
+@pytest.fixture()
+def no_keys(monkeypatch):
+    """Simulate the no-key machine even when a real .env key exists."""
+    from app.api import settings
+    monkeypatch.setattr(settings, "ai_enabled", lambda: False)
+    monkeypatch.setattr(settings, "commute_enabled", lambda: False)
+    yield
 
 
 # --- /api/ai/filters ------------------------------------------------------------
@@ -315,7 +324,7 @@ def test_near_station_filter(client):
         assert j["nearest_station"]["distance_m"] <= 800
 
 
-def test_commute_503_without_key(client):
+def test_commute_503_without_key(client, no_keys):
     r = client.get("/api/commute?job_id=job-cafe-weekday&district=matinkyla")
     assert r.status_code == 503
 
