@@ -351,18 +351,14 @@ export default function JobsPage({
           </button>
         </div>
         {askReply && (
-          <div className="mt-3" role="status">
-            <p className="m-0 font-medium">{t('jobs.weset')}</p>
-            <ul className="m-0 mt-1 ps-5">
-              {askReply.explanation.map((x, i) => <li key={i}>{x}</li>)}
-            </ul>
+          <div className="mt-2" role="status">
+            {askReply.explanation.length > 0 && (
+              <p className="m-0 text-secondary">{askReply.explanation.join(' · ')}</p>
+            )}
             {askReply.not_understood.length > 0 && (
-              <>
-                <p className="m-0 mt-2 font-medium">{t('jobs.couldnot')}</p>
-                <ul className="m-0 mt-1 ps-5 text-secondary">
-                  {askReply.not_understood.map((x, i) => <li key={i}>{x}</li>)}
-                </ul>
-              </>
+              <p className="m-0 mt-1 text-secondary">
+                {t('jobs.couldnot')}: {askReply.not_understood.join(' · ')}
+              </p>
             )}
           </div>
         )}
