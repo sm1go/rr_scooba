@@ -230,13 +230,48 @@ export interface EventTalk {
 
 export interface EventInfo {
   event: { id: string; name: string; date: string; venue: string; advisor_note: string } | null
-  employers: { id: string; name: string; booth: string; jobs: { id: string; title: string }[] }[]
+  employers: { id: string; name: string; booth: string; tagline?: string
+    field?: string; logo_color?: string
+    jobs: { id: string; title: string }[] }[]
 }
 
 export interface EventPlan {
   event: EventInfo['event']
   code: string | null
   booths: { employer_id: string; name: string; booth: string; jobs: { id: string; title: string }[] }[]
+}
+
+export interface CompanyProfile {
+  id: string; name: string; about: string; tagline: string
+  field: string; district: string; address: string
+  size_band: string; founded: number | null
+  work_languages: string[]; logo_color: string; how_we_welcome: string
+  contact_name: string; contact_email: string; contact_phone: string
+  jobs: Job[]; contracts: string[]
+  badges: { kind: string; label: string; event_name: string }[]
+  events: { event_id: string; name: string; date: string
+            booth: string | null; past: boolean
+            need_card: NeedCard | null }[]
+  commitments: string[]
+}
+
+export interface EventAfterData {
+  summaries: {
+    event_id: string; name: string; date: string
+    employers: number; participants: number; talks: number
+    answered: number; answered_in_7d_pct: number | null
+    next_steps: number; hired: number
+  }[]
+  mine: {
+    event_id: string; name: string; date: string
+    talks: { employer: string; outcome: string | null
+             note: string; answered: boolean }[]
+    records: { employer: string; date: string; observed: string[] }[]
+    badges: { id: string; kind: string; label: string; event_id: string
+              note: string; event_name: string }[]
+    people: { user_id: string; name: string; role: string
+              company: string | null }[]
+  }[]
 }
 
 export interface EmployerEvent {
@@ -368,6 +403,7 @@ export interface NeedCard {
 export interface NeedEntry {
   employer_id: string; employer_name?: string; booth: string | null
   slots: number; formats: string[]
+  tagline?: string; field?: string; logo_color?: string; open_jobs?: number
   need: { card: NeedCard; submitted_at: string; need_by: string } | null
   fit?: { key: string; [k: string]: unknown }[]
   interested?: boolean; meets?: number[]

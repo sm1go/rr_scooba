@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 12
 
 SEED_REQUIRED = [
     "events.json", "employers.json", "jobs.json", "users.json",
@@ -126,12 +126,23 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
               + _load_opt("employers_unlisted.json", seed_dir)):
         conn.execute(
             "INSERT INTO employer (id,name,about,contact_name,contact_email,"
-            "contact_phone) VALUES (:id,:name,:about,:contact_name,"
-            ":contact_email,:contact_phone)", e)
+            "contact_phone,tagline,field,district,address,size_band,founded,"
+            "work_languages,logo_color,how_we_welcome) VALUES (:id,:name,"
+            ":about,:contact_name,:contact_email,:contact_phone,:tagline,"
+            ":field,:district,:address,:size_band,:founded,:work_languages,"
+            ":logo_color,:how_we_welcome)",
+            {"about": "", "contact_name": "", "contact_email": "",
+             "contact_phone": "", "tagline": "", "field": "",
+             "district": "", "address": "", "size_band": "",
+             "founded": 0, "logo_color": "#3f3f46",
+             "how_we_welcome": "", **e,
+             "work_languages": json.dumps(e.get("work_languages", []),
+                                          ensure_ascii=False)})
         if e.get("booth"):
             conn.execute(
-                "INSERT INTO employer_event (employer_id,event_id,booth)"
-                " VALUES (?,?,?)", (e["id"], "ev-2026-11", e["booth"]))
+                "INSERT OR IGNORE INTO employer_event"
+                " (employer_id,event_id,booth) VALUES (?,?,?)",
+                (e["id"], "ev-2026-11", e["booth"]))
 
     for j in _load_seed("jobs.json", seed_dir):
         confirmed = (now - timedelta(days=j.get("confirmed_days_ago", 0))).date()

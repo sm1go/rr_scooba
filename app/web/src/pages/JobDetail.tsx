@@ -132,7 +132,10 @@ export default function JobDetail() {
       <Link to="/jobs" className="text-secondary">{`← ${t('common.back')}`}</Link>
       <h1 data-page-title tabIndex={-1} className="mt-2">{job.title}</h1>
       <p className="text-secondary" style={{ fontSize: '1.1rem' }}>
-        {job.employer?.name}
+        {job.employer?.id ? (
+          <Link to={`/companies/${job.employer.id}`}>
+            {job.employer.name}</Link>
+        ) : job.employer?.name}
         {cat && ` · ${districtName(job.district, cat.districts)}`}
         {job.distance_km != null && ` · ${job.distance_km} km`}
       </p>

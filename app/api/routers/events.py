@@ -274,7 +274,10 @@ def _can_see_needs(conn, ev, user) -> bool:
 def _need_cards(conn, ev, include_employer_names=True) -> list[dict]:
     out = []
     for ee in conn.execute(
-            "SELECT ee.*, e.name emp_name, e.contact_name, e.contact_phone"
+            "SELECT ee.*, e.name emp_name, e.contact_name, e.contact_phone,"
+            " e.tagline, e.field, e.logo_color,"
+            " (SELECT COUNT(*) FROM job j WHERE j.employer_id=ee.employer_id"
+            "  AND j.status='open') open_jobs"
             " FROM employer_event ee JOIN employer e"
             " ON e.id=ee.employer_id WHERE ee.event_id=? ORDER BY ee.booth",
             (ev["id"],)):
@@ -289,6 +292,10 @@ def _need_cards(conn, ev, include_employer_names=True) -> list[dict]:
                     (ee["employer_id"],))]}
         if include_employer_names:
             item["employer_name"] = ee["emp_name"]
+            item["tagline"] = ee["tagline"]
+            item["field"] = ee["field"]
+            item["logo_color"] = ee["logo_color"]
+            item["open_jobs"] = ee["open_jobs"]
         out.append(item)
     return out
 
@@ -358,7 +365,7 @@ def register(event_id: str, payload: EventRegisterIn,
     if _registration(conn, event_id, user["id"]):
         raise HTTPException(409, "You are already registered for this event.")
     groups = {g["id"] for g in json.loads(ev["time_groups"] or "[]")}
-    if payload.time_group not in groups:
+    if groups and payload.time_group not in groups:
         raise HTTPException(422, "Choose a time group.")
     card = payload.card.model_dump()
     if not (1 <= len(card["done"]) <= 3):
@@ -1835,3 +1842,172 @@ def hired_badge(event_id: str, payload: dict,
     db_mod.audit(conn, user["id"], "badge_given", bid)
     conn.commit()
     return {"id": bid}
+
+
+# --- companies + event summaries + history (v12) ----------------------------
+
+def _employer_profile(conn, eid: str) -> dict:
+    e = conn.execute("SELECT * FROM employer WHERE id=?", (eid,)).fetchone()
+    if not e:
+        return None
+    from ..serialize import job_out
+    jobs = [job_out(conn, r) for r in conn.execute(
+        "SELECT * FROM job WHERE employer_id=? AND status='open'"
+        " ORDER BY field,title", (eid,))]
+    contracts = [r["title"] for r in conn.execute(
+        "SELECT title FROM procurement_contract WHERE employer_id=?",
+        (eid,))]
+    badges = [dict(r) for r in conn.execute(
+        "SELECT b.kind,b.label,ev.name event_name FROM badge b"
+        " JOIN event ev ON ev.id=b.event_id"
+        " WHERE b.employer_id=? AND b.user_id IS NULL AND b.hidden=0",
+        (eid,))]
+    events = []
+    for ee in conn.execute(
+            "SELECT ee.need_card, ee.booth, ev.id, ev.name, ev.date,"
+            " ev.ends_at FROM employer_event ee JOIN event ev"
+            " ON ev.id=ee.event_id WHERE ee.employer_id=?"
+            " ORDER BY ev.date DESC", (eid,)):
+        events.append({
+            "event_id": ee["id"], "name": ee["name"], "date": ee["date"],
+            "booth": ee["booth"],
+            "past": ee["ends_at"] < datetime.now(
+                timezone.utc).isoformat(timespec="seconds"),
+            "need_card": json.loads(ee["need_card"])
+            if ee["need_card"] else None})
+    commitments = sorted({
+        c for j in conn.execute(
+            "SELECT commitments FROM job WHERE employer_id=?"
+            " AND status='open'", (eid,))
+        for c in json.loads(j["commitments"] or "[]")})
+    return {"id": e["id"], "name": e["name"], "about": e["about"],
+            "tagline": e["tagline"], "field": e["field"],
+            "district": e["district"], "address": e["address"],
+            "size_band": e["size_band"], "founded": e["founded"],
+            "work_languages": json.loads(e["work_languages"] or "[]"),
+            "logo_color": e["logo_color"],
+            "how_we_welcome": e["how_we_welcome"],
+            "contact_name": e["contact_name"],
+            "contact_email": e["contact_email"],
+            "contact_phone": e["contact_phone"],
+            "jobs": jobs, "contracts": contracts, "badges": badges,
+            "events": events, "commitments": commitments}
+
+
+@router.get("/companies/{employer_id}")
+def company_profile(employer_id: str,
+                    conn: sqlite3.Connection = Depends(get_conn)):
+    """Public company page — business info only, no user data."""
+    out = _employer_profile(conn, employer_id)
+    if not out:
+        raise HTTPException(404, "No such employer.")
+    return out
+
+
+def _event_summary(conn, ev) -> dict:
+    """Aggregate numbers for a finished event — never any names."""
+    employers = conn.execute(
+        "SELECT COUNT(DISTINCT employer_id) c FROM employer_event"
+        " WHERE event_id=?", (ev["id"],)).fetchone()["c"]
+    participants = conn.execute(
+        "SELECT COUNT(*) c FROM talent_registration WHERE event_id=?"
+        " AND status='registered'", (ev["id"],)).fetchone()["c"]
+    talks = conn.execute(
+        "SELECT talked_at, answered_at, outcome FROM event_talk"
+        " WHERE event_id=?", (ev["id"],)).fetchall()
+    in7 = sum(1 for t in talks if t["answered_at"] and
+              (date.fromisoformat(t["answered_at"][:10])
+               - date.fromisoformat(t["talked_at"][:10])).days <= 7)
+    return {"event_id": ev["id"], "name": ev["name"], "date": ev["date"],
+            "employers": employers, "participants": participants,
+            "talks": len(talks),
+            "answered": sum(1 for t in talks if t["answered_at"]),
+            "answered_in_7d_pct":
+                round(in7 * 100 / len(talks)) if talks else None,
+            "next_steps":
+                sum(1 for t in talks if t["outcome"] == "next_step"),
+            "hired": conn.execute(
+                "SELECT COUNT(*) c FROM badge WHERE event_id=?"
+                " AND kind='hired'", (ev["id"],)).fetchone()["c"]}
+
+
+@router.get("/events/{event_id}/summary")
+def event_summary(event_id: str,
+                  conn: sqlite3.Connection = Depends(get_conn)):
+    ev = _get_event(conn, event_id)
+    if ev["ends_at"] >= datetime.now(timezone.utc).isoformat(
+            timespec="seconds"):
+        raise HTTPException(409, "The event has not finished yet.")
+    return _event_summary(conn, ev)
+
+
+@router.get("/events/{event_id}/after")
+def event_after(event_id: str,
+                conn: sqlite3.Connection = Depends(get_conn),
+                user=Depends(optional_user)):
+    """After tab data: aggregate summaries of all finished events plus
+    the signed-in person's own history at earlier events."""
+    ev = _get_event(conn, event_id)
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    finished = conn.execute(
+        "SELECT * FROM event WHERE ends_at < ? ORDER BY date DESC",
+        (now,)).fetchall()
+    out = {"summaries": [_event_summary(conn, e) for e in finished]}
+    mine = []
+    if user and user["role"] == "resident":
+        for e in finished:
+            reg = conn.execute(
+                "SELECT 1 FROM talent_registration WHERE event_id=?"
+                " AND user_id=? AND status='registered'",
+                (e["id"], user["id"])).fetchone()
+            took = conn.execute(
+                "SELECT 1 FROM event_talk WHERE event_id=? AND user_id=?",
+                (e["id"], user["id"])).fetchone()
+            conn2 = conn.execute(
+                "SELECT 1 FROM connection WHERE event_id=? AND"
+                " (user_a=? OR user_b=?)",
+                (e["id"], user["id"], user["id"])).fetchone()
+            if not (reg or took or conn2):
+                continue
+            talks = [{"employer": r["employer_name"],
+                      "outcome": r["outcome"], "note": r["employer_note"],
+                      "answered": bool(r["answered_at"])}
+                     for r in conn.execute(
+                         "SELECT t.outcome,t.employer_note,t.answered_at,"
+                         " em.name employer_name FROM event_talk t"
+                         " JOIN employer em ON em.id=t.employer_id"
+                         " WHERE t.event_id=? AND t.user_id=?"
+                         " ORDER BY t.talked_at", (e["id"], user["id"]))]
+            records = [{"employer": r["employer_name"],
+                        "date": r["talked_at"][:10],
+                        "observed": json.loads(r["observed"])}
+                       for r in conn.execute(
+                           "SELECT t.talked_at,t.observed,em.name"
+                           " employer_name FROM event_talk t"
+                           " JOIN employer em ON em.id=t.employer_id"
+                           " WHERE t.event_id=? AND t.user_id=?"
+                           " AND t.observed != '[]'",
+                           (e["id"], user["id"]))]
+            badges = _visible_badges(conn, user["id"])
+            badges = [b for b in badges if b["event_id"] == e["id"]]
+            people = []
+            for c in conn.execute(
+                    "SELECT * FROM connection WHERE event_id=? AND"
+                    " (user_a=? OR user_b=?)",
+                    (e["id"], user["id"], user["id"])):
+                other = (c["user_b"] if c["user_a"] == user["id"]
+                         else c["user_a"])
+                u = conn.execute(
+                    "SELECT u.name,u.role,e.name company FROM user u"
+                    " LEFT JOIN employer e ON e.id=u.employer_id"
+                    " WHERE u.id=?", (other,)).fetchone()
+                if u:
+                    people.append({"user_id": other, "name": u["name"],
+                                   "role": u["role"],
+                                   "company": u["company"]})
+            mine.append({"event_id": e["id"], "name": e["name"],
+                         "date": e["date"], "talks": talks,
+                         "records": records, "badges": badges,
+                         "people": people})
+    out["mine"] = mine
+    return out

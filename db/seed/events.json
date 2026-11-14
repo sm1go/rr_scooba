@@ -489,7 +489,551 @@
     "slot_minutes": 10,
     "need_deadline": "",
     "publish_date": "",
-    "time_groups": []
+    "time_groups": [],
+    "employers": [
+      {
+        "employer_id": "emp-cafe-koivu",
+        "booth": "A1",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Serve customers at the counter and the till",
+            "Make coffee and heat lunch dishes",
+            "Keep the counter and tables clean",
+            "Help close the café at the end of the day",
+            "Serve the weekday lunch crowd 10:30–14:30"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "We train you on the till and the coffee machine during your first two Saturdays",
+            "You work the lunch shift with Sanna first"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-cafe-weekend",
+            "job-cafe-weekday"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-siivouspot",
+        "booth": "A2",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Clean two small offices on Tuesday and Thursday evenings",
+            "Vacuum floors, empty bins, wipe desks and kitchen surfaces",
+            "Follow a written cleaning plan for each site",
+            "Clean the gym floor, changing rooms and sauna",
+            "Use a floor scrubber — we show you how"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "No experience needed — training on site on your first evening",
+            "Training on the machines included"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-clean-office",
+            "job-clean-gym"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-market-olari",
+        "booth": "A3",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Fill the shelves and keep the shop tidy",
+            "Check dates on milk and bread",
+            "Help close the shop at 21:00",
+            "Work the till during the evening rush",
+            "Help close the shop: count the till, tidy the front"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "You shadow a colleague for three shifts",
+            "Two evenings beside our head cashier"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-market-shelf",
+            "job-market-evening-till",
+            "job-market-deli"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-mallas",
+        "booth": "B1",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Wash dishes and keep the kitchen clean during lunch",
+            "Prepare salads and cold plates",
+            "Help put away deliveries"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "Hygiene passport not needed — we arrange the test"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-mallas-kitchen"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-aurora-care",
+        "booth": "B2",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Help residents with the evening routine: meals, washing, getting ready for bed",
+            "Sit and talk — unhurried time is part of the job",
+            "Write two lines per resident in the care notes",
+            "Spend time with residents: walks, games, coffee",
+            "Help serve the weekend lunch"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "You work beside a mentor for your first month",
+            "You shadow a care assistant for two weekends"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-aurora-evening",
+            "job-aurora-weekend",
+            "job-aurora-day"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-freight",
+        "booth": "B3",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Pick orders with a handheld scanner",
+            "Pack and label parcels for the afternoon routes",
+            "Keep your own area tidy",
+            "Sort parcels onto the right cages for morning routes",
+            "Scan each parcel as you place it"
+          ],
+          "must_haves": [
+            {
+              "text": "forklift licence",
+              "why": "needed from the first week on this job"
+            }
+          ],
+          "will_teach": [
+            "Two days of training with a buddy",
+            "Thirty minutes of training on your first evening"
+          ],
+          "languages": [
+            {
+              "name": "English",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-freight-pick",
+            "job-freight-evening",
+            "job-freight-forklift"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-avara",
+        "booth": "C1",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Answer the phone and welcome visitors at a small office",
+            "Book meeting rooms and handle the post",
+            "Keep the front desk and kitchen tidy",
+            "Scan old paper files into our archive",
+            "Name and file the scans so others can find them"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "You learn the desk beside our receptionist for two weeks",
+            "Half a day of training; headphones welcome while you work"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-avara-reception",
+            "job-avara-scan",
+            "job-avara-post"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-linja",
+        "booth": "C2",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Help visitors at the service desk: directions, tickets, lockers",
+            "Answer simple questions by phone and chat",
+            "Write down requests you cannot solve and pass them on",
+            "Answer customer chats from home",
+            "Use our ready-made answers and write your own in plain language"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "Two weeks beside an experienced colleague",
+            "Two weeks at the office, then remote with daily check-ins"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-cs-desk",
+            "job-linja-chat",
+            "job-linja-phone"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-library",
+        "booth": "C3",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Put returned books and magazines back on the shelves",
+            "Keep the shelves in order and help visitors find things",
+            "Bring books between the two floors with a trolley",
+            "Help set up the Saturday children's story hour",
+            "Hand out craft materials and tidy up"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "A librarian works beside you the first week",
+            "The librarian plans the hour — you help it run"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-library-shelf",
+            "job-library-events"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-tiima",
+        "booth": "D1",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Carry materials and keep the site tidy",
+            "Help carpenters — hold, fetch, measure",
+            "Learn the site safety rules on day one",
+            "Fit doors, skirting and kitchens on a renovation site",
+            "Work from drawings with the site lead"
+          ],
+          "must_haves": [
+            {
+              "text": "carpentry experience or vocational training",
+              "why": "needed from the first week on this job"
+            },
+            {
+              "text": "driving licence B",
+              "why": "needed from the first week on this job"
+            }
+          ],
+          "will_teach": [
+            "Safety card arranged by us; you work with an experienced pair",
+            "Experienced role — you get your own rooms to finish"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-tiima-helper",
+            "job-tiima-finisher",
+            "job-tiima-driver"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-lumo",
+        "booth": "D2",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Fix bugs and build small features in our Python backend",
+            "Write tests for the code you touch",
+            "Review code with a senior developer every week",
+            "Build and own the payments part of our platform",
+            "Work with the designer on what to build next"
+          ],
+          "must_haves": [
+            {
+              "text": "some programming experience — a course, a hobby project or work",
+              "why": "needed from the first week on this job"
+            },
+            {
+              "text": "several years of backend work",
+              "why": "needed from the first week on this job"
+            }
+          ],
+          "will_teach": [
+            "A named mentor for your first three months",
+            "You pair with the current owner of the service for a month"
+          ],
+          "languages": [
+            {
+              "name": "English",
+              "level": "B2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "C1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-lumo-junior",
+            "job-lumo-senior",
+            "job-lumo-office"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      },
+      {
+        "employer_id": "emp-vihrea",
+        "booth": "D3",
+        "slots": 8,
+        "formats": [
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Keep the waterfront parks tidy: litter, paths, flower beds",
+            "Water plants and sweep walkways",
+            "Work outdoors in a small team",
+            "Grit and clear walking paths on icy mornings",
+            "Work is called the evening before when frost is forecast"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "All tools and training provided",
+            "One morning with the team leader"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-vihrea-park",
+            "job-vihrea-winter",
+            "job-vihrea-autumn"
+          ]
+        },
+        "need_submitted_at": "2026-11-10",
+        "need_by": "employer"
+      }
+    ]
   },
   {
     "id": "ev-2026-10",
@@ -530,9 +1074,43 @@
         "formats": [
           "walk_in"
         ],
-        "need_card": null,
-        "need_submitted_at": null,
-        "need_by": null
+        "need_card": {
+          "first_week": [
+            "Serve customers at the counter and the till",
+            "Make coffee and heat lunch dishes",
+            "Keep the counter and tables clean",
+            "Help close the café at the end of the day",
+            "Serve the weekday lunch crowd 10:30–14:30"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "We train you on the till and the coffee machine during your first two Saturdays",
+            "You work the lunch shift with Sanna first"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-cafe-weekend",
+            "job-cafe-weekday"
+          ]
+        },
+        "need_submitted_at": "2026-09-28",
+        "need_by": "employer"
       },
       {
         "employer_id": "emp-market-olari",
@@ -541,9 +1119,44 @@
         "formats": [
           "walk_in"
         ],
-        "need_card": null,
-        "need_submitted_at": null,
-        "need_by": null
+        "need_card": {
+          "first_week": [
+            "Fill the shelves and keep the shop tidy",
+            "Check dates on milk and bread",
+            "Help close the shop at 21:00",
+            "Work the till during the evening rush",
+            "Help close the shop: count the till, tidy the front"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "You shadow a colleague for three shifts",
+            "Two evenings beside our head cashier"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-market-shelf",
+            "job-market-evening-till",
+            "job-market-deli"
+          ]
+        },
+        "need_submitted_at": "2026-09-28",
+        "need_by": "employer"
       },
       {
         "employer_id": "emp-aurora-care",
@@ -552,9 +1165,44 @@
         "formats": [
           "walk_in"
         ],
-        "need_card": null,
-        "need_submitted_at": null,
-        "need_by": null
+        "need_card": {
+          "first_week": [
+            "Help residents with the evening routine: meals, washing, getting ready for bed",
+            "Sit and talk — unhurried time is part of the job",
+            "Write two lines per resident in the care notes",
+            "Spend time with residents: walks, games, coffee",
+            "Help serve the weekend lunch"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "You work beside a mentor for your first month",
+            "You shadow a care assistant for two weekends"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-aurora-evening",
+            "job-aurora-weekend",
+            "job-aurora-day"
+          ]
+        },
+        "need_submitted_at": "2026-09-28",
+        "need_by": "employer"
       },
       {
         "employer_id": "emp-freight",
@@ -563,9 +1211,44 @@
         "formats": [
           "walk_in"
         ],
-        "need_card": null,
-        "need_submitted_at": null,
-        "need_by": null
+        "need_card": {
+          "first_week": [
+            "Pick orders with a handheld scanner",
+            "Pack and label parcels for the afternoon routes",
+            "Keep your own area tidy",
+            "Sort parcels onto the right cages for morning routes",
+            "Scan each parcel as you place it"
+          ],
+          "must_haves": [
+            {
+              "text": "forklift licence",
+              "why": "needed from the first week on this job"
+            }
+          ],
+          "will_teach": [
+            "Two days of training with a buddy",
+            "Thirty minutes of training on your first evening"
+          ],
+          "languages": [
+            {
+              "name": "English",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "English",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-freight-pick",
+            "job-freight-evening",
+            "job-freight-forklift"
+          ]
+        },
+        "need_submitted_at": "2026-09-28",
+        "need_by": "employer"
       },
       {
         "employer_id": "emp-siivouspot",
@@ -574,9 +1257,38 @@
         "formats": [
           "walk_in"
         ],
-        "need_card": null,
-        "need_submitted_at": null,
-        "need_by": null
+        "need_card": {
+          "first_week": [
+            "Clean two small offices on Tuesday and Thursday evenings",
+            "Vacuum floors, empty bins, wipe desks and kitchen surfaces",
+            "Follow a written cleaning plan for each site",
+            "Clean the gym floor, changing rooms and sauna",
+            "Use a floor scrubber — we show you how"
+          ],
+          "must_haves": [
+            {
+              "text": "you can work reliably to agreed times",
+              "why": "the team plans shifts around it"
+            }
+          ],
+          "will_teach": [
+            "No experience needed — training on site on your first evening",
+            "Training on the machines included"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-clean-office",
+            "job-clean-gym"
+          ]
+        },
+        "need_submitted_at": "2026-09-28",
+        "need_by": "employer"
       },
       {
         "employer_id": "emp-rantala",
@@ -585,9 +1297,52 @@
         "formats": [
           "walk_in"
         ],
-        "need_card": null,
-        "need_submitted_at": null,
-        "need_by": null
+        "need_card": {
+          "first_week": [
+            "Daily rounds in housing companies: heating, water, lighting, doors",
+            "Fix small faults and call contractors for bigger ones",
+            "Yard work: in winter snow and grit, in summer lawns",
+            "Learn property maintenance on the job with a mentor",
+            "Study one day a month for the vocational qualification (oppisopimus)"
+          ],
+          "must_haves": [
+            {
+              "text": "driving licence B",
+              "why": "needed from the first week on this job"
+            },
+            {
+              "text": "occupational safety card (työturvallisuuskortti)",
+              "why": "needed from the first week on this job"
+            },
+            {
+              "text": "driving licence B",
+              "why": "needed from the first week on this job"
+            }
+          ],
+          "will_teach": [
+            "Two weeks on rounds with a senior maintenance worker; written site cards for every building",
+            "Your mentor works with you every day for the first three months"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "daily work with customers and the team"
+            },
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "daily work with customers and the team"
+            }
+          ],
+          "job_ids": [
+            "job-rantala-huolto",
+            "job-rantala-apprentice",
+            "job-rantala-janitor"
+          ]
+        },
+        "need_submitted_at": "2026-09-28",
+        "need_by": "employer"
       }
     ]
   }

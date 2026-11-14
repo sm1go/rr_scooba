@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 11;
+PRAGMA user_version = 12;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -44,7 +44,16 @@ CREATE TABLE employer (
     about         TEXT NOT NULL DEFAULT '',
     contact_name  TEXT NOT NULL DEFAULT '',
     contact_email TEXT NOT NULL DEFAULT '',
-    contact_phone TEXT NOT NULL DEFAULT ''
+    contact_phone TEXT NOT NULL DEFAULT '',
+    tagline       TEXT NOT NULL DEFAULT '',
+    field         TEXT NOT NULL DEFAULT '',
+    district      TEXT NOT NULL DEFAULT '',
+    address       TEXT NOT NULL DEFAULT '',
+    size_band     TEXT NOT NULL DEFAULT '',
+    founded       INTEGER,
+    work_languages TEXT NOT NULL DEFAULT '[]',
+    logo_color    TEXT NOT NULL DEFAULT '',
+    how_we_welcome TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE event (
@@ -381,4 +390,4 @@ CREATE TABLE connection (
     PRIMARY KEY (user_a, user_b, event_id)
 );
 
-PRAGMA user_version = 11;
+PRAGMA user_version = 12;

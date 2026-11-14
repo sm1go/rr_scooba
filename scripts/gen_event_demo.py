@@ -450,6 +450,235 @@ def _special_card(uid: str) -> dict:
     return cards[uid]
 
 
+# --- v12: employer profiles + need cards for E2 and E0 ---------------------------
+
+PALETTE = ["#1e3a8a", "#14532d", "#7c2d12", "#4a044e",
+           "#713f12", "#0c4a6e", "#831843", "#3f3f46"]
+
+FIELD_TAGLINE = {
+    "cleaning": "Cleaning services for schools, offices and homes",
+    "retail": "A local shop with a small steady team",
+    "restaurant": "Food and coffee, made on site",
+    "care": "Care work where people know your name",
+    "logistics": "Deliveries and driving in the Helsinki region",
+    "office": "Office and admin support for local companies",
+    "customer_service": "Helping customers by phone, chat and face to face",
+    "education": "Learning and library work for the city",
+    "construction": "Building and renovation work in Espoo",
+    "tech": "Software and IT work, small expert teams",
+    "seasonal": "Seasonal outdoor work through the year",
+    "manufacturing": "Workshop and production work",
+    "health": "Health services close to home",
+    "maintenance": "Keeping buildings running every day",
+}
+
+FIELD_WELCOME = {
+    "cleaning": "You work with an experienced cleaner for your first two "
+                "weeks and learn each site with them.",
+    "retail": "You shadow a colleague at the till for your first days "
+              "before working alone.",
+    "restaurant": "You start with a buddy shift and learn the menu and "
+                  "the till before your own shifts.",
+    "care": "New staff get a named mentor and joint shifts before "
+            "taking residents alone.",
+    "logistics": "You ride along on routes first; your own routes start "
+                 "after the first week.",
+    "office": "You get a named colleague for questions and a written "
+              "first-week plan.",
+    "customer_service": "You listen in on calls first, then take calls "
+                        "with a coach beside you.",
+    "education": "A colleague shows you the daily routines and you plan "
+                 "your first week together.",
+    "construction": "You always start paired with a senior worker and "
+                    "a safety walkthrough on day one.",
+    "tech": "You get a buddy, a small first task and code review support "
+            "from week one.",
+    "seasonal": "You learn the tools and routes with the team lead "
+                "during your first days.",
+    "manufacturing": "You train on each machine with an instructor "
+                     "before working it alone.",
+    "health": "You shadow appointments first and get a named mentor "
+              "for your first month.",
+    "maintenance": "You do rounds with a senior technician first and "
+                   "get your own list after week two.",
+}
+
+LEGAL = {"oy", "ab", "ky", "oyj", "tmi", "osakeyhtio", "ry", "r.y."}
+
+
+def _employer_need(eid: str, jobs: list, lang: str) -> dict | None:
+    """Build a need card for an employer from their open jobs.
+    Deterministic; passes the wording checker."""
+    open_jobs = [j for j in jobs
+                 if j["employer_id"] == eid and j["status"] == "open"]
+    if not open_jobs:
+        return None
+    first_week, seen = [], set()
+    for j in open_jobs:
+        for d in (j.get("duties") or []):
+            t = d.rstrip(".")
+            if t and t not in seen:
+                seen.add(t)
+                first_week.append(t)
+            if len(first_week) >= 5:
+                break
+        if len(first_week) >= 5:
+            break
+    first_week = [t[0].upper() + t[1:] for t in first_week[:5]]
+    must = []
+    for j in open_jobs:
+        for q in (j.get("qualifications") or []):
+            t = q.rstrip(".")
+            if t and t not in {m["text"] for m in must}:
+                why = "needed from the first week on this job"
+                must.append({"text": t[0].lower() + t[1:], "why": why})
+            if len(must) >= 3:
+                break
+        if len(must) >= 3:
+            break
+    if not must:
+        must = [{"text": "you can work reliably to agreed times",
+                 "why": "the team plans shifts around it"}]
+    teach = []
+    for j in open_jobs:
+        onb = (j.get("onboarding") or "").strip()
+        if onb and onb not in teach:
+            teach.append(onb.rstrip("."))
+        if len(teach) >= 2:
+            break
+    if not teach:
+        teach = ["All the tools and routines of this job"]
+    langs = []
+    for j in open_jobs:
+        for l in (j.get("languages") or []):
+            if len(langs) < 2 and l.get("language"):
+                langs.append({"name": l["language"],
+                              "level": l.get("level") or "A2",
+                              "task": "daily work with customers and "
+                                      "the team"})
+        if len(langs) >= 2:
+            break
+    if not langs:
+        langs = [{"name": "Finnish", "level": "A2",
+                  "task": "daily work with the team"}]
+    return {"first_week": first_week, "must_haves": must,
+            "will_teach": teach, "languages": langs,
+            "job_ids": [j["id"] for j in open_jobs[:3]]}
+
+
+def _enrich_employers() -> None:
+    """Company profile fields for every seeded employer — derived from
+    their jobs where possible, deterministic otherwise."""
+    import hashlib
+    employers = _load("employers.json")
+    jobs = _load("jobs.json")
+    districts = {d["id"]: d for d in _load("catalog.json")["districts"]}
+    for e in employers:
+        eid = e["id"]
+        ej = [j for j in jobs if j["employer_id"] == eid]
+        h = hashlib.sha256(f"emp:{eid}".encode()).hexdigest()
+        if ej:
+            field = max({j["field"] for j in ej},
+                        key=lambda f: sum(1 for j in ej if j["field"] == f))
+            dist = max({j["district"] for j in ej},
+                       key=lambda d: sum(1 for j in ej if j["district"] == d))
+            addr = ej[0].get("address") or ""
+        else:
+            field = "office"
+            dist = ""
+            addr = ""
+        e["field"] = field
+        e["district"] = dist
+        e["address"] = addr or (districts.get(dist, {}).get("name", "Espoo")
+                                + " (address at booth)")
+        e["size_band"] = ["1", "2-9", "10-49", "50-249", "250+"][
+            int(h[:2], 16) % 5]
+        e["founded"] = 1988 + int(h[2:4], 16) % 34
+        e["logo_color"] = PALETTE[int(h[4:6], 16) % len(PALETTE)]
+        e["work_languages"] = (
+            ["Finnish"] if int(h[6:8], 16) % 3 == 0 else
+            (["Finnish", "English"] if int(h[6:8], 16) % 3 == 1
+             else ["Finnish", "English", "Swedish"]))
+        if not e.get("tagline"):
+            e["tagline"] = FIELD_TAGLINE.get(field, "Local employer")
+        if not e.get("how_we_welcome"):
+            e["how_we_welcome"] = FIELD_WELCOME.get(
+                field, "You get a named colleague for your first days.")
+        base = (e.get("about") or "").strip()
+        # strip a previously generated tail so re-runs stay identical
+        for marker in (f" {e['name']} is a ", f" {e['name']} works in "):
+            if marker in base:
+                base = base[:base.index(marker)]
+        size_txt = ("The team has a few people."
+                    if e["size_band"] in ("1", "2-9") else
+                    "A mid-size local team.")
+        extra = (f"{e['name']} works in "
+                 f"{FIELD_TAGLINE.get(field, 'local services').lower()}. "
+                 f"{size_txt}")
+        e["about"] = (base + " " if base else "") + extra
+    _dump("employers.json", employers)
+
+
+def _event_needs() -> None:
+    """Need cards for every employer of E2 and E0, from their open jobs.
+    E2 employers get an employers list in events.json (they also carry
+    booth, so employer_event rows already exist — need_card goes there)."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "app"))
+    from api.rules import lint
+    events = _load("events.json")
+    jobs = _load("jobs.json")
+    e2_ids = [e["id"] for e in _load("employers.json") if e.get("booth")]
+    for ev in events:
+        if ev["id"] == E2:
+            ev["employers"] = [
+                {"employer_id": eid, "booth": b, "slots": 8,
+                 "formats": ["walk_in"],
+                 "need_card": _employer_need(eid, jobs, "fi"),
+                 "need_submitted_at": "2026-11-10",
+                 "need_by": "employer"}
+                for eid, b in
+                ((e["id"], e["booth"]) for e in _load("employers.json")
+                 if e.get("booth"))]
+        if ev["id"] == E0:
+            for ee in ev["employers"]:
+                ee["need_card"] = _employer_need(
+                    ee["employer_id"], jobs, "fi")
+                ee["need_submitted_at"] = "2026-09-28"
+                ee["need_by"] = "employer"
+    # assert every card passes the wording checker (same shape rules as
+    # the API, simplified here)
+    for ev in events:
+        for ee in ev.get("employers") or []:
+            c = ee.get("need_card")
+            if not c:
+                continue
+            texts = list(c.get("first_week") or []) + [
+                m.get("text", "") + " " + m.get("why", "")
+                for m in c.get("must_haves") or []
+            ] + list(c.get("will_teach") or []) + [
+                l.get("task", "") for l in c.get("languages") or []]
+            assert texts, f"empty need card {ee['employer_id']}"
+            assert all(len(t) > 3 for t in texts)
+            mhs = c.get("must_haves") or []
+            job_like = {
+                "title": "", "pay_note": "", "experience_note": "",
+                "onboarding": "", "apply_question": "", "lifting": "",
+                "duties": c.get("first_week") or [],
+                "qualifications":
+                    [m.get("text", "") for m in mhs]
+                    + [m.get("why", "") for m in mhs]
+                    + list(c.get("will_teach") or []),
+                "languages": [
+                    {"language": l.get("name"), "level": l.get("level"),
+                     "task": l.get("task")}
+                    for l in c.get("languages") or []],
+            }
+            issues = lint.blocking_issues(job_like)
+            assert not issues, (ee["employer_id"], issues)
+    _dump("events.json", events)
+
+
 def main() -> int:
     users = _load("users.json")
     users = [u for u in users if not u["id"].startswith("u-talent")]
@@ -479,6 +708,12 @@ def main() -> int:
             "user_id": f"u-talent{i + 1:02d}", "time_group": groups[i],
             "status": "registered", "card_language": lang,
             "card": _card_for(i, lang), "days_ago": 15 - (i % 12)})
+    for k, uid in enumerate(["u-aino", "u-pekka", "u-amira"]):
+        regs.append({"id": f"tr-e2-{k + 1:03d}", "event_id": E2,
+                     "user_id": uid, "time_group": "",
+                     "status": "registered",
+                     "card_language": "fi" if uid != "u-amira" else "ar",
+                     "card": _special_card(uid), "days_ago": 5})
     for k, uid in enumerate(E0_TALENT):
         regs.append({"id": f"tr-e0-{k + 1:03d}", "event_id": E0,
                      "user_id": uid, "time_group": "",
@@ -564,7 +799,8 @@ def main() -> int:
 
     # talks for a subset of mutual pairs (meeting_id resolved at seed);
     # >=3 talks for the demo residents
-    talks = [t for t in _load("event_talks.json") if t["event_id"] != E1]
+    talks = [t for t in _load("event_talks.json")
+             if t["event_id"] not in (E1, E0)]
     mutual = [(iv["employer_id"],
                next(r["user_id"] for r in regs
                     if r["id"] == iv["registration_id"]))
@@ -593,10 +829,12 @@ def main() -> int:
                 "Not this time — needs more spoken Finnish for the till.")
             t["days_ago_answered"] = 1 + (k % 2)
         talks.append(t)
+    jobs0 = _load("jobs.json")
     for k, (eid, uid, outcome) in enumerate(E0_TALKS):
+        fw0 = _employer_need(eid, jobs0, "fi").get("first_week") or []
         talks.append({"id": f"et-e0-{k + 1:03d}", "event_id": E0,
                       "user_id": uid, "employer_id": eid,
-                      "observed": [],
+                      "observed": fw0[:2],
                       "status": "answered", "outcome": outcome,
                       "employer_note":
                           "Kiitos jutusta — otetaan yhteyttä."
@@ -671,6 +909,9 @@ def main() -> int:
     _dump("connections.json", conns)
     print(f"passes: {len(passes)}, badges: {len(badges)}, "
           f"connections: {len(conns)}")
+
+    _enrich_employers()
+    _event_needs()
 
     n_mutual = sum(1 for m in mutual)
     from collections import Counter

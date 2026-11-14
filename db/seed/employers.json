@@ -2,631 +2,1466 @@
   {
     "id": "emp-cafe-koivu",
     "name": "Kahvila Koivu",
-    "about": "A small café next to Tapiola library.",
+    "about": "A small café next to Tapiola library. Kahvila Koivu works in food and coffee, made on site. The team has a few people.",
     "contact_name": "Sanna Lehto",
     "contact_email": "info@cafe-koivu.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "A1"
+    "booth": "A1",
+    "field": "restaurant",
+    "district": "tapiola",
+    "address": "Kulttuuriaukio 2",
+    "size_band": "2-9",
+    "founded": 1989,
+    "logo_color": "#3f3f46",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-siivouspot",
     "name": "SiivouSpoT Oy",
-    "about": "Office cleaning across Espoo.",
+    "about": "Office cleaning across Espoo. SiivouSpoT Oy works in cleaning services for schools, offices and homes. The team has a few people.",
     "contact_name": "Mikko Halme",
     "contact_email": "info@siivouspot.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "A2"
+    "booth": "A2",
+    "field": "cleaning",
+    "district": "otaniemi",
+    "address": "Tekniikantie 14",
+    "size_band": "2-9",
+    "founded": 1990,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Cleaning services for schools, offices and homes",
+    "how_we_welcome": "You work with an experienced cleaner for your first two weeks and learn each site with them."
   },
   {
     "id": "emp-kajo",
     "name": "Kajo Siivouspalvelu",
-    "about": "School and daycare cleaning.",
+    "about": "School and daycare cleaning. Kajo Siivouspalvelu works in cleaning services for schools, offices and homes. A mid-size local team.",
     "contact_name": "Tarja Niemi",
     "contact_email": "info@kajo.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "cleaning",
+    "district": "kalajarvi",
+    "address": "Soukankuja 4",
+    "size_band": "10-49",
+    "founded": 2009,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Cleaning services for schools, offices and homes",
+    "how_we_welcome": "You work with an experienced cleaner for your first two weeks and learn each site with them."
   },
   {
     "id": "emp-market-olari",
     "name": "K-Market Olari",
-    "about": "Neighbourhood grocery shop.",
+    "about": "Neighbourhood grocery shop. K-Market Olari works in a local shop with a small steady team. The team has a few people.",
     "contact_name": "Minna Voutilainen",
     "contact_email": "info@market-olari.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "A3"
+    "booth": "A3",
+    "field": "retail",
+    "district": "olari",
+    "address": "Olarinluoma 8",
+    "size_band": "1",
+    "founded": 2005,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "A local shop with a small steady team",
+    "how_we_welcome": "You shadow a colleague at the till for your first days before working alone."
   },
   {
     "id": "emp-kivimaa",
     "name": "Kivimäen Kauppa",
-    "about": "Small supermarket in Matinkylä.",
+    "about": "Small supermarket in Matinkylä. Kivimäen Kauppa works in a local shop with a small steady team. A mid-size local team.",
     "contact_name": "Jarmo Lehto",
     "contact_email": "info@kivimaa.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "retail",
+    "district": "matinkyla",
+    "address": "Merituulentie 20",
+    "size_band": "50-249",
+    "founded": 2001,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "A local shop with a small steady team",
+    "how_we_welcome": "You shadow a colleague at the till for your first days before working alone."
   },
   {
     "id": "emp-mallas",
     "name": "Ravintola Mallas",
-    "about": "Lunch restaurant in Tapiola.",
+    "about": "Lunch restaurant in Tapiola. Ravintola Mallas works in food and coffee, made on site. A mid-size local team.",
     "contact_name": "Sirkka Aho",
     "contact_email": "info@mallas.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "B1"
+    "booth": "B1",
+    "field": "restaurant",
+    "district": "tapiola",
+    "address": "Ahertajantie 5",
+    "size_band": "250+",
+    "founded": 2021,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-bistro",
     "name": "Bistro Niitty",
-    "about": "Café-bistro at Niittykumpu metro.",
+    "about": "Café-bistro at Niittykumpu metro. Bistro Niitty works in food and coffee, made on site. The team has a few people.",
     "contact_name": "Olli Rinne",
     "contact_email": "info@bistro.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "restaurant",
+    "district": "niittykumpu",
+    "address": "Niittykummuntie 9",
+    "size_band": "1",
+    "founded": 2008,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-aurora-care",
     "name": "Hoivakoti Aurora",
-    "about": "A 40-resident care home in Leppävaara.",
+    "about": "A 40-resident care home in Leppävaara. Hoivakoti Aurora works in care work where people know your name. A mid-size local team.",
     "contact_name": "Päivi Kettunen",
     "contact_email": "info@aurora-care.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "B2"
+    "booth": "B2",
+    "field": "care",
+    "district": "leppavaara",
+    "address": "Vallikalliontie 3",
+    "size_band": "10-49",
+    "founded": 2019,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Care work where people know your name",
+    "how_we_welcome": "New staff get a named mentor and joint shifts before taking residents alone."
   },
   {
     "id": "emp-kotisatama",
     "name": "Kotisatama Palvelutalo",
-    "about": "Home care and a service house in Espoonlahti.",
+    "about": "Home care and a service house in Espoonlahti. Kotisatama Palvelutalo works in care work where people know your name. The team has a few people.",
     "contact_name": "Eero Pakkanen",
     "contact_email": "info@kotisatama.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "care",
+    "district": "espoonlahti",
+    "address": "Soukkatie 12",
+    "size_band": "1",
+    "founded": 2012,
+    "logo_color": "#713f12",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Care work where people know your name",
+    "how_we_welcome": "New staff get a named mentor and joint shifts before taking residents alone."
   },
   {
     "id": "emp-freight",
     "name": "Nordic Freight Oy",
-    "about": "Warehouse and distribution in Kera.",
+    "about": "Warehouse and distribution in Kera. Nordic Freight Oy works in deliveries and driving in the helsinki region. A mid-size local team.",
     "contact_name": "Timo Rajala",
     "contact_email": "info@freight.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "B3"
+    "booth": "B3",
+    "field": "logistics",
+    "district": "espoon_keskus",
+    "address": "Keran Hallit 2",
+    "size_band": "250+",
+    "founded": 2004,
+    "logo_color": "#3f3f46",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Deliveries and driving in the Helsinki region",
+    "how_we_welcome": "You ride along on routes first; your own routes start after the first week."
   },
   {
     "id": "emp-vire",
     "name": "Lähettipalvelu Vire",
-    "about": "Parcel delivery from Kilo depot.",
+    "about": "Parcel delivery from Kilo depot. Lähettipalvelu Vire works in deliveries and driving in the helsinki region. A mid-size local team.",
     "contact_name": "Hanna Sallinen",
     "contact_email": "info@vire.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "logistics",
+    "district": "niittykumpu",
+    "address": "Kilonportti 3",
+    "size_band": "250+",
+    "founded": 1998,
+    "logo_color": "#3f3f46",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Deliveries and driving in the Helsinki region",
+    "how_we_welcome": "You ride along on routes first; your own routes start after the first week."
   },
   {
     "id": "emp-avara",
     "name": "Toimistopalvelu Avara",
-    "about": "Office support for small firms.",
+    "about": "Office support for small firms. Toimistopalvelu Avara works in office and admin support for local companies. A mid-size local team.",
     "contact_name": "Leena Koski",
     "contact_email": "info@avara.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "C1"
+    "booth": "C1",
+    "field": "office",
+    "district": "leppavaara",
+    "address": "Vallikatu 7",
+    "size_band": "50-249",
+    "founded": 1990,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Office and admin support for local companies",
+    "how_we_welcome": "You get a named colleague for questions and a written first-week plan."
   },
   {
     "id": "emp-kanto",
     "name": "Tilitoimisto Kanto",
-    "about": "Bookkeeping office in Espoon keskus.",
+    "about": "Bookkeeping office in Espoon keskus. Tilitoimisto Kanto works in office and admin support for local companies. A mid-size local team.",
     "contact_name": "Vesa Tolonen",
     "contact_email": "info@kanto.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "office",
+    "district": "espoon_keskus",
+    "address": "Kanslerintie 2",
+    "size_band": "50-249",
+    "founded": 1995,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Office and admin support for local companies",
+    "how_we_welcome": "You get a named colleague for questions and a written first-week plan."
   },
   {
     "id": "emp-linja",
     "name": "Asiakaspalvelu Linja",
-    "about": "Phone and chat customer service, Leppävaara.",
+    "about": "Phone and chat customer service, Leppävaara. Asiakaspalvelu Linja works in helping customers by phone, chat and face to face. A mid-size local team.",
     "contact_name": "Riina Palo",
     "contact_email": "info@linja.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "C2"
+    "booth": "C2",
+    "field": "customer_service",
+    "district": "leppavaara",
+    "address": "Sello, Länsikäytävä 3",
+    "size_band": "250+",
+    "founded": 2010,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Helping customers by phone, chat and face to face",
+    "how_we_welcome": "You listen in on calls first, then take calls with a coach beside you."
   },
   {
     "id": "emp-koulutus",
     "name": "Koulutuskeskus Avara",
-    "about": "Adult courses in Karakallio.",
+    "about": "Adult courses in Karakallio. Koulutuskeskus Avara works in learning and library work for the city. A mid-size local team.",
     "contact_name": "Päivi Kettunen",
     "contact_email": "info@koulutus.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "education",
+    "district": "kauklahti",
+    "address": "Lansirinteenkatu 1",
+    "size_band": "250+",
+    "founded": 2005,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Learning and library work for the city",
+    "how_we_welcome": "A colleague shows you the daily routines and you plan your first week together."
   },
   {
     "id": "emp-library",
     "name": "Espoo city library",
-    "about": "Iso Omena and Matinkylä libraries.",
+    "about": "Iso Omena and Matinkylä libraries. Espoo city library works in learning and library work for the city. A mid-size local team.",
     "contact_name": "Sara Lind",
     "contact_email": "info@library.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "C3"
+    "booth": "C3",
+    "field": "education",
+    "district": "matinkyla",
+    "address": "Pyörrekuja 6",
+    "size_band": "250+",
+    "founded": 2012,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Learning and library work for the city",
+    "how_we_welcome": "A colleague shows you the daily routines and you plan your first week together."
   },
   {
     "id": "emp-tiima",
     "name": "Rakennus Tiima Oy",
-    "about": "Renovation sites around Espoo.",
+    "about": "Renovation sites around Espoo. Rakennus Tiima Oy works in building and renovation work in espoo. A mid-size local team.",
     "contact_name": "Jussi Ranta",
     "contact_email": "info@tiima.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "D1"
+    "booth": "D1",
+    "field": "construction",
+    "district": "espoon_keskus",
+    "address": "Satulakatu 4",
+    "size_band": "10-49",
+    "founded": 2013,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Building and renovation work in Espoo",
+    "how_we_welcome": "You always start paired with a senior worker and a safety walkthrough on day one."
   },
   {
     "id": "emp-oivo",
     "name": "Maalaus Oivo",
-    "about": "Painting and small repair work.",
+    "about": "Painting and small repair work. Maalaus Oivo works in building and renovation work in espoo. The team has a few people.",
     "contact_name": "Antti Sarlin",
     "contact_email": "info@oivo.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "construction",
+    "district": "matinkyla",
+    "address": "Piispanmaenkatu 2",
+    "size_band": "1",
+    "founded": 1996,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Building and renovation work in Espoo",
+    "how_we_welcome": "You always start paired with a senior worker and a safety walkthrough on day one."
   },
   {
     "id": "emp-lumo",
     "name": "Lumo Systems Oy",
-    "about": "Booking software for tradespeople, Otaniemi.",
+    "about": "Booking software for tradespeople, Otaniemi. Lumo Systems Oy works in software and it work, small expert teams. A mid-size local team.",
     "contact_name": "Sanna Virtanen",
     "contact_email": "info@lumo.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "D2"
+    "booth": "D2",
+    "field": "tech",
+    "district": "otaniemi",
+    "address": "Innopoli 2, Tekniikantie 14",
+    "size_band": "10-49",
+    "founded": 1990,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Software and IT work, small expert teams",
+    "how_we_welcome": "You get a buddy, a small first task and code review support from week one."
   },
   {
     "id": "emp-otava",
     "name": "Otava Cloud Oy",
-    "about": "Cloud hosting in Keilaniemi.",
+    "about": "Cloud hosting in Keilaniemi. Otava Cloud Oy works in software and it work, small expert teams. The team has a few people.",
     "contact_name": "Mikael Sund",
     "contact_email": "info@otava.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "tech",
+    "district": "otaniemi",
+    "address": "Keilaranta 9",
+    "size_band": "2-9",
+    "founded": 1996,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Software and IT work, small expert teams",
+    "how_we_welcome": "You get a buddy, a small first task and code review support from week one."
   },
   {
     "id": "emp-vihrea",
     "name": "Puutarhapalvelu Vihreä",
-    "about": "Parks and garden work for the city.",
+    "about": "Parks and garden work for the city. Puutarhapalvelu Vihreä works in seasonal outdoor work through the year. The team has a few people.",
     "contact_name": "Outi Niemelä",
     "contact_email": "info@vihrea.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": "D3"
+    "booth": "D3",
+    "field": "seasonal",
+    "district": "tapiola",
+    "address": "Rantaraitti, meeting at Tapiola depot",
+    "size_band": "1",
+    "founded": 1996,
+    "logo_color": "#1e3a8a",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-rantaraitti",
     "name": "Rantaraitti kiosks",
-    "about": "Ice-cream kiosks on the waterfront.",
+    "about": "Ice-cream kiosks on the waterfront. Rantaraitti kiosks works in seasonal outdoor work through the year. The team has a few people.",
     "contact_name": "Daniel Roth",
     "contact_email": "info@rantaraitti.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "seasonal",
+    "district": "espoonlahti",
+    "address": "Soukanranta kiosk 2",
+    "size_band": "1",
+    "founded": 1992,
+    "logo_color": "#713f12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-merituuli",
     "name": "Hotelli Merituuli",
-    "about": "Small hotel in Kauklahti.",
+    "about": "Small hotel in Kauklahti. Hotelli Merituuli works in food and coffee, made on site. A mid-size local team.",
     "contact_name": "Emma Salonen",
     "contact_email": "info@merituuli.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "restaurant",
+    "district": "kauklahti",
+    "address": "Kauppatie 1",
+    "size_band": "10-49",
+    "founded": 1998,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Helping customers by phone, chat and face to face",
+    "how_we_welcome": "You listen in on calls first, then take calls with a coach beside you."
   },
   {
     "id": "emp-paja",
     "name": "Liikuntakeskus Paja",
-    "about": "Community sports centre, Espoon keskus.",
+    "about": "Community sports centre, Espoon keskus. Liikuntakeskus Paja works in helping customers by phone, chat and face to face. The team has a few people.",
     "contact_name": "Petteri Ahola",
     "contact_email": "info@paja.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "customer_service",
+    "district": "espoon_keskus",
+    "address": "Kilpikuja 1",
+    "size_band": "1",
+    "founded": 1988,
+    "logo_color": "#1e3a8a",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Helping customers by phone, chat and face to face",
+    "how_we_welcome": "You listen in on calls first, then take calls with a coach beside you."
   },
   {
     "id": "emp-apteekki",
     "name": "Apteekki Leppävaara",
-    "about": "Pharmacy in Sello shopping centre.",
+    "about": "Pharmacy in Sello shopping centre. Apteekki Leppävaara works in a local shop with a small steady team. A mid-size local team.",
     "contact_name": "Kirsi Laakso",
     "contact_email": "info@apteekki.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "retail",
+    "district": "leppavaara",
+    "address": "Sello, 1st floor",
+    "size_band": "10-49",
+    "founded": 2003,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "A local shop with a small steady team",
+    "how_we_welcome": "You shadow a colleague at the till for your first days before working alone."
   },
   {
     "id": "emp-taikinapuu",
     "name": "Leipomo Taikinapuu",
-    "about": "Bakery-café in Olari.",
+    "about": "Bakery-café in Olari. Leipomo Taikinapuu works in food and coffee, made on site. The team has a few people.",
     "contact_name": "Tuomo Heikkilä",
     "contact_email": "info@taikinapuu.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "restaurant",
+    "district": "olari",
+    "address": "Olarinlaitos 4",
+    "size_band": "2-9",
+    "founded": 2004,
+    "logo_color": "#1e3a8a",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-raikas",
     "name": "Pesula Raikas",
-    "about": "Laundry service in Niittykumpu.",
+    "about": "Laundry service in Niittykumpu. Pesula Raikas works in deliveries and driving in the helsinki region. The team has a few people.",
     "contact_name": "Anne Mäki",
     "contact_email": "info@raikas.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "logistics",
+    "district": "niittykumpu",
+    "address": "Niittysillankuja 3",
+    "size_band": "2-9",
+    "founded": 2001,
+    "logo_color": "#3f3f46",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-weegee",
     "name": "Näyttelykeskus WeeGee",
-    "about": "Exhibition centre in Tapiola.",
+    "about": "Exhibition centre in Tapiola. Näyttelykeskus WeeGee works in learning and library work for the city. A mid-size local team.",
     "contact_name": "Leena Koski",
     "contact_email": "info@weegee.example.com",
     "contact_phone": "+358 40 000 0000",
-    "booth": null
+    "booth": null,
+    "field": "education",
+    "district": "tapiola",
+    "address": "Ahertajantie 5",
+    "size_band": "250+",
+    "founded": 2014,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Learning and library work for the city",
+    "how_we_welcome": "A colleague shows you the daily routines and you plan your first week together."
   },
   {
     "id": "emp-terasmetso",
     "name": "Teräsmetso Works Oy",
-    "about": "Steel frames and machine parts, a 40-person workshop in Kauklahti.",
+    "about": "Steel frames and machine parts, a 40-person workshop in Kauklahti. Teräsmetso Works Oy works in workshop and production work. The team has a few people.",
     "contact_name": "Jari Kallunki",
     "contact_email": "info@terasmetso.example.com",
     "contact_phone": "+358 40 000 0101",
-    "booth": null
+    "booth": null,
+    "field": "manufacturing",
+    "district": "kauklahti",
+    "address": "Hansakallio 4",
+    "size_band": "2-9",
+    "founded": 2017,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Workshop and production work",
+    "how_we_welcome": "You train on each machine with an instructor before working it alone."
   },
   {
     "id": "emp-rosteri",
     "name": "Rosteri Linja Oy",
-    "about": "Stainless-steel process equipment for food and pharma plants.",
+    "about": "Stainless-steel process equipment for food and pharma plants. Rosteri Linja Oy works in workshop and production work. A mid-size local team.",
     "contact_name": "Marko Vainio",
     "contact_email": "info@rosteri.example.com",
     "contact_phone": "+358 40 000 0102",
-    "booth": null
+    "booth": null,
+    "field": "manufacturing",
+    "district": "espoon_keskus",
+    "address": "Kuurinniityntie 12",
+    "size_band": "50-249",
+    "founded": 2006,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Workshop and production work",
+    "how_we_welcome": "You train on each machine with an instructor before working it alone."
   },
   {
     "id": "emp-arcmec",
     "name": "Arcmec Assembly Oy",
-    "about": "Electrical cabinets and robot welding in Olari.",
+    "about": "Electrical cabinets and robot welding in Olari. Arcmec Assembly Oy works in workshop and production work. The team has a few people.",
     "contact_name": "Satu Hirvelä",
     "contact_email": "info@arcmec.example.com",
     "contact_phone": "+358 40 000 0103",
-    "booth": null
+    "booth": null,
+    "field": "manufacturing",
+    "district": "olari",
+    "address": "Juvanpuistonkatu 3",
+    "size_band": "1",
+    "founded": 2018,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Workshop and production work",
+    "how_we_welcome": "You train on each machine with an instructor before working it alone."
   },
   {
     "id": "emp-hila",
     "name": "Pakkaamo Hila Oy",
-    "about": "Food packing plant for ready meals and salads.",
+    "about": "Food packing plant for ready meals and salads. Pakkaamo Hila Oy works in workshop and production work. A mid-size local team.",
     "contact_name": "Kimmo Laaksonen",
     "contact_email": "info@hila.example.com",
     "contact_phone": "+358 40 000 0104",
-    "booth": null
+    "booth": null,
+    "field": "manufacturing",
+    "district": "kalajarvi",
+    "address": "Lahnuksentie 18",
+    "size_band": "50-249",
+    "founded": 1990,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Workshop and production work",
+    "how_we_welcome": "You train on each machine with an instructor before working it alone."
   },
   {
     "id": "emp-virta",
     "name": "Sähkö-Virta Espoo Oy",
-    "about": "Electrical installation for homes and housing companies.",
+    "about": "Electrical installation for homes and housing companies. Sähkö-Virta Espoo Oy works in keeping buildings running every day. The team has a few people.",
     "contact_name": "Tero Huhta",
     "contact_email": "info@virta.example.com",
     "contact_phone": "+358 40 000 0105",
-    "booth": null
+    "booth": null,
+    "field": "maintenance",
+    "district": "espoon_keskus",
+    "address": "Kamreerintie 6",
+    "size_band": "2-9",
+    "founded": 2010,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Keeping buildings running every day",
+    "how_we_welcome": "You do rounds with a senior technician first and get your own list after week two."
   },
   {
     "id": "emp-lvikaari",
     "name": "LVI-Kaari Oy",
-    "about": "Plumbing, heating and ventilation renovations.",
+    "about": "Plumbing, heating and ventilation renovations. LVI-Kaari Oy works in keeping buildings running every day. A mid-size local team.",
     "contact_name": "Pasi Ojala",
     "contact_email": "info@lvikaari.example.com",
     "contact_phone": "+358 40 000 0106",
-    "booth": null
+    "booth": null,
+    "field": "maintenance",
+    "district": "kauklahti",
+    "address": "Kauklahdenväylä 9",
+    "size_band": "10-49",
+    "founded": 2018,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Keeping buildings running every day",
+    "how_we_welcome": "You do rounds with a senior technician first and get your own list after week two."
   },
   {
     "id": "emp-rantala",
     "name": "Kiinteistöhuolto Rantala Oy",
-    "about": "Property maintenance for 120 housing companies in south Espoo.",
+    "about": "Property maintenance for 120 housing companies in south Espoo. Kiinteistöhuolto Rantala Oy works in keeping buildings running every day. The team has a few people.",
     "contact_name": "Merja Rantala",
     "contact_email": "info@rantala.example.com",
     "contact_phone": "+358 40 000 0107",
-    "booth": null
+    "booth": null,
+    "field": "maintenance",
+    "district": "matinkyla",
+    "address": "Piispansilta 9",
+    "size_band": "2-9",
+    "founded": 1990,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Keeping buildings running every day",
+    "how_we_welcome": "You do rounds with a senior technician first and get your own list after week two."
   },
   {
     "id": "emp-lastu",
     "name": "Puusepänliike Lastu",
-    "about": "Small carpentry firm: stairs, terraces and renovation.",
+    "about": "Small carpentry firm: stairs, terraces and renovation. Puusepänliike Lastu works in building and renovation work in espoo. A mid-size local team.",
     "contact_name": "Heikki Lastunen",
     "contact_email": "info@lastu.example.com",
     "contact_phone": "+358 40 000 0108",
-    "booth": null
+    "booth": null,
+    "field": "construction",
+    "district": "kalajarvi",
+    "address": "Lahnuksentie 30",
+    "size_band": "50-249",
+    "founded": 2009,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Building and renovation work in Espoo",
+    "how_we_welcome": "You always start paired with a senior worker and a safety walkthrough on day one."
   },
   {
     "id": "emp-savy",
     "name": "Pintamaalaus Sävy Oy",
-    "about": "Interior and facade painting.",
+    "about": "Interior and facade painting. Pintamaalaus Sävy Oy works in building and renovation work in espoo. A mid-size local team.",
     "contact_name": "Niina Kaarto",
     "contact_email": "info@savy.example.com",
     "contact_phone": "+358 40 000 0109",
-    "booth": null
+    "booth": null,
+    "field": "construction",
+    "district": "leppavaara",
+    "address": "Perkkaantie 4",
+    "size_band": "10-49",
+    "founded": 2004,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Building and renovation work in Espoo",
+    "how_we_welcome": "You always start paired with a senior worker and a safety walkthrough on day one."
   },
   {
     "id": "emp-kivisauma",
     "name": "Laattatyö Kivisauma",
-    "about": "Tiling and wet-room renovation.",
+    "about": "Tiling and wet-room renovation. Laattatyö Kivisauma works in building and renovation work in espoo. A mid-size local team.",
     "contact_name": "Ari Saumala",
     "contact_email": "info@kivisauma.example.com",
     "contact_phone": "+358 40 000 0110",
-    "booth": null
+    "booth": null,
+    "field": "construction",
+    "district": "espoonlahti",
+    "address": "Ulappakatu 2",
+    "size_band": "10-49",
+    "founded": 2012,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Building and renovation work in Espoo",
+    "how_we_welcome": "You always start paired with a senior worker and a safety walkthrough on day one."
   },
   {
     "id": "emp-peruskivi",
     "name": "Rakennusliike Peruskivi Oy",
-    "about": "Apartment building sites in Espoon keskus.",
+    "about": "Apartment building sites in Espoon keskus. Rakennusliike Peruskivi Oy works in building and renovation work in espoo. The team has a few people.",
     "contact_name": "Janne Kivelä",
     "contact_email": "info@peruskivi.example.com",
     "contact_phone": "+358 40 000 0111",
-    "booth": null
+    "booth": null,
+    "field": "construction",
+    "district": "espoon_keskus",
+    "address": "Kirkkojärventie 20",
+    "size_band": "2-9",
+    "founded": 1992,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Building and renovation work in Espoo",
+    "how_we_welcome": "You always start paired with a senior worker and a safety walkthrough on day one."
   },
   {
     "id": "emp-routa",
     "name": "Kuljetusliike Routa Oy",
-    "about": "Regional deliveries and a cross-dock warehouse.",
+    "about": "Regional deliveries and a cross-dock warehouse. Kuljetusliike Routa Oy works in deliveries and driving in the helsinki region. A mid-size local team.",
     "contact_name": "Sami Routio",
     "contact_email": "info@routa.example.com",
     "contact_phone": "+358 40 000 0112",
-    "booth": null
+    "booth": null,
+    "field": "logistics",
+    "district": "kauklahti",
+    "address": "Lasihytti 5",
+    "size_band": "250+",
+    "founded": 2008,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Deliveries and driving in the Helsinki region",
+    "how_we_welcome": "You ride along on routes first; your own routes start after the first week."
   },
   {
     "id": "emp-lahilinja",
     "name": "Lähilinja Bus Oy",
-    "about": "Bus operator running local routes in west Espoo.",
+    "about": "Bus operator running local routes in west Espoo. Lähilinja Bus Oy works in deliveries and driving in the helsinki region. The team has a few people.",
     "contact_name": "Kaisa Linjala",
     "contact_email": "info@lahilinja.example.com",
     "contact_phone": "+358 40 000 0113",
-    "booth": null
+    "booth": null,
+    "field": "logistics",
+    "district": "kauklahti",
+    "address": "Kauklahdentie 40",
+    "size_band": "1",
+    "founded": 2009,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Deliveries and driving in the Helsinki region",
+    "how_we_welcome": "You ride along on routes first; your own routes start after the first week."
   },
   {
     "id": "emp-apaja",
     "name": "Palvelutaksi Apaja",
-    "about": "Accessible taxi and school transport.",
+    "about": "Accessible taxi and school transport. Palvelutaksi Apaja works in deliveries and driving in the helsinki region. A mid-size local team.",
     "contact_name": "Raimo Apajalahti",
     "contact_email": "info@apaja.example.com",
     "contact_phone": "+358 40 000 0114",
-    "booth": null
+    "booth": null,
+    "field": "logistics",
+    "district": "leppavaara",
+    "address": "Hevosenkenkä 3",
+    "size_band": "250+",
+    "founded": 1995,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Deliveries and driving in the Helsinki region",
+    "how_we_welcome": "You ride along on routes first; your own routes start after the first week."
   },
   {
     "id": "emp-kuura",
     "name": "Lääkärikeskus Kuura",
-    "about": "Private medical clinic with a small laboratory.",
+    "about": "Private medical clinic with a small laboratory. Lääkärikeskus Kuura works in health services close to home. The team has a few people.",
     "contact_name": "Helena Kuusela",
     "contact_email": "info@kuura.example.com",
     "contact_phone": "+358 40 000 0115",
-    "booth": null
+    "booth": null,
+    "field": "health",
+    "district": "leppavaara",
+    "address": "Leppävaarankatu 7",
+    "size_band": "1",
+    "founded": 2007,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Health services close to home",
+    "how_we_welcome": "You shadow appointments first and get a named mentor for your first month."
   },
   {
     "id": "emp-hymy",
     "name": "Hammasklinikka Hymy",
-    "about": "Dental clinic with four treatment rooms.",
+    "about": "Dental clinic with four treatment rooms. Hammasklinikka Hymy works in health services close to home. The team has a few people.",
     "contact_name": "Laura Hymynen",
     "contact_email": "info@hymy.example.com",
     "contact_phone": "+358 40 000 0116",
-    "booth": null
+    "booth": null,
+    "field": "health",
+    "district": "tapiola",
+    "address": "Tapionaukio 5",
+    "size_band": "2-9",
+    "founded": 1993,
+    "logo_color": "#1e3a8a",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Health services close to home",
+    "how_we_welcome": "You shadow appointments first and get a named mentor for your first month."
   },
   {
     "id": "emp-kaisla",
     "name": "Apteekki Kaisla",
-    "about": "Pharmacy in the Espoonlahti shopping centre.",
+    "about": "Pharmacy in the Espoonlahti shopping centre. Apteekki Kaisla works in health services close to home. A mid-size local team.",
     "contact_name": "Tiina Kaislanen",
     "contact_email": "info@kaisla.example.com",
     "contact_phone": "+358 40 000 0117",
-    "booth": null
+    "booth": null,
+    "field": "health",
+    "district": "espoonlahti",
+    "address": "Espoonlahdenkatu 4",
+    "size_band": "250+",
+    "founded": 2003,
+    "logo_color": "#3f3f46",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Health services close to home",
+    "how_we_welcome": "You shadow appointments first and get a named mentor for your first month."
   },
   {
     "id": "emp-kaste",
     "name": "Kotihoito Kaste Oy",
-    "about": "Home care for older people in west Espoo.",
+    "about": "Home care for older people in west Espoo. Kotihoito Kaste Oy works in care work where people know your name. The team has a few people.",
     "contact_name": "Marja Kastela",
     "contact_email": "info@kaste.example.com",
     "contact_phone": "+358 40 000 0118",
-    "booth": null
+    "booth": null,
+    "field": "care",
+    "district": "espoon_keskus",
+    "address": "Kirkkojärventie 8",
+    "size_band": "1",
+    "founded": 1998,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Care work where people know your name",
+    "how_we_welcome": "New staff get a named mentor and joint shifts before taking residents alone."
   },
   {
     "id": "emp-silta",
     "name": "Avustajapalvelu Silta",
-    "about": "Matches personal assistants with disabled clients.",
+    "about": "Matches personal assistants with disabled clients. Avustajapalvelu Silta works in care work where people know your name. The team has a few people.",
     "contact_name": "Johanna Siltanen",
     "contact_email": "info@silta.example.com",
     "contact_phone": "+358 40 000 0119",
-    "booth": null
+    "booth": null,
+    "field": "care",
+    "district": "tapiola",
+    "address": "Merituulentie 30",
+    "size_band": "1",
+    "founded": 2012,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Care work where people know your name",
+    "how_we_welcome": "New staff get a named mentor and joint shifts before taking residents alone."
   },
   {
     "id": "emp-satakieli",
     "name": "Päiväkoti Satakieli",
-    "about": "Private daycare with Finnish and English groups.",
+    "about": "Private daycare with Finnish and English groups. Päiväkoti Satakieli works in learning and library work for the city. The team has a few people.",
     "contact_name": "Riikka Laulaja",
     "contact_email": "info@satakieli.example.com",
     "contact_phone": "+358 40 000 0120",
-    "booth": null
+    "booth": null,
+    "field": "education",
+    "district": "olari",
+    "address": "Kuitinmäentie 22",
+    "size_band": "1",
+    "founded": 2001,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Learning and library work for the city",
+    "how_we_welcome": "A colleague shows you the daily routines and you plan your first week together."
   },
   {
     "id": "emp-kuusikko",
     "name": "Kuusikon koulu",
-    "about": "Fictional primary school (grades 1-6) used in this demo.",
+    "about": "Fictional primary school (grades 1-6) used in this demo. Kuusikon koulu works in learning and library work for the city. A mid-size local team.",
     "contact_name": "Mervi Kuusinen",
     "contact_email": "info@kuusikko.example.com",
     "contact_phone": "+358 40 000 0121",
-    "booth": null
+    "booth": null,
+    "field": "education",
+    "district": "espoon_keskus",
+    "address": "Kirkkojärventie 34",
+    "size_band": "250+",
+    "founded": 1999,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Learning and library work for the city",
+    "how_we_welcome": "A colleague shows you the daily routines and you plan your first week together."
   },
   {
     "id": "emp-havu",
     "name": "Ravintola Havu",
-    "about": "Lunch and à la carte restaurant near Leppävaara station.",
+    "about": "Lunch and à la carte restaurant near Leppävaara station. Ravintola Havu works in food and coffee, made on site. The team has a few people.",
     "contact_name": "Toni Havukainen",
     "contact_email": "info@havu.example.com",
     "contact_phone": "+358 40 000 0122",
-    "booth": null
+    "booth": null,
+    "field": "restaurant",
+    "district": "leppavaara",
+    "address": "Leppävaarankatu 3",
+    "size_band": "1",
+    "founded": 2005,
+    "logo_color": "#3f3f46",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-fornello",
     "name": "Pizzeria Fornello",
-    "about": "Wood-fired pizza, eat-in and delivery.",
+    "about": "Wood-fired pizza, eat-in and delivery. Pizzeria Fornello works in food and coffee, made on site. The team has a few people.",
     "contact_name": "Luca Bianchi",
     "contact_email": "info@fornello.example.com",
     "contact_phone": "+358 40 000 0123",
-    "booth": null
+    "booth": null,
+    "field": "restaurant",
+    "district": "espoonlahti",
+    "address": "Ulappakatu 6",
+    "size_band": "1",
+    "founded": 2020,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-pavut",
     "name": "Paahtimo Pavut",
-    "about": "Coffee roastery café on the university campus.",
+    "about": "Coffee roastery café on the university campus. Paahtimo Pavut works in food and coffee, made on site. A mid-size local team.",
     "contact_name": "Elina Paahtola",
     "contact_email": "info@pavut.example.com",
     "contact_phone": "+358 40 000 0124",
-    "booth": null
+    "booth": null,
+    "field": "restaurant",
+    "district": "otaniemi",
+    "address": "Otakaari 1",
+    "size_band": "50-249",
+    "founded": 2003,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Food and coffee, made on site",
+    "how_we_welcome": "You start with a buddy shift and learn the menu and the till before your own shifts."
   },
   {
     "id": "emp-laguuni",
     "name": "Hotelli Laguuni",
-    "about": "120-room business hotel in Keilaniemi.",
+    "about": "120-room business hotel in Keilaniemi. Hotelli Laguuni works in helping customers by phone, chat and face to face. A mid-size local team.",
     "contact_name": "Petra Laguna",
     "contact_email": "info@laguuni.example.com",
     "contact_phone": "+358 40 000 0125",
-    "booth": null
+    "booth": null,
+    "field": "customer_service",
+    "district": "otaniemi",
+    "address": "Keilaranta 8",
+    "size_band": "50-249",
+    "founded": 2019,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Helping customers by phone, chat and face to face",
+    "how_we_welcome": "You listen in on calls first, then take calls with a coach beside you."
   },
   {
     "id": "emp-kauppakulma",
     "name": "Supermarket Kauppakulma",
-    "about": "Large supermarket in Espoon keskus.",
+    "about": "Large supermarket in Espoon keskus. Supermarket Kauppakulma works in a local shop with a small steady team. A mid-size local team.",
     "contact_name": "Juha Kulmala",
     "contact_email": "info@kauppakulma.example.com",
     "contact_phone": "+358 40 000 0126",
-    "booth": null
+    "booth": null,
+    "field": "retail",
+    "district": "espoon_keskus",
+    "address": "Espoontori 2",
+    "size_band": "10-49",
+    "founded": 2001,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "A local shop with a small steady team",
+    "how_we_welcome": "You shadow a colleague at the till for your first days before working alone."
   },
   {
     "id": "emp-oravanpesa",
     "name": "Tavaratalo Oravanpesä",
-    "about": "Department store in Matinkylä.",
+    "about": "Department store in Matinkylä. Tavaratalo Oravanpesä works in a local shop with a small steady team. A mid-size local team.",
     "contact_name": "Sari Oravisto",
     "contact_email": "info@oravanpesa.example.com",
     "contact_phone": "+358 40 000 0127",
-    "booth": null
+    "booth": null,
+    "field": "retail",
+    "district": "matinkyla",
+    "address": "Piispansilta 11",
+    "size_band": "10-49",
+    "founded": 2016,
+    "logo_color": "#713f12",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-kielo",
     "name": "Kukkakauppa Kielo",
-    "about": "Flower shop near Leppävaara station.",
+    "about": "Flower shop near Leppävaara station. Kukkakauppa Kielo works in a local shop with a small steady team. A mid-size local team.",
     "contact_name": "Anja Kielonen",
     "contact_email": "info@kielo.example.com",
     "contact_phone": "+358 40 000 0128",
-    "booth": null
+    "booth": null,
+    "field": "retail",
+    "district": "leppavaara",
+    "address": "Leppävaarankatu 1",
+    "size_band": "10-49",
+    "founded": 2008,
+    "logo_color": "#713f12",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "A local shop with a small steady team",
+    "how_we_welcome": "You shadow a colleague at the till for your first days before working alone."
   },
   {
     "id": "emp-saksi",
     "name": "Kampaamo Saksi",
-    "about": "Hair salon with six chairs.",
+    "about": "Hair salon with six chairs. Kampaamo Saksi works in helping customers by phone, chat and face to face. A mid-size local team.",
     "contact_name": "Minna Saksala",
     "contact_email": "info@saksi.example.com",
     "contact_phone": "+358 40 000 0129",
-    "booth": null
+    "booth": null,
+    "field": "customer_service",
+    "district": "matinkyla",
+    "address": "Matinkatu 3",
+    "size_band": "10-49",
+    "founded": 1989,
+    "logo_color": "#1e3a8a",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Helping customers by phone, chat and face to face",
+    "how_we_welcome": "You listen in on calls first, then take calls with a coach beside you."
   },
   {
     "id": "emp-mantymaki",
     "name": "Autokorjaamo Mäntymäki",
-    "about": "Car repair and tyre hotel.",
+    "about": "Car repair and tyre hotel. Autokorjaamo Mäntymäki works in keeping buildings running every day. A mid-size local team.",
     "contact_name": "Kari Mäntylä",
     "contact_email": "info@mantymaki.example.com",
     "contact_phone": "+358 40 000 0130",
-    "booth": null
+    "booth": null,
+    "field": "maintenance",
+    "district": "espoon_keskus",
+    "address": "Kuurinniityntie 30",
+    "size_band": "50-249",
+    "founded": 1993,
+    "logo_color": "#831843",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-polku",
     "name": "Pyöräpaja Polku",
-    "about": "Bike repair and rental.",
+    "about": "Bike repair and rental. Pyöräpaja Polku works in seasonal outdoor work through the year. A mid-size local team.",
     "contact_name": "Ville Polkunen",
     "contact_email": "info@polku.example.com",
     "contact_phone": "+358 40 000 0131",
-    "booth": null
+    "booth": null,
+    "field": "seasonal",
+    "district": "tapiola",
+    "address": "Länsituulentie 2",
+    "size_band": "10-49",
+    "founded": 2006,
+    "logo_color": "#713f12",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-vahti",
     "name": "Turvapalvelu Vahti Oy",
-    "about": "Security guarding for shops, offices and events.",
+    "about": "Security guarding for shops, offices and events. Turvapalvelu Vahti Oy works in helping customers by phone, chat and face to face. A mid-size local team.",
     "contact_name": "Mika Vahtera",
     "contact_email": "info@vahti.example.com",
     "contact_phone": "+358 40 000 0132",
-    "booth": null
+    "booth": null,
+    "field": "customer_service",
+    "district": "tapiola",
+    "address": "Hevosenkenkä 9",
+    "size_band": "250+",
+    "founded": 2015,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-laskelma",
     "name": "Taloushallinto Laskelma Oy",
-    "about": "Accounting and payroll for 300 small businesses.",
+    "about": "Accounting and payroll for 300 small businesses. Taloushallinto Laskelma Oy works in office and admin support for local companies. The team has a few people.",
     "contact_name": "Eija Laskunen",
     "contact_email": "info@laskelma.example.com",
     "contact_phone": "+358 40 000 0133",
-    "booth": null
+    "booth": null,
+    "field": "office",
+    "district": "niittykumpu",
+    "address": "Merituulentie 34",
+    "size_band": "2-9",
+    "founded": 1993,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Office and admin support for local companies",
+    "how_we_welcome": "You get a named colleague for questions and a written first-week plan."
   },
   {
     "id": "emp-kulma",
     "name": "Yrityskeskus Kulma",
-    "about": "Shared offices and meeting rooms in Tapiola.",
+    "about": "Shared offices and meeting rooms in Tapiola. Yrityskeskus Kulma works in helping customers by phone, chat and face to face. A mid-size local team.",
     "contact_name": "Hanna Kulmanen",
     "contact_email": "info@kulma.example.com",
     "contact_phone": "+358 40 000 0134",
-    "booth": null
+    "booth": null,
+    "field": "customer_service",
+    "district": "tapiola",
+    "address": "Tapionaukio 2",
+    "size_band": "50-249",
+    "founded": 2012,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Office and admin support for local companies",
+    "how_we_welcome": "You get a named colleague for questions and a written first-week plan."
   },
   {
     "id": "emp-sanasilta",
     "name": "Käännöstoimisto Sanasilta",
-    "about": "Translation and interpreting agency.",
+    "about": "Translation and interpreting agency. Käännöstoimisto Sanasilta works in office and admin support for local companies. A mid-size local team.",
     "contact_name": "Olga Sanakoski",
     "contact_email": "info@sanasilta.example.com",
     "contact_phone": "+358 40 000 0135",
-    "booth": null
+    "booth": null,
+    "field": "office",
+    "district": "tapiola",
+    "address": "Tapionaukio 4",
+    "size_band": "10-49",
+    "founded": 1995,
+    "logo_color": "#7c2d12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Office and admin support for local companies",
+    "how_we_welcome": "You get a named colleague for questions and a written first-week plan."
   },
   {
     "id": "emp-koodikallio",
     "name": "Koodikallio Oy",
-    "about": "Software studio building apps for public services.",
+    "about": "Software studio building apps for public services. Koodikallio Oy works in software and it work, small expert teams. A mid-size local team.",
     "contact_name": "Aleksi Koodari",
     "contact_email": "info@koodikallio.example.com",
     "contact_phone": "+358 40 000 0136",
-    "booth": null
+    "booth": null,
+    "field": "tech",
+    "district": "otaniemi",
+    "address": "Tekniikantie 14",
+    "size_band": "50-249",
+    "founded": 1995,
+    "logo_color": "#713f12",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Software and IT work, small expert teams",
+    "how_we_welcome": "You get a buddy, a small first task and code review support from week one."
   },
   {
     "id": "emp-datavirta",
     "name": "Datavirta Analytics Oy",
-    "about": "Data and IT services for retailers.",
+    "about": "Data and IT services for retailers. Datavirta Analytics Oy works in software and it work, small expert teams. The team has a few people.",
     "contact_name": "Noora Virtala",
     "contact_email": "info@datavirta.example.com",
     "contact_phone": "+358 40 000 0137",
-    "booth": null
+    "booth": null,
+    "field": "tech",
+    "district": "leppavaara",
+    "address": "Perkkaantie 10",
+    "size_band": "1",
+    "founded": 1997,
+    "logo_color": "#1e3a8a",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Software and IT work, small expert teams",
+    "how_we_welcome": "You get a buddy, a small first task and code review support from week one."
   },
   {
     "id": "emp-bioteekki",
     "name": "Bioteekki Labs Oy",
-    "about": "Contract laboratory for food and water testing.",
+    "about": "Contract laboratory for food and water testing. Bioteekki Labs Oy works in software and it work, small expert teams. A mid-size local team.",
     "contact_name": "Pekka Biolahti",
     "contact_email": "info@bioteekki.example.com",
     "contact_phone": "+358 40 000 0138",
-    "booth": null
+    "booth": null,
+    "field": "tech",
+    "district": "otaniemi",
+    "address": "Tekniikantie 21",
+    "size_band": "10-49",
+    "founded": 2010,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Software and IT work, small expert teams",
+    "how_we_welcome": "You get a buddy, a small first task and code review support from week one."
   },
   {
     "id": "emp-espoolive",
     "name": "Espoo Live Events (fictional)",
-    "about": "Organises outdoor concerts and markets.",
+    "about": "Organises outdoor concerts and markets. Espoo Live Events (fictional) works in seasonal outdoor work through the year. A mid-size local team.",
     "contact_name": "Roosa Tapahtuma",
     "contact_email": "info@espoolive.example.com",
     "contact_phone": "+358 40 000 0139",
-    "booth": null
+    "booth": null,
+    "field": "seasonal",
+    "district": "tapiola",
+    "address": "Tapionaukio 1",
+    "size_band": "50-249",
+    "founded": 1992,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-kesaduuni",
     "name": "Kesäduuni — youth summer work (demo)",
-    "about": "Fictional city-style summer job programme for 15-17-year-olds.",
+    "about": "Fictional city-style summer job programme for 15-17-year-olds. Kesäduuni — youth summer work (demo) works in seasonal outdoor work through the year. A mid-size local team.",
     "contact_name": "Tuuli Kesälä",
     "contact_email": "info@kesaduuni.example.com",
     "contact_phone": "+358 40 000 0140",
-    "booth": null
+    "booth": null,
+    "field": "seasonal",
+    "district": "matinkyla",
+    "address": "Kirkkojärventie 2",
+    "size_band": "10-49",
+    "founded": 2001,
+    "logo_color": "#14532d",
+    "work_languages": [
+      "Finnish",
+      "English",
+      "Swedish"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-kanerva",
     "name": "Viherrakennus Kanerva",
-    "about": "Garden building and maintenance.",
+    "about": "Garden building and maintenance. Viherrakennus Kanerva works in seasonal outdoor work through the year. The team has a few people.",
     "contact_name": "Oskari Kanervo",
     "contact_email": "info@kanerva.example.com",
     "contact_phone": "+358 40 000 0141",
-    "booth": null
+    "booth": null,
+    "field": "seasonal",
+    "district": "kalajarvi",
+    "address": "Lahnuksentie 44",
+    "size_band": "1",
+    "founded": 1999,
+    "logo_color": "#4a044e",
+    "work_languages": [
+      "Finnish",
+      "English"
+    ],
+    "tagline": "Seasonal outdoor work through the year",
+    "how_we_welcome": "You learn the tools and routes with the team lead during your first days."
   },
   {
     "id": "emp-helmi",
     "name": "Puhtauspalvelu Helmi Oy",
-    "about": "Office, shop and building-site cleaning.",
+    "about": "Office, shop and building-site cleaning. Puhtauspalvelu Helmi Oy works in cleaning services for schools, offices and homes. A mid-size local team.",
     "contact_name": "Liisa Helmelä",
     "contact_email": "info@helmi.example.com",
     "contact_phone": "+358 40 000 0142",
-    "booth": null
+    "booth": null,
+    "field": "cleaning",
+    "district": "tapiola",
+    "address": "Niittykummuntie 6",
+    "size_band": "10-49",
+    "founded": 1993,
+    "logo_color": "#0c4a6e",
+    "work_languages": [
+      "Finnish"
+    ],
+    "tagline": "Cleaning services for schools, offices and homes",
+    "how_we_welcome": "You work with an experienced cleaner for your first two weeks and learn each site with them."
   }
 ]

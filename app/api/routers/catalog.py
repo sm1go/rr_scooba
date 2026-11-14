@@ -42,7 +42,8 @@ def event(conn: sqlite3.Connection = Depends(get_conn)):
     if not ev:
         return {"event": None, "employers": []}
     employers = [dict(r) for r in conn.execute(
-        "SELECT e.id, e.name, ee.booth FROM employer_event ee"
+        "SELECT e.id, e.name, e.tagline, e.field, e.logo_color, ee.booth"
+        " FROM employer_event ee"
         " JOIN employer e ON e.id = ee.employer_id"
         " WHERE ee.event_id=? ORDER BY ee.booth", (ev["id"],))]
     for emp in employers:

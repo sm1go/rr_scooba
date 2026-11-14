@@ -1209,6 +1209,86 @@
     "days_ago": 12
   },
   {
+    "id": "tr-e2-001",
+    "event_id": "ev-2026-11",
+    "user_id": "u-aino",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Hoidin kassan ja kahvit yksin torikahviossa",
+          "own_words": "Hoidin kassan ja kahvit yksin torikahviossa"
+        },
+        {
+          "text": "Järjestin kirjaston satutunnan vapaaehtoisena",
+          "own_words": "Järjestin kirjaston satutunnan vapaaehtoisena"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 5
+  },
+  {
+    "id": "tr-e2-002",
+    "event_id": "ev-2026-11",
+    "user_id": "u-pekka",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Ajoin jakeluautoa yötöissä kaksi vuotta",
+          "own_words": "Ajoin jakeluautoa yötöissä kaksi vuotta"
+        },
+        {
+          "text": "Korjasin taloyhtiön pyöriä ja rappusia",
+          "own_words": "Korjasin taloyhtiön pyöriä ja rappusia"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "matinkyla",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 5
+  },
+  {
+    "id": "tr-e2-003",
+    "event_id": "ev-2026-11",
+    "user_id": "u-amira",
+    "time_group": "",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Cooked iftar meals for sixty people",
+          "own_words": "Cooked iftar meals for sixty people"
+        },
+        {
+          "text": "Kept a neighbourhood WhatsApp group running",
+          "own_words": "Kept a neighbourhood WhatsApp group running"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoonlahti",
+      "availability": [
+        "fri-afternoon",
+        "sat-afternoon"
+      ]
+    },
+    "days_ago": 5
+  },
+  {
     "id": "tr-e0-001",
     "event_id": "ev-2026-10",
     "user_id": "u-aino",

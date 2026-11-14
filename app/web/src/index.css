@@ -260,7 +260,16 @@ html[data-contrast="high"] .btn-primary { border: 2px solid #000; }
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
 }
-.booth-cell { text-align: center; }
+.booth-cell { text-align: center; position: relative; }
+.booth-cell a { color: inherit; text-decoration: none; display: block; }
+.booth-cell a::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+}
+.booth-mine { border-color: var(--color-yes); border-width: 2px; }
+.booth-entrance {
+  border-bottom: 2px dashed var(--color-hairline);
+  padding: 8px; text-align: center;
+}
 
 .start-tile {
   min-height: 120px;
@@ -323,3 +332,13 @@ html[dir=rtl] ol, html[dir=rtl] ul { padding-right: 1.25rem; padding-left: 0; }
 /* keep top bar on one line on desktop; links may shrink but not wrap */
 .top-nav-links a, .top-nav-links button, .top-nav-links span,
 .top-nav-links select, header .font-display { white-space: nowrap; }
+
+/* employer tiles: 1 col phone, 2 md, 3 lg, 4 xl */
+.emp-tiles { grid-template-columns: 1fr; }
+@media (min-width: 768px) { .emp-tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .emp-tiles { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1280px) { .emp-tiles { grid-template-columns: repeat(4, 1fr); } }
+.emp-tiles a { color: inherit; text-decoration: none; }
+.emp-tiles a::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+}

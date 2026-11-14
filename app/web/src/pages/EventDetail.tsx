@@ -7,6 +7,7 @@ import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import type {
   Connection,
+  EventAfterData,
   EventRecord,
   EventDetailData, EventSummary, MyEventData,
   NeedEntry, TalentCardData,
@@ -15,6 +16,8 @@ import { DAYS, PARTS } from '../types'
 import { ErrorBox, ErrorState, Section, Toggle } from '../components/ui'
 import { Tabs } from '../components/Tabs'
 import ScanBox from '../components/ScanBox'
+import CompanyLogo from '../components/CompanyLogo'
+import BoothPlan from '../components/BoothPlan'
 import { useConfig } from '../lib/config'
 import EventPage from './EventPage'
 
@@ -58,7 +61,9 @@ function NeedCardView({ e, registered, onToggleInterest, interestCount, limit }:
 
   return (
     <article className="card p-4 grid gap-2">
-      <h3 className="m-0">{e.employer_name}</h3>
+      <h3 className="m-0">
+        <Link to={`/companies/${e.employer_id}`}>{e.employer_name}</Link>
+      </h3>
       {e.company_badges?.includes('employer_answered') && (
         <span className="chip" style={{ background: 'var(--color-yes-bg)' }}>
           {t('badge.employer_answered')}</span>
@@ -267,6 +272,7 @@ export default function EventDetail() {
   const [my, setMy] = useState<MyEventData | null>(null)
   const [conns, setConns] = useState<Connection[]>([])
   const [records, setRecords] = useState<EventRecord[]>([])
+  const [afterData, setAfterData] = useState<EventAfterData | null>(null)
   const [err, setErr] = useState<unknown>(null)
   const [showForm, setShowForm] = useState(false)
 
@@ -275,6 +281,8 @@ export default function EventDetail() {
   const load = () => {
     setErr(null)
     api<EventDetailData>(`/api/events/${id}`).then(setEv).catch(setErr)
+    api<EventAfterData>(`/api/events/${id}/after`)
+      .then(setAfterData).catch(() => setAfterData(null))
     if (isResident) {
       api<MyEventData>(`/api/events/${id}/my`).then(setMy).catch(() => setMy(null))
     api<{ connections: Connection[] }>('/api/me/connections')
@@ -329,9 +337,41 @@ export default function EventDetail() {
         </Section>
       )}
 
-      <Section title={`${t('ev.org.e')} (${ev.employers.length})`}>
-        <ul className="m-0 ps-5">
-          {ev.employers.map((e) => <li key={e.employer_id}>{e.employer_name}</li>)}
+      <Section title={t('ev.employers.title', { n: ev.employers.length })}>
+        <ul className="m-0 p-0 list-none grid gap-3 emp-tiles">
+          {ev.employers.map((e) => {
+            const firstLine = e.need?.card.first_week?.[0]
+            return (
+              <li key={e.employer_id} className="card p-4"
+                  style={{ position: 'relative' }}>
+                <Link to={`/companies/${e.employer_id}`}
+                      className="flex gap-3 items-start stretched-link">
+                  <CompanyLogo
+                    employer={{ name: e.employer_name ?? '',
+                                logo_color: e.logo_color, field: e.field }}
+                    size={44} />
+                  <span className="flex-1" style={{ minWidth: 0 }}>
+                    <span className="block font-medium">{e.employer_name}</span>
+                    {e.tagline &&
+                      <span className="block text-secondary">{e.tagline}</span>}
+                    <span className="block text-secondary">
+                      {[
+                        e.field ? t(`field.${e.field}` as Key) : '',
+                        e.booth ? `${t('ev.booth')} ${e.booth}` : '',
+                        e.open_jobs != null
+                          ? t('ev.openjobs.n', { n: e.open_jobs }) : '',
+                      ].filter(Boolean).join(' · ')}
+                    </span>
+                    {firstLine && (
+                      <span className="block mt-1">
+                        <strong>{t('ev.firstweek')}</strong> {firstLine}
+                      </span>
+                    )}
+                  </span>
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </Section>
 
@@ -449,6 +489,12 @@ export default function EventDetail() {
               </ul>
             </Section>
           )}
+          <BoothPlan
+            employers={ev.employers.map((e) => ({
+              id: e.employer_id, name: e.employer_name ?? '',
+              booth: e.booth, field: e.field, logo_color: e.logo_color }))}
+            inPlan={new Set(my.interests.map((i) => i.employer_id))}
+          />
           <Section title={t('ev.day.queue.title')}>
             <ul className="grid gap-2 p-0 list-none">
               {ev.employers.map((e) => (
@@ -479,6 +525,83 @@ export default function EventDetail() {
 
   const after = (
     <div className="grid gap-4">
+      {afterData?.mine && afterData.mine.length > 0 && (
+        <Section title={t('ev.after.earlier')}>
+          <div className="grid gap-3">
+            {afterData.mine.map((h) => (
+              <div key={h.event_id} className="card p-4">
+                <strong>{h.name}</strong>
+                <span className="text-secondary"> — {fmtDate(h.date)}</span>
+                {h.talks.length > 0 && (
+                  <ul className="m-0 mt-2 ps-5">
+                    {h.talks.map((tk, i) => (
+                      <li key={i}>
+                        <strong>{tk.employer}</strong>{' — '}
+                        {tk.outcome
+                          ? t(`ev.outcome.${tk.outcome}` as Key)
+                          : t('ev.outcome.waiting')}
+                        {tk.note &&
+                          <span className="text-secondary"> — {tk.note}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {h.records.length > 0 && (
+                  <ul className="m-0 mt-1 ps-5">
+                    {h.records.map((r, i) => (
+                      <li key={i}>
+                        {t('ev.after.seen')} — <strong>{r.employer}</strong>
+                        {r.observed.length > 0 && (
+                          <span className="text-secondary">
+                            {' '}({r.observed.join(', ')})</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {h.badges.length > 0 && (
+                  <div className="flex gap-2 flex-wrap mt-2">
+                    {h.badges.map((b) => (
+                      <span key={b.id} className="chip"
+                            style={{ background: 'var(--color-yes-bg)' }}>
+                        {t(`badge.${b.label || b.kind}` as Key,
+                           { event: h.name })}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {h.people.length > 0 && (
+                  <p className="m-0 mt-1 text-secondary">
+                    {t('ev.after.met')}:{' '}
+                    {h.people.map((p2) =>
+                      p2.name + (p2.company ? ` (${p2.company})` : '')
+                    ).join(', ')}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+      {afterData?.summaries && afterData.summaries.length > 0 && (
+        <Section title={t('ev.after.howwent')}>
+          <ul className="grid gap-2 p-0 list-none">
+            {afterData.summaries.map((sm) => (
+              <li key={sm.event_id} className="card p-3">
+                <strong>{sm.name}</strong>
+                <span className="text-secondary"> — {fmtDate(sm.date)}</span>
+                <span className="block">
+                  {t('ev.after.sum', {
+                    e: sm.employers, p: sm.participants, t: sm.talks,
+                    n: sm.next_steps, h: sm.hired })}
+                  {sm.answered_in_7d_pct != null &&
+                    ` · ${t('ev.after.sum7d', { n: sm.answered_in_7d_pct })}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
       {my && my.talks.length > 0 ? (
         <Section title={t('ev.talks')}>
           <ul className="grid gap-2 p-0 list-none">

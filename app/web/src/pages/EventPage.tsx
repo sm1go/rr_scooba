@@ -6,6 +6,7 @@ import { useI18n } from '../i18n/i18n'
 import type { EventInfo, EventPlan } from '../types'
 import { ErrorBox, ErrorState, Field, Section } from '../components/ui'
 import { useStaffT } from '../i18n-staff'
+import BoothPlan from '../components/BoothPlan'
 
 const EMPTY_TALK = { employer_id: '', first_name: '', contact_method: 'phone', contact_value: '', job_id: '', consent: false }
 
@@ -131,11 +132,7 @@ export default function EventPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 data-page-title tabIndex={-1}>{ev.name}</h1>
-      <p className="text-secondary" style={{ fontSize: '1.1rem' }}>
-        {ev.date} · {ev.venue}
-      </p>
+    <div className="grid gap-4">
       <p className="card p-4 font-medium">{ev.advisor_note || t('event.advisor')}</p>
       {user?.role === 'advisor' && <RecordTalk info={info} />}
 
@@ -183,23 +180,15 @@ export default function EventPage() {
         </p>
       )}
 
-      <Section title={t('event.boothplan')}>
-        <div className="booth-grid" role="list">
-          {info.employers.map((e) => (
-            <div key={e.id} role="listitem" className="booth-cell card p-4">
-              <div className="font-display" style={{ fontSize: '1.4rem' }}>{e.booth}</div>
-              <div>{e.name}</div>
-            </div>
-          ))}
-        </div>
-      </Section>
+      <BoothPlan employers={info.employers} inPlan={inPlan} />
 
       <Section title={t('event.openjobs')}>
         {info.employers.map((e) => (
           <div key={e.id} className="card p-4 mb-3">
             <div className="flex justify-between gap-3 flex-wrap">
               <div>
-                <strong>{e.booth}</strong> — {e.name}
+                <strong>{e.booth}</strong> —{' '}
+                <Link to={`/companies/${e.id}`}>{e.name}</Link>
               </div>
               {user?.role === 'resident' && (
                 inPlan.has(e.id) ? (
