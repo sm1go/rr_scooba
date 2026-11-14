@@ -1,4 +1,4 @@
-import type { Condition, Job, Shift } from '../types'
+import type { Condition, Job } from '../types'
 import type { Key } from '../i18n/en'
 import { DAYS, PARTS } from '../types'
 
@@ -7,7 +7,10 @@ type T = (k: Key) => string
 export function payLine(j: Job, t: T): string {
   if (j.pay_amount == null) return j.pay_note || t('common.toagreed')
   const unit = j.pay_unit === 'month' ? t('common.permonth') : t('common.perhour')
-  return `€${j.pay_amount.toFixed(2)} ${unit}${j.pay_note ? ` · ${j.pay_note}` : ''}`
+  const whole = Number.isInteger(j.pay_amount)
+  const amount = j.pay_amount.toLocaleString('en', {
+    minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 })
+  return `€${amount} ${unit}${j.pay_note ? ` · ${j.pay_note}` : ''}`
 }
 
 export function hoursLine(j: Job, t: T): string {
@@ -16,20 +19,36 @@ export function hoursLine(j: Job, t: T): string {
   return `${j.hours_min ?? '–'}–${j.hours_max ?? '–'} ${t('common.hweek')}`
 }
 
-export function shiftsLine(j: Job, t: T): string {
-  if (!j.shifts.length) return j.schedule_flexible ? t('common.flexible') : ''
-  const byDay = new Map<string, Shift[]>()
-  for (const s of j.shifts) {
-    byDay.set(s.day, [...(byDay.get(s.day) ?? []), s])
+/** Days with the same times are grouped: "Mon–Fri 07:00–15:00 / 09:30–17:30". */
+export function shiftGroups(j: Job, t: T): string[] {
+  if (!j.shifts.length) return j.schedule_flexible ? [t('common.flexible')] : []
+  const byDay = new Map<string, string>()
+  for (const d of DAYS) {
+    const ss = j.shifts.filter((s) => s.day === d)
+      .map((s) => `${s.start.slice(0, 5)}–${s.end.slice(0, 5)}`)
+    if (ss.length) byDay.set(d, [...new Set(ss)].sort().join(' / '))
   }
-  const parts = [...byDay.entries()]
-    .sort(([a], [b]) => DAYS.indexOf(a as (typeof DAYS)[number])
-                        - DAYS.indexOf(b as (typeof DAYS)[number]))
-    .map(([day, ss]) => {
-      const times = ss.map((s) => `${s.start.slice(0, 5)}–${s.end.slice(0, 5)}`).join(', ')
-      return `${t(`day.${day}` as Key)} ${times}`
-    })
-  return parts.join(' · ')
+  const groups: { days: string[]; times: string }[] = []
+  for (const d of DAYS) {
+    const times = byDay.get(d)
+    if (!times) continue
+    const last = groups[groups.length - 1]
+    const prev = DAYS[DAYS.indexOf(d) - 1]
+    if (last && last.times === times && last.days[last.days.length - 1] === prev)
+      last.days.push(d)
+    else groups.push({ days: [d], times })
+  }
+  const day = (d: string) => t(`day.${d}` as Key)
+  return groups.map((g) => {
+    const days = g.days.length === 1 ? day(g.days[0])
+      : g.days.length === 2 ? `${day(g.days[0])}, ${day(g.days[1])}`
+      : `${day(g.days[0])}–${day(g.days[g.days.length - 1])}`
+    return `${days} ${g.times}`
+  })
+}
+
+export function shiftsLine(j: Job, t: T): string {
+  return shiftGroups(j, t).join('; ')
 }
 
 export function jobLine(j: Job, t: T): string {

@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bookmark, UserCheck } from 'lucide-react'
+import { Bookmark, Clock, UserCheck } from 'lucide-react'
 import type { Condition, Job } from '../types'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import { Chip } from './ui'
-import { conditionState, daysAgoText, helpLink, hoursLine, jobLine, payLine } from '../lib/format'
+import { conditionState, daysAgoText, helpLink, hoursLine, payLine, shiftGroups } from '../lib/format'
 import { commuteLine, getCommute } from '../lib/commute'
 import { useConfig } from '../lib/config'
 import { useA11y } from '../lib/a11y'
@@ -163,7 +163,17 @@ export default function JobRow({
             {job.employer?.name} · {districtName ?? job.district}
             {job.distance_km != null && ` · ${job.distance_km} km`}
           </p>
-          <p className="m-0 mt-1">{jobLine(job, t)}</p>
+          <p className="m-0 mt-2 font-medium" style={{ fontSize: '1.1rem' }}>
+            {[payLine(job, t), hoursLine(job, t)].filter(Boolean).join(' · ')}
+          </p>
+          {shiftGroups(job, t).length > 0 && (
+            <div className="m-0 mt-1 flex items-start gap-2">
+              <Clock size={18} aria-hidden="true" className="shrink-0 mt-1" />
+              <ul className="list-none p-0 m-0">
+                {shiftGroups(job, t).map((g) => <li key={g}>{g}</li>)}
+              </ul>
+            </div>
+          )}
           {commute && originName && (
             <p className="m-0 mt-1 text-secondary">
               {commuteLine(commute, originName, t)}
