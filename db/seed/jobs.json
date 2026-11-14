@@ -63,7 +63,8 @@
       "seated_work": "no",
       "flexible_breaks": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-clean-office",
@@ -115,7 +116,8 @@
       "written_instructions": "yes",
       "adjustments_negotiable": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-library-shelf",
@@ -176,7 +178,8 @@
       "quiet_environment": "yes",
       "written_instructions": "yes",
       "step_free_entrance": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-cs-desk",
@@ -248,7 +251,8 @@
       "quiet_environment": "no",
       "written_instructions": "yes",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-clean-school",
@@ -316,7 +320,8 @@
       "written_instructions": "yes",
       "quiet_environment": "yes",
       "lifting_yes_note": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-clean-gym",
@@ -378,7 +383,8 @@
     "conditions": {
       "seated_work": "no",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-clean-flex",
@@ -418,7 +424,10 @@
       "flexible_breaks": "yes",
       "written_instructions": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-market-shelf",
@@ -480,7 +489,10 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-market-till",
@@ -537,7 +549,10 @@
     "conditions": {
       "seated_work": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-mallas-kitchen",
@@ -610,7 +625,10 @@
       "seated_work": "no",
       "written_instructions": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-bistro",
@@ -679,7 +697,8 @@
       "written_instructions": "yes",
       "step_free_entrance": "yes",
       "accessible_toilet": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-aurora-evening",
@@ -745,7 +764,8 @@
       "step_free_entrance": "yes",
       "accessible_toilet": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kotisatama",
@@ -819,7 +839,11 @@
     "conditions": {
       "written_instructions": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": [
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-freight-pick",
@@ -892,7 +916,10 @@
       "written_instructions": "yes",
       "seated_work": "no",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-freight-evening",
@@ -948,7 +975,8 @@
     "conditions": {
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-vire-driver",
@@ -1023,7 +1051,8 @@
       "seated_work": "yes",
       "flexible_breaks": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-avara-reception",
@@ -1089,7 +1118,12 @@
       "step_free_entrance": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-kanto",
@@ -1138,7 +1172,8 @@
       "written_instructions": "yes",
       "assistive_tech_ok": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-koulutus-assist",
@@ -1199,7 +1234,8 @@
       "seated_work": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-tiima-helper",
@@ -1277,7 +1313,8 @@
       "written_instructions": "yes",
       "seated_work": "no",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-oivo",
@@ -1339,7 +1376,10 @@
       "written_instructions": "no",
       "quiet_environment": "no",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk"
+    ]
   },
   {
     "id": "job-lumo-junior",
@@ -1391,7 +1431,8 @@
       "flexible_breaks": "yes",
       "written_instructions": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-otava-support",
@@ -1446,7 +1487,8 @@
       "assistive_tech_ok": "yes",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-vihrea-park",
@@ -1518,7 +1560,11 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "open_hiring",
+      "guaranteed_talk"
+    ]
   },
   {
     "id": "job-rantaraitti",
@@ -1585,7 +1631,8 @@
     "conditions": {
       "written_instructions": "yes",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-merituuli",
@@ -1654,7 +1701,10 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-paja-desk",
@@ -1719,7 +1769,8 @@
       "lift": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-apteekki",
@@ -1780,7 +1831,11 @@
       "accessible_toilet": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": [
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-taikinapuu",
@@ -1837,7 +1892,8 @@
     "conditions": {
       "seated_work": "no",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-raikas",
@@ -1910,7 +1966,10 @@
       "seated_work": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-weegee",
@@ -1977,7 +2036,8 @@
       "quiet_environment": "yes",
       "written_instructions": "yes",
       "sign_language_ok": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-clean-daycare",
@@ -2039,7 +2099,8 @@
     "conditions": {
       "written_instructions": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-market-evening-till",
@@ -2102,7 +2163,8 @@
       "seated_work": "yes",
       "written_instructions": "yes",
       "step_free_entrance": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kivimaa-morning",
@@ -2164,7 +2226,8 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-aurora-weekend",
@@ -2225,7 +2288,8 @@
       "seated_work": "yes",
       "written_instructions": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-freight-forklift",
@@ -2294,7 +2358,8 @@
     "conditions": {
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-avara-scan",
@@ -2345,7 +2410,8 @@
       "assistive_tech_ok": "yes",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-linja-chat",
@@ -2398,7 +2464,11 @@
       "quiet_environment": "yes",
       "assistive_tech_ok": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-koulutus-remote",
@@ -2452,7 +2522,8 @@
       "quiet_environment": "yes",
       "assistive_tech_ok": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-tiima-finisher",
@@ -2527,7 +2598,10 @@
       "written_instructions": "yes",
       "quiet_environment": "no",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "skills_first"
+    ]
   },
   {
     "id": "job-lumo-senior",
@@ -2577,7 +2651,8 @@
       "quiet_environment": "yes",
       "assistive_tech_ok": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-otava-junior",
@@ -2627,7 +2702,8 @@
       "assistive_tech_ok": "yes",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-vihrea-winter",
@@ -2673,7 +2749,8 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-merituuli-night",
@@ -2737,7 +2814,8 @@
       "written_instructions": "yes",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-paja-instructor",
@@ -2797,7 +2875,8 @@
       "lift": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-raikas-driver",
@@ -2861,7 +2940,8 @@
     "conditions": {
       "seated_work": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-market-deli",
@@ -2924,7 +3004,8 @@
       "seated_work": "no",
       "written_instructions": "yes",
       "step_free_entrance": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-avara-post",
@@ -2999,7 +3080,8 @@
       "step_free_entrance": "yes",
       "written_instructions": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kanto-remote",
@@ -3047,7 +3129,8 @@
       "quiet_environment": "yes",
       "assistive_tech_ok": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-linja-phone",
@@ -3124,7 +3207,12 @@
       "flexible_breaks": "no",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-tiima-driver",
@@ -3198,7 +3286,8 @@
     "conditions": {
       "seated_work": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-vihrea-autumn",
@@ -3250,7 +3339,8 @@
       "written_instructions": "yes",
       "seated_work": "no",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-cafe-weekday",
@@ -3325,7 +3415,10 @@
       "flexible_breaks": "yes",
       "written_instructions": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-library-events",
@@ -3381,7 +3474,10 @@
       "seated_work": "yes",
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": [
+      "tryout"
+    ]
   },
   {
     "id": "job-koulutus-it",
@@ -3441,7 +3537,12 @@
       "step_free_entrance": "yes",
       "lift": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-oivo-shop",
@@ -3503,7 +3604,10 @@
     "conditions": {
       "seated_work": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": [
+      "tryout"
+    ]
   },
   {
     "id": "job-aurora-day",
@@ -3569,7 +3673,8 @@
       "seated_work": "yes",
       "written_instructions": "yes",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-taikinapuu-cafe",
@@ -3632,7 +3737,8 @@
       "seated_work": "no",
       "written_instructions": "yes",
       "step_free_entrance": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-lumo-office",
@@ -3702,7 +3808,8 @@
       "adjustments_negotiable": "yes",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-otava-nightwatch",
@@ -3763,7 +3870,8 @@
       "flexible_breaks": "yes",
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-terasmetso-mig",
@@ -3848,7 +3956,8 @@
       "seated_work": "no",
       "flexible_breaks": "no",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-terasmetso-trainee",
@@ -3925,7 +4034,10 @@
     "conditions": {
       "written_instructions": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-terasmetso-sheet",
@@ -3996,7 +4108,11 @@
     "confirmed_days_ago": 9,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-rosteri-tig",
@@ -4082,7 +4198,8 @@
       "flexible_breaks": "no",
       "quiet_environment": "no",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-rosteri-cnc",
@@ -4184,7 +4301,8 @@
     "conditions": {
       "written_instructions": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-arcmec-assembly",
@@ -4271,7 +4389,12 @@
       "written_instructions": "yes",
       "assistive_tech_ok": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": [
+      "open_hiring",
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-arcmec-evening",
@@ -4343,7 +4466,8 @@
     "conditions": {
       "seated_work": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-arcmec-robot",
@@ -4448,7 +4572,8 @@
       "step_free_entrance": "yes",
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-hila-packer",
@@ -4531,7 +4656,8 @@
       },
       "seated_work": "no",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-hila-weekend",
@@ -4593,7 +4719,8 @@
     "confirmed_days_ago": 7,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-hila-line",
@@ -4689,7 +4816,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 8,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-virta-electrician",
@@ -4766,7 +4894,8 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-virta-assistant",
@@ -4842,7 +4971,11 @@
     "confirmed_days_ago": 8,
     "conditions": {
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-lvikaari-plumber",
@@ -4918,7 +5051,8 @@
     "conditions": {
       "seated_work": "no",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-lvikaari-hvac",
@@ -4995,7 +5129,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 13,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-rantala-huolto",
@@ -5075,7 +5210,8 @@
       "flexible_breaks": "yes",
       "quiet_environment": "no",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-rantala-apprentice",
@@ -5149,7 +5285,8 @@
     "conditions": {
       "adjustments_negotiable": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-rantala-janitor",
@@ -5227,7 +5364,8 @@
       "step_free_entrance": "yes",
       "lift": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-rantala-weekend",
@@ -5287,7 +5425,8 @@
     "confirmed_days_ago": 5,
     "conditions": {
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-rantala-snow",
@@ -5339,7 +5478,8 @@
     "confirmed_days_ago": 20,
     "conditions": {
       "written_instructions": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-lastu-carpenter",
@@ -5413,7 +5553,8 @@
     "confirmed_days_ago": 12,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-savy-painter",
@@ -5492,7 +5633,8 @@
     "conditions": {
       "seated_work": "no",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kivisauma-tile",
@@ -5564,7 +5706,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 26,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-peruskivi-labourer",
@@ -5644,7 +5787,8 @@
       "seated_work": "no",
       "flexible_breaks": "no",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-peruskivi-summer",
@@ -5721,7 +5865,10 @@
     "confirmed_days_ago": 8,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk"
+    ]
   },
   {
     "id": "job-mantymaki-mechanic",
@@ -5801,7 +5948,8 @@
       "step_free_entrance": "yes",
       "accessible_toilet": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-mantymaki-tyre",
@@ -5884,7 +6032,8 @@
     "confirmed_days_ago": 7,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-polku-bike",
@@ -5965,7 +6114,10 @@
         "note": "Stool at the repair stand."
       },
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": [
+      "skills_first"
+    ]
   },
   {
     "id": "job-routa-delivery",
@@ -6045,7 +6197,8 @@
     "confirmed_days_ago": 3,
     "conditions": {
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-routa-picker",
@@ -6126,7 +6279,8 @@
       },
       "seated_work": "no",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-routa-weekend",
@@ -6181,7 +6335,8 @@
     "confirmed_days_ago": 5,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-routa-forklift",
@@ -6287,7 +6442,8 @@
         "value": "yes",
         "note": "You sit in the forklift most of the shift."
       }
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-routa-van",
@@ -6336,7 +6492,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 11,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-lahilinja-bus",
@@ -6455,7 +6612,12 @@
         "note": "Staff toilets at route end stops."
       },
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-lahilinja-trainee",
@@ -6526,7 +6688,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 12,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-apaja-taxi",
@@ -6631,7 +6794,8 @@
     "conditions": {
       "seated_work": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-apaja-school",
@@ -6730,7 +6894,12 @@
     "confirmed_days_ago": 9,
     "conditions": {
       "seated_work": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-kuura-rn",
@@ -6818,7 +6987,8 @@
       "quiet_environment": "yes",
       "written_instructions": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kuura-rn-evening",
@@ -6881,7 +7051,10 @@
     "conditions": {
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": [
+      "skills_first"
+    ]
   },
   {
     "id": "job-kuura-pn",
@@ -6956,7 +7129,8 @@
       "step_free_entrance": "yes",
       "lift": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kuura-lab",
@@ -7033,7 +7207,12 @@
     "confirmed_days_ago": 22,
     "conditions": {
       "seated_work": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-kuura-reception",
@@ -7144,7 +7323,8 @@
       "seated_work": "yes",
       "assistive_tech_ok": "yes",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-hymy-dental",
@@ -7220,7 +7400,8 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "seated_work": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-hymy-apprentice",
@@ -7291,7 +7472,8 @@
     "conditions": {
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kaisla-pharmacy",
@@ -7375,7 +7557,8 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kaste-pn",
@@ -7496,7 +7679,8 @@
       "written_instructions": "yes",
       "seated_work": "no",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kaste-homecare",
@@ -7565,7 +7749,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 4,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-kaste-weekend",
@@ -7618,7 +7803,8 @@
     "status": "open",
     "source": "advisor",
     "confirmed_days_ago": 25,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-silta-evening",
@@ -7692,7 +7878,11 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-silta-english",
@@ -7767,7 +7957,11 @@
       "accessible_toilet": "yes",
       "seated_work": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-silta-swedish",
@@ -7828,7 +8022,8 @@
     "conditions": {
       "step_free_entrance": "yes",
       "lift": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-satakieli-teacher",
@@ -7931,7 +8126,8 @@
       "seated_work": "no",
       "flexible_breaks": "no",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-satakieli-english",
@@ -8009,7 +8205,8 @@
     "conditions": {
       "step_free_entrance": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-satakieli-assistant",
@@ -8107,7 +8304,8 @@
     "confirmed_days_ago": 7,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kuusikko-assistant",
@@ -8187,7 +8385,8 @@
       "step_free_entrance": "yes",
       "lift": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kuusikko-club",
@@ -8259,7 +8458,11 @@
     "confirmed_days_ago": 13,
     "conditions": {
       "step_free_entrance": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-kuusikko-cook",
@@ -8333,7 +8536,12 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-havu-cook",
@@ -8429,7 +8637,8 @@
       "seated_work": "no",
       "flexible_breaks": "no",
       "quiet_environment": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-havu-dish",
@@ -8500,7 +8709,8 @@
         "value": "yes",
         "note": "One of our cooks signs FinSL."
       }
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-havu-dish-weekend",
@@ -8559,7 +8769,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 9,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-fornello-pizza",
@@ -8637,7 +8848,8 @@
     "confirmed_days_ago": 6,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-pavut-barista",
@@ -8713,7 +8925,8 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-pavut-morning",
@@ -8790,7 +9003,11 @@
     "confirmed_days_ago": 12,
     "conditions": {
       "step_free_entrance": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-laguuni-breakfast",
@@ -8878,7 +9095,8 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-laguuni-reception",
@@ -9011,7 +9229,8 @@
         "note": "Stools behind the desk."
       },
       "assistive_tech_ok": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-laguuni-night",
@@ -9061,7 +9280,10 @@
     "conditions": {
       "seated_work": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": [
+      "skills_first"
+    ]
   },
   {
     "id": "job-laguuni-housekeeper",
@@ -9151,7 +9373,8 @@
       "seated_work": "no",
       "written_instructions": "yes",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kulma-reception",
@@ -9238,7 +9461,8 @@
       "quiet_environment": "no",
       "assistive_tech_ok": "yes",
       "adjustments_negotiable": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kulma-office",
@@ -9315,7 +9539,8 @@
       "quiet_environment": "yes",
       "written_instructions": "yes",
       "assistive_tech_ok": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-vahti-guard",
@@ -9475,7 +9700,8 @@
     "conditions": {
       "seated_work": "no",
       "flexible_breaks": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-vahti-event",
@@ -9526,7 +9752,8 @@
     "confirmed_days_ago": 28,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kauppakulma-cashier",
@@ -9617,7 +9844,8 @@
         "value": "yes",
         "note": "Cashier chairs at every till."
       }
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kauppakulma-morning",
@@ -9692,7 +9920,8 @@
     "confirmed_days_ago": 7,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-oravanpesa-sales",
@@ -9776,7 +10005,8 @@
       "lift": "yes",
       "accessible_toilet": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-oravanpesa-xmas",
@@ -9864,7 +10094,8 @@
       "step_free_entrance": "yes",
       "lift": "yes",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kielo-florist",
@@ -9938,7 +10169,12 @@
     "conditions": {
       "step_free_entrance": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-saksi-hair",
@@ -10017,7 +10253,12 @@
     "conditions": {
       "step_free_entrance": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-helmi-office",
@@ -10097,7 +10338,10 @@
       "written_instructions": "yes",
       "quiet_environment": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": [
+      "open_hiring"
+    ]
   },
   {
     "id": "job-helmi-sidejob",
@@ -10151,7 +10395,8 @@
     "confirmed_days_ago": 6,
     "conditions": {
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-helmi-site",
@@ -10228,7 +10473,8 @@
     "confirmed_days_ago": 5,
     "conditions": {
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-laskelma-accountant",
@@ -10287,7 +10533,8 @@
       "written_instructions": "yes",
       "assistive_tech_ok": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-laskelma-payroll",
@@ -10333,7 +10580,12 @@
     "conditions": {
       "seated_work": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-laskelma-assistant",
@@ -10384,7 +10636,11 @@
       "seated_work": "yes",
       "quiet_environment": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout"
+    ]
   },
   {
     "id": "job-sanasilta-translator",
@@ -10436,7 +10692,11 @@
       "seated_work": "yes",
       "quiet_environment": "yes",
       "assistive_tech_ok": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "skills_first"
+    ]
   },
   {
     "id": "job-sanasilta-interpreter",
@@ -10490,7 +10750,8 @@
     "confirmed_days_ago": 1,
     "conditions": {
       "seated_work": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-koodikallio-dev",
@@ -10542,7 +10803,8 @@
       "assistive_tech_ok": "yes",
       "adjustments_negotiable": "yes",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-koodikallio-test",
@@ -10595,7 +10857,12 @@
       "seated_work": "yes",
       "quiet_environment": "yes",
       "assistive_tech_ok": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-koodikallio-ux",
@@ -10646,7 +10913,12 @@
     "conditions": {
       "seated_work": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk",
+      "tryout",
+      "skills_first"
+    ]
   },
   {
     "id": "job-datavirta-analyst",
@@ -10700,7 +10972,8 @@
       "seated_work": "yes",
       "quiet_environment": "yes",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-datavirta-support",
@@ -10807,7 +11080,8 @@
       "accessible_toilet": "yes",
       "seated_work": "yes",
       "assistive_tech_ok": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-datavirta-junior",
@@ -10851,7 +11125,10 @@
     "confirmed_days_ago": 9,
     "conditions": {
       "seated_work": "yes"
-    }
+    },
+    "commitments": [
+      "guaranteed_talk"
+    ]
   },
   {
     "id": "job-bioteekki-lab",
@@ -10933,7 +11210,8 @@
       "accessible_toilet": "yes",
       "seated_work": "no",
       "written_instructions": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-espoolive-staff",
@@ -10994,7 +11272,8 @@
     "conditions": {
       "seated_work": "no",
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-espoolive-crew",
@@ -11054,7 +11333,8 @@
     "status": "open",
     "source": "employer",
     "confirmed_days_ago": 29,
-    "conditions": {}
+    "conditions": {},
+    "commitments": []
   },
   {
     "id": "job-kesaduuni-park",
@@ -11130,7 +11410,8 @@
     "conditions": {
       "written_instructions": "yes",
       "seated_work": "no"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kesaduuni-library",
@@ -11209,7 +11490,8 @@
       "accessible_toilet": "yes",
       "seated_work": "yes",
       "quiet_environment": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kesaduuni-sport",
@@ -11284,7 +11566,8 @@
     "confirmed_days_ago": 4,
     "conditions": {
       "accessible_toilet": "yes"
-    }
+    },
+    "commitments": []
   },
   {
     "id": "job-kanerva-gardener",
@@ -11363,6 +11646,7 @@
     "conditions": {
       "seated_work": "no",
       "flexible_breaks": "yes"
-    }
+    },
+    "commitments": []
   }
 ]

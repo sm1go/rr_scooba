@@ -69,6 +69,11 @@ export default function Applications() {
               <Chip tone={TONE[a.status] ?? 'wait'}>
                 {t(`status.${a.status}` as Key)}
               </Chip>
+              {a.queue_position != null && (
+                <p className="m-0 mt-2 font-medium">
+                  {t('apps.queue', { n: a.queue_position })}
+                </p>
+              )}
             </div>
 
             <div className="flex gap-0 mt-4" role="list"

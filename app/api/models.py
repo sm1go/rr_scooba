@@ -81,6 +81,7 @@ class JobIn(BaseModel):
     lifting: Optional[str] = None
     apply_question: str = ""
     cv_required: bool = False
+    commitments: list[str] = []
     positions: int = 1
     status: Optional[Literal["draft", "open"]] = None   # None = keep / draft
     conditions: dict[str, Literal["yes", "no", "unknown"]] = {}
@@ -104,8 +105,10 @@ class ApplicationIn(BaseModel):
     contact_method: Literal["phone", "sms", "email"]
     contact_value: str
     availability_note: str = ""
-    answer: str
+    answer: str = ""
     cv_text: Optional[str] = None
+    meets_must_haves: bool = False
+    wants_tryout: bool = False
     shared_needs: list[str] = []
     meet_at_event: bool = False
     name: Optional[str] = None          # advisor applies for someone

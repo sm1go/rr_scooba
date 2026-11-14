@@ -11,7 +11,7 @@ import { ErrorBox, Field, Section, Toggle } from '../../components/ui'
 import { employerProgramsFor } from '../../lib/support'
 
 const STEPS = ['title', 'duties', 'where', 'pay', 'hours', 'contract',
-               'language', 'conditions', 'apply', 'preview'] as const
+               'language', 'conditions', 'promises', 'apply', 'preview'] as const
 
 interface Form {
   employer_id: string;
@@ -24,6 +24,7 @@ interface Form {
   qualifications: string; onboarding: string;
   languages: { language: string; level: string; task: string }[];
   lifting: string; apply_question: string; cv_required: boolean;
+  commitments: string[];
   positions: number; conditions: Record<string, string>;
 }
 
@@ -34,7 +35,7 @@ const EMPTY: Form = {
   shifts: [], schedule_flexible: false, hours_min: '', hours_max: '',
   contract: '', experience: '', experience_note: '', qualifications: '',
   onboarding: '', languages: [], lifting: '', apply_question: '',
-  cv_required: false, positions: 1, conditions: {},
+  cv_required: false, commitments: [], positions: 1, conditions: {},
 }
 
 export default function EmployerJobForm() {
@@ -84,7 +85,8 @@ export default function EmployerJobForm() {
         qualifications: j.qualifications.join('\n'),
         onboarding: j.onboarding, languages: j.languages,
         lifting: j.lifting ?? '', apply_question: j.apply_question,
-        cv_required: j.cv_required, positions: j.positions,
+        cv_required: j.cv_required, commitments: j.commitments ?? [],
+        positions: j.positions,
         conditions: Object.fromEntries(
           j.conditions.filter((c) => c.value !== 'unknown')
             .map((c) => [c.key, c.value])),
@@ -127,7 +129,8 @@ export default function EmployerJobForm() {
       qualifications: f.qualifications.split('\n').map((s) => s.trim()).filter(Boolean),
       onboarding: f.onboarding, languages: f.languages.filter((l) => l.language),
       lifting: f.lifting || null, apply_question: f.apply_question,
-      cv_required: f.cv_required, positions: f.positions, status,
+      cv_required: f.cv_required, commitments: f.commitments,
+      positions: f.positions, status,
       conditions: f.conditions,
     }
     try {
@@ -435,6 +438,7 @@ export default function EmployerJobForm() {
             <input id="jf-paynote" value={f.pay_note}
                    onChange={(e) => setF({ ...f, pay_note: e.target.value })} />
           </Field>
+          <p className="text-secondary mt-3">{t('employer.payhint')}</p>
         </Section>
       )}
 
@@ -616,6 +620,33 @@ export default function EmployerJobForm() {
         </Section>
       )}
 
+      {cur === 'promises' && (
+        <Section title={t('employer.step.promises')}>
+          <p className="text-secondary mt-0">{t('employer.promiseshint')}</p>
+          {(['open_hiring', 'guaranteed_talk', 'tryout',
+             'skills_first'] as const).map((c) => {
+            const blocked = c === 'open_hiring' && f.cv_required
+            return (
+              <div key={c} className="card p-4 mb-3">
+                <Toggle pressed={f.commitments.includes(c)} disabled={blocked}
+                        onClick={() => setF({
+                          ...f,
+                          commitments: f.commitments.includes(c)
+                            ? f.commitments.filter((x) => x !== c)
+                            : [...f.commitments, c],
+                        })}>
+                  {t(`commit.${c}` as Key)}
+                </Toggle>
+                <p className="m-0 mt-2 text-secondary">
+                  {t(`commit.desc.${c}` as Key)}
+                  {blocked && ` ${t('employer.openhiringblocked')}`}
+                </p>
+              </div>
+            )
+          })}
+        </Section>
+      )}
+
       {cur === 'apply' && (
         <Section title={t('employer.step.apply')}>
           {mark('apply_question')}{mark('cv_required')}
@@ -624,7 +655,12 @@ export default function EmployerJobForm() {
                    onChange={(e) => setF({ ...f, apply_question: e.target.value })} />
           </Field>
           <Toggle pressed={f.cv_required}
-                  onClick={() => setF({ ...f, cv_required: !f.cv_required })}>
+                  onClick={() => setF({
+                    ...f, cv_required: !f.cv_required,
+                    commitments: f.cv_required
+                      ? f.commitments
+                      : f.commitments.filter((c) => c !== 'open_hiring'),
+                  })}>
             {t('employer.cvrequired')}
           </Toggle>
         </Section>
@@ -632,6 +668,12 @@ export default function EmployerJobForm() {
 
       {cur === 'preview' && (
         <Section title={t('employer.step.preview')}>
+          {!f.pay_amount && (
+            <div className="card p-4 mb-4"
+                 style={{ background: 'var(--color-wait-bg)' }} role="status">
+              <p className="m-0">{t('employer.nopaywarn')}</p>
+            </div>
+          )}
           {missing.length > 0 && (
             <div className="card p-4 mb-4">
               <h3 className="m-0 mb-2" style={{ fontSize: '1.05rem' }}>

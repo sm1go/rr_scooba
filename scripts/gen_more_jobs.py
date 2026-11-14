@@ -16,6 +16,7 @@ catalog.json from scratch):
 
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 import sys
@@ -1433,6 +1434,52 @@ def validate(jobs, employers, catalog):
             assert s["day"] in DAYS, jid
 
 
+def _rank(job_id: str) -> str:
+    """Stable order per job id — no unseeded randomness."""
+    return hashlib.md5(job_id.encode()).hexdigest()
+
+
+def _assign_commitments(jobs: list[dict]) -> None:
+    """Fair-hiring promises, deterministic by job id. Targets: ~12 open
+    hiring, ~25 guaranteed talk, ~25 tryout, ~20 skills first."""
+    def pick(pool: list[dict], n: int, first: list[dict] | None = None) -> set:
+        chosen = [j["id"] for j in (first or [])]
+        chosen += [j["id"] for j in sorted(pool, key=lambda j: _rank(j["id"]))
+                   if j["id"] not in chosen][:n - len(chosen)]
+        return set(chosen)
+
+    open_eligible = [j for j in jobs
+                     if j.get("experience") == "none"
+                     and not j.get("qualifications")
+                     and not j.get("cv_required")
+                     and j["field"] in {"cleaning", "retail", "restaurant",
+                                        "logistics", "seasonal",
+                                        "manufacturing"}]
+    tryout_eligible = [j for j in jobs
+                       if j.get("contract") in ("permanent", "fixed_term")]
+    welders = [j for j in tryout_eligible
+               if "weld" in (j["title"] + " ".join(j.get("duties", []))).lower()]
+    skills_eligible = [j for j in jobs if j.get("experience") != "none"]
+
+    open_ids = pick(open_eligible, 12)
+    talk_ids = pick(jobs, 25)
+    tryout_ids = pick(tryout_eligible, 25,
+                      first=sorted(welders, key=lambda j: _rank(j["id"]))[:1])
+    skills_ids = pick(skills_eligible, 20)
+
+    for j in jobs:
+        c = []
+        if j["id"] in open_ids:
+            c.append("open_hiring")
+        if j["id"] in talk_ids:
+            c.append("guaranteed_talk")
+        if j["id"] in tryout_ids:
+            c.append("tryout")
+        if j["id"] in skills_ids:
+            c.append("skills_first")
+        j["commitments"] = c
+
+
 def main():
     new_ids = {j["id"] for j in JOBS}
     new_emp_ids = {e[0] for e in EMPLOYERS}
@@ -1463,11 +1510,15 @@ def main():
     base_count = len(jobs)
     jobs.extend(JOBS)
     validate(jobs, employers + unlisted, catalog)
+    _assign_commitments(jobs)
 
     _dump("jobs.json", jobs)
     _dump("employers.json", employers)
     _dump("catalog.json", catalog)
 
+    from collections import Counter
+    counts = Counter(c for j in jobs for c in j["commitments"])
+    print(f"commitments: {dict(counts)}")
     stale = sum(1 for j in jobs if j["confirmed_days_ago"] > 14)
     print(f"kept {base_count} base jobs, added {len(JOBS)} -> {len(jobs)} jobs")
     print(f"employers: {len(employers)} listed ({len(EMPLOYERS)} new), "

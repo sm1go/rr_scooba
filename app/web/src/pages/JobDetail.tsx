@@ -102,6 +102,10 @@ export default function JobDetail() {
     job.title, job.employer?.name, payLine(job, t),
     hoursLine(job, t), shiftsLine(job, t),
     commute && originName ? commuteLine(commute, originName, t) : '',
+    (job.commitments ?? []).length
+      ? `${t('job.promises')}: ${(job.commitments ?? [])
+          .map((c) => t(`commit.desc.${c}` as Key)).join(' ')}`
+      : '',
     t('job.conditions'),
     ...job.conditions.map((c) => `${t(`cond.${c.key}` as Key)}: ${conditionState(c, t)}`),
     `${t('job.lifting')}: ${job.lifting || t('common.unknown')}`,
@@ -193,6 +197,19 @@ export default function JobDetail() {
             </details>
           ))}
         </div>
+      )}
+
+      {(job.commitments ?? []).length > 0 && (
+        <Section title={t('job.promises')}>
+          <ul className="m-0 ps-5 grid gap-2">
+            {(job.commitments ?? []).map((c) => (
+              <li key={c}>
+                <strong>{t(`commit.${c}` as Key)}.</strong>{' '}
+                {t(`commit.desc.${c}` as Key)}
+              </li>
+            ))}
+          </ul>
+        </Section>
       )}
 
       <div id="job-conditions" />

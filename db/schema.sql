@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 5;
+PRAGMA user_version = 6;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -84,6 +84,7 @@ CREATE TABLE job (
     lifting         TEXT,
     apply_question  TEXT NOT NULL DEFAULT '',
     cv_required     INTEGER NOT NULL DEFAULT 0,
+    commitments     TEXT NOT NULL DEFAULT '[]',
     positions       INTEGER NOT NULL DEFAULT 1,
     status          TEXT NOT NULL DEFAULT 'draft'
                     CHECK (status IN ('draft','open','closed')),
@@ -122,6 +123,8 @@ CREATE TABLE application (
     cv_text            TEXT,
     shared_needs       TEXT NOT NULL DEFAULT '[]',
     meet_at_event      INTEGER NOT NULL DEFAULT 0,
+    meets_must_haves   INTEGER NOT NULL DEFAULT 0,
+    wants_tryout       INTEGER NOT NULL DEFAULT 0,
     status             TEXT NOT NULL DEFAULT 'sent' CHECK (status IN
         ('sent','interview','offer','not_selected','withdrawn','job_closed')),
     status_note        TEXT NOT NULL DEFAULT '',

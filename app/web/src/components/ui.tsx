@@ -44,15 +44,16 @@ export function Section({
 }
 
 export function Toggle({
-  pressed, onClick, children, className = '',
+  pressed, onClick, children, className = '', disabled = false,
 }: {
   pressed: boolean; onClick: () => void; children: ReactNode
-  className?: string
+  className?: string; disabled?: boolean
 }) {
   return (
     <button
       type="button"
       aria-pressed={pressed}
+      disabled={disabled}
       onClick={onClick}
       className={`btn ${pressed ? 'btn-primary' : 'btn-quiet'} ${className}`}
       style={{ minHeight: 48 }}

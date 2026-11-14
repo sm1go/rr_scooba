@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -114,6 +115,25 @@ def set_application_status(app_id: str, payload: StatusIn,
                  "interview, or give a short reason.")
     if row["status"] not in ("sent", "interview"):
         raise HTTPException(409, "This application already has an answer.")
+    # fair-hiring promises: backend enforces what the badges say
+    commitments = json.loads(conn.execute(
+        "SELECT commitments FROM job WHERE id=?",
+        (row["job_id"],)).fetchone()["commitments"] or "[]")
+    if "guaranteed_talk" in commitments and row["meets_must_haves"] \
+            and row["status"] == "sent" and payload.status == "not_selected":
+        raise HTTPException(
+            409, "This job promises a conversation to everyone who meets "
+                 "the must-haves. Offer a conversation first.")
+    if "open_hiring" in commitments and payload.status == "offer":
+        earlier = conn.execute(
+            "SELECT 1 FROM application WHERE job_id=? AND status='sent'"
+            " AND (created_at<? OR (created_at=? AND id<?)) LIMIT 1",
+            (row["job_id"], row["created_at"], row["created_at"],
+             row["id"])).fetchone()
+        if earlier:
+            raise HTTPException(
+                409, "Open hiring: answer people in sign-up order. "
+                     "Someone signed up before this person.")
     conn.execute(
         "UPDATE application SET status=?, status_note=?,"
         " updated_at=datetime('now') WHERE id=?",

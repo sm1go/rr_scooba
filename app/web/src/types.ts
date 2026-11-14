@@ -50,6 +50,7 @@ export interface Job {
   lifting: string | null
   apply_question: string
   cv_required: boolean
+  commitments: string[]
   positions: number
   status: 'draft' | 'open' | 'closed'
   source: 'employer' | 'advisor'
@@ -121,13 +122,17 @@ export interface Application {
   answer: string
   shared_needs: string[]
   meet_at_event: boolean
+  meets_must_haves: boolean
+  wants_tryout: boolean
+  queue_position: number | null
   status: 'sent' | 'interview' | 'offer' | 'not_selected' | 'withdrawn' | 'job_closed'
   status_note: string
   created_by_advisor: boolean
   created_at: string
   updated_at: string
   days_waiting: number
-  job?: { id: string; title: string; status: string; employer_name: string }
+  job?: { id: string; title: string; status: string;
+          employer_name: string; commitments?: string[] }
   history?: { action: string; detail: string; created_at: string }[]
 }
 

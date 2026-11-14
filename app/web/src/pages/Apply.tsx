@@ -23,6 +23,8 @@ export default function Apply() {
   const [value, setValue] = useState('')
   const [availability, setAvailability] = useState('')
   const [answer, setAnswer] = useState('')
+  const [meetsMust, setMeetsMust] = useState(false)
+  const [wantsTryout, setWantsTryout] = useState(false)
   const [cv, setCv] = useState('')
   const [share, setShare] = useState<Set<string>>(new Set())
   const [event, setEvent] = useState(false)
@@ -72,6 +74,8 @@ export default function Apply() {
     )
   }
   if (!job) return <p>{t('common.loading')}</p>
+  const commits = job.commitments ?? []
+  const openHiring = commits.includes('open_hiring')
   if (done) {
     return (
       <div className="card p-6 max-w-xl mx-auto text-center">
@@ -91,7 +95,8 @@ export default function Apply() {
         body: {
           job_id: job.id, contact_method: method, contact_value: value,
           availability_note: availability, answer,
-          cv_text: job.cv_required ? cv : undefined,
+          cv_text: job.cv_required && !openHiring ? cv : undefined,
+          meets_must_haves: meetsMust, wants_tryout: wantsTryout,
           shared_needs: [...share], meet_at_event: event,
         },
       })
@@ -138,6 +143,37 @@ export default function Apply() {
             </Field>
           </Section>
 
+          {openHiring && (
+            <div className="card p-4 mb-4" style={{ background: 'var(--color-wait-bg)' }}>
+              <p className="m-0 font-medium">{t('apply.openhiring')}</p>
+            </div>
+          )}
+          {commits.includes('guaranteed_talk') && (
+            <div className="card p-4 mb-4">
+              <label className="flex items-start gap-3 cursor-pointer font-medium">
+                <input type="checkbox" checked={meetsMust}
+                       onChange={(e) => setMeetsMust(e.target.checked)}
+                       style={{ width: 24, height: 24, marginTop: 2 }} />
+                <span>{t('apply.meetsmust')}</span>
+              </label>
+              {job.qualifications.length > 0 && (
+                <ul className="m-0 mt-2 ps-5 text-secondary">
+                  {job.qualifications.map((q) => <li key={q}>{q}</li>)}
+                </ul>
+              )}
+            </div>
+          )}
+          {commits.includes('tryout') && (
+            <div className="card p-4 mb-4">
+              <label className="flex items-start gap-3 cursor-pointer font-medium">
+                <input type="checkbox" checked={wantsTryout}
+                       onChange={(e) => setWantsTryout(e.target.checked)}
+                       style={{ width: 24, height: 24, marginTop: 2 }} />
+                <span>{t('apply.tryout')}</span>
+              </label>
+            </div>
+          )}
+          {!openHiring && (
           <Section title={t('apply.question')}>
             <p className="font-medium mt-0">{job.apply_question}</p>
             <Field label={t('apply.question')} id="apply-answer">
@@ -147,8 +183,9 @@ export default function Apply() {
             <VoiceInput targetId="apply-answer"
                         onText={(txt) => setAnswer((a) => (a ? `${a} ` : '') + txt)} />
           </Section>
+          )}
 
-          {job.cv_required && (
+          {job.cv_required && !openHiring && (
             <Section title={t('apply.cv')}>
               <Field label={t('apply.cv')} id="apply-cv">
                 <textarea id="apply-cv" value={cv}
@@ -186,9 +223,10 @@ export default function Apply() {
           )}
 
           <button type="button" className="btn btn-primary w-full"
-                  onClick={() => { setErr(answer.trim() ? '' : t('apply.question'))
-                                   if (answer.trim()) setReview(true) }}>
-            {t('common.next')}
+                  onClick={() => { const ok = openHiring || !!answer.trim()
+                                   setErr(ok ? '' : t('apply.question'))
+                                   if (ok) setReview(true) }}>
+            {openHiring ? t('apply.signup') : t('common.next')}
           </button>
         </>
       ) : (
@@ -199,9 +237,16 @@ export default function Apply() {
             <dd className="m-0">{t(`apply.${method}` as Key)}: {value || '—'}</dd>
             <dt className="font-medium mt-2">{t('apply.availability')}</dt>
             <dd className="m-0">{availability || '—'}</dd>
-            <dt className="font-medium mt-2">{job.apply_question}</dt>
-            <dd className="m-0 whitespace-pre-wrap">{answer}</dd>
-            {job.cv_required && (
+            {!openHiring && (
+              <>
+                <dt className="font-medium mt-2">{job.apply_question}</dt>
+                <dd className="m-0 whitespace-pre-wrap">{answer}</dd>
+              </>
+            )}
+            {openHiring && <dd className="m-0 mt-2">{t('apply.openhiring')}</dd>}
+            {meetsMust && <dd className="m-0 mt-2">{t('apply.meetsmust')}</dd>}
+            {wantsTryout && <dd className="m-0 mt-2">{t('apply.tryout')}</dd>}
+            {job.cv_required && !openHiring && (
               <>
                 <dt className="font-medium mt-2">{t('apply.cv')}</dt>
                 <dd className="m-0 whitespace-pre-wrap">{cv}</dd>
@@ -220,7 +265,7 @@ export default function Apply() {
                     onClick={() => setReview(false)}>{t('common.back')}</button>
             <button type="button" className="btn btn-primary flex-1"
                     disabled={busy} onClick={submit}>
-              {t('common.send')}
+              {openHiring ? t('apply.signup') : t('common.send')}
             </button>
           </div>
         </section>

@@ -175,6 +175,9 @@ export default function JobRow({
               <Chip key={l.id} title={l.why}>{labelText(l.id, t)}</Chip>
             ))}
             {job.work_mode === 'remote' && <Chip>{t('common.remote')}</Chip>}
+            {(job.commitments ?? []).map((c) => (
+              <Chip key={c}>{t(`commit.${c}` as Key)}</Chip>
+            ))}
             {job.event && <Chip tone="yes">{t('jobs.atevent')}</Chip>}
           </div>
         </div>

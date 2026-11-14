@@ -68,7 +68,8 @@ def _create_application(conn: sqlite3.Connection, payload: ApplicationIn,
                        (payload.job_id,)).fetchone()
     if not job or job["status"] != "open":
         raise HTTPException(409, "This job is not open for applications.")
-    if not payload.answer.strip():
+    open_hiring = "open_hiring" in json.loads(job["commitments"] or "[]")
+    if not open_hiring and not payload.answer.strip():
         raise HTTPException(422, "The answer to the question is empty.")
     if job["cv_required"] and not (payload.cv_text or "").strip():
         raise HTTPException(422, "This job asks for a CV text.")
@@ -102,13 +103,15 @@ def _create_application(conn: sqlite3.Connection, payload: ApplicationIn,
     conn.execute(
         "INSERT INTO application (id,job_id,user_id,name,contact_method,"
         "contact_value,availability_note,answer,cv_text,shared_needs,"
-        "meet_at_event,status,created_by_advisor)"
-        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "meet_at_event,meets_must_haves,wants_tryout,status,"
+        "created_by_advisor)"
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (app_id, payload.job_id, user_id, name, payload.contact_method,
          payload.contact_value, payload.availability_note, payload.answer,
-         payload.cv_text,
+         payload.cv_text if not open_hiring else None,
          json.dumps(payload.shared_needs, ensure_ascii=False),
-         int(payload.meet_at_event), "sent", int(by_advisor)))
+         int(payload.meet_at_event), int(payload.meets_must_haves),
+         int(payload.wants_tryout), "sent", int(by_advisor)))
     db_mod.audit(conn, (user["id"] if user else "advisor"),
                  "application_created",
                  f"{app_id}:job={payload.job_id}"

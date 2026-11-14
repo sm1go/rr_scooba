@@ -44,10 +44,12 @@ export default function EmployerApplications() {
   }
 
   const groups = useMemo(() => {
-    const m = new Map<string, { title: string; items: Application[] }>()
+    const m = new Map<string, { title: string; items: Application[];
+                                openHiring: boolean }>()
     for (const a of apps ?? []) {
       const g = m.get(a.job_id) ?? {
         title: a.job?.title ?? a.job_id, items: [],
+        openHiring: (a.job?.commitments ?? []).includes('open_hiring'),
       }
       g.items.push(a)
       m.set(a.job_id, g)
@@ -73,6 +75,12 @@ export default function EmployerApplications() {
           <h2 className="font-display" style={{ fontSize: '1.3rem' }}>
             <Link to={`/jobs/${jid}`}>{g.title}</Link>
           </h2>
+          {g.openHiring && (
+            <div className="card p-4 mb-3"
+                 style={{ background: 'var(--color-wait-bg)' }}>
+              <p className="m-0">{t('employer.openhiringbanner')}</p>
+            </div>
+          )}
           {g.items.map((a) => (
             <article key={a.id} className="card p-5 mb-3">
               <div className="flex justify-between gap-3 flex-wrap">
@@ -103,6 +111,17 @@ export default function EmployerApplications() {
                   <strong>{t('apply.share')}:</strong>{' '}
                   {a.shared_needs.map((k) => t(`cond.${k}` as Key)).join(', ')}
                 </p>
+              )}
+              {a.queue_position != null && (
+                <p className="mt-2 mb-0 font-medium">
+                  {t('employer.queue', { n: a.queue_position })}
+                </p>
+              )}
+              {a.meets_must_haves && (
+                <p className="mt-2 mb-0">{t('employer.meetsmust')}</p>
+              )}
+              {a.wants_tryout && (
+                <p className="mt-2 mb-0">{t('employer.wantstryout')}</p>
               )}
               {a.meet_at_event && (
                 <p className="mt-2 mb-0">{t('apply.event')}</p>

@@ -18,6 +18,8 @@ const QUICK_LABELS = ['students', 'retirement', 'first_job', 'side_job',
                       'part_time', 'access_info'] as const
 const QUICK_NEEDS = ['step_free_entrance', 'seated_work', 'flexible_breaks',
                      'quiet_environment']
+const COMMITMENTS = ['open_hiring', 'guaranteed_talk', 'tryout',
+                     'skills_first'] as const
 const WEEKDAYS = DAYS.slice(0, 5)
 const TIME_GROUPS: { id: Key; slots: string[] }[] = [
   { id: 'jobs.time.mornings', slots: WEEKDAYS.map((d) => `${d}-morning`) },
@@ -163,6 +165,13 @@ export default function JobsPage({
     if (s.has(k)) s.delete(k); else s.add(k)
     set('needs', [...s].join(',') || null)
   }
+  const commitSet = new Set((params.get('commit') || '')
+    .split(',').filter(Boolean))
+  const toggleCommit = (c: string) => {
+    const s2 = new Set(commitSet)
+    if (s2.has(c)) s2.delete(c); else s2.add(c)
+    set('commit', [...s2].join(',') || null)
+  }
   const clearAll = () => setParams(new URLSearchParams())
 
   const useMyProfile = async () => {
@@ -235,6 +244,8 @@ export default function JobsPage({
       names.push({ key: 'commute_max',
                    name: t('jobs.commute.chip',
                            { m: params.get('commute_max')! }) })
+    commitSet.forEach((c) =>
+      names.push({ key: `commit:${c}`, name: t(`commit.${c}` as Key) }))
     if (params.get('q')) names.push({ key: 'q', name: t('jobs.chip.q', { q: params.get('q')!.split(',').join(' / ') }) })
     if (params.get('work_mode'))
       names.push({ key: 'work_mode', name: t(`common.${params.get('work_mode') === 'on_site' ? 'onsite' : params.get('work_mode')}` as Key) })
@@ -257,6 +268,10 @@ export default function JobsPage({
       p.delete('label')
       params.getAll('label').filter((l) => `label:${l}` !== k)
         .forEach((l) => p.append('label', l))
+    } else if (k.startsWith('commit:')) {
+      set('commit', [...commitSet]
+        .filter((c) => `commit:${c}` !== k).join(',') || null)
+      return
     } else {
       p.delete(k)
       if (k === 'needs') p.delete('needs_mode')
@@ -476,6 +491,22 @@ export default function JobsPage({
                   className="whitespace-nowrap">
             {t('jobs.atevent')}
           </Toggle>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto mb-3 -mx-4 px-4"
+           role="group" aria-label={t('jobs.promises')}>
+        <div className="flex gap-2 w-max pe-4 items-center">
+          <span className="whitespace-nowrap text-secondary">
+            {t('jobs.promises')}:
+          </span>
+          {COMMITMENTS.map((c) => (
+            <Toggle key={c} pressed={commitSet.has(c)}
+                    onClick={() => toggleCommit(c)}
+                    className="whitespace-nowrap">
+              {t(`commit.${c}` as Key)}
+            </Toggle>
+          ))}
         </div>
       </div>
 
@@ -749,7 +780,7 @@ function EmptyHint({ params }: { params: URLSearchParams }) {
   const [best, setBest] = useState<string | null>(null)
   useEffect(() => {
     let cancelled = false
-    const candidates = ['slots', 'needs', 'field', 'district', 'language', 'hours_min', 'hours_max', 'experience', 'contract']
+    const candidates = ['slots', 'needs', 'field', 'district', 'language', 'hours_min', 'hours_max', 'experience', 'contract', 'commit']
       .filter((k) => params.get(k))
     Promise.all(candidates.map(async (k) => {
       const p = new URLSearchParams(params)
@@ -769,6 +800,7 @@ function EmptyHint({ params }: { params: URLSearchParams }) {
     district: t('jobs.distance'), language: t('jobs.language'),
     hours_min: t('jobs.minhours'), hours_max: t('jobs.maxhours'),
     experience: t('jobs.experience'), contract: t('jobs.contract'),
+    commit: t('jobs.promises'),
   }
   return <p className="text-secondary mt-2">{t('jobs.emptyhint')} {names[best]}</p>
 }

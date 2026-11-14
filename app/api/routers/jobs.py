@@ -27,6 +27,17 @@ router = APIRouter(prefix="/api", tags=["jobs"])
 
 CEFR = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
+COMMITMENTS = {"open_hiring", "guaranteed_talk", "tryout", "skills_first"}
+
+
+def _check_commitments(payload: JobIn) -> None:
+    bad = set(payload.commitments) - COMMITMENTS
+    if bad:
+        raise HTTPException(422, f"Unknown commitments: {sorted(bad)}")
+    if "open_hiring" in payload.commitments and payload.cv_required:
+        raise HTTPException(422,
+                            "Open hiring jobs cannot ask for a CV.")
+
 
 def _district_center(district_id: str) -> tuple[float, float] | None:
     cat = json.loads((SEED_DIR / "catalog.json").read_text(encoding="utf-8"))
@@ -40,7 +51,8 @@ def _label_ids(job: dict, cond_count: int) -> set[str]:
 
 def _decode(row: sqlite3.Row) -> dict:
     job = dict(row)
-    for f in ("duties", "shifts", "qualifications", "languages"):
+    for f in ("duties", "shifts", "qualifications", "languages",
+              "commitments"):
         job[f] = json.loads(job[f] or "[]")
     job["schedule_flexible"] = bool(job["schedule_flexible"])
     job["cv_required"] = bool(job["cv_required"])
@@ -91,6 +103,7 @@ def list_jobs(
     at_event: int | None = None,
     near_station: int | None = None,
     commute_max: int | None = None,
+    commit: str | None = None,
     q: str | None = None,
     hours_min: int | None = None,
     conn: sqlite3.Connection = Depends(get_conn),
@@ -102,6 +115,7 @@ def list_jobs(
     need_keys = [k for k in (needs or "").split(",") if k]
     slot_list = [s for s in (slots or "").split(",") if s]
     want_labels = set(label)
+    want_commit = set(c for c in (commit or "").split(",") if c)
     out = []
 
     matched: list[sqlite3.Row] = []
@@ -167,6 +181,8 @@ def list_jobs(
                             emp["name"] if emp else ""])
             if not text_matches(q, hay):
                 continue
+        if want_commit and not want_commit <= set(job["commitments"]):
+            continue
         if near_station:
             if job["work_mode"] == "remote" or job["lat"] is None:
                 continue
@@ -259,7 +275,8 @@ def get_job(job_id: str, conn: sqlite3.Connection = Depends(get_conn),
 
 def _job_fields(payload: JobIn) -> dict:
     d = payload.model_dump(exclude={"conditions", "employer_id"})
-    for f in ("duties", "shifts", "qualifications", "languages"):
+    for f in ("duties", "shifts", "qualifications", "languages",
+              "commitments"):
         d[f] = json.dumps(d[f], ensure_ascii=False)
     d["schedule_flexible"] = int(d["schedule_flexible"])
     d["cv_required"] = int(d["cv_required"])
@@ -311,6 +328,7 @@ def create_job(payload: JobIn, conn: sqlite3.Connection = Depends(get_conn),
     if not employer_id or not conn.execute(
             "SELECT 1 FROM employer WHERE id=?", (employer_id,)).fetchone():
         raise HTTPException(422, "Unknown employer.")
+    _check_commitments(payload)
     if payload.status == "open" and lint.blocking_issues(payload.model_dump()):
         raise HTTPException(422, "The wording must be fixed before publishing.",
                             )  # details returned by check-wording
@@ -322,12 +340,12 @@ def create_job(payload: JobIn, conn: sqlite3.Connection = Depends(get_conn),
         "lat,lon,work_mode,pay_amount,pay_unit,pay_note,shifts,"
         "schedule_flexible,hours_min,hours_max,contract,experience,"
         "experience_note,qualifications,onboarding,languages,lifting,"
-        "apply_question,cv_required,positions,status,source,confirmed_at)"
+        "apply_question,cv_required,commitments,positions,status,source,confirmed_at)"
         " VALUES (:id,:employer_id,:title,:field,:duties,:address,:district,"
         ":lat,:lon,:work_mode,:pay_amount,:pay_unit,:pay_note,:shifts,"
         ":schedule_flexible,:hours_min,:hours_max,:contract,:experience,"
         ":experience_note,:qualifications,:onboarding,:languages,:lifting,"
-        ":apply_question,:cv_required,:positions,:status,:source,:confirmed_at)",
+        ":apply_question,:cv_required,:commitments,:positions,:status,:source,:confirmed_at)",
         {**fields, "id": job_id, "employer_id": employer_id, "source": source,
          "confirmed_at": date.today().isoformat()})
     _write_job_conditions(conn, job_id, payload.conditions, source)
@@ -345,6 +363,7 @@ def update_job(job_id: str, payload: JobIn,
     if not row:
         raise HTTPException(404, "Job not found.")
     _check_owner(conn, user, row)
+    _check_commitments(payload)
     if payload.status == "open" and lint.blocking_issues(payload.model_dump()):
         raise HTTPException(422, "The wording must be fixed before publishing.")
     fields = _job_fields(payload)
@@ -358,7 +377,8 @@ def update_job(job_id: str, payload: JobIn,
         "experience=:experience,experience_note=:experience_note,"
         "qualifications=:qualifications,onboarding=:onboarding,"
         "languages=:languages,lifting=:lifting,apply_question=:apply_question,"
-        "cv_required=:cv_required,positions=:positions,status=:status"
+        "cv_required=:cv_required,commitments=:commitments,"
+        "positions=:positions,status=:status"
         " WHERE id=:id", {**fields, "id": job_id})
     source = "advisor" if user["role"] == "advisor" else "employer"
     _write_job_conditions(conn, job_id, payload.conditions, source)

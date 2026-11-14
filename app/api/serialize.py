@@ -20,10 +20,11 @@ JOB_FIELDS = [
     "lat", "lon", "work_mode", "pay_amount", "pay_unit", "pay_note", "shifts",
     "schedule_flexible", "hours_min", "hours_max", "contract", "experience",
     "experience_note", "qualifications", "onboarding", "languages", "lifting",
-    "apply_question", "cv_required", "positions", "status", "source",
+    "apply_question", "cv_required", "commitments", "positions", "status", "source",
     "confirmed_at", "created_at",
 ]
-_JSON_FIELDS = {"duties", "shifts", "qualifications", "languages"}
+_JSON_FIELDS = {"duties", "shifts", "qualifications", "languages",
+                "commitments"}
 _BOOL_FIELDS = {"schedule_flexible", "cv_required"}
 STALE_DAYS = 14
 
@@ -112,6 +113,8 @@ def application_out(conn: sqlite3.Connection, row: sqlite3.Row,
            "answer": row["answer"],
            "shared_needs": json.loads(row["shared_needs"] or "[]"),
            "meet_at_event": bool(row["meet_at_event"]),
+           "meets_must_haves": bool(row["meets_must_haves"]),
+           "wants_tryout": bool(row["wants_tryout"]),
            "status": row["status"], "status_note": row["status_note"],
            "created_by_advisor": bool(row["created_by_advisor"]),
            "created_at": row["created_at"], "updated_at": row["updated_at"]}
@@ -119,8 +122,9 @@ def application_out(conn: sqlite3.Connection, row: sqlite3.Row,
     if created.tzinfo is None:
         created = created.replace(tzinfo=timezone.utc)
     app["days_waiting"] = (datetime.now(timezone.utc) - created).days
-    job = conn.execute("SELECT id,title,status FROM job WHERE id=?",
-                       (row["job_id"],)).fetchone()
+    job = conn.execute(
+        "SELECT id,title,status,commitments FROM job WHERE id=?",
+        (row["job_id"],)).fetchone()
     emp = None
     if job:
         e = conn.execute("SELECT name FROM employer e JOIN job j"
@@ -128,7 +132,17 @@ def application_out(conn: sqlite3.Connection, row: sqlite3.Row,
                          (row["job_id"],)).fetchone()
         emp = e["name"] if e else None
         app["job"] = {"id": job["id"], "title": job["title"],
-                      "status": job["status"], "employer_name": emp}
+                      "status": job["status"], "employer_name": emp,
+                      "commitments": json.loads(job["commitments"] or "[]")}
+    # sign-up order for open hiring: rank among non-withdrawn applications
+    app["queue_position"] = None
+    if job and "open_hiring" in json.loads(job["commitments"] or "[]"):
+        app["queue_position"] = conn.execute(
+            "SELECT COUNT(*)+1 p FROM application WHERE job_id=?"
+            " AND status!='withdrawn' AND (created_at<? OR (created_at=?"
+            " AND id<?))",
+            (row["job_id"], row["created_at"], row["created_at"],
+             row["id"])).fetchone()["p"]
     if not employer_view:
         # history of status changes from the audit log
         app["history"] = [dict(r) for r in conn.execute(
