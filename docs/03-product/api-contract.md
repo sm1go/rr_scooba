@@ -57,7 +57,7 @@ type Spark = { id: string; talent_id: string; card_id: string; claim_id: string;
 |---|---|---|
 | GET | `/api/talents/{id}` | → `{ id, pseudonym, languages, availability, spark_budget, sparks_used }` (never the name) |
 | POST | `/api/story/followups` | `{ talent_id, transcript, language }` → `{ questions: string[] (≤3), provider }` |
-| POST | `/api/story/extract` | `{ talent_id, transcript, language }` → `{ claims: Claim[], refused: { text, reason }[], provider }` — server rejects any claim whose quote is not an exact substring of the transcript, and inflated verbs ("led" when the quote says "helped") |
+| POST | `/api/story/extract` | `{ talent_id, transcript, language }` → `{ claims: Claim[], refused: { text, reason }[], provider }` — server rejects any claim whose quote is not an exact substring of the transcript, and inflated verbs ("led" when the quote says "helped"); returned claims have `confirmed:false` until the person confirms them |
 | POST | `/api/evidence/{talent_id}` | `{ claims: Claim[] }` (only confirmed ones kept) → `EvidenceCard` |
 | GET | `/api/evidence/{talent_id}` | → `EvidenceCard` |
 
@@ -67,7 +67,7 @@ type Spark = { id: string; talent_id: string; card_id: string; claim_id: string;
 |---|---|---|
 | GET | `/api/talents/{id}/sparks` | → `Spark[]` |
 | POST | `/api/sparks` | `{ talent_id, card_id, claim_id, requirement_id, note? (≤140 chars) }` → `Spark` (409 if budget used; budget = min(5, max(3, round(total_company_slots × 1.5 / talents_registered)))) |
-| GET | `/api/companies/{id}/sparks` | → `{ by_requirement: { requirement: Requirement, sparks: { id, pseudonym, claim: Claim, note?, status, deadline }[] }[], minutes_estimate: number }` — no names before accept |
+| GET | `/api/companies/{id}/sparks` | → `{ by_requirement: { requirement: Requirement, sparks: { id, pseudonym, claim: Claim, note?, status, deadline }[] }[], minutes_estimate: number }` — no names or source-language metadata before accept |
 | POST | `/api/sparks/{id}/respond` | `{ decision: "accept"|"decline", reason_chip?: string }` → `Spark` (accept → `revealed_name` + first free `slot`; decline → refunded to talent) |
 | GET | `/api/companies/{id}/meetings` | → `{ id, spark_id, talent_name, slot, card_id }[]` |
 | GET | `/api/meetings/{id}/sheet` | → `{ meeting_id, questions: { requirement_id, question: string, how_we_check }[] (exactly the card must-haves), ticks: { requirement_id, seen: boolean, note? }[] }` |
@@ -79,7 +79,7 @@ type Spark = { id: string; talent_id: string; card_id: string; claim_id: string;
 | Method | Path | Response |
 |---|---|---|
 | GET | `/api/organiser/overview` | `{ cards_approved, sparks_sent, sparks_answered_pct, meetings, closures_within_72h_pct, talents_without_meeting_band: Band, avg_company_minutes }` |
-| GET | `/api/trust/twin-report` | `{ runs, pairs, variants: { name, flip_rate_pct, n }[], threshold_pct, passed, provider, generated_at }` (precomputed JSON in `db/seed/twin_report.json` until the Modal batch runs) |
+| GET | `/api/trust/twin-report` | `{ runs, pairs, variants: { name, flip_rate_pct, n }[], threshold_pct, passed, placeholder, provider, generated_at }`; before the Modal batch runs, `placeholder:true`, `passed:false`, and `variants:[]` |
 | GET | `/api/audit` | last 50 audit events `{ at, actor: "ai"|"human", action, detail }` |
 
 ## Rules (deterministic, unit-tested)

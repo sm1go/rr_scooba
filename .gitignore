@@ -19,3 +19,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Local SQLite (rebuilt from db/seed + db/schema.sql)
+db/*.sqlite
+db/*.sqlite-journal

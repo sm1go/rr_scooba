@@ -1,0 +1,270 @@
+{
+  "meta": {
+    "title": "ESCO-like skill subset for the TalentMatch Signal demo",
+    "license": "labels inspired by ESCO (CC BY 4.0)",
+    "uris": "PLACEHOLDER — these are not real ESCO identifiers"
+  },
+  "skills": [
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0001",
+      "id": "sk-ci",
+      "label": "use continuous integration and delivery tools",
+      "keywords": [
+        "ci",
+        "ci/cd",
+        "pipeline",
+        "jenkins",
+        "github actions",
+        "build"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0002",
+      "id": "sk-python",
+      "label": "develop software in Python",
+      "keywords": [
+        "python",
+        "fastapi",
+        "django",
+        "flask"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0003",
+      "id": "sk-test",
+      "label": "develop automated software tests",
+      "keywords": [
+        "pytest",
+        "automated test",
+        "test suite",
+        "tdd",
+        "testing"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0004",
+      "id": "sk-react",
+      "label": "develop web interfaces with React",
+      "keywords": [
+        "react",
+        "typescript",
+        "frontend",
+        "front-end"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0005",
+      "id": "sk-k8s",
+      "label": "orchestrate containers with Kubernetes",
+      "keywords": [
+        "kubernetes",
+        "k8s",
+        "container"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0006",
+      "id": "sk-sql",
+      "label": "design and query relational databases",
+      "keywords": [
+        "sql",
+        "postgresql",
+        "database"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0007",
+      "id": "sk-ml",
+      "label": "deploy machine learning models",
+      "keywords": [
+        "machine learning",
+        "ml model",
+        "pytorch",
+        "model deployment"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0008",
+      "id": "sk-cloud",
+      "label": "manage cloud infrastructure",
+      "keywords": [
+        "aws",
+        "azure",
+        "gcp",
+        "cloud"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0009",
+      "id": "sk-iac",
+      "label": "provision infrastructure as code",
+      "keywords": [
+        "terraform",
+        "infrastructure as code",
+        "iac",
+        "pulumi"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0010",
+      "id": "sk-mobile",
+      "label": "develop mobile applications",
+      "keywords": [
+        "android",
+        "kotlin",
+        "swift",
+        "ios",
+        "mobile"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0011",
+      "id": "sk-embedded",
+      "label": "develop embedded software",
+      "keywords": [
+        "embedded",
+        "firmware",
+        "c++",
+        "microcontroller"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0012",
+      "id": "sk-api",
+      "label": "design REST and event-driven APIs",
+      "keywords": [
+        "rest api",
+        "api design",
+        "openapi",
+        "graphql"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0013",
+      "id": "sk-secu",
+      "label": "apply application security practices",
+      "keywords": [
+        "security",
+        "owasp",
+        "penetration",
+        "hardening"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0014",
+      "id": "sk-obs",
+      "label": "operate observability and monitoring",
+      "keywords": [
+        "monitoring",
+        "grafana",
+        "observability",
+        "prometheus"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0015",
+      "id": "sk-etl",
+      "label": "build data pipelines and ETL",
+      "keywords": [
+        "etl",
+        "data pipeline",
+        "airflow",
+        "spark"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0016",
+      "id": "sk-a11y",
+      "label": "implement accessibility standards",
+      "keywords": [
+        "accessibility",
+        "wcag",
+        "a11y"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0017",
+      "id": "sk-geo",
+      "label": "develop geospatial applications",
+      "keywords": [
+        "gis",
+        "geospatial",
+        "postgis",
+        "maps"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0018",
+      "id": "sk-ui",
+      "label": "design user interfaces",
+      "keywords": [
+        "figma",
+        "ui design",
+        "ux",
+        "prototype"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0019",
+      "id": "sk-doc",
+      "label": "write technical documentation",
+      "keywords": [
+        "documentation",
+        "technical writing",
+        "docs"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0020",
+      "id": "sk-agile",
+      "label": "coordinate agile software projects",
+      "keywords": [
+        "scrum",
+        "agile",
+        "project coordination",
+        "kanban"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0021",
+      "id": "sk-support",
+      "label": "provide technical customer support",
+      "keywords": [
+        "customer support",
+        "helpdesk",
+        "service desk"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0022",
+      "id": "sk-robot",
+      "label": "programme industrial robots",
+      "keywords": [
+        "robotics",
+        "ros",
+        "plc"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0023",
+      "id": "sk-net",
+      "label": "administer computer networks",
+      "keywords": [
+        "networking",
+        "tcp/ip",
+        "cisco",
+        "network"
+      ]
+    },
+    {
+      "uri": "http://data.europa.eu/esco/skill/placeholder-0024",
+      "id": "sk-cad",
+      "label": "create CAD engineering models",
+      "keywords": [
+        "cad",
+        "autocad",
+        "solidworks"
+      ]
+    }
+  ]
+}
