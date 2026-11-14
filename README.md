@@ -13,9 +13,9 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 |---|---|
 | 0. Challenge intake | Done — brief + indexed stakeholders / pain points / constraints / judging criteria |
 | 1. Research & problem analysis | In progress — 6 notes incl. Junction tech partners and prior art |
-| 2. Multi-agent ideation (3 rounds) | Round 1 done (58 raw ideas) · Round 2 cross-review running |
-| 3. Feature catalog & shortlist | Next |
-| 4. MVP build (`app/` + `db/`) | Not started — waiting for the scope decision |
+| 2. Multi-agent ideation (3 rounds) | Done — 58 raw ideas → 20 consolidated features → final vote |
+| 3. Feature catalog & shortlist | Done — recommendation: *TalentMatch Signal*, awaiting owner OK |
+| 4. MVP build (`app/` + `db/`) | Next — architecture draft ready |
 
 ## Timeline (Junction 2026, Europe/Helsinki)
 
@@ -44,4 +44,5 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 - [Challenge brief](docs/00-challenge/challenge-brief.md) · [Tech challenges (stackable)](docs/00-challenge/tech-challenges.md)
 - Research: [Espoo & TalentMatch](docs/01-research/01-context-espoo-and-talentmatch.md) · [AI in hiring](docs/01-research/02-ai-in-hiring-evidence.md) · [Regulation](docs/01-research/03-regulatory-fact-sheet.md) · [Market & data](docs/01-research/04-market-and-data-sources.md) · [Junction tech partners](docs/01-research/05-junction-2026-tech-partners.md) · [Prior art](docs/01-research/06-prior-art-open-source.md) · [Espoo mentor validation](docs/01-research/07-espoo-mentor-validation.md)
 - [Ideation method](docs/02-ideation/README.md) · [Round 1 digest — all 58 raw ideas](docs/02-ideation/round-1-digest.md) · [Round 2 brief](docs/02-ideation/round-2-brief.md)
+- Product: [Feature catalogue F01–F20](docs/03-product/feature-catalog.md) · [Shortlist & MVP](docs/03-product/shortlist.md) · [Architecture](docs/03-product/architecture.md) · [Scoring](docs/03-product/scoring/summary.md)
 - [Decision log](docs/decisions/decision-log.md)

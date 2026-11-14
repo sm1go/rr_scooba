@@ -113,3 +113,26 @@ Raw features parsed: **58** from 6 roles.
 | F17 | 2 | RAI-09 TECH-05 | 3.18 | 3.63 | 0 | 0 |
 | F16 | 2 | STR-05 STR-07 | 3.07 | 3.31 | 0 | 0 |
 | F20 | 3 | STR-08 STR-09 TAL-10 | 2.97 | 3.12 | 0 | 0 |
+
+## Round 3 — final vote (100 points per agent)
+
+| F-ID | Points | Backers | Allocation |
+|---|---|---|---|
+| F06 | 141 | 6 | PM:22 RAI:25 STR:22 TAL:25 TECH:25 UX:22 |
+| F01 | 117 | 6 | PM:20 RAI:20 STR:20 TAL:20 TECH:20 UX:17 |
+| F04 | 89 | 6 | PM:16 RAI:15 STR:14 TAL:12 TECH:15 UX:17 |
+| F03 | 81 | 6 | PM:15 RAI:12 STR:16 TAL:14 TECH:12 UX:12 |
+| F13 | 51 | 6 | PM:9 RAI:5 STR:12 TAL:10 TECH:5 UX:10 |
+| F10 | 42 | 5 | PM:9 RAI:6 TAL:10 TECH:8 UX:9 |
+| F11 | 30 | 6 | PM:5 RAI:4 STR:7 TAL:4 TECH:3 UX:7 |
+| F02 | 27 | 6 | PM:2 RAI:7 STR:5 TAL:3 TECH:6 UX:4 |
+| F18 | 12 | 4 | PM:2 RAI:6 TECH:2 UX:2 |
+| F14 | 6 | 2 | STR:4 TAL:2 |
+| F05 | 4 | 1 | TECH:4 |
+
+- PM: allocated 100 points
+- RAI: allocated 100 points
+- STR: allocated 100 points
+- TAL: allocated 100 points
+- TECH: allocated 100 points
+- UX: allocated 100 points
