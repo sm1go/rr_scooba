@@ -12,7 +12,7 @@ def _jobs(client, **params):
 
 def test_jobs_public_and_count(client):
     jobs = _jobs(client)
-    assert len(jobs) == 60
+    assert len(jobs) == 158
 
 
 def test_job_item_shape(client):
@@ -146,7 +146,7 @@ def test_order_confirmed_desc(client):
 def test_stale_flag(client):
     jobs = _jobs(client)
     stale = [j for j in jobs if j["stale"]]
-    assert len(stale) == 8
+    assert len(stale) == 17
     assert all(j["confirmed_days_ago"] > 14 for j in stale)
 
 

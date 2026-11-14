@@ -1322,6 +1322,9 @@ def main(out_dir: Path | None = None):
     print(f"seed written to {out_dir}")
     print(f"{len(open_jobs)} open jobs, {len(employers)} employers, "
           f"{len(at_event)} jobs at the event, {len(stale)} stale jobs")
+    if out_dir == SEED_DIR:
+        import gen_more_jobs
+        gen_more_jobs.main()
 
 
 if __name__ == "__main__":

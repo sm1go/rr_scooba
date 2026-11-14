@@ -84,8 +84,8 @@ def test_advisor_overview(client, advisor):
     r = client.get("/api/advisor/overview", headers=advisor)
     assert r.status_code == 200
     body = r.json()
-    assert body["open_jobs"] == 60
-    assert len(body["stale_jobs"]) == 8
+    assert body["open_jobs"] == 158
+    assert len(body["stale_jobs"]) == 17
     assert any(w["days_waiting"] > 7 for w in body["waiting_over_7_days"])
     assert body["new_help_requests"] >= 1
     assert "sent" in body["applications_by_status"]

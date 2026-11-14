@@ -43,6 +43,18 @@
     {
       "id": "seasonal",
       "name": "Seasonal work"
+    },
+    {
+      "id": "manufacturing",
+      "name": "Manufacturing and metal work"
+    },
+    {
+      "id": "health",
+      "name": "Health care"
+    },
+    {
+      "id": "maintenance",
+      "name": "Property maintenance and trades"
     }
   ],
   "districts": [

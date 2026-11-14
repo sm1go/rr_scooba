@@ -3764,5 +3764,7605 @@
       "step_free_entrance": "yes",
       "lift": "yes"
     }
+  },
+  {
+    "id": "job-terasmetso-mig",
+    "employer_id": "emp-terasmetso",
+    "title": "Welder — MIG/MAG",
+    "field": "manufacturing",
+    "duties": [
+      "Weld steel frames and brackets with MIG/MAG (fillet and butt welds).",
+      "Read simple workshop drawings and check measurements.",
+      "Grind and finish welds; keep your booth tidy."
+    ],
+    "address": "Hansakallio 4",
+    "district": "kauklahti",
+    "lat": 60.18755,
+    "lon": 24.59825,
+    "work_mode": "on_site",
+    "pay_amount": 17.8,
+    "pay_unit": "hour",
+    "pay_note": "Shift supplement for the evening shift.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "SC welding certificate (EN ISO 9606-1, MAG 135/136)",
+      "Hot work card (tulityökortti)"
+    ],
+    "onboarding": "Two days with the foreman, then a test piece before you work alone.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read safety signs and short work orders"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with the foreman"
+      }
+    ],
+    "lifting": "Steel parts up to 25 kg; an overhead crane lifts anything heavier",
+    "apply_question": "Which welding positions have you done (PA, PB, PF…)? Tell me about one tricky weld.",
+    "cv_required": 0,
+    "positions": 2,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "written_instructions": {
+        "value": "yes",
+        "note": "Drawings and work orders are on paper at every booth."
+      },
+      "seated_work": "no",
+      "flexible_breaks": "no",
+      "quiet_environment": "no"
+    }
+  },
+  {
+    "id": "job-terasmetso-trainee",
+    "employer_id": "emp-terasmetso",
+    "title": "Welder trainee",
+    "field": "manufacturing",
+    "duties": [
+      "Learn MAG welding from our welding instructor.",
+      "Help with cutting, grinding and fitting parts.",
+      "Take the SC certificate test at the end — we pay for it."
+    ],
+    "address": "Hansakallio 4",
+    "district": "kauklahti",
+    "lat": 60.18755,
+    "lon": 24.59825,
+    "work_mode": "on_site",
+    "pay_amount": 13.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "traineeship",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A 4-month in-house programme; pay rises to the welder rate after the certificate.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "follow safety instructions"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "follow safety instructions (if no Finnish)"
+      }
+    ],
+    "lifting": "Parts up to 20 kg",
+    "apply_question": "Have you done any hands-on work — metal, cars, bikes, building? Tell me about it.",
+    "cv_required": 0,
+    "positions": 2,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "written_instructions": "yes",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-terasmetso-sheet",
+    "employer_id": "emp-terasmetso",
+    "title": "Sheet-metal worker — evening shift",
+    "field": "manufacturing",
+    "duties": [
+      "Bend sheet metal on a CNC press brake.",
+      "Set up tools from the job card and check the first part.",
+      "Deburr and stack finished parts for the welders."
+    ],
+    "address": "Hansakallio 4",
+    "district": "kauklahti",
+    "lat": 60.18755,
+    "lon": 24.59825,
+    "work_mode": "on_site",
+    "pay_amount": 16.4,
+    "pay_unit": "hour",
+    "pay_note": "Evening shift supplement +1.30 €/h on top of the hourly pay.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "14:30",
+        "end": "23:00"
+      },
+      {
+        "day": "tue",
+        "start": "14:30",
+        "end": "23:00"
+      },
+      {
+        "day": "wed",
+        "start": "14:30",
+        "end": "23:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:30",
+        "end": "23:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 34,
+    "hours_max": 34,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One week on the day shift with an experienced bender.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read job cards"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "ask the shift lead"
+      }
+    ],
+    "lifting": "Sheets up to 15 kg; vacuum lifter for big sheets",
+    "apply_question": "Have you used a press brake, guillotine or punch? What did you make?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 9,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-rosteri-tig",
+    "employer_id": "emp-rosteri",
+    "title": "TIG welder, stainless steel",
+    "field": "manufacturing",
+    "duties": [
+      "TIG-weld stainless pipes and tanks (AISI 316L) to hygiene standards.",
+      "Purge gas set-up and visual inspection of your welds.",
+      "Some installation trips to customer plants in the Helsinki region."
+    ],
+    "address": "Kuurinniityntie 12",
+    "district": "espoon_keskus",
+    "lat": 60.2051,
+    "lon": 24.65388,
+    "work_mode": "on_site",
+    "pay_amount": 19.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:30",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:30",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:30",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:30",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:30",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "At least 2 years of TIG welding.",
+    "qualifications": [
+      "SC welding certificate (EN ISO 9606-1, TIG 141, stainless)",
+      "Hot work card (tulityökortti)",
+      "Driving licence B"
+    ],
+    "onboarding": "Weld test on your first day, then a week with a senior welder.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with customers on installation trips"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "work in the workshop (Finnish not needed there)"
+      }
+    ],
+    "lifting": "Pipes and fittings up to 15 kg",
+    "apply_question": "Tell me about stainless or thin-wall pipe welding you have done.",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 1,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "accessible_toilet": "yes",
+      "written_instructions": "yes",
+      "seated_work": "no",
+      "flexible_breaks": "no",
+      "quiet_environment": "no",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-rosteri-cnc",
+    "employer_id": "emp-rosteri",
+    "title": "CNC machinist",
+    "field": "manufacturing",
+    "duties": [
+      "Run CNC lathes and milling machines (Fanuc and Heidenhain controls).",
+      "Set up tools, load programmes and measure parts with micrometers.",
+      "Small programme edits at the machine."
+    ],
+    "address": "Kuurinniityntie 12",
+    "district": "espoon_keskus",
+    "lat": 60.2051,
+    "lon": 24.65388,
+    "work_mode": "on_site",
+    "pay_amount": 18.2,
+    "pay_unit": "hour",
+    "pay_note": "Two-shift work: mornings one week, evenings the next. Evening supplement +1.10 €/h.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "mon",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "tue",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "wed",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "14:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "Vocational qualification in machining or about a year at a CNC machine.",
+    "qualifications": [],
+    "onboarding": "Two weeks with the machine shop lead; written set-up sheets for every part.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read set-up sheets"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with the shop lead"
+      }
+    ],
+    "lifting": "Blanks up to 20 kg; hoist at each machine",
+    "apply_question": "Which machines and controls have you used?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "written_instructions": "yes",
+      "quiet_environment": "no"
+    }
+  },
+  {
+    "id": "job-arcmec-assembly",
+    "employer_id": "emp-arcmec",
+    "title": "Assembly worker — electrical cabinets",
+    "field": "manufacturing",
+    "duties": [
+      "Mount rails, terminals and cable ducts following an assembly picture.",
+      "Cut, strip and connect wires; label every wire.",
+      "Check your own work with a checklist."
+    ],
+    "address": "Juvanpuistonkatu 3",
+    "district": "olari",
+    "lat": 60.17231,
+    "lon": 24.74339,
+    "work_mode": "on_site",
+    "pay_amount": 15.1,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Picture-based instructions at every workbench; a mentor for two weeks.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read the checklist"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "read the checklist (English version exists)"
+      }
+    ],
+    "lifting": "Light — parts under 5 kg",
+    "apply_question": "Do you like detailed hand work? Tell me about something you built or repaired.",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": {
+        "value": "yes",
+        "note": "Height-adjustable benches; stand or sit."
+      },
+      "flexible_breaks": "no",
+      "quiet_environment": "no",
+      "written_instructions": "yes",
+      "assistive_tech_ok": "yes",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-arcmec-evening",
+    "employer_id": "emp-arcmec",
+    "title": "Assembly worker — 4 evenings a week",
+    "field": "manufacturing",
+    "duties": [
+      "Assemble cable sets and small components.",
+      "Pack finished cabinets parts for the next morning.",
+      "Keep the work area tidy at the end of the shift."
+    ],
+    "address": "Juvanpuistonkatu 3",
+    "district": "olari",
+    "lat": 60.17231,
+    "lon": 24.74339,
+    "work_mode": "on_site",
+    "pay_amount": 15.1,
+    "pay_unit": "hour",
+    "pay_note": "Evening supplement +1.00 €/h.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "16:00",
+        "end": "21:00"
+      },
+      {
+        "day": "tue",
+        "start": "16:00",
+        "end": "21:00"
+      },
+      {
+        "day": "wed",
+        "start": "16:00",
+        "end": "21:00"
+      },
+      {
+        "day": "thu",
+        "start": "16:00",
+        "end": "21:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 20,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "First evening with the shift lead; same picture instructions as the day shift.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "greet colleagues"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "follow instructions"
+      }
+    ],
+    "lifting": "Light — under 5 kg",
+    "apply_question": "Which evenings can you work, and from when can you start?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "seated_work": "yes",
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-arcmec-robot",
+    "employer_id": "emp-arcmec",
+    "title": "Robot welding cell operator",
+    "field": "manufacturing",
+    "duties": [
+      "Load and unload parts in two welding robot cells.",
+      "Start programmes, watch weld quality and fix small faults.",
+      "Do touch-up welding by hand when needed (MIG/MAG)."
+    ],
+    "address": "Juvanpuistonkatu 3",
+    "district": "olari",
+    "lat": 60.17231,
+    "lon": 24.74339,
+    "work_mode": "on_site",
+    "pay_amount": 16.9,
+    "pay_unit": "hour",
+    "pay_note": "Rotating two shifts, evening supplement +1.10 €/h.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "mon",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "tue",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "wed",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "14:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Hot work card (tulityökortti)"
+    ],
+    "onboarding": "Robot course with the supplier (3 days), then a month on shift with an operator.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "read robot screen messages and fault reports"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with colleagues"
+      }
+    ],
+    "lifting": "Parts up to 15 kg; lifting aids at the cell",
+    "apply_question": "Have you welded or run any production machine? What did you do there?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 11,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "written_instructions": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-hila-packer",
+    "employer_id": "emp-hila",
+    "title": "Factory packer — food production",
+    "field": "manufacturing",
+    "duties": [
+      "Pack salads and ready meals on a production line.",
+      "Label boxes and stack them on pallets.",
+      "Work in a cool room (+6 °C); warm workwear is provided."
+    ],
+    "address": "Lahnuksentie 18",
+    "district": "kalajarvi",
+    "lat": 60.29594,
+    "lon": 24.57027,
+    "work_mode": "on_site",
+    "pay_amount": 14.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi) — we help you get it"
+    ],
+    "onboarding": "Hygiene training on day one; a buddy for your first week.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "understand basic words — picture signs everywhere"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "follow the line lead"
+      }
+    ],
+    "lifting": "Boxes up to 10 kg",
+    "apply_question": "When could you start, and can you be at work by 6 in the morning?",
+    "cv_required": 0,
+    "positions": 4,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "written_instructions": {
+        "value": "yes",
+        "note": "Picture instructions at every line station."
+      },
+      "seated_work": "no",
+      "flexible_breaks": "no"
+    }
+  },
+  {
+    "id": "job-hila-weekend",
+    "employer_id": "emp-hila",
+    "title": "Factory packer — weekends",
+    "field": "manufacturing",
+    "duties": [
+      "Pack and label food products for Monday deliveries.",
+      "Clean the line at the end of the shift."
+    ],
+    "address": "Lahnuksentie 18",
+    "district": "kalajarvi",
+    "lat": 60.29594,
+    "lon": 24.57027,
+    "work_mode": "on_site",
+    "pay_amount": 14.2,
+    "pay_unit": "hour",
+    "pay_note": "Sunday work is paid double.",
+    "shifts": [
+      {
+        "day": "sat",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "sun",
+        "start": "07:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 8,
+    "hours_max": 16,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)"
+    ],
+    "onboarding": "One training shift on a weekday.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "basic words"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "follow instructions"
+      }
+    ],
+    "lifting": "Boxes up to 10 kg",
+    "apply_question": "Can you work both weekend days or only one?",
+    "cv_required": 0,
+    "positions": 2,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 7,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-hila-line",
+    "employer_id": "emp-hila",
+    "title": "Production line operator",
+    "field": "manufacturing",
+    "duties": [
+      "Run and adjust a tray-sealing and labelling line.",
+      "Change film rolls and labels; record checks in the tablet.",
+      "Report faults to maintenance."
+    ],
+    "address": "Lahnuksentie 18",
+    "district": "kalajarvi",
+    "lat": 60.29594,
+    "lon": 24.57027,
+    "work_mode": "on_site",
+    "pay_amount": 15.6,
+    "pay_unit": "hour",
+    "pay_note": "Three-shift rotation; evening and night supplements.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "mon",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "tue",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "wed",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "14:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)"
+    ],
+    "onboarding": "Three weeks with an operator on each shift.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "record quality checks"
+      }
+    ],
+    "lifting": "Film rolls up to 18 kg",
+    "apply_question": "Have you run a machine or a production line before? Tell me about it.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {}
+  },
+  {
+    "id": "job-virta-electrician",
+    "employer_id": "emp-virta",
+    "title": "Electrician",
+    "field": "maintenance",
+    "duties": [
+      "Electrical installation and renovation in apartments and housing companies.",
+      "Fault finding and repairs; measurement and commissioning reports.",
+      "Drive the company van between sites."
+    ],
+    "address": "Kamreerintie 6",
+    "district": "espoon_keskus",
+    "lat": 60.20665,
+    "lon": 24.65539,
+    "work_mode": "on_site",
+    "pay_amount": 19.4,
+    "pay_unit": "hour",
+    "pay_note": "Tool allowance and daily travel allowance paid.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "Vocational qualification in electrical installation.",
+    "qualifications": [
+      "Electrical safety qualification S2 (sähköpätevyys)",
+      "Electrical work safety card (sähkötyöturvallisuuskortti)",
+      "Occupational safety card (työturvallisuuskortti)",
+      "Driving licence B"
+    ],
+    "onboarding": "You start in a pair with a senior electrician for two weeks.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with residents and read site documents"
+      }
+    ],
+    "lifting": "Cable reels and tools up to 20 kg",
+    "apply_question": "What kind of electrical work have you done most — new builds, renovation, service?",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "written_instructions": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-virta-assistant",
+    "employer_id": "emp-virta",
+    "title": "Electrician's assistant",
+    "field": "maintenance",
+    "duties": [
+      "Pull cables, mount boxes and ducts with an electrician.",
+      "Carry materials and keep sites tidy.",
+      "Learn the trade — apprenticeship (oppisopimus) possible later."
+    ],
+    "address": "Kamreerintie 6",
+    "district": "espoon_keskus",
+    "lat": 60.20665,
+    "lon": 24.65539,
+    "work_mode": "on_site",
+    "pay_amount": 14.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "No experience needed.",
+    "qualifications": [],
+    "onboarding": "We pay for the occupational and electrical work safety cards in your first month.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "understand instructions on site"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with your electrician"
+      }
+    ],
+    "lifting": "Materials up to 20 kg",
+    "apply_question": "Why would you like to learn electrical work?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-lvikaari-plumber",
+    "employer_id": "emp-lvikaari",
+    "title": "Plumber",
+    "field": "maintenance",
+    "duties": [
+      "Pipe renovations (putkiremontti) in apartment buildings.",
+      "Install water pipes, drains, taps and toilets.",
+      "Pressure tests and handover paperwork."
+    ],
+    "address": "Kauklahdenväylä 9",
+    "district": "kauklahti",
+    "lat": 60.18977,
+    "lon": 24.60284,
+    "work_mode": "on_site",
+    "pay_amount": 18.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "Vocational qualification in plumbing or 3+ years of experience.",
+    "qualifications": [
+      "Hot work card (tulityökortti)",
+      "Occupational safety card (työturvallisuuskortti)",
+      "Driving licence B"
+    ],
+    "onboarding": "A week with the site foreman to learn our way of working.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with residents and the site foreman"
+      }
+    ],
+    "lifting": "Pipes and fittings up to 25 kg",
+    "apply_question": "Tell me about the biggest plumbing job you have done.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "seated_work": "no",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-lvikaari-hvac",
+    "employer_id": "emp-lvikaari",
+    "title": "HVAC installer (ventilation)",
+    "field": "maintenance",
+    "duties": [
+      "Install ventilation ducts, units and grilles in renovation sites.",
+      "Balance air flows with the measurement team.",
+      "Work on ladders and scaffolds."
+    ],
+    "address": "Kauklahdenväylä 9",
+    "district": "kauklahti",
+    "lat": 60.18977,
+    "lon": 24.60284,
+    "work_mode": "on_site",
+    "pay_amount": 17.4,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Hot work card (tulityökortti)",
+      "Occupational safety card (työturvallisuuskortti)"
+    ],
+    "onboarding": "Work in a pair with an experienced installer.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read the site plan"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with your pair"
+      }
+    ],
+    "lifting": "Ducts up to 20 kg, often overhead",
+    "apply_question": "Have you worked on building sites? What did you do?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 13,
+    "conditions": {}
+  },
+  {
+    "id": "job-rantala-huolto",
+    "employer_id": "emp-rantala",
+    "title": "Property maintenance worker (kiinteistöhuoltaja)",
+    "field": "maintenance",
+    "duties": [
+      "Daily rounds in housing companies: heating, water, lighting, doors.",
+      "Fix small faults and call contractors for bigger ones.",
+      "Yard work: in winter snow and grit, in summer lawns."
+    ],
+    "address": "Piispansilta 9",
+    "district": "matinkyla",
+    "lat": 60.15938,
+    "lon": 24.74027,
+    "work_mode": "on_site",
+    "pay_amount": 2650,
+    "pay_unit": "month",
+    "pay_note": "On-call week every 6 weeks with a separate on-call allowance.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B",
+      "Occupational safety card (työturvallisuuskortti)"
+    ],
+    "onboarding": "Two weeks on rounds with a senior maintenance worker; written site cards for every building.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with residents and write fault notes"
+      }
+    ],
+    "lifting": "Tools and grit bags up to 20 kg",
+    "apply_question": "What have you fixed or maintained yourself — at home, at work, anywhere?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "accessible_toilet": "yes",
+      "written_instructions": "yes",
+      "seated_work": "no",
+      "flexible_breaks": "yes",
+      "quiet_environment": "no",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-rantala-apprentice",
+    "employer_id": "emp-rantala",
+    "title": "Property maintenance apprentice",
+    "field": "maintenance",
+    "duties": [
+      "Learn property maintenance on the job with a mentor.",
+      "Study one day a month for the vocational qualification (oppisopimus).",
+      "Rounds, small repairs and yard work."
+    ],
+    "address": "Piispansilta 9",
+    "district": "matinkyla",
+    "lat": 60.15938,
+    "lon": 24.74027,
+    "work_mode": "on_site",
+    "pay_amount": 2150,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "traineeship",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B"
+    ],
+    "onboarding": "Your mentor works with you every day for the first three months.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with your mentor; we support your Finnish"
+      }
+    ],
+    "lifting": "Up to 20 kg",
+    "apply_question": "Why does maintenance work interest you?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 10,
+    "conditions": {
+      "adjustments_negotiable": "yes",
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-rantala-janitor",
+    "employer_id": "emp-rantala",
+    "title": "Janitor — school building",
+    "field": "maintenance",
+    "duties": [
+      "Open the school building, check heating, locks and alarms.",
+      "Small repairs: lamps, furniture, doors.",
+      "Help with deliveries and keep the yard safe."
+    ],
+    "address": "Matinkatu 15",
+    "district": "matinkyla",
+    "lat": 60.15978,
+    "lon": 24.73831,
+    "work_mode": "on_site",
+    "pay_amount": 2380,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Hand-over week with the retiring janitor.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with school staff and pupils"
+      },
+      {
+        "language": "Swedish",
+        "level": "A2",
+        "task": "greet staff in the Swedish-language wing (nice to have)"
+      }
+    ],
+    "lifting": "Furniture with a trolley, up to 15 kg",
+    "apply_question": "Tell me about a time you kept a place running — a home, a club, a workplace.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-rantala-weekend",
+    "employer_id": "emp-rantala",
+    "title": "Weekend caretaker rounds — 8 h a week",
+    "field": "maintenance",
+    "duties": [
+      "Weekend rounds in six buildings: check boiler rooms, doors and lights.",
+      "Note faults in the phone app for Monday."
+    ],
+    "address": "Olarinkatu 12",
+    "district": "olari",
+    "lat": 60.17212,
+    "lon": 24.74227,
+    "work_mode": "on_site",
+    "pay_amount": 15.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "sat",
+        "start": "09:00",
+        "end": "13:00"
+      },
+      {
+        "day": "sun",
+        "start": "09:00",
+        "end": "13:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 8,
+    "hours_max": 8,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One weekend together with the regular caretaker.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "write short fault notes"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "report faults"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Can you work every weekend, or every other?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-rantala-snow",
+    "employer_id": "emp-rantala",
+    "title": "Snow clearing — seasonal, on call",
+    "field": "seasonal",
+    "duties": [
+      "Clear snow from entrances and paths by hand and with a small tractor.",
+      "Spread grit on icy mornings.",
+      "Work starts early when it snows — we call by 4 a.m."
+    ],
+    "address": "Piispansilta 9",
+    "district": "matinkyla",
+    "lat": 60.15938,
+    "lon": 24.74027,
+    "work_mode": "on_site",
+    "pay_amount": 16.0,
+    "pay_unit": "hour",
+    "pay_note": "November–March. Night and Sunday supplements.",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 0,
+    "hours_max": 30,
+    "contract": "seasonal",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B (tractor training given)"
+    ],
+    "onboarding": "Tractor training in November before the snow.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "understand the call-out message"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "understand the call-out message"
+      }
+    ],
+    "lifting": "Shovelling and grit bags up to 20 kg",
+    "apply_question": "Can you start at 4 a.m. at short notice? How would you get to Matinkylä?",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 20,
+    "conditions": {
+      "written_instructions": "no"
+    }
+  },
+  {
+    "id": "job-lastu-carpenter",
+    "employer_id": "emp-lastu",
+    "title": "Carpenter (kirvesmies)",
+    "field": "construction",
+    "duties": [
+      "Build terraces, stairs and interior wood work.",
+      "Renovation: doors, windows, floors.",
+      "Measure and cut on site."
+    ],
+    "address": "Lahnuksentie 30",
+    "district": "kalajarvi",
+    "lat": 60.29463,
+    "lon": 24.56973,
+    "work_mode": "on_site",
+    "pay_amount": 18.0,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "Carpenter qualification or several years on sites.",
+    "qualifications": [
+      "Occupational safety card (työturvallisuuskortti)",
+      "Driving licence B"
+    ],
+    "onboarding": "You work with the owner for the first weeks.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with home owners"
+      }
+    ],
+    "lifting": "Timber up to 25 kg",
+    "apply_question": "Tell me about one wood job you are proud of.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "advisor",
+    "confirmed_days_ago": 12,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-savy-painter",
+    "employer_id": "emp-savy",
+    "title": "Painter",
+    "field": "construction",
+    "duties": [
+      "Prepare walls: fill, sand, tape.",
+      "Paint interiors in apartments and offices; facades in summer.",
+      "Protect floors and furniture; clean up."
+    ],
+    "address": "Perkkaantie 4",
+    "district": "leppavaara",
+    "lat": 60.21964,
+    "lon": 24.81157,
+    "work_mode": "on_site",
+    "pay_amount": 16.8,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Occupational safety card (työturvallisuuskortti)"
+    ],
+    "onboarding": "Two weeks with a team leader.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with the team"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with the team"
+      }
+    ],
+    "lifting": "Paint buckets up to 15 kg; ladders",
+    "apply_question": "Have you painted before — at work or at home? What went well?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "seated_work": "no",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-kivisauma-tile",
+    "employer_id": "emp-kivisauma",
+    "title": "Tile setter",
+    "field": "construction",
+    "duties": [
+      "Waterproof and tile bathrooms and saunas.",
+      "Lay floor and wall tiles; grout and seal.",
+      "Plan tile layouts with the customer."
+    ],
+    "address": "Ulappakatu 2",
+    "district": "espoonlahti",
+    "lat": 60.14757,
+    "lon": 24.65914,
+    "work_mode": "on_site",
+    "pay_amount": 19.0,
+    "pay_unit": "hour",
+    "pay_note": "Piece-rate bonus possible.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:30",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:30",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:30",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:30",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:30",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "Wet-room installer certificate (märkätilasertifikaatti)",
+      "Driving licence B"
+    ],
+    "onboarding": "One joint job with the owner, then your own sites.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with customers"
+      }
+    ],
+    "lifting": "Tile boxes and mortar bags up to 25 kg",
+    "apply_question": "Show or tell me about a bathroom you tiled.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 26,
+    "conditions": {}
+  },
+  {
+    "id": "job-peruskivi-labourer",
+    "employer_id": "emp-peruskivi",
+    "title": "Construction labourer",
+    "field": "construction",
+    "duties": [
+      "Carry and lift materials, build and take down supports.",
+      "Keep the site clean and safe.",
+      "Help carpenters and concrete workers."
+    ],
+    "address": "Kirkkojärventie 20",
+    "district": "espoon_keskus",
+    "lat": 60.20471,
+    "lon": 24.65793,
+    "work_mode": "on_site",
+    "pay_amount": 15.5,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Occupational safety card (työturvallisuuskortti) — we can arrange the course"
+    ],
+    "onboarding": "Site induction on day one; a foreman tells you each morning what to do.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "understand safety words"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with the foreman"
+      }
+    ],
+    "lifting": "Materials up to 25 kg",
+    "apply_question": "Are you used to physical work outdoors in all weather?",
+    "cv_required": 0,
+    "positions": 4,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 1,
+    "conditions": {
+      "seated_work": "no",
+      "flexible_breaks": "no",
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-peruskivi-summer",
+    "employer_id": "emp-peruskivi",
+    "title": "Summer site helper (18+)",
+    "field": "construction",
+    "duties": [
+      "Site cleaning, waste sorting and carrying materials.",
+      "Help the site storage keeper."
+    ],
+    "address": "Kirkkojärventie 20",
+    "district": "espoon_keskus",
+    "lat": 60.20471,
+    "lon": 24.65793,
+    "work_mode": "on_site",
+    "pay_amount": 13.8,
+    "pay_unit": "hour",
+    "pay_note": "June–August.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "summer_job",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Occupational safety card (työturvallisuuskortti)"
+    ],
+    "onboarding": "Site induction and safety walk on day one.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "understand site safety rules"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with colleagues"
+      }
+    ],
+    "lifting": "Up to 20 kg",
+    "apply_question": "Which summer weeks can you work?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-mantymaki-mechanic",
+    "employer_id": "emp-mantymaki",
+    "title": "Car mechanic",
+    "field": "maintenance",
+    "duties": [
+      "Service and repair cars of all brands.",
+      "Read fault codes with diagnostic tools.",
+      "Explain the repair to the customer service desk."
+    ],
+    "address": "Kuurinniityntie 30",
+    "district": "espoon_keskus",
+    "lat": 60.20644,
+    "lon": 24.65636,
+    "work_mode": "on_site",
+    "pay_amount": 17.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:30"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:30"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:30"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:30"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "Vehicle mechanic qualification or equivalent experience.",
+    "qualifications": [
+      "Driving licence B"
+    ],
+    "onboarding": "One week to learn our system; manufacturer courses during the year.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read work orders"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with the workshop lead"
+      }
+    ],
+    "lifting": "Wheels and parts up to 25 kg",
+    "apply_question": "Which car brands and systems do you know best?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-mantymaki-tyre",
+    "employer_id": "emp-mantymaki",
+    "title": "Tyre fitter — autumn and spring season",
+    "field": "seasonal",
+    "duties": [
+      "Change and balance tyres.",
+      "Take tyres in and out of the tyre hotel.",
+      "Torque wheels and fill in the checklist."
+    ],
+    "address": "Kuurinniityntie 30",
+    "district": "espoon_keskus",
+    "lat": 60.20644,
+    "lon": 24.65636,
+    "work_mode": "on_site",
+    "pay_amount": 14.5,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "17:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "17:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "17:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "17:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "17:00"
+      },
+      {
+        "day": "sat",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 25,
+    "hours_max": 40,
+    "contract": "seasonal",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B"
+    ],
+    "onboarding": "Two days with an experienced fitter.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "basic words"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "follow instructions"
+      }
+    ],
+    "lifting": "Wheels up to 25 kg, all day",
+    "apply_question": "Can you work long days in October–November?",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "advisor",
+    "confirmed_days_ago": 7,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-polku-bike",
+    "employer_id": "emp-polku",
+    "title": "Bike mechanic — spring and summer",
+    "field": "seasonal",
+    "duties": [
+      "Repair and service bikes and e-bikes.",
+      "Prepare rental bikes each morning.",
+      "Help customers choose parts."
+    ],
+    "address": "Länsituulentie 2",
+    "district": "tapiola",
+    "lat": 60.17472,
+    "lon": 24.80244,
+    "work_mode": "on_site",
+    "pay_amount": 14.0,
+    "pay_unit": "hour",
+    "pay_note": "April–September.",
+    "shifts": [
+      {
+        "day": "tue",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "wed",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "thu",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "fri",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "sat",
+        "start": "10:00",
+        "end": "18:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 37.5,
+    "contract": "seasonal",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A trial day in the workshop.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve customers"
+      },
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "serve customers (nice to have)"
+      }
+    ],
+    "lifting": "Bikes up to 25 kg",
+    "apply_question": "What bikes have you fixed?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 9,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "seated_work": {
+        "value": "yes",
+        "note": "Stool at the repair stand."
+      },
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-routa-delivery",
+    "employer_id": "emp-routa",
+    "title": "Delivery driver (C licence)",
+    "field": "logistics",
+    "duties": [
+      "Drive a 12-tonne truck on regional routes.",
+      "Load with a tail lift; deliver to shops and building sites.",
+      "Scan deliveries with a hand scanner."
+    ],
+    "address": "Lasihytti 5",
+    "district": "kauklahti",
+    "lat": 60.18877,
+    "lon": 24.60377,
+    "work_mode": "on_site",
+    "pay_amount": 17.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:30"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:30"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:30"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:30"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "C driving licence",
+      "Driver's professional competence (ammattipätevyys)",
+      "Digital tachograph card"
+    ],
+    "onboarding": "Two days as co-driver on your routes.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with receivers"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with dispatch"
+      }
+    ],
+    "lifting": "Parcels up to 25 kg; pallet jack for pallets",
+    "apply_question": "Tell me about your driving experience with trucks.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-routa-picker",
+    "employer_id": "emp-routa",
+    "title": "Warehouse picker — evenings",
+    "field": "logistics",
+    "duties": [
+      "Pick orders with a hand scanner.",
+      "Wrap and label pallets for the morning trucks.",
+      "Count stock on Fridays."
+    ],
+    "address": "Lasihytti 5",
+    "district": "kauklahti",
+    "lat": 60.18877,
+    "lon": 24.60377,
+    "work_mode": "on_site",
+    "pay_amount": 14.0,
+    "pay_unit": "hour",
+    "pay_note": "Evening supplement +1.20 €/h.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "tue",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "wed",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "thu",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "fri",
+        "start": "15:00",
+        "end": "23:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One shift with a picker; scanner instructions in five languages.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "basic words"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "read scanner screens"
+      }
+    ],
+    "lifting": "Boxes up to 20 kg",
+    "apply_question": "Can you work every weekday evening?",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "written_instructions": {
+        "value": "yes",
+        "note": "Scanner screens in Finnish, English, Russian, Estonian and Arabic."
+      },
+      "seated_work": "no",
+      "flexible_breaks": "no"
+    }
+  },
+  {
+    "id": "job-routa-weekend",
+    "employer_id": "emp-routa",
+    "title": "Warehouse picker — weekends, 8–16 h",
+    "field": "logistics",
+    "duties": [
+      "Pick and pack web-shop orders.",
+      "Help unload containers."
+    ],
+    "address": "Lasihytti 5",
+    "district": "kauklahti",
+    "lat": 60.18877,
+    "lon": 24.60377,
+    "work_mode": "on_site",
+    "pay_amount": 14.0,
+    "pay_unit": "hour",
+    "pay_note": "Sunday work paid double.",
+    "shifts": [
+      {
+        "day": "sat",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "sun",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 8,
+    "hours_max": 16,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One training shift.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "read scanner screens"
+      }
+    ],
+    "lifting": "Boxes up to 20 kg",
+    "apply_question": "One or both weekend days?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-routa-forklift",
+    "employer_id": "emp-routa",
+    "title": "Forklift driver",
+    "field": "logistics",
+    "duties": [
+      "Unload and load trucks with a counterbalance forklift.",
+      "Put pallets away to high racks with a reach truck.",
+      "Keep the yard safe."
+    ],
+    "address": "Lasihytti 5",
+    "district": "kauklahti",
+    "lat": 60.18877,
+    "lon": 24.60377,
+    "work_mode": "on_site",
+    "pay_amount": 15.4,
+    "pay_unit": "hour",
+    "pay_note": "Two shifts, rotating weekly.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "mon",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "tue",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "wed",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "14:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Forklift card (trukkikortti)"
+    ],
+    "onboarding": "Two days learning our racks and safety routes.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with drivers"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with drivers"
+      }
+    ],
+    "lifting": "Mostly machine lifting",
+    "apply_question": "How long have you driven a forklift and which types?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 7,
+    "conditions": {
+      "seated_work": {
+        "value": "yes",
+        "note": "You sit in the forklift most of the shift."
+      }
+    }
+  },
+  {
+    "id": "job-routa-van",
+    "employer_id": "emp-routa",
+    "title": "Van driver (B licence) — gig work",
+    "field": "logistics",
+    "duties": [
+      "Deliver parcels with a company van.",
+      "Use the route app; photograph each delivery."
+    ],
+    "address": "Lasihytti 5",
+    "district": "kauklahti",
+    "lat": 60.18877,
+    "lon": 24.60377,
+    "work_mode": "on_site",
+    "pay_amount": 15.0,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 0,
+    "hours_max": 25,
+    "contract": "gig",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B"
+    ],
+    "onboarding": "One ride-along day.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "use the route app"
+      },
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "greet customers"
+      }
+    ],
+    "lifting": "Parcels up to 20 kg",
+    "apply_question": "Which days are you usually free?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 11,
+    "conditions": {}
+  },
+  {
+    "id": "job-lahilinja-bus",
+    "employer_id": "emp-lahilinja",
+    "title": "Bus driver",
+    "field": "logistics",
+    "duties": [
+      "Drive local bus routes in west Espoo.",
+      "Help passengers with prams and wheelchairs.",
+      "Check the bus before and after your shift."
+    ],
+    "address": "Kauklahdentie 40",
+    "district": "kauklahti",
+    "lat": 60.18637,
+    "lon": 24.60056,
+    "work_mode": "on_site",
+    "pay_amount": 16.1,
+    "pay_unit": "hour",
+    "pay_note": "Rotating shift list; evening, Saturday and Sunday supplements.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "05:30",
+        "end": "13:30"
+      },
+      {
+        "day": "tue",
+        "start": "05:30",
+        "end": "13:30"
+      },
+      {
+        "day": "wed",
+        "start": "05:30",
+        "end": "13:30"
+      },
+      {
+        "day": "thu",
+        "start": "05:30",
+        "end": "13:30"
+      },
+      {
+        "day": "fri",
+        "start": "05:30",
+        "end": "13:30"
+      },
+      {
+        "day": "mon",
+        "start": "13:30",
+        "end": "21:30"
+      },
+      {
+        "day": "tue",
+        "start": "13:30",
+        "end": "21:30"
+      },
+      {
+        "day": "wed",
+        "start": "13:30",
+        "end": "21:30"
+      },
+      {
+        "day": "thu",
+        "start": "13:30",
+        "end": "21:30"
+      },
+      {
+        "day": "fri",
+        "start": "13:30",
+        "end": "21:30"
+      },
+      {
+        "day": "sat",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "sun",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "D driving licence",
+      "Driver's professional competence (ammattipätevyys)"
+    ],
+    "onboarding": "Route training on each line before you drive alone.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "answer passenger questions and talk with traffic control"
+      },
+      {
+        "language": "Swedish",
+        "level": "A2",
+        "task": "help Swedish-speaking passengers (nice to have)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me how you handle a stressful situation in traffic.",
+    "cv_required": 0,
+    "positions": 4,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "seated_work": "yes",
+      "accessible_toilet": {
+        "value": "yes",
+        "note": "Staff toilets at route end stops."
+      },
+      "flexible_breaks": "no"
+    }
+  },
+  {
+    "id": "job-lahilinja-trainee",
+    "employer_id": "emp-lahilinja",
+    "title": "Bus driver trainee — we pay your D licence",
+    "field": "logistics",
+    "duties": [
+      "Take the D licence and professional competence training paid by us.",
+      "Practise driving with an instructor.",
+      "Work as a driver after you qualify (2-year commitment)."
+    ],
+    "address": "Kauklahdentie 40",
+    "district": "kauklahti",
+    "lat": 60.18637,
+    "lon": 24.60056,
+    "work_mode": "on_site",
+    "pay_amount": 12.8,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "traineeship",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B held for at least 1 year"
+    ],
+    "onboarding": "About 4 months of training with pay.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "pass the theory test in Finnish or Swedish"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Why would you like to drive a bus?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 12,
+    "conditions": {}
+  },
+  {
+    "id": "job-apaja-taxi",
+    "employer_id": "emp-apaja",
+    "title": "Transport service driver (taxi)",
+    "field": "logistics",
+    "duties": [
+      "Drive older and disabled passengers with an accessible taxi.",
+      "Help passengers in and out; secure wheelchairs.",
+      "Trips booked through the app — no street hailing."
+    ],
+    "address": "Hevosenkenkä 3",
+    "district": "leppavaara",
+    "lat": 60.22022,
+    "lon": 24.81503,
+    "work_mode": "on_site",
+    "pay_amount": 15.3,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "mon",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "tue",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "wed",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "thu",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "fri",
+        "start": "15:00",
+        "end": "23:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Taxi driver's licence (taksinkuljettajan ajolupa)",
+      "Driving licence B"
+    ],
+    "onboarding": "Wheelchair-securing training and two days with a driver.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with passengers"
+      },
+      {
+        "language": "Swedish",
+        "level": "A2",
+        "task": "greet Swedish-speaking passengers"
+      }
+    ],
+    "lifting": "Helping passengers; wheelchairs with a ramp",
+    "apply_question": "Tell me about a time you helped someone who needed extra time.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "seated_work": "yes",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-apaja-school",
+    "employer_id": "emp-apaja",
+    "title": "School transport driver — mornings and afternoons",
+    "field": "logistics",
+    "duties": [
+      "Drive pupils to and from school in a minibus.",
+      "Same route and children every day."
+    ],
+    "address": "Hevosenkenkä 3",
+    "district": "leppavaara",
+    "lat": 60.22022,
+    "lon": 24.81503,
+    "work_mode": "on_site",
+    "pay_amount": 15.3,
+    "pay_unit": "hour",
+    "pay_note": "School year August–June; split shift.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "09:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "09:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "09:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "09:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "09:00"
+      },
+      {
+        "day": "mon",
+        "start": "13:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "13:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "13:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "13:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "13:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 25,
+    "contract": "fixed_term",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Taxi driver's licence (taksinkuljettajan ajolupa)",
+      "Driving licence B",
+      "Criminal record extract for work with children"
+    ],
+    "onboarding": "You drive the route once with the previous driver.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with children and parents"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Have you worked with children?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 9,
+    "conditions": {
+      "seated_work": "yes"
+    }
+  },
+  {
+    "id": "job-kuura-rn",
+    "employer_id": "emp-kuura",
+    "title": "Registered nurse (sairaanhoitaja)",
+    "field": "health",
+    "duties": [
+      "Nurse appointments: vaccinations, wound care, blood pressure follow-up.",
+      "Assist doctors in small procedures.",
+      "Phone and chat advice to patients."
+    ],
+    "address": "Leppävaarankatu 7",
+    "district": "leppavaara",
+    "lat": 60.2187,
+    "lon": 24.81144,
+    "work_mode": "on_site",
+    "pay_amount": 3150,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "New graduates welcome; 1 year of experience is a plus.",
+    "qualifications": [
+      "Valvira registration (JulkiTerhikki) as a registered nurse"
+    ],
+    "onboarding": "Two-week orientation with a named mentor nurse.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "advise patients and write patient records"
+      },
+      {
+        "language": "Swedish",
+        "level": "B1",
+        "task": "serve Swedish-speaking patients (bonus)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What kind of nursing work do you enjoy most and why?",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": {
+        "value": "yes",
+        "note": "Desk and stool in every nurse room."
+      },
+      "flexible_breaks": "no",
+      "quiet_environment": "yes",
+      "written_instructions": "yes",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-kuura-rn-evening",
+    "employer_id": "emp-kuura",
+    "title": "Registered nurse — evening and Saturday clinic",
+    "field": "health",
+    "duties": [
+      "Nurse appointments in the evening clinic.",
+      "Triage walk-in patients."
+    ],
+    "address": "Leppävaarankatu 7",
+    "district": "leppavaara",
+    "lat": 60.2187,
+    "lon": 24.81144,
+    "work_mode": "on_site",
+    "pay_amount": 24.5,
+    "pay_unit": "hour",
+    "pay_note": "Evening and Saturday supplements included in the hourly pay.",
+    "shifts": [
+      {
+        "day": "tue",
+        "start": "16:00",
+        "end": "21:00"
+      },
+      {
+        "day": "thu",
+        "start": "16:00",
+        "end": "21:00"
+      },
+      {
+        "day": "sat",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 10,
+    "hours_max": 16,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Valvira registration (JulkiTerhikki) as a registered nurse"
+    ],
+    "onboarding": "One orientation shift.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "advise patients"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Which evenings fit you?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 14,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes"
+    }
+  },
+  {
+    "id": "job-kuura-pn",
+    "employer_id": "emp-kuura",
+    "title": "Practical nurse (lähihoitaja) — clinic",
+    "field": "health",
+    "duties": [
+      "Prepare treatment rooms and instruments.",
+      "Take blood samples and ECGs after training.",
+      "Book follow-up appointments."
+    ],
+    "address": "Leppävaarankatu 7",
+    "district": "leppavaara",
+    "lat": 60.2187,
+    "lon": 24.81144,
+    "work_mode": "on_site",
+    "pay_amount": 2580,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:30",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Valvira registration (JulkiTerhikki) as a practical nurse"
+    ],
+    "onboarding": "Sampling training in your first two weeks.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with patients"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about your practical nurse studies or work.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-kuura-lab",
+    "employer_id": "emp-kuura",
+    "title": "Laboratory nurse — mornings",
+    "field": "health",
+    "duties": [
+      "Take blood samples from 07:00 when the lab opens.",
+      "Send samples to the central lab and record them."
+    ],
+    "address": "Leppävaarankatu 7",
+    "district": "leppavaara",
+    "lat": 60.2187,
+    "lon": 24.81144,
+    "work_mode": "on_site",
+    "pay_amount": 2850,
+    "pay_unit": "month",
+    "pay_note": "Part-time 30 h/week, monthly pay shown for full-time equivalent.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "13:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "13:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "13:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "13:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "13:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 30,
+    "contract": "fixed_term",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Valvira registration (JulkiTerhikki) (biomedical laboratory scientist or nurse)"
+    ],
+    "onboarding": "One week with the lab nurse.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with patients"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve English-speaking patients"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "How much venipuncture experience do you have?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 22,
+    "conditions": {
+      "seated_work": "yes"
+    }
+  },
+  {
+    "id": "job-kuura-reception",
+    "employer_id": "emp-kuura",
+    "title": "Clinic receptionist",
+    "field": "customer_service",
+    "duties": [
+      "Check in patients and take payments.",
+      "Answer the phone and book appointments.",
+      "Keep the waiting room tidy."
+    ],
+    "address": "Leppävaarankatu 7",
+    "district": "leppavaara",
+    "lat": 60.2187,
+    "lon": 24.81144,
+    "work_mode": "on_site",
+    "pay_amount": 2350,
+    "pay_unit": "month",
+    "pay_note": "Morning and evening shifts in turns.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "mon",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "tue",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "wed",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "thu",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "fri",
+        "start": "12:00",
+        "end": "20:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Booking system training in the first week.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "serve patients on the phone"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve patients"
+      },
+      {
+        "language": "Swedish",
+        "level": "A2",
+        "task": "greet patients (nice to have)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a time you served a stressed customer.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "assistive_tech_ok": "yes",
+      "quiet_environment": "no"
+    }
+  },
+  {
+    "id": "job-hymy-dental",
+    "employer_id": "emp-hymy",
+    "title": "Dental assistant",
+    "field": "health",
+    "duties": [
+      "Assist the dentist chair-side.",
+      "Clean and sterilise instruments.",
+      "Prepare materials and keep patient records."
+    ],
+    "address": "Tapionaukio 5",
+    "district": "tapiola",
+    "lat": 60.17672,
+    "lon": 24.80622,
+    "work_mode": "on_site",
+    "pay_amount": 2480,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Dental assistant qualification (hammashoitaja) or practical nurse with dental studies"
+    ],
+    "onboarding": "Two weeks with our senior assistant.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with patients"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What do you know about infection control in dental work?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes"
+    }
+  },
+  {
+    "id": "job-hymy-apprentice",
+    "employer_id": "emp-hymy",
+    "title": "Dental assistant apprentice",
+    "field": "health",
+    "duties": [
+      "Learn sterilisation and chair-side work.",
+      "Study for the qualification through an apprenticeship (oppisopimus)."
+    ],
+    "address": "Tapionaukio 5",
+    "district": "tapiola",
+    "lat": 60.17672,
+    "lon": 24.80622,
+    "work_mode": "on_site",
+    "pay_amount": 2100,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "traineeship",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A named mentor for the whole training.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with patients and study"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Why does dental care interest you?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 27,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes"
+    }
+  },
+  {
+    "id": "job-kaisla-pharmacy",
+    "employer_id": "emp-kaisla",
+    "title": "Pharmacy assistant (tekninen apulainen)",
+    "field": "health",
+    "duties": [
+      "Unpack deliveries and fill shelves.",
+      "Serve customers at the self-care products till.",
+      "Collect prescription orders for the pharmacists."
+    ],
+    "address": "Espoonlahdenkatu 4",
+    "district": "espoonlahti",
+    "lat": 60.14851,
+    "lon": 24.66034,
+    "work_mode": "on_site",
+    "pay_amount": 14.9,
+    "pay_unit": "hour",
+    "pay_note": "Evening and Saturday supplements.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "tue",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "wed",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "thu",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "fri",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "sat",
+        "start": "10:00",
+        "end": "18:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 30,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A week with a colleague; product training online.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "serve customers"
+      },
+      {
+        "language": "Swedish",
+        "level": "B1",
+        "task": "serve Swedish-speaking customers (welcome)"
+      }
+    ],
+    "lifting": "Boxes up to 10 kg",
+    "apply_question": "Tell me about your customer service experience.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-kaste-pn",
+    "employer_id": "emp-kaste",
+    "title": "Practical nurse — home care",
+    "field": "care",
+    "duties": [
+      "Visit older clients at home: medication, wound care, meals.",
+      "Drive between clients with a company car.",
+      "Write visit notes on a phone."
+    ],
+    "address": "Kirkkojärventie 8",
+    "district": "espoon_keskus",
+    "lat": 60.20606,
+    "lon": 24.65592,
+    "work_mode": "on_site",
+    "pay_amount": 2720,
+    "pay_unit": "month",
+    "pay_note": "Rotating shifts; every third weekend.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "sat",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "sun",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "mon",
+        "start": "13:30",
+        "end": "21:00"
+      },
+      {
+        "day": "tue",
+        "start": "13:30",
+        "end": "21:00"
+      },
+      {
+        "day": "wed",
+        "start": "13:30",
+        "end": "21:00"
+      },
+      {
+        "day": "thu",
+        "start": "13:30",
+        "end": "21:00"
+      },
+      {
+        "day": "fri",
+        "start": "13:30",
+        "end": "21:00"
+      },
+      {
+        "day": "sat",
+        "start": "13:30",
+        "end": "21:00"
+      },
+      {
+        "day": "sun",
+        "start": "13:30",
+        "end": "21:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Valvira registration (JulkiTerhikki) as a practical nurse",
+      "Driving licence B"
+    ],
+    "onboarding": "Two weeks with a mentor on the same route.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with clients and write visit notes"
+      }
+    ],
+    "lifting": "Helping clients move; lifting aids at homes",
+    "apply_question": "Tell me about a client or relative you have cared for.",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 1,
+    "conditions": {
+      "written_instructions": "yes",
+      "seated_work": "no",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-kaste-homecare",
+    "employer_id": "emp-kaste",
+    "title": "Home care worker (hoiva-avustaja)",
+    "field": "care",
+    "duties": [
+      "Help clients with washing, dressing and meals.",
+      "Cleaning and shopping help.",
+      "Travel between clients by bus or e-bike."
+    ],
+    "address": "Kirkkojärventie 8",
+    "district": "espoon_keskus",
+    "lat": 60.20606,
+    "lon": 24.65592,
+    "work_mode": "on_site",
+    "pay_amount": 14.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 25,
+    "hours_max": 35,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Paid care assistant training (hoiva-avustaja) during your first year.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with clients"
+      }
+    ],
+    "lifting": "Helping clients stand — with support",
+    "apply_question": "Why do you want to work with older people?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {}
+  },
+  {
+    "id": "job-kaste-weekend",
+    "employer_id": "emp-kaste",
+    "title": "Home care worker — weekends",
+    "field": "care",
+    "duties": [
+      "Weekend visits: meals and medicine reminders.",
+      "Keep clients company."
+    ],
+    "address": "Kirkkojärventie 8",
+    "district": "espoon_keskus",
+    "lat": 60.20606,
+    "lon": 24.65592,
+    "work_mode": "on_site",
+    "pay_amount": 14.6,
+    "pay_unit": "hour",
+    "pay_note": "Sunday double pay.",
+    "shifts": [
+      {
+        "day": "sat",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "sun",
+        "start": "08:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 12,
+    "hours_max": 12,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Two training shifts with a colleague.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with clients"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Can you work every weekend?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "advisor",
+    "confirmed_days_ago": 25,
+    "conditions": {}
+  },
+  {
+    "id": "job-silta-evening",
+    "employer_id": "emp-silta",
+    "title": "Personal assistant for a wheelchair user — evenings",
+    "field": "care",
+    "duties": [
+      "Help a young man in a wheelchair with evening routines.",
+      "Cooking, shopping and getting to hobbies.",
+      "He tells you what he needs — you are his hands."
+    ],
+    "address": "Merituulentie 30",
+    "district": "niittykumpu",
+    "lat": 60.17014,
+    "lon": 24.77299,
+    "work_mode": "on_site",
+    "pay_amount": 13.9,
+    "pay_unit": "hour",
+    "pay_note": "Evening supplement included.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "17:00",
+        "end": "21:00"
+      },
+      {
+        "day": "tue",
+        "start": "17:00",
+        "end": "21:00"
+      },
+      {
+        "day": "wed",
+        "start": "17:00",
+        "end": "21:00"
+      },
+      {
+        "day": "thu",
+        "start": "17:00",
+        "end": "21:00"
+      },
+      {
+        "day": "fri",
+        "start": "17:00",
+        "end": "21:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 20,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Two evenings with the current assistant. No qualification needed.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with the client"
+      }
+    ],
+    "lifting": "Transfers with a ceiling lift; no heavy lifting",
+    "apply_question": "What would make you a good assistant for someone your age?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-silta-english",
+    "employer_id": "emp-silta",
+    "title": "Personal assistant — English-speaking student",
+    "field": "care",
+    "duties": [
+      "Assist a visually impaired university student on campus.",
+      "Guide to lectures, read signs, help with lunch.",
+      "Some note-taking."
+    ],
+    "address": "Otakaari 20",
+    "district": "otaniemi",
+    "lat": 60.18507,
+    "lon": 24.82806,
+    "work_mode": "on_site",
+    "pay_amount": 13.9,
+    "pay_unit": "hour",
+    "pay_note": "Academic year, September–May.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "09:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "09:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "09:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "09:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 15,
+    "hours_max": 20,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One week together with the current assistant.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "talk and take notes"
+      },
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "not needed"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a time you helped someone get around or learn.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 9,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-silta-swedish",
+    "employer_id": "emp-silta",
+    "title": "Personal assistant — weekends, Swedish-speaking client",
+    "field": "care",
+    "duties": [
+      "Help an older woman with walking, shopping and cooking.",
+      "Accompany her to church and concerts."
+    ],
+    "address": "Itätuulenkuja 6",
+    "district": "tapiola",
+    "lat": 60.1748,
+    "lon": 24.80535,
+    "work_mode": "on_site",
+    "pay_amount": 14.1,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "sat",
+        "start": "10:00",
+        "end": "16:00"
+      },
+      {
+        "day": "sun",
+        "start": "10:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 12,
+    "hours_max": 12,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Meet the client first over coffee.",
+    "languages": [
+      {
+        "language": "Swedish",
+        "level": "B1",
+        "task": "talk with the client"
+      },
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "small talk"
+      }
+    ],
+    "lifting": "Light support when walking",
+    "apply_question": "What do you enjoy doing on weekends?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes"
+    }
+  },
+  {
+    "id": "job-satakieli-teacher",
+    "employer_id": "emp-satakieli",
+    "title": "Early childhood teacher (varhaiskasvatuksen opettaja)",
+    "field": "education",
+    "duties": [
+      "Plan and lead the pedagogy of a group of 3–5-year-olds.",
+      "Work in a team with two childcare assistants.",
+      "Parent meetings and early childhood education plans."
+    ],
+    "address": "Kuitinmäentie 22",
+    "district": "olari",
+    "lat": 60.17155,
+    "lon": 24.74356,
+    "work_mode": "on_site",
+    "pay_amount": 2950,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "mon",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "tue",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "wed",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "thu",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "fri",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Bachelor of Education (ECE) or Bachelor of Social Services with ECE teacher qualification",
+      "Criminal record extract for work with children"
+    ],
+    "onboarding": "Orientation week before you start with the group.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "talk with children and parents and write plans"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about an activity that worked well with small children.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no",
+      "flexible_breaks": "no",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-satakieli-english",
+    "employer_id": "emp-satakieli",
+    "title": "English-speaking ECE teacher — language-immersion group",
+    "field": "education",
+    "duties": [
+      "Lead an English-language group of 4–6-year-olds.",
+      "Plan play-based English activities."
+    ],
+    "address": "Kuitinmäentie 22",
+    "district": "olari",
+    "lat": 60.17155,
+    "lon": 24.74356,
+    "work_mode": "on_site",
+    "pay_amount": 2950,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Teacher qualification in early childhood education (degree recognised by the Finnish National Agency for Education)"
+    ],
+    "onboarding": "Two weeks with our pedagogical lead.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "C1",
+        "task": "teach children"
+      },
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with colleagues and parents"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "How would you help a child who does not yet understand English?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 11,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-satakieli-assistant",
+    "employer_id": "emp-satakieli",
+    "title": "Childcare assistant (lastenhoitaja)",
+    "field": "education",
+    "duties": [
+      "Care for children in daily routines: meals, naps, outdoors.",
+      "Support the teacher's activities."
+    ],
+    "address": "Kuitinmäentie 22",
+    "district": "olari",
+    "lat": 60.17155,
+    "lon": 24.74356,
+    "work_mode": "on_site",
+    "pay_amount": 2380,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "mon",
+        "start": "09:30",
+        "end": "17:30"
+      },
+      {
+        "day": "tue",
+        "start": "09:30",
+        "end": "17:30"
+      },
+      {
+        "day": "wed",
+        "start": "09:30",
+        "end": "17:30"
+      },
+      {
+        "day": "thu",
+        "start": "09:30",
+        "end": "17:30"
+      },
+      {
+        "day": "fri",
+        "start": "09:30",
+        "end": "17:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Vocational qualification in education and guidance or practical nurse (or studying)",
+      "Criminal record extract for work with children"
+    ],
+    "onboarding": "A buddy colleague for your first month.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with children"
+      }
+    ],
+    "lifting": "Lifting small children",
+    "apply_question": "What do you enjoy doing with children?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 7,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-kuusikko-assistant",
+    "employer_id": "emp-kuusikko",
+    "title": "School assistant (koulunkäynnin ohjaaja)",
+    "field": "education",
+    "duties": [
+      "Support pupils with learning needs in class.",
+      "Help in breaks and lunch.",
+      "Work with the class teacher's plan."
+    ],
+    "address": "Kirkkojärventie 34",
+    "district": "espoon_keskus",
+    "lat": 60.20613,
+    "lon": 24.65694,
+    "work_mode": "on_site",
+    "pay_amount": 13.8,
+    "pay_unit": "hour",
+    "pay_note": "School year August–May.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "13:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "13:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "13:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "13:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "13:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 25,
+    "hours_max": 25,
+    "contract": "fixed_term",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Criminal record extract for work with children"
+    ],
+    "onboarding": "Meet the teacher and the pupils in August.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "help pupils with tasks"
+      },
+      {
+        "language": "Arabic",
+        "level": "B1",
+        "task": "support Arabic-speaking pupils (bonus)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a time you helped a child learn something.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 10,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-kuusikko-club",
+    "employer_id": "emp-kuusikko",
+    "title": "After-school club instructor",
+    "field": "education",
+    "duties": [
+      "Run play, crafts and outdoor games for 1st–2nd graders.",
+      "Serve a snack and make sure everyone is picked up."
+    ],
+    "address": "Kirkkojärventie 34",
+    "district": "espoon_keskus",
+    "lat": 60.20613,
+    "lon": 24.65694,
+    "work_mode": "on_site",
+    "pay_amount": 13.0,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "12:30",
+        "end": "16:30"
+      },
+      {
+        "day": "tue",
+        "start": "12:30",
+        "end": "16:30"
+      },
+      {
+        "day": "wed",
+        "start": "12:30",
+        "end": "16:30"
+      },
+      {
+        "day": "thu",
+        "start": "12:30",
+        "end": "16:30"
+      },
+      {
+        "day": "fri",
+        "start": "12:30",
+        "end": "16:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 20,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Criminal record extract for work with children"
+    ],
+    "onboarding": "One afternoon alongside the club leader.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with children and parents"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What games or crafts could you run with children?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 13,
+    "conditions": {
+      "step_free_entrance": "yes"
+    }
+  },
+  {
+    "id": "job-kuusikko-cook",
+    "employer_id": "emp-kuusikko",
+    "title": "School cook — lunch kitchen",
+    "field": "restaurant",
+    "duties": [
+      "Cook lunch for 400 pupils from set recipes.",
+      "Prepare special diets.",
+      "Wash up and clean the kitchen."
+    ],
+    "address": "Kirkkojärventie 34",
+    "district": "espoon_keskus",
+    "lat": 60.20613,
+    "lon": 24.65694,
+    "work_mode": "on_site",
+    "pay_amount": 14.4,
+    "pay_unit": "hour",
+    "pay_note": "Holidays in summer.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:30",
+        "end": "14:30"
+      },
+      {
+        "day": "tue",
+        "start": "06:30",
+        "end": "14:30"
+      },
+      {
+        "day": "wed",
+        "start": "06:30",
+        "end": "14:30"
+      },
+      {
+        "day": "thu",
+        "start": "06:30",
+        "end": "14:30"
+      },
+      {
+        "day": "fri",
+        "start": "06:30",
+        "end": "14:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)"
+    ],
+    "onboarding": "Recipes and diet lists are written; a week with the head cook.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read recipes and diet lists"
+      }
+    ],
+    "lifting": "Pots up to 15 kg; trolleys",
+    "apply_question": "Have you cooked in big quantities?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "written_instructions": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-havu-cook",
+    "employer_id": "emp-havu",
+    "title": "Cook",
+    "field": "restaurant",
+    "duties": [
+      "Cook lunch buffet and à la carte dishes.",
+      "Prepare ingredients and follow recipes.",
+      "Keep the kitchen clean and do self-checks."
+    ],
+    "address": "Leppävaarankatu 3",
+    "district": "leppavaara",
+    "lat": 60.22086,
+    "lon": 24.81538,
+    "work_mode": "on_site",
+    "pay_amount": 15.3,
+    "pay_unit": "hour",
+    "pay_note": "Evening supplement after 18:00.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "sat",
+        "start": "14:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)",
+      "Cook's vocational qualification or 2 years in a restaurant kitchen"
+    ],
+    "onboarding": "Trial shift, then one week with the head chef.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "read orders"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk in the kitchen"
+      }
+    ],
+    "lifting": "Pots and crates up to 15 kg",
+    "apply_question": "What is your favourite dish to cook for 100 people?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "seated_work": "no",
+      "flexible_breaks": "no",
+      "quiet_environment": "no"
+    }
+  },
+  {
+    "id": "job-havu-dish",
+    "employer_id": "emp-havu",
+    "title": "Dishwasher — evenings",
+    "field": "restaurant",
+    "duties": [
+      "Run the dish machine and wash pots.",
+      "Take out rubbish and recycling.",
+      "Clean the kitchen floor at closing."
+    ],
+    "address": "Leppävaarankatu 3",
+    "district": "leppavaara",
+    "lat": 60.22086,
+    "lon": 24.81538,
+    "work_mode": "on_site",
+    "pay_amount": 12.9,
+    "pay_unit": "hour",
+    "pay_note": "Evening supplement after 18:00.",
+    "shifts": [
+      {
+        "day": "wed",
+        "start": "16:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "16:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "16:00",
+        "end": "22:00"
+      },
+      {
+        "day": "sat",
+        "start": "16:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 18,
+    "hours_max": 24,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One shift with the kitchen porter.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with the cooks — Finnish not needed"
+      }
+    ],
+    "lifting": "Racks and crates up to 12 kg",
+    "apply_question": "Which evenings can you work?",
+    "cv_required": 0,
+    "positions": 2,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 1,
+    "conditions": {
+      "seated_work": "no",
+      "written_instructions": "yes",
+      "sign_language_ok": {
+        "value": "yes",
+        "note": "One of our cooks signs FinSL."
+      }
+    }
+  },
+  {
+    "id": "job-havu-dish-weekend",
+    "employer_id": "emp-havu",
+    "title": "Kitchen helper — weekends, 4–8 h a week",
+    "field": "restaurant",
+    "duties": [
+      "Wash dishes and help prepare salads at weekend brunch."
+    ],
+    "address": "Leppävaarankatu 3",
+    "district": "leppavaara",
+    "lat": 60.22086,
+    "lon": 24.81538,
+    "work_mode": "on_site",
+    "pay_amount": 12.9,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "sat",
+        "start": "10:00",
+        "end": "14:00"
+      },
+      {
+        "day": "sun",
+        "start": "10:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 4,
+    "hours_max": 8,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi) within 3 months"
+    ],
+    "onboarding": "We show you everything on the first shift.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with the cooks"
+      },
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "basic words"
+      }
+    ],
+    "lifting": "Crates up to 10 kg",
+    "apply_question": "Saturday, Sunday or both?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 9,
+    "conditions": {}
+  },
+  {
+    "id": "job-fornello-pizza",
+    "employer_id": "emp-fornello",
+    "title": "Pizza baker",
+    "field": "restaurant",
+    "duties": [
+      "Make dough and stretch pizzas.",
+      "Bake in a wood-fired oven.",
+      "Keep the station clean."
+    ],
+    "address": "Ulappakatu 6",
+    "district": "espoonlahti",
+    "lat": 60.14972,
+    "lon": 24.65738,
+    "work_mode": "on_site",
+    "pay_amount": 14.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "wed",
+        "start": "15:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "15:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "15:00",
+        "end": "22:00"
+      },
+      {
+        "day": "sat",
+        "start": "15:00",
+        "end": "22:00"
+      },
+      {
+        "day": "sun",
+        "start": "15:00",
+        "end": "22:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 25,
+    "hours_max": 35,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)"
+    ],
+    "onboarding": "Two shifts with our pizzaiolo.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with colleagues"
+      },
+      {
+        "language": "Italian",
+        "level": "A2",
+        "task": "with the owner (nice to have)"
+      }
+    ],
+    "lifting": "Flour sacks up to 25 kg",
+    "apply_question": "How many pizzas an hour can you make?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "advisor",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-pavut-barista",
+    "employer_id": "emp-pavut",
+    "title": "Barista",
+    "field": "restaurant",
+    "duties": [
+      "Make espresso drinks and filter coffee.",
+      "Serve pastries and take payments.",
+      "Talk with customers about our coffees."
+    ],
+    "address": "Otakaari 1",
+    "district": "otaniemi",
+    "lat": 60.18578,
+    "lon": 24.83015,
+    "work_mode": "on_site",
+    "pay_amount": 13.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 15,
+    "hours_max": 30,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)"
+    ],
+    "onboarding": "Barista training with our roaster in the first week.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve students and staff — Finnish not needed"
+      }
+    ],
+    "lifting": "Milk crates up to 10 kg",
+    "apply_question": "What coffee do you make best?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-pavut-morning",
+    "employer_id": "emp-pavut",
+    "title": "Barista — early mornings",
+    "field": "restaurant",
+    "duties": [
+      "Open the café at 07:00 and bake croissants.",
+      "Serve the morning rush."
+    ],
+    "address": "Otakaari 1",
+    "district": "otaniemi",
+    "lat": 60.18578,
+    "lon": 24.83015,
+    "work_mode": "on_site",
+    "pay_amount": 13.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:30",
+        "end": "11:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:30",
+        "end": "11:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:30",
+        "end": "11:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:30",
+        "end": "11:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:30",
+        "end": "11:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 15,
+    "hours_max": 22.5,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Hygiene passport (hygieniapassi)"
+    ],
+    "onboarding": "We train you on the espresso machine.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve customers"
+      },
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "serve customers (nice to have)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Can you be here at 6:30 every weekday?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 12,
+    "conditions": {
+      "step_free_entrance": "yes"
+    }
+  },
+  {
+    "id": "job-laguuni-breakfast",
+    "employer_id": "emp-laguuni",
+    "title": "Breakfast server",
+    "field": "restaurant",
+    "duties": [
+      "Fill the breakfast buffet and clear tables.",
+      "Make coffee and greet guests."
+    ],
+    "address": "Keilaranta 8",
+    "district": "otaniemi",
+    "lat": 60.18682,
+    "lon": 24.82936,
+    "work_mode": "on_site",
+    "pay_amount": 13.4,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "11:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "11:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "11:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "11:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "11:00"
+      },
+      {
+        "day": "sat",
+        "start": "07:00",
+        "end": "12:00"
+      },
+      {
+        "day": "sun",
+        "start": "07:00",
+        "end": "12:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 15,
+    "hours_max": 25,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Two shifts with a colleague.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve hotel guests"
+      },
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "greet guests"
+      }
+    ],
+    "lifting": "Trays up to 8 kg",
+    "apply_question": "Tell me about a time you made a guest or customer happy.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-laguuni-reception",
+    "employer_id": "emp-laguuni",
+    "title": "Hotel receptionist",
+    "field": "customer_service",
+    "duties": [
+      "Check guests in and out.",
+      "Answer phone and e-mail bookings.",
+      "Solve guests' problems — taxis, lost keys, restaurant tips."
+    ],
+    "address": "Keilaranta 8",
+    "district": "otaniemi",
+    "lat": 60.18682,
+    "lon": 24.82936,
+    "work_mode": "on_site",
+    "pay_amount": 14.6,
+    "pay_unit": "hour",
+    "pay_note": "Rotating morning and evening shifts; weekend supplements.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "sat",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "sun",
+        "start": "07:00",
+        "end": "15:00"
+      },
+      {
+        "day": "mon",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "tue",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "wed",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "thu",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "fri",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "sat",
+        "start": "15:00",
+        "end": "23:00"
+      },
+      {
+        "day": "sun",
+        "start": "15:00",
+        "end": "23:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Two weeks of training in the booking system.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "serve international guests"
+      },
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "serve Finnish guests"
+      },
+      {
+        "language": "Swedish",
+        "level": "A2",
+        "task": "greet Swedish guests (nice to have)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a difficult customer you helped.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": {
+        "value": "yes",
+        "note": "Stools behind the desk."
+      },
+      "assistive_tech_ok": "yes"
+    }
+  },
+  {
+    "id": "job-laguuni-night",
+    "employer_id": "emp-laguuni",
+    "title": "Night receptionist",
+    "field": "customer_service",
+    "duties": [
+      "Look after the hotel at night: late check-ins, phone, security rounds.",
+      "Night audit of the day's sales."
+    ],
+    "address": "Keilaranta 8",
+    "district": "otaniemi",
+    "lat": 60.18682,
+    "lon": 24.82936,
+    "work_mode": "on_site",
+    "pay_amount": 15.8,
+    "pay_unit": "hour",
+    "pay_note": "Night supplement included.",
+    "shifts": [],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 32,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Two nights with the current night receptionist.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "serve guests"
+      },
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "serve guests"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "How do you stay alert on night shifts?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 20,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes"
+    }
+  },
+  {
+    "id": "job-laguuni-housekeeper",
+    "employer_id": "emp-laguuni",
+    "title": "Hotel housekeeper",
+    "field": "cleaning",
+    "duties": [
+      "Clean and prepare guest rooms.",
+      "Change bed linen and refill supplies.",
+      "Report damage to the supervisor."
+    ],
+    "address": "Keilaranta 8",
+    "district": "otaniemi",
+    "lat": 60.18682,
+    "lon": 24.82936,
+    "work_mode": "on_site",
+    "pay_amount": 13.2,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "sat",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "sun",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A colleague works with you for the first 3 days; picture checklist for every room.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "read the room list"
+      },
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "greet guests"
+      }
+    ],
+    "lifting": "Linen trolley; mattresses lifted in pairs",
+    "apply_question": "When can you start?",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "seated_work": "no",
+      "written_instructions": "yes",
+      "flexible_breaks": "no"
+    }
+  },
+  {
+    "id": "job-kulma-reception",
+    "employer_id": "emp-kulma",
+    "title": "Receptionist — business centre",
+    "field": "customer_service",
+    "duties": [
+      "Greet visitors and hand out keys.",
+      "Book meeting rooms; answer the phone.",
+      "Order coffee and supplies."
+    ],
+    "address": "Tapionaukio 2",
+    "district": "tapiola",
+    "lat": 60.17743,
+    "lon": 24.80594,
+    "work_mode": "on_site",
+    "pay_amount": 2380,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One week with the office manager.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "serve visitors"
+      },
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "serve international tenants"
+      },
+      {
+        "language": "Swedish",
+        "level": "B1",
+        "task": "serve Swedish-speaking tenants (welcome)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me why you would enjoy front-desk work.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 13,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "quiet_environment": "no",
+      "assistive_tech_ok": "yes",
+      "adjustments_negotiable": "yes"
+    }
+  },
+  {
+    "id": "job-kulma-office",
+    "employer_id": "emp-kulma",
+    "title": "Office assistant",
+    "field": "office",
+    "duties": [
+      "Post, archiving and invoice scanning.",
+      "Update tenant lists in Excel.",
+      "Help the reception at lunchtime."
+    ],
+    "address": "Tapionaukio 2",
+    "district": "tapiola",
+    "lat": 60.17743,
+    "lon": 24.80594,
+    "work_mode": "on_site",
+    "pay_amount": 2300,
+    "pay_unit": "month",
+    "pay_note": "Monthly pay shown for full-time; 30 h/week = about 1,840 €.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 30,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Written step-by-step guides for every task.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "read and file letters"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Which computer programs do you use?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "written_instructions": "yes",
+      "assistive_tech_ok": "yes"
+    }
+  },
+  {
+    "id": "job-vahti-guard",
+    "employer_id": "emp-vahti",
+    "title": "Security guard",
+    "field": "customer_service",
+    "duties": [
+      "Guard shopping centres and offices; patrol and respond to alarms.",
+      "Help customers and staff.",
+      "Write incident reports."
+    ],
+    "address": "Hevosenkenkä 9",
+    "district": "leppavaara",
+    "lat": 60.22021,
+    "lon": 24.81544,
+    "work_mode": "on_site",
+    "pay_amount": 15.6,
+    "pay_unit": "hour",
+    "pay_note": "Evening, night and weekend supplements.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "sat",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "sun",
+        "start": "06:00",
+        "end": "14:00"
+      },
+      {
+        "day": "mon",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "tue",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "wed",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "thu",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "fri",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "sat",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "sun",
+        "start": "14:00",
+        "end": "22:00"
+      },
+      {
+        "day": "mon",
+        "start": "22:00",
+        "end": "06:00"
+      },
+      {
+        "day": "tue",
+        "start": "22:00",
+        "end": "06:00"
+      },
+      {
+        "day": "wed",
+        "start": "22:00",
+        "end": "06:00"
+      },
+      {
+        "day": "thu",
+        "start": "22:00",
+        "end": "06:00"
+      },
+      {
+        "day": "fri",
+        "start": "22:00",
+        "end": "06:00"
+      },
+      {
+        "day": "sat",
+        "start": "22:00",
+        "end": "06:00"
+      },
+      {
+        "day": "sun",
+        "start": "22:00",
+        "end": "06:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Security guard card (vartijakortti)",
+      "First aid EA1"
+    ],
+    "onboarding": "Two weeks of site training with a senior guard.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with the public and write reports"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "help visitors"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a situation you calmed down.",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "seated_work": "no",
+      "flexible_breaks": "no"
+    }
+  },
+  {
+    "id": "job-vahti-event",
+    "employer_id": "emp-vahti",
+    "title": "Event steward (järjestyksenvalvoja) — gig",
+    "field": "seasonal",
+    "duties": [
+      "Check tickets and bags at concerts and sports events.",
+      "Guide crowds and help visitors."
+    ],
+    "address": "Tapionaukio 1",
+    "district": "tapiola",
+    "lat": 60.17504,
+    "lon": 24.80611,
+    "work_mode": "on_site",
+    "pay_amount": 15.0,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 0,
+    "hours_max": 20,
+    "contract": "gig",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Crowd steward card (järjestyksenvalvojakortti)"
+    ],
+    "onboarding": "Event briefing before every shift.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "guide visitors"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "guide visitors"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Which weekends are you free?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 28,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-kauppakulma-cashier",
+    "employer_id": "emp-kauppakulma",
+    "title": "Cashier — evenings and weekends",
+    "field": "retail",
+    "duties": [
+      "Serve customers at the till and self-checkouts.",
+      "Help customers find products.",
+      "Fill shelves when it is quiet."
+    ],
+    "address": "Espoontori 2",
+    "district": "espoon_keskus",
+    "lat": 60.20584,
+    "lon": 24.65533,
+    "work_mode": "on_site",
+    "pay_amount": 12.9,
+    "pay_unit": "hour",
+    "pay_note": "Evening and Sunday supplements (retail collective agreement).",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "16:00",
+        "end": "21:30"
+      },
+      {
+        "day": "tue",
+        "start": "16:00",
+        "end": "21:30"
+      },
+      {
+        "day": "wed",
+        "start": "16:00",
+        "end": "21:30"
+      },
+      {
+        "day": "thu",
+        "start": "16:00",
+        "end": "21:30"
+      },
+      {
+        "day": "fri",
+        "start": "16:00",
+        "end": "21:30"
+      },
+      {
+        "day": "sat",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "sun",
+        "start": "12:00",
+        "end": "20:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 12,
+    "hours_max": 24,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Till training on your first two shifts.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "serve customers"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve customers"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a time you served customers.",
+    "cv_required": 0,
+    "positions": 3,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 1,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": {
+        "value": "yes",
+        "note": "Cashier chairs at every till."
+      }
+    }
+  },
+  {
+    "id": "job-kauppakulma-morning",
+    "employer_id": "emp-kauppakulma",
+    "title": "Store worker — early mornings",
+    "field": "retail",
+    "duties": [
+      "Unload deliveries and fill shelves before opening.",
+      "Check use-by dates."
+    ],
+    "address": "Espoontori 2",
+    "district": "espoon_keskus",
+    "lat": 60.20584,
+    "lon": 24.65533,
+    "work_mode": "on_site",
+    "pay_amount": 13.3,
+    "pay_unit": "hour",
+    "pay_note": "Early-morning supplement before 06:00.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "05:00",
+        "end": "10:00"
+      },
+      {
+        "day": "tue",
+        "start": "05:00",
+        "end": "10:00"
+      },
+      {
+        "day": "wed",
+        "start": "05:00",
+        "end": "10:00"
+      },
+      {
+        "day": "thu",
+        "start": "05:00",
+        "end": "10:00"
+      },
+      {
+        "day": "fri",
+        "start": "05:00",
+        "end": "10:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 25,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One shift with the morning team.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "basic words"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with the team"
+      }
+    ],
+    "lifting": "Crates up to 15 kg",
+    "apply_question": "Can you start at 5 every morning?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 7,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-oravanpesa-sales",
+    "employer_id": "emp-oravanpesa",
+    "title": "Sales assistant — home electronics",
+    "field": "retail",
+    "duties": [
+      "Advise customers on TVs, phones and appliances.",
+      "Sell warranties and arrange deliveries.",
+      "Keep shelves and displays tidy."
+    ],
+    "address": "Piispansilta 11",
+    "district": "matinkyla",
+    "lat": 60.15989,
+    "lon": 24.73539,
+    "work_mode": "on_site",
+    "pay_amount": 13.4,
+    "pay_unit": "hour",
+    "pay_note": "Sales bonus monthly.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "tue",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "wed",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "thu",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "fri",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "sat",
+        "start": "10:00",
+        "end": "18:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 25,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Product training online and a week with a colleague.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "advise customers"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "advise customers"
+      }
+    ],
+    "lifting": "Boxes up to 15 kg",
+    "apply_question": "Which product would you love to sell and why?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-oravanpesa-xmas",
+    "employer_id": "emp-oravanpesa",
+    "title": "Christmas season sales assistant",
+    "field": "seasonal",
+    "duties": [
+      "Serve customers in the toy and gift departments.",
+      "Wrap gifts and fill shelves.",
+      "Work 20 November – 6 January."
+    ],
+    "address": "Piispansilta 11",
+    "district": "matinkyla",
+    "lat": 60.15989,
+    "lon": 24.73539,
+    "work_mode": "on_site",
+    "pay_amount": 13.1,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "15:00",
+        "end": "21:00"
+      },
+      {
+        "day": "tue",
+        "start": "15:00",
+        "end": "21:00"
+      },
+      {
+        "day": "wed",
+        "start": "15:00",
+        "end": "21:00"
+      },
+      {
+        "day": "thu",
+        "start": "15:00",
+        "end": "21:00"
+      },
+      {
+        "day": "fri",
+        "start": "15:00",
+        "end": "21:00"
+      },
+      {
+        "day": "sat",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "sun",
+        "start": "10:00",
+        "end": "18:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 15,
+    "hours_max": 30,
+    "contract": "seasonal",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Half-day training in November.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "serve customers"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve customers"
+      }
+    ],
+    "lifting": "Boxes up to 10 kg",
+    "apply_question": "Which days in December can you work?",
+    "cv_required": 0,
+    "positions": 6,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 0,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-kielo-florist",
+    "employer_id": "emp-kielo",
+    "title": "Florist",
+    "field": "retail",
+    "duties": [
+      "Make bouquets and funeral arrangements.",
+      "Care for plants and serve customers.",
+      "Take phone and web-shop orders."
+    ],
+    "address": "Leppävaarankatu 1",
+    "district": "leppavaara",
+    "lat": 60.21851,
+    "lon": 24.8122,
+    "work_mode": "on_site",
+    "pay_amount": 13.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "tue",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "wed",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "thu",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "fri",
+        "start": "09:00",
+        "end": "17:00"
+      },
+      {
+        "day": "sat",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "Florist vocational qualification or 2 years in a flower shop"
+    ],
+    "onboarding": "A trial day.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "serve customers and take phone orders"
+      }
+    ],
+    "lifting": "Water buckets up to 12 kg",
+    "apply_question": "Bring a photo of an arrangement you made.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "advisor",
+    "confirmed_days_ago": 22,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-saksi-hair",
+    "employer_id": "emp-saksi",
+    "title": "Hairdresser",
+    "field": "customer_service",
+    "duties": [
+      "Cuts, colouring and styling.",
+      "Book your own appointments in the system.",
+      "Sell hair care products."
+    ],
+    "address": "Matinkatu 3",
+    "district": "matinkyla",
+    "lat": 60.15842,
+    "lon": 24.73756,
+    "work_mode": "on_site",
+    "pay_amount": 2200,
+    "pay_unit": "month",
+    "pay_note": "Guaranteed base pay + 40 % commission above target.",
+    "shifts": [
+      {
+        "day": "tue",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "wed",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "thu",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "fri",
+        "start": "10:00",
+        "end": "18:00"
+      },
+      {
+        "day": "sat",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [
+      "Hairdresser vocational qualification (parturi-kampaaja)"
+    ],
+    "onboarding": "Model day with the owner.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with clients"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with international clients"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What kind of cuts do you specialise in?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "advisor",
+    "confirmed_days_ago": 10,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-helmi-office",
+    "employer_id": "emp-helmi",
+    "title": "Office cleaner — early mornings",
+    "field": "cleaning",
+    "duties": [
+      "Clean offices before staff arrive.",
+      "Empty bins and refill kitchens.",
+      "Use a small floor machine."
+    ],
+    "address": "Niittykummuntie 6",
+    "district": "niittykumpu",
+    "lat": 60.17007,
+    "lon": 24.77562,
+    "work_mode": "on_site",
+    "pay_amount": 13.0,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "05:30",
+        "end": "09:30"
+      },
+      {
+        "day": "tue",
+        "start": "05:30",
+        "end": "09:30"
+      },
+      {
+        "day": "wed",
+        "start": "05:30",
+        "end": "09:30"
+      },
+      {
+        "day": "thu",
+        "start": "05:30",
+        "end": "09:30"
+      },
+      {
+        "day": "fri",
+        "start": "05:30",
+        "end": "09:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 20,
+    "hours_max": 20,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Picture-based cleaning plan; a colleague trains you for 3 mornings.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A1",
+        "task": "basic words"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "read the cleaning plan"
+      }
+    ],
+    "lifting": "Buckets up to 8 kg",
+    "apply_question": "Can you start at 5:30 on weekdays?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "written_instructions": "yes",
+      "quiet_environment": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-helmi-sidejob",
+    "employer_id": "emp-helmi",
+    "title": "Cleaner — side job, 4 h a week",
+    "field": "cleaning",
+    "duties": [
+      "Clean a small office every Tuesday and Thursday evening."
+    ],
+    "address": "Länsituulentie 10",
+    "district": "tapiola",
+    "lat": 60.1756,
+    "lon": 24.80404,
+    "work_mode": "on_site",
+    "pay_amount": 13.0,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "tue",
+        "start": "17:00",
+        "end": "19:00"
+      },
+      {
+        "day": "thu",
+        "start": "17:00",
+        "end": "19:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 4,
+    "hours_max": 4,
+    "contract": "permanent",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One evening with the supervisor.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "read the task list"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Are Tuesdays and Thursdays good for you?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "quiet_environment": "yes"
+    }
+  },
+  {
+    "id": "job-helmi-site",
+    "employer_id": "emp-helmi",
+    "title": "Construction site cleaner (rakennussiivous)",
+    "field": "cleaning",
+    "duties": [
+      "Final cleaning of new apartments before handover.",
+      "Wash windows, floors and kitchens."
+    ],
+    "address": "Kirkkojärventie 22",
+    "district": "espoon_keskus",
+    "lat": 60.20582,
+    "lon": 24.65864,
+    "work_mode": "on_site",
+    "pay_amount": 13.6,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "fixed_term",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Occupational safety card (työturvallisuuskortti)"
+    ],
+    "onboarding": "Site induction on day one.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with the supervisor"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with the supervisor"
+      }
+    ],
+    "lifting": "Machines up to 15 kg",
+    "apply_question": "Have you done heavy cleaning before?",
+    "cv_required": 0,
+    "positions": 2,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-laskelma-accountant",
+    "employer_id": "emp-laskelma",
+    "title": "Accountant",
+    "field": "office",
+    "duties": [
+      "Bookkeeping and VAT returns for 40 small businesses.",
+      "Monthly and annual closing.",
+      "Answer client questions by e-mail and phone."
+    ],
+    "address": "Merituulentie 34",
+    "district": "niittykumpu",
+    "lat": 60.1677,
+    "lon": 24.77371,
+    "work_mode": "hybrid",
+    "pay_amount": 3350,
+    "pay_unit": "month",
+    "pay_note": "Hybrid: 2 office days a week.",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "2+ years of bookkeeping.",
+    "qualifications": [
+      "Degree or vocational qualification in business/accounting"
+    ],
+    "onboarding": "Two weeks with a senior accountant; written process guides.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "talk with clients and read Finnish tax rules"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve English-speaking entrepreneurs"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Which accounting software have you used?",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 5,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "written_instructions": "yes",
+      "assistive_tech_ok": "yes",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-laskelma-payroll",
+    "employer_id": "emp-laskelma",
+    "title": "Payroll specialist",
+    "field": "office",
+    "duties": [
+      "Run monthly payroll for 60 client companies.",
+      "Apply collective agreements and reporting to the Incomes Register.",
+      "Answer employees' pay questions."
+    ],
+    "address": "Merituulentie 34",
+    "district": "niittykumpu",
+    "lat": 60.1677,
+    "lon": 24.77371,
+    "work_mode": "hybrid",
+    "pay_amount": 3450,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "2+ years of payroll work.",
+    "qualifications": [],
+    "onboarding": "Process training with our payroll lead.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "read collective agreements"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What payroll systems and collective agreements do you know?",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 14,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes"
+    }
+  },
+  {
+    "id": "job-laskelma-assistant",
+    "employer_id": "emp-laskelma",
+    "title": "Accounting assistant — part-time",
+    "field": "office",
+    "duties": [
+      "Scan and match receipts.",
+      "Check bank entries."
+    ],
+    "address": "Merituulentie 34",
+    "district": "niittykumpu",
+    "lat": 60.1677,
+    "lon": 24.77371,
+    "work_mode": "hybrid",
+    "pay_amount": 15.5,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 15,
+    "hours_max": 20,
+    "contract": "fixed_term",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Written step-by-step guides.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "read receipts"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with the team"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Do you enjoy careful, precise work?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 14,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-sanasilta-translator",
+    "employer_id": "emp-sanasilta",
+    "title": "Translator (Finnish–English), freelance",
+    "field": "office",
+    "duties": [
+      "Translate public-service texts between Finnish and English.",
+      "Proofread colleagues' translations.",
+      "Use a translation memory tool."
+    ],
+    "address": "Tapionaukio 4",
+    "district": "tapiola",
+    "lat": 60.17477,
+    "lon": 24.80545,
+    "work_mode": "remote",
+    "pay_amount": 26.0,
+    "pay_unit": "hour",
+    "pay_note": "Paid per word; about 26 €/h on average.",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 5,
+    "hours_max": 25,
+    "contract": "gig",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A paid test translation and a style guide.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "C1",
+        "task": "translate"
+      },
+      {
+        "language": "English",
+        "level": "C2",
+        "task": "translate"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Which kinds of texts do you translate best?",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 7,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "assistive_tech_ok": "yes"
+    }
+  },
+  {
+    "id": "job-sanasilta-interpreter",
+    "employer_id": "emp-sanasilta",
+    "title": "Community interpreter — Ukrainian and Russian",
+    "field": "office",
+    "duties": [
+      "Interpret at health, social and school appointments.",
+      "Mostly phone and video; some on-site visits in Espoo."
+    ],
+    "address": "Tapionaukio 4",
+    "district": "tapiola",
+    "lat": 60.17477,
+    "lon": 24.80545,
+    "work_mode": "hybrid",
+    "pay_amount": 30.0,
+    "pay_unit": "hour",
+    "pay_note": "Minimum 1 hour billed per assignment.",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 4,
+    "hours_max": 25,
+    "contract": "gig",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Briefing on interpreter ethics.",
+    "languages": [
+      {
+        "language": "Ukrainian",
+        "level": "C1",
+        "task": "interpret"
+      },
+      {
+        "language": "Russian",
+        "level": "C1",
+        "task": "interpret"
+      },
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "interpret"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about your interpreting experience.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 1,
+    "conditions": {
+      "seated_work": "yes"
+    }
+  },
+  {
+    "id": "job-koodikallio-dev",
+    "employer_id": "emp-koodikallio",
+    "title": "Software developer (TypeScript / Python)",
+    "field": "tech",
+    "duties": [
+      "Build web apps for public-service clients.",
+      "Write tests and review code.",
+      "Work in a team of five with a designer."
+    ],
+    "address": "Tekniikantie 14",
+    "district": "otaniemi",
+    "lat": 60.18693,
+    "lon": 24.8264,
+    "work_mode": "hybrid",
+    "pay_amount": 4600,
+    "pay_unit": "month",
+    "pay_note": "Range 3,800–5,200 € depending on experience.",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "3+ years of professional development.",
+    "qualifications": [],
+    "onboarding": "A buddy developer and a first small task in week one.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "work in the team — Finnish not needed"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Show us something you built (link or short description).",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 3,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "assistive_tech_ok": "yes",
+      "adjustments_negotiable": "yes",
+      "flexible_breaks": "yes"
+    }
+  },
+  {
+    "id": "job-koodikallio-test",
+    "employer_id": "emp-koodikallio",
+    "title": "Test engineer",
+    "field": "tech",
+    "duties": [
+      "Plan and run tests; automate them with Playwright.",
+      "Test accessibility (WCAG) with screen readers."
+    ],
+    "address": "Tekniikantie 14",
+    "district": "otaniemi",
+    "lat": 60.18693,
+    "lon": 24.8264,
+    "work_mode": "hybrid",
+    "pay_amount": 3750,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "ISTQB Foundation (nice to have)"
+    ],
+    "onboarding": "Two weeks pairing with the QA lead.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "work in the team"
+      },
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "test Finnish UI texts (bonus)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a bug you were proud to find.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 10,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "assistive_tech_ok": "yes"
+    }
+  },
+  {
+    "id": "job-koodikallio-ux",
+    "employer_id": "emp-koodikallio",
+    "title": "UX designer",
+    "field": "tech",
+    "duties": [
+      "Interview users and test prototypes.",
+      "Design in Figma with our design system.",
+      "Work closely with developers."
+    ],
+    "address": "Tekniikantie 14",
+    "district": "otaniemi",
+    "lat": 60.18693,
+    "lon": 24.8264,
+    "work_mode": "hybrid",
+    "pay_amount": 4100,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "required",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Portfolio walk-through with the team in week one.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "work in the team"
+      },
+      {
+        "language": "Finnish",
+        "level": "B2",
+        "task": "run user interviews (strong plus)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Share a portfolio case and what you learned from users.",
+    "cv_required": 1,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes"
+    }
+  },
+  {
+    "id": "job-datavirta-analyst",
+    "employer_id": "emp-datavirta",
+    "title": "Data analyst",
+    "field": "tech",
+    "duties": [
+      "Build sales dashboards for retail clients (Power BI).",
+      "Write SQL queries and clean data.",
+      "Present findings to clients."
+    ],
+    "address": "Perkkaantie 10",
+    "district": "leppavaara",
+    "lat": 60.21956,
+    "lon": 24.81093,
+    "work_mode": "remote",
+    "pay_amount": 3900,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "SQL"
+    ],
+    "onboarding": "A month working with a senior analyst.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "work in the team"
+      },
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "present to Finnish clients (plus)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about an analysis that changed a decision.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "seated_work": "yes",
+      "quiet_environment": "yes",
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-datavirta-support",
+    "employer_id": "emp-datavirta",
+    "title": "IT support specialist",
+    "field": "tech",
+    "duties": [
+      "Help store staff by phone and remote tools.",
+      "Set up laptops, phones and tills.",
+      "Document fixes in the ticket system."
+    ],
+    "address": "Perkkaantie 10",
+    "district": "leppavaara",
+    "lat": 60.21956,
+    "lon": 24.81093,
+    "work_mode": "on_site",
+    "pay_amount": 2750,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "mon",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "tue",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "wed",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "thu",
+        "start": "12:00",
+        "end": "20:00"
+      },
+      {
+        "day": "fri",
+        "start": "12:00",
+        "end": "20:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "IT support vocational qualification or similar experience"
+    ],
+    "onboarding": "Two weeks of shadowing on the help desk.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "help store staff by phone"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "write tickets"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Tell me about a tech problem you solved for someone else.",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 6,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "assistive_tech_ok": "yes"
+    }
+  },
+  {
+    "id": "job-datavirta-junior",
+    "employer_id": "emp-datavirta",
+    "title": "Junior data engineer — traineeship",
+    "field": "tech",
+    "duties": [
+      "Learn data pipelines with Python and SQL.",
+      "Support analysts with data checks."
+    ],
+    "address": "Perkkaantie 10",
+    "district": "leppavaara",
+    "lat": 60.21956,
+    "lon": 24.81093,
+    "work_mode": "hybrid",
+    "pay_amount": 2450,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [],
+    "schedule_flexible": 1,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "traineeship",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A 6-month programme with a mentor.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "work in the team"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What have you learned about data so far — courses, projects?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 9,
+    "conditions": {
+      "seated_work": "yes"
+    }
+  },
+  {
+    "id": "job-bioteekki-lab",
+    "employer_id": "emp-bioteekki",
+    "title": "Laboratory technician",
+    "field": "tech",
+    "duties": [
+      "Prepare and analyse food and water samples.",
+      "Run analysers and record results in the LIMS.",
+      "Follow ISO 17025 quality rules."
+    ],
+    "address": "Tekniikantie 21",
+    "district": "otaniemi",
+    "lat": 60.18763,
+    "lon": 24.82994,
+    "work_mode": "on_site",
+    "pay_amount": 2950,
+    "pay_unit": "month",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:30",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:30",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "permanent",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Laboratory technician qualification or BSc in chemistry/biology"
+    ],
+    "onboarding": "Method training with written work instructions.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "read work instructions"
+      },
+      {
+        "language": "English",
+        "level": "B2",
+        "task": "read methods and reports"
+      }
+    ],
+    "lifting": "Sample boxes up to 10 kg",
+    "apply_question": "Which lab methods have you used?",
+    "cv_required": 0,
+    "positions": 1,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 8,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "no",
+      "written_instructions": "yes"
+    }
+  },
+  {
+    "id": "job-espoolive-staff",
+    "employer_id": "emp-espoolive",
+    "title": "Festival staff — summer events",
+    "field": "seasonal",
+    "duties": [
+      "Sell drinks and merchandise.",
+      "Guide visitors and keep areas clean."
+    ],
+    "address": "Tapionaukio 1",
+    "district": "tapiola",
+    "lat": 60.17653,
+    "lon": 24.80479,
+    "work_mode": "on_site",
+    "pay_amount": 13.2,
+    "pay_unit": "hour",
+    "pay_note": "June–August.",
+    "shifts": [
+      {
+        "day": "fri",
+        "start": "16:00",
+        "end": "23:00"
+      },
+      {
+        "day": "sat",
+        "start": "12:00",
+        "end": "23:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 0,
+    "hours_max": 20,
+    "contract": "gig",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "Briefing before each event.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "serve visitors"
+      },
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "serve visitors"
+      }
+    ],
+    "lifting": "Crates up to 10 kg",
+    "apply_question": "Which summer weekends can you work?",
+    "cv_required": 0,
+    "positions": 6,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 11,
+    "conditions": {
+      "seated_work": "no",
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-espoolive-crew",
+    "employer_id": "emp-espoolive",
+    "title": "Festival build crew",
+    "field": "seasonal",
+    "duties": [
+      "Build stages, fences and tents before events.",
+      "Take them down after."
+    ],
+    "address": "Tapionaukio 1",
+    "district": "tapiola",
+    "lat": 60.17653,
+    "lon": 24.80479,
+    "work_mode": "on_site",
+    "pay_amount": 14.5,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "16:00"
+      },
+      {
+        "day": "sun",
+        "start": "22:00",
+        "end": "04:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 10,
+    "hours_max": 30,
+    "contract": "seasonal",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [
+      "Occupational safety card (työturvallisuuskortti)"
+    ],
+    "onboarding": "Safety briefing and a crew lead for each build.",
+    "languages": [
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "follow the crew lead"
+      }
+    ],
+    "lifting": "Fence panels up to 25 kg — in pairs",
+    "apply_question": "Are you used to physical outdoor work?",
+    "cv_required": 0,
+    "positions": 4,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 29,
+    "conditions": {}
+  },
+  {
+    "id": "job-kesaduuni-park",
+    "employer_id": "emp-kesaduuni",
+    "title": "Summer job for youth — park helper (15–17)",
+    "field": "seasonal",
+    "duties": [
+      "Pick litter, water plants and help the park team.",
+      "Two weeks, 6 hours a day, in June."
+    ],
+    "address": "Kirkkojärventie 2",
+    "district": "espoon_keskus",
+    "lat": 60.20522,
+    "lon": 24.65824,
+    "work_mode": "on_site",
+    "pay_amount": 10.5,
+    "pay_unit": "hour",
+    "pay_note": "Two-week summer job; pay follows the fictional programme's flat rate.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "tue",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "wed",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "thu",
+        "start": "08:00",
+        "end": "14:00"
+      },
+      {
+        "day": "fri",
+        "start": "08:00",
+        "end": "14:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 30,
+    "contract": "summer_job",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "The park team leader guides you every day.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "understand instructions"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "understand instructions"
+      }
+    ],
+    "lifting": "Watering cans and bags up to 10 kg",
+    "apply_question": "Why would you like a summer job — what do you want to learn?",
+    "cv_required": 0,
+    "positions": 10,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 0,
+    "conditions": {
+      "written_instructions": "yes",
+      "seated_work": "no"
+    }
+  },
+  {
+    "id": "job-kesaduuni-library",
+    "employer_id": "emp-kesaduuni",
+    "title": "Summer job for youth — library helper (15–17)",
+    "field": "seasonal",
+    "duties": [
+      "Shelve books and help at summer reading events.",
+      "Two weeks, 6 hours a day."
+    ],
+    "address": "Suomenlahdentie 1",
+    "district": "matinkyla",
+    "lat": 60.16027,
+    "lon": 24.73802,
+    "work_mode": "on_site",
+    "pay_amount": 10.5,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "10:00",
+        "end": "16:00"
+      },
+      {
+        "day": "tue",
+        "start": "10:00",
+        "end": "16:00"
+      },
+      {
+        "day": "wed",
+        "start": "10:00",
+        "end": "16:00"
+      },
+      {
+        "day": "thu",
+        "start": "10:00",
+        "end": "16:00"
+      },
+      {
+        "day": "fri",
+        "start": "10:00",
+        "end": "16:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 30,
+    "contract": "summer_job",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "A librarian is your mentor.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "help visitors"
+      },
+      {
+        "language": "Swedish",
+        "level": "A2",
+        "task": "help visitors (welcome)"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "Which books, games or hobbies could you tell other kids about?",
+    "cv_required": 0,
+    "positions": 4,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 2,
+    "conditions": {
+      "step_free_entrance": "yes",
+      "lift": "yes",
+      "accessible_toilet": "yes",
+      "seated_work": "yes",
+      "quiet_environment": "yes"
+    }
+  },
+  {
+    "id": "job-kesaduuni-sport",
+    "employer_id": "emp-kesaduuni",
+    "title": "Summer job for youth — sports camp helper (15–17)",
+    "field": "seasonal",
+    "duties": [
+      "Help instructors at day camps for 7–10-year-olds.",
+      "Lead games and keep kids safe."
+    ],
+    "address": "Espoonlahdenkatu 10",
+    "district": "espoonlahti",
+    "lat": 60.1503,
+    "lon": 24.66066,
+    "work_mode": "on_site",
+    "pay_amount": 10.5,
+    "pay_unit": "hour",
+    "pay_note": "",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "tue",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "wed",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "thu",
+        "start": "09:00",
+        "end": "15:00"
+      },
+      {
+        "day": "fri",
+        "start": "09:00",
+        "end": "15:00"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 30,
+    "hours_max": 30,
+    "contract": "summer_job",
+    "experience": "none",
+    "experience_note": "",
+    "qualifications": [],
+    "onboarding": "One-day camp instructor course in May.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "B1",
+        "task": "talk with children"
+      },
+      {
+        "language": "English",
+        "level": "B1",
+        "task": "talk with children"
+      }
+    ],
+    "lifting": null,
+    "apply_question": "What sports or games do you like?",
+    "cv_required": 0,
+    "positions": 6,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 4,
+    "conditions": {
+      "accessible_toilet": "yes"
+    }
+  },
+  {
+    "id": "job-kanerva-gardener",
+    "employer_id": "emp-kanerva",
+    "title": "Gardener",
+    "field": "seasonal",
+    "duties": [
+      "Plant, prune and mow in housing company yards.",
+      "Build stone edges and small paths.",
+      "Drive a ride-on mower."
+    ],
+    "address": "Lahnuksentie 44",
+    "district": "kalajarvi",
+    "lat": 60.29369,
+    "lon": 24.57017,
+    "work_mode": "on_site",
+    "pay_amount": 14.8,
+    "pay_unit": "hour",
+    "pay_note": "April–October, possible snow work in winter.",
+    "shifts": [
+      {
+        "day": "mon",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "tue",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "wed",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "thu",
+        "start": "07:00",
+        "end": "15:30"
+      },
+      {
+        "day": "fri",
+        "start": "07:00",
+        "end": "15:30"
+      }
+    ],
+    "schedule_flexible": 0,
+    "hours_min": 37.5,
+    "hours_max": 37.5,
+    "contract": "fixed_term",
+    "experience": "some",
+    "experience_note": "",
+    "qualifications": [
+      "Driving licence B (a plus)"
+    ],
+    "onboarding": "Machine training in April.",
+    "languages": [
+      {
+        "language": "Finnish",
+        "level": "A2",
+        "task": "talk with the team"
+      },
+      {
+        "language": "English",
+        "level": "A2",
+        "task": "talk with the team"
+      }
+    ],
+    "lifting": "Soil bags and stones up to 25 kg",
+    "apply_question": "What garden work have you done?",
+    "cv_required": 0,
+    "positions": 2,
+    "status": "open",
+    "source": "employer",
+    "confirmed_days_ago": 13,
+    "conditions": {
+      "seated_work": "no",
+      "flexible_breaks": "yes"
+    }
   }
 ]
