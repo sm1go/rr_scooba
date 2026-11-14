@@ -207,3 +207,100 @@ The owner found the event pages overloaded: the solution was hard to see. The me
 **8.5 Demo bar.** When `/api/config` returns `demo: true` (env `DEMO_MODE`, default on), a thin bar at the very top says "Demo — see as: Jobseeker (Aino) · Employer (Sanna) · Organizer (Leena) · Signed out". One click signs in with the demo account and opens E1 in that role. Seed data must make the match moment demoable:
 - at least one E1 employer has already invited Aino and Aino has not chosen it yet;
 - at least one E1 person has already chosen Sanna's company and has not been invited yet.
+
+## 9. Event journey v7: a coherent, time-driven loop (decision D017, replaces §8.1–8.4)
+
+Owner verdict on §8: the loop has no logic.
+- He is "registered" from the start.
+- Choosing employers leads nowhere.
+- Nobody explains what "Meet" or the visitor number is for.
+- The old unlimited "add to my plan" bypasses the 5-choice limit.
+- The floor plan is not a map.
+- "Answers" has no context.
+
+v7 fixes the logic first. The demo bar (§8.5) stays and gains a clock and a reset.
+
+### 9.1 Events
+- **In person:** "Espoo TalentMatch — spring 2027 (demo)", E1, `format='in_person'`, Otaniemi, 19 Mar 2027 13:00–17:30.
+- **Online:** a new event, "Espoo TalentMatch Online — customer service & IT (demo)", `ev-2027-02`, `format='online'`, 10 Feb 2027 10:00–14:00. It has 8 employers and about 30 registrations.
+- The Sello treffit event (E2) is removed from upcoming events. E0 stays as the past event that gives history.
+- Every event has these dates:
+  - `registration_opens`;
+  - `need_deadline`;
+  - `matching_closes`: 5 days before the event; choices and invites stop and matches are final;
+  - `starts_at` / `ends_at`;
+  - `answers_due`: ends_at + 7 days.
+
+### 9.2 One clock
+- All phase logic uses `app_now()`. In demo mode it is the demo clock stored in a `demo_state` table; otherwise it is real time.
+- Phases per event:
+  - `registration`: now < matching_closes;
+  - `matched`: matching_closes ≤ now < starts_at;
+  - `live`: starts_at ≤ now < ends_at;
+  - `after`: ends_at ≤ now < answers_due;
+  - `closed`.
+- Every screen, default step, button availability and the organizer board derive from the phase. Nothing can be done out of phase: choosing after matching_closes → 409 "Matching has closed".
+
+### 9.3 Talent journey (one page, it moves forward by itself)
+The stepper shows **1 Register → 2 Choose → 3 Your plan → 4 Event day → 5 Answers**. Its state comes from the data and the phase; a step that cannot be used yet is visibly locked, with the date it opens.
+1. **Register.**
+   - Not registered = a clear form: 3 things done, looking for, availability, arrival group for in-person events.
+   - After submit the page goes straight to Choose.
+   - "Registered" is shown only when it is true.
+2. **Choose (until matching_closes).**
+   - Cards one at a time, or as a list.
+   - Each choice lands in "Your choices (n/5)". Each choice shows one of two states:
+     - "Waiting for <Company> — employers choose until <date>";
+     - "Match! Talk at 14:40" (instant when mutual).
+   - At 5 choices the chooser closes and the page moves to Your plan. Taking back reopens it.
+   - The old unlimited "Add to my plan" and the per-booth "Open jobs" list are removed everywhere.
+3. **Your plan** (visible from registration; final after matching_closes).
+   - The personal agenda for the day:
+     - arrival time (in person) or "log in to the lobby at 9:55" (online);
+     - each booked talk with time, place (booth on the venue map) or video link, the employer's first-week tasks;
+     - a short **"How to prepare"** checklist built from that employer's must-haves ("Think of one example for: You can work reliably to agreed times"), plus "Bring: <documents the job asks for>".
+   - After matching_closes, choices without a match say "No match this time — you can still talk to them as a walk-in" (in person) or "…ask them in their booth Q&A" (online).
+   - In person, the **Venue map** (9.6) shows the route through the booked booths in time order.
+4. **Event day (live)** is a **Now / Next** screen.
+   - The next talk is shown as a big card with a countdown ("in 12 min · Booth A3 · K-Market Olari"), or a "Join the video call" button (active from 5 minutes before; online).
+   - The pass explains its one purpose: "At each talk, show this code. The employer scans it to open your profile and to send you their answer afterwards." The number is the fallback.
+   - Finished talks show "Done — answer due by <date>".
+   - Also: walk-in booths (in person) and the lobby, stage and networking lounge (online, 9.7).
+5. **Answers.** For every talk, the employer's answer:
+   - **Next step** with a concrete proposal: kind (interview / work try-out / call), date-time, place or link, and a note. The talent replies **"Yes, I'll come"** or **"Ask for another time"** (with a note).
+   - **Not this time** with the reason.
+   - Plus what the employer saw (seen-at-the-event) and badges.
+   - One line explains the use: "Records like these go with your next applications instead of a CV."
+   - Answers not given by answers_due are flagged "Late" and appear for the organizer.
+
+### 9.4 Employer journey
+The stepper shows **1 Need card → 2 Choose people → 3 Your schedule → 4 Event day → 5 Answer everyone**.
+- **Choose:** until matching_closes. People who chose you come first. The invite counter is shown, and pending invites say "waiting for this person".
+- **Your schedule:** time slots with each matched person's anonymous card. The name appears at the talk, after the scan or code, and online when the call starts (the reveal button lives on the call card).
+- **Event day:** Now/Next. Scan the QR or type the number → the person's profile → **record the talk**: tick observed items, outcome next step (with kind, date-time, place/link) or not now (with reason). One click marks a no-show.
+- **Answer everyone:** talks without a sent answer, counted down to answers_due.
+
+### 9.5 Demo controls (demo bar)
+- **Clock** buttons: "3 weeks before" (registration), "Matching closed" (matching_closes + 1 h), "Event day 14:35" (live), "After the event" (+2 days).
+- **Reset demo:** POST /api/demo/reset reloads the database from the seed. The client then signs in again with the current demo role.
+- When the clock moves forward, `demo_advance()` simulates the **other** employers (never Sanna's company, never real users' own actions). It is idempotent and the UI says "(simulated in the demo)" where it shows simulated results:
+  - **at matching_closes:** each employer except Sanna's company invites the people who chose it and said they meet all its must-haves, in stable random order, up to its slots. Then booking runs;
+  - **at the live time:** meetings that ended before the demo time and are not Sanna's get a recorded talk (observed items + outcome, deterministic);
+  - **at after:** all simulated talks get answers; next steps carry a concrete proposal.
+- **After a reset,** Aino is not registered in either upcoming event, so the demo starts from zero. All other seeded people are registered and have chosen.
+
+### 9.6 Venue map (in person)
+An SVG schematic, not to scale but laid out like a hall:
+- the entrance at the bottom;
+- an info & advisor desk by the entrance;
+- the stage (pitches) and the workshop room on one side;
+- four booth rows A–D with labelled boxes (logo initials + booth).
+
+Booked booths are numbered 1, 2, 3 in time order, a dashed route connects them, and a list beside the map reads "1 · 14:40 · A3 K-Market Olari". There is a text alternative list for screen readers. It is shown in Your plan and Event day.
+
+### 9.7 Online event environment
+- **Lobby** (event day): the programme with a "Live now" marker driven by the clock, a big "Watch the stage" button for pitches, the person's own talks with Join buttons, and links to booths and the lounge.
+- **Video talks:** each meeting has a unique Jitsi Meet room (`https://meet.jit.si/EspooTM-<event>-<meeting short id>`). No account is needed. A privacy note says the call runs on Jitsi Meet, an external service, and nothing is recorded. There is a "Test your camera" link.
+- **Stage:** one Jitsi room per event for the pitches. The schedule shows who pitches when.
+- **Virtual booths:** each employer's booth page has the logo, tagline, need card, open jobs and a **Q&A board**. Talent asks a question (wording-checked, max 300 chars); the employer answers; the board is visible to event participants.
+- **Networking lounge:** people who opt in, shown with first name, looking for and one thing done. "Connect" creates a connection (both sides opted in). Leaving the lounge removes you from it.
