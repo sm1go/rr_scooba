@@ -284,7 +284,10 @@ export default function JobsPage({
   const showOnMap = (id: string) => {
     setSelected(id)
     setView('map')
-    document.getElementById('map-panel')?.scrollIntoView({ block: 'nearest' })
+    // on phones the map was hidden until now: wait a frame, then show its top
+    const wide = window.matchMedia('(min-width: 1024px)').matches
+    window.setTimeout(() => document.getElementById('map-panel')
+      ?.scrollIntoView({ block: wide ? 'nearest' : 'start' }), 50)
   }
   const onSelectMarker = (id: string) => {
     setSelected(id)
