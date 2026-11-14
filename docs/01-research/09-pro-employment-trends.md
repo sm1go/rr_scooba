@@ -16,6 +16,11 @@ Collected by web search on 14 Nov 2026; figures are as reported by the sources.
 
 - **Pay shown on every job.** NYC requires pay ranges in job ads since Nov 2022. In US surveys, 82% of workers are more likely to apply when pay is shown (SHRM 2023). The **EU Pay Transparency Directive (2023/970)** must be applied by member states by 7 June 2026 and gives applicants a right to know the starting pay or range before the interview. All 158 demo jobs show pay; the employer form warns when pay is missing.
 
+## Espoo levers that already exist but are under-used
+
+- **Employment clause in public procurement (työllistämisehto).** The winning supplier must hire someone under 30, with an immigrant background, or unemployed at least 6 months; any task counts (Business Espoo). Example: a ~7.5 M€ central-kitchen contract required two hires, with a 10 000 € sanction per missing hire (Espoo case, 2017). Espoo's purchases were about 700–800 M€ a year (2015 thesis). A thesis commissioned by Helsinki, Vantaa and Espoo found procurement units struggle to use the clause. The app turns these obligations into visible jobs and tracks fulfilment.
+- **Joint employment.** The Finnish Employment Contracts Act allows two or more employers to employ one worker jointly; it is used in agriculture and by staffing firms ("monityönantajamalli") but rarely organised for small urban employers. The app starts on the resident side by combining 2–3 compatible part-time jobs into one week.
+
 ## Policy-level ideas for the pitch (not app features)
 
 - **Job guarantee, Gramatneusiedl/Marienthal, Austria (AMS Lower Austria, MAGMA, Oct 2020–Mar 2024).** Long-term unemployment in the municipality fell to zero by April 2021. Over 3.5 years, eligible people spent on average 555 more days in work, unsubsidised employment rose 17%, and costs fell back after 18 months (Oxford/Vienna evaluation, AMS 2026). Espoo's own cost driver is the same group: people unemployed more than 400 days (see `08-espoo-local-situation-2026.md`).
@@ -24,6 +29,12 @@ Collected by web search on 14 Nov 2026; figures are as reported by the sources.
 - **Stockholm Jobbtorg.** Municipal job centres report 66% of participants moving into work or study (2020). Swedish 100%-subsidised "extratjänster" helped most for newly arrived women and long-term unemployed people with disabilities (Arbetsförmedlingen 2024).
 
 ## Sources
+
+- Business Espoo, Hankinnoilla työllistäminen: https://www.espoo.fi/fi/business-espoo-yritysten-parhaaksi/ideasta-yrittajaksi/hankinnat
+- Espoo case, employment through procurement (2017): https://www.slideshare.net/slideshow/espoon-kaupungin-esimerkki-hankinnoilla-tyllistmisest/76055189
+- Thesis on the employment clause for Helsinki, Vantaa and Espoo: http://theseus.fi/handle/10024/809164
+- Thesis on Espoo procurement and employment (2015): https://www.theseus.fi/handle/10024/99191
+- European Commission, joint employment in Finnish agriculture: https://ec.europa.eu/social/BlobServlet?docId=21458&langId=en
 
 - Start Foundation, Open Hiring: https://startfoundation.nl/dit-doen-we/initiatieven/open-hiring/
 - Rotterdam council motion on Open Hiring (2023): https://rotterdam.partijvoordedieren.nl/moties/motie-gemeente-doet-mee-met-open-hiring
