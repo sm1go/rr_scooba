@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { api, ApiError } from '../../lib/api'
 import { useI18n } from '../../i18n/i18n'
 import type { Key } from '../../i18n/en'
@@ -117,10 +117,12 @@ export function AdvisorJobCheck() {
 export function AdvisorApplyFor() {
   const { t } = useI18n()
   const { id } = useParams()
+  const pre = (useLocation().state ?? {}) as { name?: string; contact_method?: string; contact_value?: string }
   const [job, setJob] = useState<Job | null>(null)
-  const [name, setName] = useState('')
-  const [method, setMethod] = useState<'phone' | 'sms' | 'email'>('phone')
-  const [value, setValue] = useState('')
+  const [name, setName] = useState(pre.name ?? '')
+  const [method, setMethod] = useState<'phone' | 'sms' | 'email'>(
+    pre.contact_method === 'sms' || pre.contact_method === 'email' ? pre.contact_method : 'phone')
+  const [value, setValue] = useState(pre.contact_value ?? '')
   const [answer, setAnswer] = useState('')
   const [consent, setConsent] = useState(false)
   const [err, setErr] = useState('')

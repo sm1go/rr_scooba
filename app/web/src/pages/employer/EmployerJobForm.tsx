@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { api, ApiError } from '../../lib/api'
 import { useAuth } from '../../lib/auth'
 import { useConfig } from '../../lib/config'
@@ -44,7 +44,8 @@ export default function EmployerJobForm() {
   const { id } = useParams()
   const nav = useNavigate()
   const [cat, setCat] = useState<Catalog | null>(null)
-  const [f, setF] = useState<Form>(EMPTY)
+  const [params] = useSearchParams()
+  const [f, setF] = useState<Form>(() => ({ ...EMPTY, employer_id: params.get('employer') ?? '' }))
   const [step, setStep] = useState(0)
   const [tips, setTips] = useState<WordingTip[]>([])
   const [err, setErr] = useState('')

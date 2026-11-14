@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   Link, NavLink, Outlet, useLocation, useNavigate,
 } from 'react-router-dom'
 import {
   Bookmark, FileText, Home, Menu as MenuIcon, User as UserIcon,
-  Briefcase, Inbox, ClipboardList, Building2, ListChecks, CalendarDays,
+  Briefcase, Inbox, ClipboardList, Building2, ListChecks, CalendarDays, X,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useA11y } from '../lib/a11y'
+import { useDialog } from '../lib/useDialog'
 import { useI18n, LANGS, type Lang } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 
@@ -43,10 +44,7 @@ const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home;
 function A11yPanel() {
   const { settings, set, setOpen } = useA11y()
   const { t } = useI18n()
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    ref.current?.querySelector('button')?.focus()
-  }, [])
+  const ref = useDialog<HTMLDivElement>(() => setOpen(false))
   const sizeBtn = (v: 'normal' | 'large' | 'xlarge', label: string) => (
     <button type="button" className={`btn ${settings.textSize === v ? 'btn-primary' : 'btn-quiet'}`}
             aria-pressed={settings.textSize === v}
@@ -65,7 +63,10 @@ function A11yPanel() {
          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false) }}>
       <div ref={ref} className="card p-6 w-full max-w-lg"
            style={{ maxHeight: '90vh', overflow: 'auto' }}>
-        <h2 className="m-0 mb-4">{t('a11y.title')}</h2>
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <h2 className="m-0">{t('a11y.title')}</h2>
+          <CloseButton onClick={() => setOpen(false)} />
+        </div>
         <p className="font-medium mb-2">{t('a11y.textsize')}</p>
         <div className="flex gap-2 mb-4 flex-wrap">
           {sizeBtn('normal', t('a11y.normal'))}
@@ -80,6 +81,33 @@ function A11yPanel() {
         </div>
         <button type="button" className="btn btn-primary w-full"
                 onClick={() => setOpen(false)}>{t('a11y.done')}</button>
+      </div>
+    </div>
+  )
+}
+
+function CloseButton({ onClick }: { onClick: () => void }) {
+  const { t } = useI18n()
+  return (
+    <button type="button" className="btn btn-quiet shrink-0" onClick={onClick}
+            style={{ minHeight: 44, padding: '6px 12px' }}>
+      <X size={20} aria-hidden="true" /> {t('common.close')}
+    </button>
+  )
+}
+
+function MobileMenu({ onClose, children }: { onClose: () => void; children: ReactNode }) {
+  const { t } = useI18n()
+  const ref = useDialog<HTMLDivElement>(onClose)
+  return (
+    <div role="dialog" aria-modal="true" aria-label={t('nav.menu')}
+         className="fixed inset-0 z-[70] p-4 flex justify-end"
+         style={{ background: 'rgba(23,23,23,0.35)' }}
+         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
+      <div ref={ref} className="card p-5 w-full max-w-xs self-start mt-2"
+           style={{ maxHeight: '85vh', overflow: 'auto' }}>
+        <div className="flex justify-end mb-2"><CloseButton onClick={onClose} /></div>
+        {children}
       </div>
     </div>
   )
@@ -150,7 +178,7 @@ export default function Layout() {
               <LangSwitch />
               {user ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-secondary">{user.name}</span>
+                  <span className="text-secondary truncate hidden 2xl:block" style={{ maxWidth: 200 }} title={user.name}>{user.name}</span>
                   <button type="button" className="btn btn-secondary" style={{ minHeight: 44 }}
                           onClick={async () => { await logout(); nav('/') }}>
                     {t('nav.signout')}
@@ -173,47 +201,41 @@ export default function Layout() {
       </header>
 
       {menuOpen && (
-        <div role="dialog" aria-label={t('nav.menu')}
-             className="fixed inset-0 z-[70] p-4 flex justify-end"
-             style={{ background: 'rgba(23,23,23,0.35)' }}
-             onClick={(e) => { if (e.target === e.currentTarget) setMenuOpen(false) }}>
-          <div className="card p-5 w-full max-w-xs self-start mt-2"
-               style={{ maxHeight: '85vh', overflow: 'auto' }}>
-            {user && <p className="text-secondary mt-0">{user.name}</p>}
-            <div className="flex flex-col gap-2 mb-4">
-              <button type="button" className="btn btn-quiet justify-start"
-                      onClick={() => { setMenuOpen(false); setOpen(true) }}>
-                {t('nav.accessibility')}
+        <MobileMenu onClose={() => setMenuOpen(false)}>
+          {user && <p className="text-secondary mt-0">{user.name}</p>}
+          <div className="flex flex-col gap-2 mb-4">
+            <button type="button" className="btn btn-quiet justify-start"
+                    onClick={() => { setMenuOpen(false); setOpen(true) }}>
+              {t('nav.accessibility')}
+            </button>
+            <LangSwitch />
+            {user ? (
+              <button type="button" className="btn btn-secondary"
+                      onClick={async () => { await logout(); setMenuOpen(false); nav('/') }}>
+                {t('nav.signout')}
               </button>
-              <LangSwitch />
-              {user ? (
-                <button type="button" className="btn btn-secondary"
-                        onClick={async () => { await logout(); setMenuOpen(false); nav('/') }}>
-                  {t('nav.signout')}
-                </button>
-              ) : (
-                <Link to={signInTo} className="btn btn-primary"
-                      onClick={() => setMenuOpen(false)}>
-                  {t('nav.signin')}
-                </Link>
-              )}
-            </div>
-            <nav aria-label="Main" className="flex flex-col gap-1">
-              {links.map((l) => (
-                <NavLink key={l.to} to={l.to} end={l.to === '/'}
-                         className={({ isActive }) =>
-                           `px-4 py-3 rounded-xl no-underline ${isActive ? 'font-semibold' : ''}`}
-                         style={({ isActive }) => ({
-                           color: 'var(--color-ink)',
-                           background: isActive ? 'var(--color-canvas)' : 'transparent',
-                         })}
-                         onClick={() => setMenuOpen(false)}>
-                  {t(l.key)}
-                </NavLink>
-              ))}
-            </nav>
+            ) : (
+              <Link to={signInTo} className="btn btn-primary"
+                    onClick={() => setMenuOpen(false)}>
+                {t('nav.signin')}
+              </Link>
+            )}
           </div>
-        </div>
+          <nav aria-label="Main" className="flex flex-col gap-1">
+            {links.map((l) => (
+              <NavLink key={l.to} to={l.to} end={l.to === '/'}
+                       className={({ isActive }) =>
+                         `px-4 py-3 rounded-xl no-underline ${isActive ? 'font-semibold' : ''}`}
+                       style={({ isActive }) => ({
+                         color: 'var(--color-ink)',
+                         background: isActive ? 'var(--color-canvas)' : 'transparent',
+                       })}
+                       onClick={() => setMenuOpen(false)}>
+                {t(l.key)}
+              </NavLink>
+            ))}
+          </nav>
+        </MobileMenu>
       )}
 
       <main id="main" className="flex-1 w-full max-w-6xl mx-auto px-4 py-6">

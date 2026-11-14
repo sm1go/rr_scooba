@@ -6,11 +6,21 @@ import type { Key } from '../../i18n/en'
 import type { HelpRequest } from '../../types'
 import { Chip, ErrorState, Field, Toggle } from '../../components/ui'
 import { fmtDate } from '../../lib/format'
+import { useStaffT } from '../../i18n-staff'
+
+const contactHref = (method: string, value: string) => {
+  const v = value.trim()
+  if (method === 'email') return v.includes('@') ? `mailto:${v}` : null
+  const n = v.replace(/[^\d+]/g, '')
+  if (!n) return null
+  return method === 'sms' ? `sms:${n}` : `tel:${n}`
+}
 
 const BUCKETS = ['new', 'in_progress', 'done'] as const
 
 export default function AdvisorQueue() {
   const { t, lang } = useI18n()
+  const s = useStaffT()
   const [bucket, setBucket] = useState<(typeof BUCKETS)[number]>('new')
   const [items, setItems] = useState<HelpRequest[] | null>(null)
   const [err, setErr] = useState<unknown>(null)
@@ -79,7 +89,10 @@ export default function AdvisorQueue() {
                 {t(`help.kind.${h.kind}` as Key)}
               </h2>
               <p className="m-0 mt-1 text-secondary">
-                {h.name} · {h.contact_method}: {h.contact_value}
+                {h.name} · {h.contact_method}:{' '}
+                {contactHref(h.contact_method, h.contact_value)
+                  ? <a href={contactHref(h.contact_method, h.contact_value)!}>{h.contact_value}</a>
+                  : h.contact_value}
                 {' · '}{fmtDate(h.created_at, lang)}
               </p>
               {h.job && (
@@ -170,6 +183,17 @@ export default function AdvisorQueue() {
               </div>
             ) : (
               <div className="flex gap-2 mt-3 flex-wrap">
+                {contactHref(h.contact_method, h.contact_value) && (
+                  <a className="btn btn-secondary" href={contactHref(h.contact_method, h.contact_value)!}>
+                    {s(h.contact_method === 'email' ? 'q.email' : h.contact_method === 'sms' ? 'q.sms' : 'q.call')}
+                  </a>
+                )}
+                {h.job && h.kind === 'prepare_application' && (
+                  <Link className="btn btn-secondary" to={`/advisor/jobs/${h.job.id}/apply-for`}
+                        state={{ name: h.name, contact_method: h.contact_method, contact_value: h.contact_value }}>
+                    {s('q.applyfor', { name: h.name || '…' })}
+                  </Link>
+                )}
                 {h.status === 'new' && (
                   <button type="button" className="btn btn-secondary"
                           onClick={() => update(h.id, 'in_progress')}>

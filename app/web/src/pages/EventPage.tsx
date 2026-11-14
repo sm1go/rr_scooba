@@ -1,10 +1,90 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api } from '../lib/api'
+import { api, ApiError } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { useI18n } from '../i18n/i18n'
 import type { EventInfo, EventPlan } from '../types'
-import { ErrorState, Section } from '../components/ui'
+import { ErrorBox, ErrorState, Field, Section } from '../components/ui'
+import { useStaffT } from '../i18n-staff'
+
+const EMPTY_TALK = { employer_id: '', first_name: '', contact_method: 'phone', contact_value: '', job_id: '', consent: false }
+
+/** Advisor: record a talk for a walk-up visitor with no account or number. */
+function RecordTalk({ info }: { info: EventInfo }) {
+  const { t } = useI18n()
+  const s = useStaffT()
+  const [open, setOpen] = useState(false)
+  const [f, setF] = useState(EMPTY_TALK)
+  const [err, setErr] = useState('')
+  const [saved, setSaved] = useState(false)
+  const emp = info.employers.find((e) => e.id === f.employer_id)
+  const ready = f.employer_id && f.first_name.trim() && f.contact_value.trim().length >= 3 && f.consent
+
+  const save = async () => {
+    setErr('')
+    try {
+      await api('/api/advisor/event/talks', { body: { ...f, job_id: f.job_id || null } })
+      setSaved(true); setOpen(false); setF(EMPTY_TALK)
+    } catch (e) { setErr(e instanceof ApiError ? e.message : t('common.error')) }
+  }
+
+  if (!open) {
+    return (
+      <div className="mb-5">
+        {saved && <p className="card p-4 font-medium" role="status">{s('wu.saved')}</p>}
+        <button type="button" className="btn btn-primary"
+                onClick={() => { setOpen(true); setSaved(false) }}>
+          {s('wu.button')}
+        </button>
+      </div>
+    )
+  }
+  return (
+    <Section title={s('wu.button')}>
+      <p className="mt-0 text-secondary">{s('wu.intro')}</p>
+      {err && <ErrorBox>{err}</ErrorBox>}
+      <Field label={s('wu.employer')} id="wu-emp">
+        <select id="wu-emp" value={f.employer_id}
+                onChange={(e) => setF({ ...f, employer_id: e.target.value, job_id: '' })}>
+          <option value="">{s('wu.choose')}</option>
+          {info.employers.map((e) => <option key={e.id} value={e.id}>{e.booth} — {e.name}</option>)}
+        </select>
+      </Field>
+      <Field label={s('wu.name')} id="wu-name">
+        <input id="wu-name" value={f.first_name} maxLength={60} autoComplete="off"
+               onChange={(e) => setF({ ...f, first_name: e.target.value })} />
+      </Field>
+      <Field label={s('wu.method')} id="wu-method">
+        <select id="wu-method" value={f.contact_method}
+                onChange={(e) => setF({ ...f, contact_method: e.target.value })}>
+          {(['phone', 'sms', 'email'] as const).map((m) => <option key={m} value={m}>{s(`wu.${m}`)}</option>)}
+        </select>
+      </Field>
+      <Field label={s('wu.value')} id="wu-value">
+        <input id="wu-value" value={f.contact_value} autoComplete="off"
+               type={f.contact_method === 'email' ? 'email' : 'tel'}
+               onChange={(e) => setF({ ...f, contact_value: e.target.value })} />
+      </Field>
+      {emp && emp.jobs.length > 0 && (
+        <Field label={s('wu.job')} id="wu-job">
+          <select id="wu-job" value={f.job_id} onChange={(e) => setF({ ...f, job_id: e.target.value })}>
+            <option value="">{s('wu.nojob')}</option>
+            {emp.jobs.map((j) => <option key={j.id} value={j.id}>{j.title}</option>)}
+          </select>
+        </Field>
+      )}
+      <label className="flex gap-2 items-start mb-3">
+        <input type="checkbox" checked={f.consent} style={{ width: 24, height: 24 }}
+               onChange={(e) => setF({ ...f, consent: e.target.checked })} />
+        <span>{s('wu.consent')}</span>
+      </label>
+      <div className="flex gap-2 flex-wrap">
+        <button type="button" className="btn btn-quiet" onClick={() => setOpen(false)}>{s('wu.cancel')}</button>
+        <button type="button" className="btn btn-primary" disabled={!ready} onClick={save}>{s('wu.save')}</button>
+      </div>
+    </Section>
+  )
+}
 
 /** /event — the recruitment event: booth plan, employer list, My plan. */
 export default function EventPage() {
@@ -57,6 +137,7 @@ export default function EventPage() {
         {ev.date} · {ev.venue}
       </p>
       <p className="card p-4 font-medium">{ev.advisor_note || t('event.advisor')}</p>
+      {user?.role === 'advisor' && <RecordTalk info={info} />}
 
       {user?.role === 'resident' && plan?.code && (
         <Section title={t('event.myplan')}>

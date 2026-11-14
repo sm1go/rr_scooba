@@ -1,19 +1,30 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { useConfig } from '../lib/config'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import type { Catalog, FiltersReply, Job, Profile } from '../types'
+import type { Catalog, EventInfo, FiltersReply, Job, Profile } from '../types'
 import { CEFR, DAYS, PARTS } from '../types'
 import JobRow, { labelText } from '../components/JobRow'
 import JobMap from '../components/JobMap'
 import { ErrorState, Field, HelpCard, Toggle } from '../components/ui'
-import { districtName, slotsText } from '../lib/format'
+import VoiceInput from '../components/VoiceInput'
+import { districtName, fmtDate, slotsText } from '../lib/format'
+import { CalendarDays, ChevronDown, LifeBuoy, SlidersHorizontal } from 'lucide-react'
 
 const QUICK_LABELS = ['students', 'retirement', 'first_job', 'side_job',
                       'part_time', 'access_info'] as const
+const QUICK_NEEDS = ['step_free_entrance', 'seated_work', 'flexible_breaks',
+                     'quiet_environment']
+const WEEKDAYS = DAYS.slice(0, 5)
+const TIME_GROUPS: { id: Key; slots: string[] }[] = [
+  { id: 'jobs.time.mornings', slots: WEEKDAYS.map((d) => `${d}-morning`) },
+  { id: 'jobs.time.daytime', slots: WEEKDAYS.map((d) => `${d}-afternoon`) },
+  { id: 'jobs.time.evenings', slots: [...WEEKDAYS.map((d) => `${d}-evening`),
+    ...['sat', 'sun'].flatMap((d) => PARTS.map((p) => `${d}-${p}`))] },
+]
 
 export default function JobsPage({
   rowActions, headerExtra,
@@ -31,12 +42,27 @@ export default function JobsPage({
   const [err, setErr] = useState<unknown>(null)
   const [view, setView] = useState<'list' | 'map'>('list')
   const [more, setMore] = useState(false)
+  const [fitOpen, setFitOpen] = useState(() => window.matchMedia('(min-width: 768px)').matches
+    || ['district', 'commute_max', 'needs'].some((k) => !!params.get(k)))
   const [selected, setSelected] = useState<string | null>(null)
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
   const [askText, setAskText] = useState('')
   const [askReply, setAskReply] = useState<FiltersReply | null>(null)
   const [askBusy, setAskBusy] = useState(false)
   const [profileDistrict, setProfileDistrict] = useState<string | null>(null)
+  const [profileNeeds, setProfileNeeds] = useState<string[]>([])
+  const [event, setEvent] = useState<EventInfo | null>(null)
+  const [upcoming, setUpcoming] = useState(false)
+  const prefilled = useRef(false)
+  const home = !rowActions && !headerExtra
+
+  useEffect(() => {
+    if (!home) return
+    api<EventInfo>('/api/event').then((r) => {
+      setEvent(r)
+      setUpcoming(!!r.event && r.event.date >= new Date().toISOString().slice(0, 10))
+    }).catch(() => {})
+  }, [home])
 
   useEffect(() => {
     api<Catalog>('/api/catalog').then(setCat).catch(() => {})
@@ -45,10 +71,25 @@ export default function JobsPage({
   // commute origin (§5): the district filter wins, else the resident's
   // own profile district — no sign-in needed for the filter path
   useEffect(() => {
-    if (user?.role !== 'resident') { setProfileDistrict(null); return }
-    api<Profile>('/api/me/profile')
-      .then((p) => setProfileDistrict(p.district)).catch(() => undefined)
-  }, [user])
+    if (user?.role !== 'resident') { setProfileDistrict(null); setProfileNeeds([]); return }
+    api<Profile>('/api/me/profile').then((p) => {
+      setProfileDistrict(p.district)
+      setProfileNeeds(p.needs)
+      // the person's own needs are preselected once, in the mode that
+      // only hides jobs where the answer is a clear "no"
+      const once = `ewm.needsPrefilled.${user.id}`
+      if (prefilled.current || !p.needs.length || sessionStorage.getItem(once)) return
+      prefilled.current = true
+      sessionStorage.setItem(once, '1')
+      setParams((cur) => {
+        if (cur.get('needs')) return cur
+        const np = new URLSearchParams(cur)
+        np.set('needs', p.needs.join(','))
+        np.set('needs_mode', 'not_no')
+        return np
+      }, { replace: true })
+    }).catch(() => undefined)
+  }, [user, setParams])
   const originDistrict = params.get('district') || profileDistrict || undefined
   const originName = cat && originDistrict
     ? districtName(originDistrict, cat.districts) : undefined
@@ -100,7 +141,23 @@ export default function JobsPage({
     if (s.has(slot)) s.delete(slot); else s.add(slot)
     set('slots', [...s].join(',') || null)
   }
+  const toggleGroup = (slots: string[]) => {
+    const s = new Set(slotSet)
+    const on = slots.every((x) => s.has(x))
+    slots.forEach((x) => { if (on) s.delete(x); else s.add(x) })
+    set('slots', [...s].join(',') || null)
+  }
+  const pickCommute = (m: number) => {
+    const p = new URLSearchParams(params)
+    if (params.get('commute_max') === String(m)) p.delete('commute_max')
+    else {
+      p.set('commute_max', String(m))
+      if (!p.get('district') && profileDistrict) p.set('district', profileDistrict)
+    }
+    setParams(p)
+  }
   const needKeys = (params.get('needs') || '').split(',').filter(Boolean)
+  const quickNeeds = [...new Set([...QUICK_NEEDS, ...profileNeeds, ...needKeys])]
   const toggleNeed = (k: string) => {
     const s = new Set(needKeys)
     if (s.has(k)) s.delete(k); else s.add(k)
@@ -206,6 +263,8 @@ export default function JobsPage({
       ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
+  const ev = event?.event
+
   if (err && jobs !== null) {
     return (
       <ErrorState err={err} gone={t('err.gone')} goneLabel=""
@@ -240,16 +299,38 @@ export default function JobsPage({
         </div>
       </div>
 
-      <div className="card p-4 mb-3">
-        <label htmlFor="ask-filters" className="font-medium block mb-2">
+      {home && <p className="m-0 mb-4" style={{ fontSize: '1.15rem' }}>{t('jobs.tagline')}</p>}
+
+      {home && ev && upcoming && (
+        <Link to="/event" className="card p-4 mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 no-underline"
+              style={{ color: 'var(--color-ink)' }}>
+          <span className="flex items-start gap-2">
+            <CalendarDays size={22} aria-hidden="true" className="shrink-0 mt-0.5" />
+            <span>
+              <strong>{ev.name}</strong>
+              {' · '}{t('jobs.event.line', { date: fmtDate(ev.date, lang), n: event?.employers.length ?? 0 })}
+            </span>
+          </span>
+          <span className="font-medium underline ms-auto">{t('jobs.event.plan')}</span>
+        </Link>
+      )}
+
+      <div className="card p-5 mb-3">
+        <label htmlFor="ask-filters" className="font-medium block mb-1" style={{ fontSize: '1.15rem' }}>
           {t('jobs.lookingfor')}
         </label>
-        <div className="flex gap-2 flex-wrap">
+        <p id="ask-hint" className="m-0 mb-2 text-secondary">
+          {t(window.SpeechRecognition ?? window.webkitSpeechRecognition ? 'jobs.lookingfor.hint' : 'jobs.lookingfor.hintwrite')}
+        </p>
+        <div className="flex gap-2 flex-wrap items-center">
           <input id="ask-filters" value={askText} maxLength={600}
+                 aria-describedby="ask-hint"
                  placeholder={t('jobs.lookingfor.ex')}
                  onChange={(e) => setAskText(e.target.value)}
                  onKeyDown={(e) => { if (e.key === 'Enter') askFilters() }}
                  className="flex-1" style={{ minWidth: 220 }} />
+          <VoiceInput compact targetId="ask-filters"
+                      onText={(x) => setAskText((a) => (a ? `${a} ` : '') + x)} />
           <button type="button" className="btn btn-primary" disabled={askBusy}
                   onClick={askFilters}>
             {t('jobs.findjobs')}
@@ -258,13 +339,13 @@ export default function JobsPage({
         {askReply && (
           <div className="mt-3" role="status">
             <p className="m-0 font-medium">{t('jobs.weset')}</p>
-            <ul className="m-0 mt-1 pl-5">
+            <ul className="m-0 mt-1 ps-5">
               {askReply.explanation.map((x, i) => <li key={i}>{x}</li>)}
             </ul>
             {askReply.not_understood.length > 0 && (
               <>
                 <p className="m-0 mt-2 font-medium">{t('jobs.couldnot')}</p>
-                <ul className="m-0 mt-1 pl-5 text-secondary">
+                <ul className="m-0 mt-1 ps-5 text-secondary">
                   {askReply.not_understood.map((x, i) => <li key={i}>{x}</li>)}
                 </ul>
               </>
@@ -273,14 +354,89 @@ export default function JobsPage({
         )}
       </div>
 
-      <button type="button" className="btn btn-secondary mb-3"
-              aria-expanded={more} onClick={() => setMore((m) => !m)}>
-        {t('jobs.morefilters')}
-      </button>
+      {home && (
+        <div className="card p-4 mb-3 flex flex-wrap items-center justify-between gap-3"
+             style={{ background: 'var(--color-yes-bg)' }}>
+          <p className="m-0 flex items-start gap-2">
+            <LifeBuoy size={22} aria-hidden="true" className="shrink-0 mt-0.5" />
+            <span><strong>{t('jobs.human.title')}</strong> {t('jobs.human.body')}</span>
+          </p>
+          <Link to="/help" className="btn btn-primary">{t('jobs.askadvisor')}</Link>
+        </div>
+      )}
+
+      {cat && !fitOpen && (
+        <button type="button" className="btn btn-secondary w-full mb-3 justify-between"
+                aria-expanded={false} onClick={() => setFitOpen(true)}>
+          {t('jobs.fit.toggle')}
+          <ChevronDown size={20} aria-hidden="true" />
+        </button>
+      )}
+
+      {cat && fitOpen && (
+        <div className="card p-5 mb-3 grid gap-5 md:grid-cols-2">
+          <div>
+            <label htmlFor="q-from" className="font-medium block mb-2" style={{ fontSize: '1.15rem' }}>
+              {t('jobs.from')}
+            </label>
+            <select id="q-from" className="w-full" style={{ maxWidth: 360 }} value={params.get('district') ?? profileDistrict ?? ''}
+                    onChange={(e) => set('district', e.target.value || null)}>
+              <option value="">—</option>
+              {cat.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+            {cfg.commute && (
+              <div className="mt-3">
+                <p id="q-commute" className="m-0 mb-2">{t('jobs.commute.filter')}</p>
+                {originDistrict ? (
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-labelledby="q-commute">
+                    {[15, 30, 45, 60].map((m) => (
+                      <Toggle key={m} pressed={params.get('commute_max') === String(m)}
+                              onClick={() => pickCommute(m)} className="justify-center">
+                        {t('jobs.commute.tile', { m })}
+                      </Toggle>
+                    ))}
+                  </div>
+                ) : <p className="m-0 text-secondary">{t('jobs.commute.first')}</p>}
+              </div>
+            )}
+          </div>
+          <div>
+            <h2 id="q-needs" className="m-0 mb-2 font-medium"
+                style={{ fontSize: '1.15rem', fontFamily: 'inherit' }}>
+              {t('jobs.myneeds')}
+            </h2>
+            <div className="flex flex-wrap gap-2" role="group" aria-labelledby="q-needs">
+              {quickNeeds.map((k) => (
+                <Toggle key={k} pressed={needKeys.includes(k)} onClick={() => toggleNeed(k)}>
+                  {t(`cond.${k}` as Key)}
+                </Toggle>
+              ))}
+            </div>
+            {needKeys.length > 0 && (
+              <fieldset className="mt-3 p-0 m-0 border-0">
+                <legend className="sr-only">{t('jobs.needs')}</legend>
+                {[['yes', t('jobs.needs.only')], ['not_no', t('jobs.needs.also')]].map(([v, label]) => (
+                  <label key={v} className="flex items-center gap-2" style={{ minHeight: 44 }}>
+                    <input type="radio" name="needs_mode_quick"
+                           checked={(params.get('needs_mode') ?? 'yes') === v}
+                           onChange={() => set('needs_mode', v)} />
+                    {label}
+                  </label>
+                ))}
+              </fieldset>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="overflow-x-auto mb-3 -mx-4 px-4"
            role="group" aria-label={t('jobs.filters')}>
-        <div className="flex gap-2 w-max pr-4">
+        <div className="flex gap-2 w-max pe-4">
+          <button type="button" className="btn btn-secondary whitespace-nowrap"
+                  aria-expanded={more} onClick={() => setMore((m) => !m)}>
+            <SlidersHorizontal size={20} aria-hidden="true" />
+            {t('jobs.morefilters')}
+          </button>
           {QUICK_LABELS.map((l) => (
             <Toggle key={l} pressed={params.getAll('label').includes(l)}
                     onClick={() => toggleLabel(l)}
@@ -316,9 +472,19 @@ export default function JobsPage({
               </button>
             </div>
           </div>
-          <h3>{t('jobs.whenwork')}</h3>
-          <div className="overflow-x-auto -mx-1 px-1">
-            <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: 'repeat(4, minmax(120px,1fr))' }}>
+          <h3 id="f-when">{t('jobs.whenwork')}</h3>
+          <div className="grid gap-2 sm:grid-cols-3 mb-3" role="group" aria-labelledby="f-when">
+            {TIME_GROUPS.map((g) => (
+              <Toggle key={g.id} pressed={g.slots.every((x) => slotSet.has(x))}
+                      onClick={() => toggleGroup(g.slots)} className="justify-center">
+                {t(g.id)}
+              </Toggle>
+            ))}
+          </div>
+          <details className="mb-4">
+            <summary className="cursor-pointer py-2">{t('jobs.time.days')}</summary>
+          <div className="overflow-x-auto -mx-1 px-1 mt-2">
+            <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(4, minmax(120px,1fr))' }}>
               <div />
               {PARTS.map((p) => <strong key={p}>{t(`part.${p}` as Key)}</strong>)}
               {DAYS.map((d) => (
@@ -338,6 +504,7 @@ export default function JobsPage({
               ))}
             </div>
           </div>
+          </details>
           <div className="grid gap-4 md:grid-cols-3">
             <Field label={t('jobs.maxhours')} id="f-hours">
               <input id="f-hours" type="number" min="1" inputMode="numeric"
@@ -400,55 +567,13 @@ export default function JobsPage({
                 {CEFR.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
             </Field>
-            <Field label={t('jobs.distance')} id="f-dist">
-              <div className="flex gap-2">
-                <select id="f-dist" aria-label={t('jobs.area')}
-                        value={params.get('district') ?? ''}
-                        onChange={(e) => set('district', e.target.value || null)}
-                        className="flex-1">
-                  <option value="">—</option>
-                  {cat.districts.map((d) => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
-                  ))}
-                </select>
-                <input type="number" min="1" style={{ width: 90 }}
-                       aria-label={t('jobs.km')}
-                       value={params.get('km') ?? ''} placeholder="km"
-                       onChange={(e) => set('km', e.target.value || null)} />
-              </div>
+            <Field label={`${t('jobs.distance')} (${t('jobs.km')})`} id="f-dist">
+              <input id="f-dist" type="number" min="1" inputMode="numeric"
+                     value={params.get('km') ?? ''} disabled={!params.get('district')}
+                     onChange={(e) => set('km', e.target.value || null)} />
             </Field>
-            {cfg.commute && (
-              <Field label={t('jobs.commute.filter')} id="f-commute">
-                {params.get('district') ? (
-                  <div className="flex gap-2 flex-wrap" role="radiogroup"
-                       aria-label={t('jobs.commute.filter')}>
-                    {[15, 30, 45, 60].map((m) => (
-                      <Toggle key={m}
-                              pressed={params.get('commute_max') === String(m)}
-                              onClick={() => set('commute_max',
-                                params.get('commute_max') === String(m)
-                                  ? null : String(m))}>
-                        {t('jobs.commute.tile', { m })}
-                      </Toggle>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-secondary m-0">{t('jobs.commute.first')}</p>
-                )}
-              </Field>
-            )}
           </div>
           <h3 className="mt-5">{t('jobs.needs')}</h3>
-          <div className="flex gap-3 mb-2" role="radiogroup">
-            {[['yes', t('jobs.needs.only')], ['not_no', t('jobs.needs.also')]].map(
-              ([v, label]) => (
-                <label key={v} className="flex items-center gap-2" style={{ minHeight: 48 }}>
-                  <input type="radio" name="needs_mode" checked={(params.get('needs_mode') ?? 'yes') === v}
-                         onChange={() => set('needs_mode', v)} />
-                  {label}
-                </label>
-              ))}
-          </div>
           <div className="flex flex-wrap gap-2">
             {cat.condition_keys.map((c) => (
               <Toggle key={c.id} pressed={needKeys.includes(c.id)}
@@ -503,8 +628,9 @@ export default function JobsPage({
                       actions={rowActions?.(j)}
                       originDistrict={originDistrict}
                       originName={originName}
+                      needs={needKeys}
                       districtName={cat ? districtName(j.district, cat.districts) : j.district} />
-              {i === 2 && <HelpCard />}
+              {i === 2 && !home && <HelpCard />}
             </div>
           ))}
           {jobs && jobs.length > 3 && <HelpCard />}

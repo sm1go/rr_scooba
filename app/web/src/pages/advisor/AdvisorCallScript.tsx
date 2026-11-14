@@ -5,6 +5,9 @@ import { useI18n } from '../../i18n/i18n'
 import type { CallScript, Job } from '../../types'
 import { ErrorBox, Section } from '../../components/ui'
 import { daysAgoText } from '../../lib/format'
+import { useStaffT } from '../../i18n-staff'
+
+type Outcome = 'still_open' | 'filled' | 'no_answer'
 
 /** /advisor/jobs/:id/call — "Prepare a call to the employer" script (§4).
     Works without AI via the deterministic rules script; the response
@@ -20,6 +23,7 @@ const FIELD_LABEL: Record<string, string> = {
 export default function AdvisorCallScript() {
   const { id } = useParams()
   const { t } = useI18n()
+  const s = useStaffT()
   const fieldLabel = (f: string) => {
     if (f.startsWith('condition.')) {
       const k = `cond.${f.slice(10)}`
@@ -32,6 +36,17 @@ export default function AdvisorCallScript() {
   const [script, setScript] = useState<CallScript | null>(null)
   const [job, setJob] = useState<Job | null>(null)
   const [err, setErr] = useState('')
+  const [logged, setLogged] = useState<Outcome | null>(null)
+  const [callErr, setCallErr] = useState('')
+
+  const logCall = async (outcome: Outcome) => {
+    setCallErr('')
+    try {
+      await api('/api/advisor/calls', { body: { job_id: id, outcome } })
+      setLogged(outcome)
+      api<Job>(`/api/jobs/${id}`).then(setJob).catch(() => undefined)
+    } catch (e) { setCallErr(e instanceof ApiError ? e.message : t('common.error')) }
+  }
 
   useEffect(() => {
     api<CallScript>('/api/ai/advisor/questions', { body: { job_id: id } })
@@ -87,6 +102,25 @@ export default function AdvisorCallScript() {
         </Section>
       )}
       {!script && !err && <p>{t('common.loading')}</p>}
+      {job && (
+        <Section title={s('cs.title')}>
+          {callErr && <ErrorBox>{callErr}</ErrorBox>}
+          {logged ? (
+            <p className="card p-4 m-0 font-medium" role="status">{s(`cs.done.${logged}`)}</p>
+          ) : (
+            <div className="flex gap-2 flex-wrap no-print">
+              {(['still_open', 'filled', 'no_answer'] as const).map((o) => (
+                <button key={o} type="button"
+                        className={`btn ${o === 'still_open' ? 'btn-primary' : 'btn-secondary'}`}
+                        disabled={o !== 'no_answer' && job.status !== 'open'}
+                        onClick={() => logCall(o)}>
+                  {s(`cs.${o}`)}
+                </button>
+              ))}
+            </div>
+          )}
+        </Section>
+      )}
     </div>
   )
 }

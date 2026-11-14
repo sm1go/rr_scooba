@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 4;
+PRAGMA user_version = 5;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -199,8 +199,17 @@ CREATE TABLE event_plan (
 CREATE TABLE event_talk (
     id            TEXT PRIMARY KEY,
     event_id      TEXT NOT NULL REFERENCES event(id),
-    user_id       TEXT NOT NULL REFERENCES user(id),
+    user_id       TEXT REFERENCES user(id),  -- NULL = walk-up visitor
     employer_id   TEXT NOT NULL REFERENCES employer(id),
+    job_id        TEXT REFERENCES job(id),
+    -- walk-up visitor without an account, recorded by an advisor with
+    -- the visitor's spoken consent
+    visitor_name  TEXT NOT NULL DEFAULT '',
+    visitor_contact_method TEXT CHECK (visitor_contact_method IN
+        ('phone','sms','email')),
+    visitor_contact_value  TEXT NOT NULL DEFAULT '',
+    recorded_by   TEXT REFERENCES user(id),
+    consent       INTEGER NOT NULL DEFAULT 0,
     status        TEXT NOT NULL CHECK (status IN ('talked','answered')),
     outcome       TEXT CHECK (outcome IN ('next_step','not_now')),
     employer_note TEXT NOT NULL DEFAULT '',

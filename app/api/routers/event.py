@@ -74,7 +74,8 @@ def _talk_out(r) -> dict:
     return {"id": r["id"], "event_id": r["event_id"],
             "user_id": r["user_id"], "employer_id": r["employer_id"],
             "status": r["status"], "outcome": r["outcome"],
-            "employer_note": r["employer_note"],
+            "employer_note": r["employer_note"], "job_id": r["job_id"],
+            "recorded_by_advisor": r["user_id"] is None,
             "talked_at": r["talked_at"], "answered_at": r["answered_at"]}
 
 
@@ -142,7 +143,7 @@ def employer_event(conn: sqlite3.Connection = Depends(get_conn),
     planned = conn.execute(
         "SELECT COUNT(*) c FROM event_plan WHERE event_id=? AND employer_id=?",
         (ev["id"], user["employer_id"])).fetchone()["c"]
-    talks = [dict(_talk_out(r), **_person_brief(conn, r["user_id"]))
+    talks = [dict(_talk_out(r), **_person_brief(conn, r))
              for r in conn.execute(
                  "SELECT * FROM event_talk WHERE event_id=? AND employer_id=?"
                  " ORDER BY talked_at", (ev["id"], user["employer_id"]))]
@@ -150,8 +151,14 @@ def employer_event(conn: sqlite3.Connection = Depends(get_conn),
             "visitors_planned": planned, "talks": talks}
 
 
-def _person_brief(conn, user_id: str) -> dict:
-    """Name + preferred contact — revealed only after the number is used."""
+def _person_brief(conn, talk) -> dict:
+    """Name + preferred contact — revealed only after the number is used,
+    or given with spoken consent to an advisor (walk-up visitor)."""
+    if talk["user_id"] is None:
+        return {"person_name": talk["visitor_name"],
+                "person_contact_method": talk["visitor_contact_method"],
+                "person_contact_value": talk["visitor_contact_value"]}
+    user_id = talk["user_id"]
     u = conn.execute("SELECT name, email, phone FROM user WHERE id=?",
                      (user_id,)).fetchone()
     p = conn.execute(
@@ -199,7 +206,7 @@ def record_talk(payload: TalkIn,
     conn.commit()
     r = conn.execute("SELECT * FROM event_talk WHERE id=?",
                      (talk_id,)).fetchone()
-    return {**_talk_out(r), **_person_brief(conn, vis["user_id"])}
+    return {**_talk_out(r), **_person_brief(conn, r)}
 
 
 @router.post("/employer/event/talks/{talk_id}/answer")
@@ -223,7 +230,7 @@ def answer_talk(talk_id: str, payload: TalkAnswerIn,
     conn.commit()
     r = conn.execute("SELECT * FROM event_talk WHERE id=?",
                      (talk_id,)).fetchone()
-    return {**_talk_out(r), **_person_brief(conn, r["user_id"])}
+    return {**_talk_out(r), **_person_brief(conn, r)}
 
 
 # --- resident view of their talks (for /applications) -------------------------

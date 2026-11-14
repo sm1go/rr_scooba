@@ -1,4 +1,4 @@
-import type { Job, Shift } from '../types'
+import type { Condition, Job, Shift } from '../types'
 import type { Key } from '../i18n/en'
 import { DAYS, PARTS } from '../types'
 
@@ -86,4 +86,14 @@ export function districtName(id: string, districts: { id: string; name: string }
 export function fieldName(id: string, t: T): string {
   const key = `field.${id}` as Key
   return t(key)
+}
+
+export function conditionState(c: Condition, t: T) {
+  if (c.value === 'unknown') return t('common.unknown')
+  const v = c.value === 'yes' ? t('common.yes') : t('common.no')
+  return `${v} · ${c.source === 'advisor' ? t('job.advisorchecked') : t('job.employersays')}`
+}
+
+export function helpLink(jobId: string, keys: string[]) {
+  return `/help?job=${jobId}${keys.length ? `&keys=${keys.join(',')}` : ''}`
 }

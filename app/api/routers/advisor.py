@@ -11,8 +11,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from .. import auth as auth_mod
 from .. import db as db_mod
 from ..db import get_conn
-from ..models import ApplicationIn, EmployerNewIn, HelpRequestUpdate
-from ..serialize import application_out, help_request_out
+from ..models import (ApplicationIn, CallOutcomeIn, EmployerNewIn,
+                      HelpRequestUpdate, WalkupTalkIn)
+from ..serialize import _days_ago, help_request_out
+from .jobs import mark_closed, mark_confirmed
 from .resident import _create_application
 
 router = APIRouter(prefix="/api", tags=["advisor"])
@@ -109,7 +111,7 @@ def overview(conn: sqlite3.Connection = Depends(get_conn),
     _advisor(user)
     open_jobs = conn.execute(
         "SELECT COUNT(*) c FROM job WHERE status='open'").fetchone()["c"]
-    from ..serialize import STALE_DAYS, _days_ago
+    from ..serialize import STALE_DAYS
     stale = []
     for r in conn.execute("SELECT id,title,confirmed_at,employer_id FROM job"
                           " WHERE status='open'").fetchall():
@@ -150,7 +152,7 @@ def overview(conn: sqlite3.Connection = Depends(get_conn),
     for r in conn.execute(
             "SELECT t.*, u.name person_name, e.name emp_name,"
             " e.contact_email, e.contact_phone, e.contact_name"
-            " FROM event_talk t JOIN user u ON u.id=t.user_id"
+            " FROM event_talk t LEFT JOIN user u ON u.id=t.user_id"
             " JOIN employer e ON e.id=t.employer_id"
             " WHERE t.status='talked' ORDER BY t.talked_at").fetchall():
         at = datetime.fromisoformat(r["talked_at"].replace("Z", "+00:00"))
@@ -159,7 +161,9 @@ def overview(conn: sqlite3.Connection = Depends(get_conn),
         days = (datetime.now(timezone.utc) - at).days
         if days > 7:
             talks.append({
-                "id": r["id"], "person_name": r["person_name"],
+                "id": r["id"],
+                "person_name": r["person_name"] or r["visitor_name"],
+                "recorded_by_advisor": r["user_id"] is None,
                 "employer_name": r["emp_name"], "days_waiting": days,
                 "employer": {"name": r["emp_name"],
                              "contact_name": r["contact_name"],
@@ -168,7 +172,210 @@ def overview(conn: sqlite3.Connection = Depends(get_conn),
     return {"open_jobs": open_jobs, "stale_jobs": stale,
             "waiting_over_7_days": waiting, "new_help_requests": new_requests,
             "applications_by_status": by_status,
-            "event_talks_unanswered": talks}
+            "event_talks_unanswered": talks,
+            "outcomes": {"last_7_days": _outcomes(conn, 7),
+                         "all_time": _outcomes(conn, None)}}
+
+
+CALL_OUTCOMES = ("still_open", "filled", "no_answer", "no_vacancy")
+
+
+def _outcomes(conn: sqlite3.Connection, days: int | None) -> dict:
+    """Aggregate counts only — never per person or per advisor."""
+    def since(col: str) -> str:
+        return (f" AND julianday({col}) >= julianday('now','-{days} days')"
+                if days else "")
+
+    def count(sql: str) -> int:
+        return conn.execute(sql).fetchone()[0]
+
+    hr = {r["status"]: r["c"] for r in conn.execute(
+        "SELECT status, COUNT(*) c FROM help_request WHERE 1=1"
+        + since("created_at") + " GROUP BY status")}
+    calls = dict.fromkeys(CALL_OUTCOMES, 0)
+    for r in conn.execute("SELECT detail FROM audit_log WHERE"
+                          " action='call_logged'" + since("created_at")):
+        o = r["detail"].rsplit(":", 1)[-1]
+        if o in calls:
+            calls[o] += 1
+    return {
+        "help_requests": {k: hr.get(k, 0)
+                          for k in ("new", "in_progress", "done")},
+        "applications": count("SELECT COUNT(*) FROM application WHERE 1=1"
+                              + since("created_at")),
+        "applications_by_advisor": count(
+            "SELECT COUNT(*) FROM application WHERE created_by_advisor=1"
+            + since("created_at")),
+        "interviews": count(
+            "SELECT COUNT(*) FROM application WHERE status IN"
+            " ('interview','offer')" + since("updated_at")),
+        "offers": count("SELECT COUNT(*) FROM application WHERE"
+                        " status='offer'" + since("updated_at")),
+        "event_talks": {
+            "recorded": count("SELECT COUNT(*) FROM event_talk WHERE 1=1"
+                              + since("talked_at")),
+            "answered": count("SELECT COUNT(*) FROM event_talk WHERE"
+                              " status='answered'" + since("answered_at")),
+            "unanswered": count("SELECT COUNT(*) FROM event_talk WHERE"
+                                " status='talked'" + since("talked_at"))},
+        "employer_calls": calls}
+
+
+@router.post("/advisor/calls", status_code=201)
+def log_call(payload: CallOutcomeIn,
+             conn: sqlite3.Connection = Depends(get_conn),
+             user=Depends(auth_mod.current_user)):
+    """Outcome of a call to an employer. 'still_open' confirms the job,
+    'filled' closes it; the audit row holds ids + outcome only."""
+    _advisor(user)
+    emp_id = payload.employer_id
+    if payload.job_id:
+        job = conn.execute("SELECT employer_id FROM job WHERE id=?",
+                           (payload.job_id,)).fetchone()
+        if not job:
+            raise HTTPException(404, "Job not found.")
+        emp_id = job["employer_id"]
+    elif payload.outcome in ("still_open", "filled"):
+        raise HTTPException(422, "Choose the job this answer is about.")
+    if not emp_id or not conn.execute("SELECT 1 FROM employer WHERE id=?",
+                                      (emp_id,)).fetchone():
+        raise HTTPException(404, "Employer not found.")
+    if payload.outcome == "still_open":
+        mark_confirmed(conn, payload.job_id, user["id"])
+    elif payload.outcome == "filled":
+        mark_closed(conn, payload.job_id, user["id"])
+    db_mod.audit(conn, user["id"], "call_logged",
+                 f"{emp_id}:{payload.job_id or '-'}:{payload.outcome}")
+    conn.commit()
+    return {"employer_id": emp_id, "job_id": payload.job_id,
+            "outcome": payload.outcome}
+
+
+def _last_calls(conn: sqlite3.Connection) -> dict:
+    out = {}
+    for r in conn.execute("SELECT detail, created_at FROM audit_log"
+                          " WHERE action='call_logged' ORDER BY id"):
+        parts = r["detail"].split(":")
+        if len(parts) == 3:
+            out[parts[0]] = {"outcome": parts[2], "at": r["created_at"],
+                             "job_id": None if parts[1] == "-" else parts[1]}
+    return out
+
+
+@router.get("/advisor/employers-to-call")
+def employers_to_call(conn: sqlite3.Connection = Depends(get_conn),
+                      user=Depends(auth_mod.current_user)):
+    """Hidden-vacancy call list: no open job, newest confirmation older
+    than 30 days, or the last call went unanswered. An employer who
+    answered in the last 30 days drops off until then."""
+    _advisor(user)
+    calls = _last_calls(conn)
+    order = {"call_again": 0, "no_open_job": 1, "stale": 2}
+    out = []
+    for e in conn.execute("SELECT * FROM employer ORDER BY name").fetchall():
+        jobs = conn.execute(
+            "SELECT id, status, confirmed_at FROM job WHERE employer_id=?"
+            " ORDER BY status='open' DESC, confirmed_at DESC, created_at DESC",
+            (e["id"],)).fetchall()
+        open_days = [_days_ago(j["confirmed_at"]) for j in jobs
+                     if j["status"] == "open"]
+        newest = min((d for d in open_days if d is not None), default=None)
+        call = calls.get(e["id"])
+        if call and call["outcome"] == "no_answer":
+            reason = "call_again"
+        elif call and (_days_ago(call["at"]) or 0) <= 30:
+            continue
+        elif not open_days:
+            reason = "no_open_job"
+        elif newest is None or newest > 30:
+            reason = "stale"
+        else:
+            continue
+        out.append({
+            "id": e["id"], "name": e["name"], "contact_name": e["contact_name"],
+            "contact_email": e["contact_email"],
+            "contact_phone": e["contact_phone"], "reason": reason,
+            "open_jobs": len(open_days), "newest_confirmed_days_ago": newest,
+            "latest_job_id": ((call and call["job_id"])
+                              or (jobs[0]["id"] if jobs else None)),
+            "last_call": ({"outcome": call["outcome"], "at": call["at"]}
+                          if call else None)})
+    out.sort(key=lambda r: order[r["reason"]])
+    return {"employers": out}
+
+
+@router.post("/advisor/event/talks", status_code=201)
+def record_walkup_talk(payload: WalkupTalkIn,
+                       conn: sqlite3.Connection = Depends(get_conn),
+                       user=Depends(auth_mod.current_user)):
+    """A walk-up visitor with no account or number talked to an employer;
+    the advisor records it with the visitor's spoken consent so the
+    employer still has to answer."""
+    _advisor(user)
+    if not payload.consent:
+        raise HTTPException(422, "Ask the visitor first: they must agree "
+                                 "that their name and contact are shared "
+                                 "with this employer.")
+    ev = conn.execute("SELECT id FROM event ORDER BY date LIMIT 1").fetchone()
+    if not ev or not conn.execute(
+            "SELECT 1 FROM employer_event WHERE event_id=? AND employer_id=?",
+            (ev["id"], payload.employer_id)).fetchone():
+        raise HTTPException(404, "That employer is not at the event.")
+    if payload.job_id and not conn.execute(
+            "SELECT 1 FROM job WHERE id=? AND employer_id=?",
+            (payload.job_id, payload.employer_id)).fetchone():
+        raise HTTPException(404, "That job is not from this employer.")
+    talk_id = db_mod.new_id(conn, "et")
+    conn.execute(
+        "INSERT INTO event_talk (id,event_id,user_id,employer_id,job_id,"
+        "visitor_name,visitor_contact_method,visitor_contact_value,"
+        "recorded_by,consent,status,talked_at)"
+        " VALUES (?,?,NULL,?,?,?,?,?,?,1,'talked',?)",
+        (talk_id, ev["id"], payload.employer_id, payload.job_id,
+         payload.first_name.strip(), payload.contact_method,
+         payload.contact_value.strip(), user["id"],
+         datetime.now(timezone.utc).isoformat(timespec="seconds")))
+    db_mod.audit(conn, user["id"], "event_talk_walkup", talk_id)
+    conn.commit()
+    return {"id": talk_id, "employer_id": payload.employer_id,
+            "job_id": payload.job_id, "status": "talked",
+            "recorded_by_advisor": True}
+
+
+@router.get("/advisor/event-overview")
+def event_overview(conn: sqlite3.Connection = Depends(get_conn),
+                   user=Depends(auth_mod.current_user)):
+    """Per-booth counts for the event organiser, in booth order."""
+    _advisor(user)
+    ev = conn.execute("SELECT * FROM event ORDER BY date LIMIT 1").fetchone()
+    if not ev:
+        return {"event": None, "employers": [], "totals": None}
+
+    def pct(a: int, b: int) -> int | None:
+        return round(100 * a / b) if b else None
+
+    sub = ("(SELECT COUNT(*) FROM event_talk t WHERE t.event_id=ee.event_id"
+           " AND t.employer_id=e.id{})")
+    rows = []
+    for r in conn.execute(
+            "SELECT e.id, e.name, ee.booth,"
+            " (SELECT COUNT(*) FROM event_plan p WHERE p.event_id=ee.event_id"
+            "  AND p.employer_id=e.id) planned, "
+            + sub.format("") + " talks, "
+            + sub.format(" AND t.status='answered'") + " answered, "
+            + sub.format(" AND t.outcome='next_step'") + " next_step"
+            " FROM employer_event ee JOIN employer e ON e.id=ee.employer_id"
+            " WHERE ee.event_id=? ORDER BY ee.booth", (ev["id"],)):
+        rows.append({
+            "employer_id": r["id"], "name": r["name"], "booth": r["booth"],
+            "visitors_planned": r["planned"], "talks": r["talks"],
+            "answered": r["answered"], "next_step": r["next_step"],
+            "answered_pct": pct(r["answered"], r["talks"])})
+    totals = {k: sum(r[k] for r in rows) for k in
+              ("visitors_planned", "talks", "answered", "next_step")}
+    totals["answered_pct"] = pct(totals["answered"], totals["talks"])
+    return {"event": {"id": ev["id"], "name": ev["name"], "date": ev["date"]},
+            "employers": rows, "totals": totals}
 
 
 @router.get("/audit")

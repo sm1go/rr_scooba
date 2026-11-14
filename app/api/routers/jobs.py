@@ -346,13 +346,25 @@ def _get_job_row(conn, job_id, user):
     return row
 
 
+def mark_confirmed(conn, job_id: str, actor: str) -> None:
+    conn.execute("UPDATE job SET confirmed_at=? WHERE id=?",
+                 (date.today().isoformat(), job_id))
+    db_mod.audit(conn, actor, "job_confirmed", job_id)
+
+
+def mark_closed(conn, job_id: str, actor: str) -> None:
+    conn.execute("UPDATE job SET status='closed' WHERE id=?", (job_id,))
+    conn.execute(
+        "UPDATE application SET status='job_closed', updated_at=datetime('now')"
+        " WHERE job_id=? AND status IN ('sent','interview')", (job_id,))
+    db_mod.audit(conn, actor, "job_closed", job_id)
+
+
 @router.post("/jobs/{job_id}/confirm")
 def confirm_job(job_id: str, conn: sqlite3.Connection = Depends(get_conn),
                 user=Depends(current_user)):
     _get_job_row(conn, job_id, user)
-    conn.execute("UPDATE job SET confirmed_at=? WHERE id=?",
-                 (date.today().isoformat(), job_id))
-    db_mod.audit(conn, user["id"], "job_confirmed", job_id)
+    mark_confirmed(conn, job_id, user["id"])
     conn.commit()
     return job_out(conn, conn.execute("SELECT * FROM job WHERE id=?",
                                       (job_id,)).fetchone())
@@ -362,11 +374,7 @@ def confirm_job(job_id: str, conn: sqlite3.Connection = Depends(get_conn),
 def close_job(job_id: str, conn: sqlite3.Connection = Depends(get_conn),
               user=Depends(current_user)):
     _get_job_row(conn, job_id, user)
-    conn.execute("UPDATE job SET status='closed' WHERE id=?", (job_id,))
-    conn.execute(
-        "UPDATE application SET status='job_closed', updated_at=datetime('now')"
-        " WHERE job_id=? AND status IN ('sent','interview')", (job_id,))
-    db_mod.audit(conn, user["id"], "job_closed", job_id)
+    mark_closed(conn, job_id, user["id"])
     conn.commit()
     return job_out(conn, conn.execute("SELECT * FROM job WHERE id=?",
                                       (job_id,)).fetchone())

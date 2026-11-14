@@ -11,7 +11,9 @@ import { labelText } from '../components/JobRow'
 import JobMap from '../components/JobMap'
 import ConditionTable from '../components/ConditionTable'
 import ListenButton from '../components/ListenButton'
-import { daysAgoText, districtName, hoursLine, payLine, shiftsLine } from '../lib/format'
+import {
+  conditionState, daysAgoText, districtName, helpLink, hoursLine, payLine, shiftsLine,
+} from '../lib/format'
 import { commuteLine, legText } from '../lib/commute'
 import { employerProgramsFor } from '../lib/support'
 
@@ -94,11 +96,17 @@ export default function JobDetail() {
   }
   if (!job) return <p>{t('common.loading')}</p>
 
+  const originName = cat && originId ? districtName(originId, cat.districts) : ''
+  const unknownKeys = job.conditions.filter((c) => c.value === 'unknown').map((c) => c.key)
   const listenText = [
     job.title, job.employer?.name, payLine(job, t),
     hoursLine(job, t), shiftsLine(job, t),
+    commute && originName ? commuteLine(commute, originName, t) : '',
+    t('job.conditions'),
+    ...job.conditions.map((c) => `${t(`cond.${c.key}` as Key)}: ${conditionState(c, t)}`),
+    `${t('job.lifting')}: ${job.lifting || t('common.unknown')}`,
     ...(job.duties ?? []),
-  ].join('. ')
+  ].filter(Boolean).join('. ')
 
   const toggleSave = async () => {
     if (!user) return
@@ -141,7 +149,7 @@ export default function JobDetail() {
           <summary className="cursor-pointer text-secondary">
             {t('commute.legs')}
           </summary>
-          <ol className="m-0 mt-1 pl-5 text-secondary">
+          <ol className="m-0 mt-1 ps-5 text-secondary">
             {commute.legs.map((l, i) => (
               <li key={i}>{legText(l, districtName(originId, cat.districts), t)}</li>
             ))}
@@ -160,11 +168,12 @@ export default function JobDetail() {
             {t('job.simpler')}
           </button>
         )}
-        <Link to={`/jobs/${job.id}/print`} className="btn btn-quiet">
-          {t('job.print')}
-        </Link>
         {!cfg.ai && <span className="text-secondary">{t('ai.off')}</span>}
         {simplerErr && <span className="text-secondary">{simplerErr}</span>}
+        <Link to={`/jobs/${job.id}/print`} className="ms-auto underline text-secondary"
+              style={{ fontSize: '1rem', padding: '10px 4px' }}>
+          {t('job.print')}
+        </Link>
       </div>
       {simpler && (
         <p className="card p-3 mb-4 text-secondary">{t('job.simpler.machine')}</p>
@@ -176,7 +185,7 @@ export default function JobDetail() {
             <details key={l.id} className="card p-3 mb-2">
               <summary className="cursor-pointer font-medium">
                 <Chip tone="yes">{labelText(l.id, t)}</Chip>
-                <span className="text-secondary ml-2" style={{ fontSize: '1rem' }}>
+                <span className="text-secondary ms-2" style={{ fontSize: '1rem' }}>
                   {t('job.why')}
                 </span>
               </summary>
@@ -186,8 +195,22 @@ export default function JobDetail() {
         </div>
       )}
 
+      <div id="job-conditions" />
+      <Section title={t('job.conditions')}>
+        {unknownKeys.length > 0 && (
+          <div className="card p-4 mb-3 flex flex-wrap items-center justify-between gap-3"
+               style={{ background: 'var(--color-wait-bg)' }}>
+            <p className="m-0 font-medium">{t('job.unknownbanner', { n: unknownKeys.length })}</p>
+            <Link to={helpLink(job.id, unknownKeys)} className="btn btn-secondary">
+              {t('job.unknownask')}
+            </Link>
+          </div>
+        )}
+        <ConditionTable job={job} jobId={job.id} />
+      </Section>
+
       <Section title={t('job.whatyoudo')}>
-        <ul className="m-0 pl-5">
+        <ul className="m-0 ps-5">
           {(simpler?.duties ?? job.duties).map((d, i) => <li key={i} className="mb-2">{d}</li>)}
         </ul>
       </Section>
@@ -235,12 +258,12 @@ export default function JobDetail() {
           <p className="text-secondary mt-1">{simpler?.experience_note ?? job.experience_note}</p>
         )}
         {(simpler?.qualifications ?? job.qualifications).length > 0 && (
-          <ul className="pl-5 mt-2 mb-2">
+          <ul className="ps-5 mt-2 mb-2">
             {(simpler?.qualifications ?? job.qualifications).map((q, i) => <li key={i}>{q}</li>)}
           </ul>
         )}
         {job.languages.length > 0 && (
-          <ul className="pl-5 mt-2 mb-0">
+          <ul className="ps-5 mt-2 mb-0">
             {job.languages.map((l, i) => (
               <li key={i}>{l.language} {l.level}
                 {(simpler?.language_tasks?.[i] ?? l.task)
@@ -256,11 +279,6 @@ export default function JobDetail() {
           <p className="m-0">{simpler?.onboarding ?? job.onboarding}</p>
         </Section>
       )}
-
-      <div id="job-conditions" />
-      <Section title={t('job.conditions')}>
-        <ConditionTable job={job} jobId={job.id} />
-      </Section>
 
       {job.event && (
         <Section title={t('job.atevent')}>

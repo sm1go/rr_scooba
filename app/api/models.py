@@ -183,3 +183,18 @@ class TalkIn(BaseModel):
 class TalkAnswerIn(BaseModel):
     outcome: Literal["next_step", "not_now"]
     employer_note: str = Field(min_length=1)
+
+
+class CallOutcomeIn(BaseModel):
+    employer_id: Optional[str] = None
+    job_id: Optional[str] = None
+    outcome: Literal["still_open", "filled", "no_answer", "no_vacancy"]
+
+
+class WalkupTalkIn(BaseModel):
+    employer_id: str
+    first_name: str = Field(min_length=1, max_length=60)
+    contact_method: Literal["phone", "sms", "email"]
+    contact_value: str = Field(min_length=3, max_length=120)
+    job_id: Optional[str] = None
+    consent: bool

@@ -22,7 +22,7 @@ export default function ConditionTable({
               className="flex flex-wrap items-baseline justify-between gap-2 py-3 border-b"
               style={{ borderColor: 'var(--color-hairline)' }}>
             <span>{t(`cond.${c.key}` as Key)}</span>
-            <span className="flex items-center gap-3 text-right">
+            <span className="flex items-center gap-3 text-end">
               {c.value === 'yes' && (
                 <span className="chip yes"><span className="dot" aria-hidden="true" />{t('common.yes')}</span>
               )}

@@ -76,12 +76,14 @@ export default function Help() {
       {err && <ErrorBox>{err}</ErrorBox>}
 
       <Section title={t('help.what')}>
-        <div className="grid gap-2">
+        <div className="grid gap-2" role="radiogroup" aria-label={t('help.what')}>
           {KINDS.map((k) => (
-            <Toggle key={k} pressed={kind === k} onClick={() => setKind(k)}
-                    className="justify-start text-left">
+            <label key={k} className={`btn ${kind === k ? 'btn-primary' : 'btn-quiet'} justify-start text-start gap-3`}
+                   style={{ minHeight: 48, justifyContent: 'flex-start' }}>
+              <input type="radio" name="help-kind" checked={kind === k}
+                     onChange={() => setKind(k)} style={{ width: 20, height: 20 }} />
               {t(`help.kind.${k}` as Key)}
-            </Toggle>
+            </label>
           ))}
         </div>
       </Section>

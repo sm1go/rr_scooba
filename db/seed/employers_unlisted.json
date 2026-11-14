@@ -1,0 +1,14 @@
+[
+  {"id": "emp-parturi-leppavaara", "name": "Parturi Leppävaara",
+   "about": "Three-chair barber shop by Leppävaara station.",
+   "contact_name": "Jari Salo", "contact_email": "info@parturi-leppavaara.example.com",
+   "contact_phone": "+358 40 000 0101"},
+  {"id": "emp-pyorapaja", "name": "Espoon Pyöräpaja",
+   "about": "Bike repair workshop with four mechanics in Espoonlahti.",
+   "contact_name": "Elina Korpi", "contact_email": "info@pyorapaja.example.com",
+   "contact_phone": "+358 40 000 0102"},
+  {"id": "emp-kotiapu-nuuksio", "name": "Kotiapu Nuuksio",
+   "about": "Home help and garden work for older residents; six staff.",
+   "contact_name": "Raili Väisänen", "contact_email": "info@kotiapu-nuuksio.example.com",
+   "contact_phone": "+358 40 000 0103"}
+]

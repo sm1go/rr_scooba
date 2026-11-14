@@ -3,11 +3,13 @@ import { api, ApiError } from '../../lib/api'
 import { useI18n } from '../../i18n/i18n'
 import type { EmployerEvent, EventTalk } from '../../types'
 import { Chip, ErrorBox, ErrorState, Section } from '../../components/ui'
+import { useStaffT } from '../../i18n-staff'
 
 /** /employer/event — the employer's booth view: visitor count, record
     conversations by number, answer each with next step / not now. */
 export default function EmployerEventPage() {
   const { t } = useI18n()
+  const s = useStaffT()
   const [ev, setEv] = useState<EmployerEvent | null>(null)
   const [err, setErr] = useState<unknown>(null)
   const [msg, setMsg] = useState('')
@@ -98,6 +100,9 @@ export default function EmployerEventPage() {
                 <p className="m-0 text-secondary">
                   {tk.person_contact_method}: {tk.person_contact_value}
                 </p>
+                {(tk as EventTalk & { recorded_by_advisor?: boolean }).recorded_by_advisor && (
+                  <p className="m-0 text-secondary" style={{ fontSize: '1rem' }}>{s('wu.byadvisor')}</p>
+                )}
               </div>
               <Chip tone={tk.status === 'answered' ? 'yes' : 'wait'}>
                 {tk.status === 'answered' ? t('empevent.answered') : t('empevent.needsanswer')}

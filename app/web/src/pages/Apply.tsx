@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../lib/api'
 import { useAuth } from '../lib/auth'
@@ -31,6 +31,13 @@ export default function Apply() {
   const [err, setErr] = useState('')
   const [done, setDone] = useState<Application | null>(null)
   const [activeCount, setActiveCount] = useState<number | null>(null)
+  const reviewRef = useRef<HTMLHeadingElement>(null)
+  const first = useRef(true)
+  useEffect(() => {
+    if (first.current) { first.current = false; return }
+    if (review) reviewRef.current?.focus()
+    else document.querySelector<HTMLElement>('h1[data-page-title]')?.focus()
+  }, [review])
 
   const loadJob = () => {
     setLoadErr(null)
@@ -185,7 +192,8 @@ export default function Apply() {
           </button>
         </>
       ) : (
-        <Section title={t('apply.review')}>
+        <section className="card p-5 mb-5">
+          <h2 ref={reviewRef} tabIndex={-1} className="m-0 mb-3">{t('apply.review')}</h2>
           <dl className="m-0">
             <dt className="font-medium mt-2">{t('apply.reachme')}</dt>
             <dd className="m-0">{t(`apply.${method}` as Key)}: {value || '—'}</dd>
@@ -215,7 +223,7 @@ export default function Apply() {
               {t('common.send')}
             </button>
           </div>
-        </Section>
+        </section>
       )}
     </div>
   )

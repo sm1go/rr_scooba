@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Mic } from 'lucide-react'
 import { useI18n } from '../i18n/i18n'
 
 const SPEECH_LANGS = [
@@ -25,17 +26,20 @@ declare global {
   }
 }
 
-/** "Speak instead of typing" — appends recognised text to the textarea. */
+/** "Speak instead of typing" — appends recognised text to the textarea.
+    compact: mic button + language only, for a one-line search box. */
 export default function VoiceInput({
-  onText, targetId,
-}: { onText: (text: string) => void; targetId: string }) {
-  const { t } = useI18n()
-  const [lang, setLang] = useState('fi-FI')
+  onText, targetId, compact,
+}: { onText: (text: string) => void; targetId: string; compact?: boolean }) {
+  const { t, lang: ui } = useI18n()
+  const [lang, setLang] = useState(
+    SPEECH_LANGS.find((l) => l.id.startsWith(ui))?.id ?? 'fi-FI')
   const [listening, setListening] = useState(false)
   const [rec, setRec] = useState<SR | null>(null)
 
   const Ctor = window.SpeechRecognition ?? window.webkitSpeechRecognition
   if (!Ctor) {
+    if (compact) return null
     return <p className="text-secondary" style={{ fontSize: '1rem' }}>
       {t('apply.voiceunsupported')}</p>
   }
@@ -60,11 +64,12 @@ export default function VoiceInput({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mt-2">
-      <button type="button" className="btn btn-quiet" onClick={toggle}
-              aria-pressed={listening} aria-controls={targetId}
+    <div className={compact ? 'contents' : 'flex flex-wrap items-center gap-2 mt-2'}>
+      <button type="button" className={`btn ${compact ? 'btn-secondary' : 'btn-quiet'}`}
+              onClick={toggle} aria-pressed={listening} aria-controls={targetId}
               style={{ minHeight: 48 }}>
-        {listening ? t('common.stop') : t('apply.speak')}
+        <Mic size={20} aria-hidden="true" />
+        {listening ? t('common.stop') : t(compact ? 'jobs.speak' : 'apply.speak')}
       </button>
       <label className="text-secondary" style={{ fontSize: '1rem' }}>
         <select value={lang} onChange={(e) => setLang(e.target.value)}
@@ -75,9 +80,11 @@ export default function VoiceInput({
           ))}
         </select>
       </label>
-      <p className="text-secondary w-full" style={{ fontSize: '1rem' }}>
-        {t('apply.voiceprivacy')}
-      </p>
+      {(!compact || listening) && (
+        <p className="text-secondary w-full" style={{ fontSize: '1rem' }}>
+          {t('apply.voiceprivacy')}
+        </p>
+      )}
     </div>
   )
 }

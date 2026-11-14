@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 SEED_REQUIRED = [
     "event.json", "employers.json", "jobs.json", "users.json",
@@ -40,6 +40,11 @@ def db_path() -> Path:
 
 def _load_seed(name: str, seed_dir: Path):
     return json.loads((seed_dir / name).read_text(encoding="utf-8"))
+
+
+def _load_opt(name: str, seed_dir: Path) -> list:
+    p = seed_dir / name
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
 
 
 def _run_generator() -> None:
@@ -85,7 +90,10 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
         "INSERT INTO event (id,name,date,venue,advisor_note)"
         " VALUES (:id,:name,:date,:venue,:advisor_note)", ev)
 
-    for e in _load_seed("employers.json", seed_dir):
+    # employers_unlisted.json: small firms with no job on the map yet
+    # (hidden-vacancy call list); hand-written, not from the generator
+    for e in (_load_seed("employers.json", seed_dir)
+              + _load_opt("employers_unlisted.json", seed_dir)):
         conn.execute(
             "INSERT INTO employer (id,name,about,contact_name,contact_email,"
             "contact_phone) VALUES (:id,:name,:about,:contact_name,"
@@ -171,8 +179,7 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
                 now: datetime) -> None:
     """Optional event-mode seed files (spec v3 §8)."""
     def opt(name: str):
-        p = seed_dir / name
-        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
+        return _load_opt(name, seed_dir)
 
     for v in opt("event_visitors.json"):
         conn.execute(
