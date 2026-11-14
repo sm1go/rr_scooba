@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 6;
+PRAGMA user_version = 7;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -88,6 +88,7 @@ CREATE TABLE job (
     positions       INTEGER NOT NULL DEFAULT 1,
     status          TEXT NOT NULL DEFAULT 'draft'
                     CHECK (status IN ('draft','open','closed')),
+    contract_id     TEXT REFERENCES procurement_contract(id),
     source          TEXT NOT NULL DEFAULT 'employer'
                     CHECK (source IN ('employer','advisor')),
     confirmed_at    TEXT,
@@ -125,6 +126,8 @@ CREATE TABLE application (
     meet_at_event      INTEGER NOT NULL DEFAULT 0,
     meets_must_haves   INTEGER NOT NULL DEFAULT 0,
     wants_tryout       INTEGER NOT NULL DEFAULT 0,
+    contract_eligible  INTEGER NOT NULL DEFAULT 0,
+    shared_credentials TEXT NOT NULL DEFAULT '[]',
     status             TEXT NOT NULL DEFAULT 'sent' CHECK (status IN
         ('sent','interview','offer','not_selected','withdrawn','job_closed')),
     status_note        TEXT NOT NULL DEFAULT '',
@@ -142,8 +145,9 @@ CREATE TABLE help_request (
     job_id         TEXT REFERENCES job(id),
     kind           TEXT NOT NULL CHECK (kind IN
         ('check_conditions','prepare_application','arrange_contact','other',
-         'employer_support')),
+         'employer_support','check_document')),
     condition_keys TEXT NOT NULL DEFAULT '[]',
+    document_label TEXT NOT NULL DEFAULT '',
     message        TEXT NOT NULL DEFAULT '',
     consent        INTEGER NOT NULL DEFAULT 0,
     status         TEXT NOT NULL DEFAULT 'new'
@@ -152,6 +156,37 @@ CREATE TABLE help_request (
     advisor_reply  TEXT NOT NULL DEFAULT '',
     created_at     TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at     TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE procurement_contract (
+    id              TEXT PRIMARY KEY,
+    employer_id     TEXT NOT NULL REFERENCES employer(id),
+    title           TEXT NOT NULL,
+    value_eur       REAL NOT NULL DEFAULT 0,
+    starts          TEXT NOT NULL,
+    ends            TEXT NOT NULL,
+    due             TEXT NOT NULL,
+    hires_required  INTEGER NOT NULL,
+    hires_done      INTEGER NOT NULL DEFAULT 0,
+    target_groups   TEXT NOT NULL DEFAULT '[]'
+);
+
+CREATE TABLE contract_hire (
+    id           TEXT PRIMARY KEY,
+    contract_id  TEXT NOT NULL REFERENCES procurement_contract(id),
+    hired_on     TEXT NOT NULL,
+    note         TEXT NOT NULL DEFAULT '',
+    advisor_id   TEXT REFERENCES user(id),
+    created_at   TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE credential (
+    id          TEXT PRIMARY KEY,
+    user_id     TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    label       TEXT NOT NULL,
+    advisor_id  TEXT REFERENCES user(id),
+    checked_at  TEXT NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE audit_log (

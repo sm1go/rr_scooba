@@ -12,7 +12,7 @@ import JobMap from '../components/JobMap'
 import ConditionTable from '../components/ConditionTable'
 import ListenButton from '../components/ListenButton'
 import {
-  conditionState, daysAgoText, districtName, helpLink, hoursLine, payLine, shiftsLine,
+  conditionState, daysAgoText, districtName, fmtDate, helpLink, hoursLine, payLine, shiftsLine,
 } from '../lib/format'
 import { commuteLine, legText } from '../lib/commute'
 import { employerProgramsFor } from '../lib/support'
@@ -203,6 +203,21 @@ export default function JobDetail() {
         </div>
       )}
 
+      {job.city_contract && (
+        <div className="card p-4 mb-4"
+             style={{ background: 'var(--color-yes-bg)' }}>
+          <h2 className="m-0 mb-2 font-display" style={{ fontSize: '1.15rem' }}>
+            {t('job.citycontract')}
+          </h2>
+          <p className="m-0">{t('job.citycontract.body', { due: fmtDate(job.city_contract.due, lang) })}</p>
+        </div>
+      )}
+      {job.qualifications.length > 0 && (
+        <p className="card p-4 mb-4 text-secondary">
+          {t('job.dochint')}{' '}
+          <Link to="/profile#documents">{t('job.dochint.link')}</Link>
+        </p>
+      )}
       {(job.commitments ?? []).length > 0 && (
         <Section title={t('job.promises')}>
           <ul className="m-0 ps-5 grid gap-2">

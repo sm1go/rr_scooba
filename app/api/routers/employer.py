@@ -144,3 +144,17 @@ def set_application_status(app_id: str, payload: StatusIn,
     return application_out(conn, conn.execute(
         "SELECT * FROM application WHERE id=?", (app_id,)).fetchone(),
         employer_view=True)
+
+
+@router.get("/employer/contracts")
+def employer_contracts(conn: sqlite3.Connection = Depends(get_conn),
+                       user=Depends(auth_mod.current_user)):
+    if user["role"] != "employer":
+        raise HTTPException(403, "This is not available for your account.")
+    return {"contracts": [
+        {"id": c["id"], "title": c["title"], "due": c["due"],
+         "hires_required": c["hires_required"],
+         "hires_done": c["hires_done"]}
+        for c in conn.execute(
+            "SELECT * FROM procurement_contract WHERE employer_id=?"
+            " ORDER BY due", (user["employer_id"],))]}

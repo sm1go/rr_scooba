@@ -82,6 +82,7 @@ class JobIn(BaseModel):
     apply_question: str = ""
     cv_required: bool = False
     commitments: list[str] = []
+    contract_id: Optional[str] = None
     positions: int = 1
     status: Optional[Literal["draft", "open"]] = None   # None = keep / draft
     conditions: dict[str, Literal["yes", "no", "unknown"]] = {}
@@ -109,6 +110,8 @@ class ApplicationIn(BaseModel):
     cv_text: Optional[str] = None
     meets_must_haves: bool = False
     wants_tryout: bool = False
+    contract_eligible: bool = False
+    share_credentials: bool = False
     shared_needs: list[str] = []
     meet_at_event: bool = False
     name: Optional[str] = None          # advisor applies for someone
@@ -124,8 +127,10 @@ class StatusIn(BaseModel):
 class HelpRequestIn(BaseModel):
     job_id: Optional[str] = None
     kind: Literal["check_conditions", "prepare_application",
-                  "arrange_contact", "other", "employer_support"]
+                  "arrange_contact", "other", "employer_support",
+                  "check_document"]
     condition_keys: list[str] = []
+    document_label: str = ""
     message: str = ""
     consent: bool
     name: Optional[str] = None

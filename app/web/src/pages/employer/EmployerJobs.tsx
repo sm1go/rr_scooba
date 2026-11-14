@@ -4,11 +4,13 @@ import { api, ApiError } from '../../lib/api'
 import { useI18n } from '../../i18n/i18n'
 import type { Job } from '../../types'
 import { Chip, ErrorBox, ErrorState } from '../../components/ui'
-import { daysAgoText } from '../../lib/format'
+import { daysAgoText, fmtDate } from '../../lib/format'
 
 export default function EmployerJobs() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const [jobs, setJobs] = useState<Job[] | null>(null)
+  const [contracts, setContracts] = useState<{ id: string; title: string;
+    due: string; hires_done: number; hires_required: number }[]>([])
   const [err, setErr] = useState<unknown>(null)
 
   const load = () => {
@@ -16,6 +18,8 @@ export default function EmployerJobs() {
     api<{ jobs: Job[] }>('/api/employer/jobs')
       .then((r) => setJobs(r.jobs))
       .catch((e) => { setErr(e); setJobs([]) })
+    api<{ contracts: typeof contracts }>('/api/employer/contracts')
+      .then((r) => setContracts(r.contracts)).catch(() => undefined)
   }
   useEffect(load, [t])
 
@@ -45,6 +49,14 @@ export default function EmployerJobs() {
           {t('employer.addjob')}
         </Link>
       </div>
+      {contracts.map((c) => (
+        <div key={c.id} className="card p-4 mb-3" style={{ background: 'var(--color-yes-bg)' }}>
+          <p className="m-0">
+            {t('employer.contractbanner', { title: c.title, n: c.hires_done,
+                                           req: c.hires_required, due: fmtDate(c.due, lang) })}
+          </p>
+        </div>
+      ))}
       {err != null && jobs.length > 0 && <ErrorBox>{String(err)}</ErrorBox>}
       {jobs.length === 0 && <p>{t('employer.empty')}</p>}
       {jobs.map((j) => (

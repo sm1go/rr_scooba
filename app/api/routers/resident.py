@@ -103,15 +103,19 @@ def _create_application(conn: sqlite3.Connection, payload: ApplicationIn,
     conn.execute(
         "INSERT INTO application (id,job_id,user_id,name,contact_method,"
         "contact_value,availability_note,answer,cv_text,shared_needs,"
-        "meet_at_event,meets_must_haves,wants_tryout,status,"
-        "created_by_advisor)"
-        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "meet_at_event,meets_must_haves,wants_tryout,contract_eligible,"
+        "shared_credentials,status,created_by_advisor)"
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (app_id, payload.job_id, user_id, name, payload.contact_method,
          payload.contact_value, payload.availability_note, payload.answer,
          payload.cv_text if not open_hiring else None,
          json.dumps(payload.shared_needs, ensure_ascii=False),
          int(payload.meet_at_event), int(payload.meets_must_haves),
-         int(payload.wants_tryout), "sent", int(by_advisor)))
+         int(payload.wants_tryout),
+         int(payload.contract_eligible) if job["contract_id"] else 0,
+         json.dumps(_credential_snapshot(conn, user_id)
+                    if payload.share_credentials else []),
+         "sent", int(by_advisor)))
     db_mod.audit(conn, (user["id"] if user else "advisor"),
                  "application_created",
                  f"{app_id}:job={payload.job_id}"
@@ -159,10 +163,44 @@ def withdraw_application(app_id: str,
         "SELECT * FROM application WHERE id=?", (app_id,)).fetchone())
 
 
+def _credential_snapshot(conn: sqlite3.Connection,
+                         user_id: str) -> list[dict]:
+    return [{"label": r["label"], "checked_at": r["checked_at"]}
+            for r in conn.execute(
+                "SELECT label,checked_at FROM credential WHERE user_id=?"
+                " ORDER BY checked_at DESC", (user_id,))]
+
+
+@router.get("/me/credentials")
+def my_credentials(conn: sqlite3.Connection = Depends(get_conn),
+                   user=Depends(auth_mod.current_user)):
+    _resident(user)
+    return {"credentials": [dict(r) for r in conn.execute(
+        "SELECT id,label,checked_at,advisor_id FROM credential"
+        " WHERE user_id=? ORDER BY checked_at DESC", (user["id"],))]}
+
+
+@router.delete("/me/credentials/{cred_id}", status_code=204)
+def delete_credential(cred_id: str,
+                      conn: sqlite3.Connection = Depends(get_conn),
+                      user=Depends(auth_mod.current_user)):
+    _resident(user)
+    cur = conn.execute("DELETE FROM credential WHERE id=? AND user_id=?",
+                       (cred_id, user["id"]))
+    if cur.rowcount == 0:
+        raise HTTPException(404, "Document not found.")
+    conn.commit()
+
+
 # --- help requests --------------------------------------------------------------
 
 def _create_help_request(conn: sqlite3.Connection, payload: HelpRequestIn,
                          user) -> dict:
+    if payload.kind == "check_document":
+        if not user:
+            raise HTTPException(401, "Sign in to continue.")
+        if not payload.document_label.strip():
+            raise HTTPException(422, "Tell us which document you have.")
     if not payload.consent:
         raise HTTPException(422, "Please tick the consent box so an advisor "
                                  "can contact you.")
@@ -195,12 +233,12 @@ def _create_help_request(conn: sqlite3.Connection, payload: HelpRequestIn,
     hr_id = db_mod.new_id(conn, "hr")
     conn.execute(
         "INSERT INTO help_request (id,user_id,name,contact_method,"
-        "contact_value,job_id,kind,condition_keys,message,consent)"
-        " VALUES (?,?,?,?,?,?,?,?,?,?)",
+        "contact_value,job_id,kind,condition_keys,document_label,"
+        "message,consent) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
         (hr_id, user["id"] if user else None, name, contact_method,
          contact_value, payload.job_id, payload.kind,
          json.dumps(payload.condition_keys, ensure_ascii=False),
-         payload.message, 1))
+         payload.document_label.strip(), payload.message, 1))
     db_mod.audit(conn, (user["id"] if user else "anonymous"),
                  "help_request_created", f"{hr_id}:{payload.kind}")
     conn.commit()

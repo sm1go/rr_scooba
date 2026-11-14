@@ -1480,6 +1480,26 @@ def _assign_commitments(jobs: list[dict]) -> None:
         j["commitments"] = c
 
 
+def _assign_contracts(jobs: list[dict], catalog: dict) -> None:
+    """Link open jobs to city-contract employers (työllistämisehto),
+    deterministic by job id. 1-3 jobs per contract employer."""
+    try:
+        contracts = _load("procurement.json")
+    except FileNotFoundError:
+        return
+    for j in jobs:
+        j.pop("contract_id", None)
+    for con in sorted(contracts, key=lambda c: c["id"]):
+        pool = [j for j in jobs
+                if j["employer_id"] == con["employer_id"]
+                and j.get("status") in (None, "open")]
+        if not pool:
+            continue
+        n = 1 + int(hashlib.md5(con["id"].encode()).hexdigest(), 16) % 3
+        for j in sorted(pool, key=lambda x: _rank(x["id"]))[:n]:
+            j["contract_id"] = con["id"]
+
+
 def main():
     new_ids = {j["id"] for j in JOBS}
     new_emp_ids = {e[0] for e in EMPLOYERS}
@@ -1511,6 +1531,7 @@ def main():
     jobs.extend(JOBS)
     validate(jobs, employers + unlisted, catalog)
     _assign_commitments(jobs)
+    _assign_contracts(jobs, catalog)
 
     _dump("jobs.json", jobs)
     _dump("employers.json", employers)

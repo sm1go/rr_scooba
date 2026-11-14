@@ -51,6 +51,8 @@ export interface Job {
   apply_question: string
   cv_required: boolean
   commitments: string[]
+  contract_id: string | null
+  city_contract: { id: string; title: string; due: string } | null
   positions: number
   status: 'draft' | 'open' | 'closed'
   source: 'employer' | 'advisor'
@@ -125,6 +127,8 @@ export interface Application {
   meets_must_haves: boolean
   wants_tryout: boolean
   queue_position: number | null
+  contract_eligible: boolean
+  shared_credentials: { label: string; checked_at: string }[]
   status: 'sent' | 'interview' | 'offer' | 'not_selected' | 'withdrawn' | 'job_closed'
   status_note: string
   created_by_advisor: boolean
@@ -143,8 +147,9 @@ export interface HelpRequest {
   contact_method: string
   contact_value: string
   job_id: string | null
-  kind: 'check_conditions' | 'prepare_application' | 'arrange_contact' | 'other' | 'employer_support'
+  kind: 'check_conditions' | 'prepare_application' | 'arrange_contact' | 'other' | 'employer_support' | 'check_document'
   condition_keys: string[]
+  document_label?: string
   message: string
   status: 'new' | 'in_progress' | 'done'
   advisor_reply: string
@@ -304,3 +309,26 @@ export interface SimplerSections {
 export const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
 export const PARTS = ['morning', 'afternoon', 'evening'] as const
 export const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const
+
+export interface Bundle {
+  jobs: Job[]
+  hours_min: number
+  hours_max: number
+  max_km_apart: number
+  week: Record<string, { job_id: string; start: string; end: string }[]>
+  pay_week_eur: number | null
+}
+
+export interface CityContract {
+  id: string; title: string; due: string
+  starts?: string; ends?: string; value_eur?: number
+  hires_required: number; hires_done: number
+  status?: 'done' | 'behind' | 'on_track'; open_jobs?: number
+  target_groups?: string[]
+  employer?: { id: string; name: string; contact_name: string;
+               contact_phone: string; contact_email: string }
+}
+
+export interface Credential {
+  id: string; label: string; checked_at: string; advisor_id: string
+}

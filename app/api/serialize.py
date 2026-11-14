@@ -20,7 +20,8 @@ JOB_FIELDS = [
     "lat", "lon", "work_mode", "pay_amount", "pay_unit", "pay_note", "shifts",
     "schedule_flexible", "hours_min", "hours_max", "contract", "experience",
     "experience_note", "qualifications", "onboarding", "languages", "lifting",
-    "apply_question", "cv_required", "commitments", "positions", "status", "source",
+    "apply_question", "cv_required", "commitments", "contract_id",
+    "positions", "status", "source",
     "confirmed_at", "created_at",
 ]
 _JSON_FIELDS = {"duties", "shifts", "qualifications", "languages",
@@ -67,6 +68,12 @@ def job_out(conn: sqlite3.Connection, row: sqlite3.Row,
     emp = conn.execute("SELECT id,name FROM employer WHERE id=?",
                        (job["employer_id"],)).fetchone()
     job["employer"] = {"id": emp["id"], "name": emp["name"]} if emp else None
+
+    con = conn.execute(
+        "SELECT id,title,due FROM procurement_contract WHERE id=?",
+        (job.get("contract_id"),)).fetchone() if job.get("contract_id") else None
+    job["city_contract"] = ({"id": con["id"], "title": con["title"],
+                             "due": con["due"]} if con else None)
 
     conds = conditions_out(conn, job["id"])
     job["conditions"] = conds
@@ -115,6 +122,9 @@ def application_out(conn: sqlite3.Connection, row: sqlite3.Row,
            "meet_at_event": bool(row["meet_at_event"]),
            "meets_must_haves": bool(row["meets_must_haves"]),
            "wants_tryout": bool(row["wants_tryout"]),
+           "contract_eligible": bool(row["contract_eligible"]),
+           "shared_credentials": json.loads(
+               row["shared_credentials"] or "[]"),
            "status": row["status"], "status_note": row["status_note"],
            "created_by_advisor": bool(row["created_by_advisor"]),
            "created_at": row["created_at"], "updated_at": row["updated_at"]}
@@ -158,6 +168,7 @@ def help_request_out(row: sqlite3.Row) -> dict:
             "contact_value": row["contact_value"], "job_id": row["job_id"],
             "kind": row["kind"],
             "condition_keys": json.loads(row["condition_keys"] or "[]"),
+            "document_label": row["document_label"],
             "message": row["message"], "status": row["status"],
             "advisor_reply": row["advisor_reply"],
             "created_at": row["created_at"], "updated_at": row["updated_at"]}

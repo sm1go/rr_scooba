@@ -24,11 +24,12 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 SEED_REQUIRED = [
     "event.json", "employers.json", "jobs.json", "users.json",
     "applications.json", "help_requests.json", "saved_jobs.json",
+    "procurement.json",
 ]
 
 DEMO_PASSWORD = "demo1234"   # seeded demo accounts; documented in READMEs
@@ -110,12 +111,14 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
             "lat,lon,work_mode,pay_amount,pay_unit,pay_note,shifts,"
             "schedule_flexible,hours_min,hours_max,contract,experience,"
             "experience_note,qualifications,onboarding,languages,lifting,"
-            "apply_question,cv_required,commitments,positions,status,source,confirmed_at)"
+            "apply_question,cv_required,commitments,positions,status,source,"
+            "contract_id,confirmed_at)"
             " VALUES (:id,:employer_id,:title,:field,:duties,:address,:district,"
             ":lat,:lon,:work_mode,:pay_amount,:pay_unit,:pay_note,:shifts,"
             ":schedule_flexible,:hours_min,:hours_max,:contract,:experience,"
             ":experience_note,:qualifications,:onboarding,:languages,:lifting,"
-            ":apply_question,:cv_required,:commitments,:positions,:status,:source,"
+            ":apply_question,:cv_required,:commitments,:positions,:status,"
+            ":source,:contract_id,"
             ":confirmed_at)",
             {**j,
              "duties": json.dumps(j.get("duties", []), ensure_ascii=False),
@@ -125,7 +128,8 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
              "languages": json.dumps(j.get("languages", []), ensure_ascii=False),
              "confirmed_at": confirmed.isoformat(),
              "commitments": json.dumps(j.get("commitments", []),
-                                       ensure_ascii=False)})
+                                       ensure_ascii=False),
+             "contract_id": j.get("contract_id")})
         _write_conditions(conn, j["id"], j.get("conditions", {}), "employer")
 
     from . import auth as auth_mod
@@ -169,6 +173,29 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
              h.get("message", ""), int(h.get("consent", 0)), h["status"],
              h.get("advisor_id"), h.get("advisor_reply", ""),
              created.isoformat(), created.isoformat()))
+
+    for c in _load_opt("procurement.json", seed_dir):
+        conn.execute(
+            "INSERT INTO procurement_contract (id,employer_id,title,"
+            "value_eur,starts,ends,due,hires_required,hires_done,"
+            "target_groups) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (c["id"], c["employer_id"], c["title"], c.get("value_eur", 0),
+             c["starts"], c["ends"], c["due"], c["hires_required"],
+             c.get("hires_done", 0),
+             json.dumps(c.get("target_groups", []))))
+
+    # demo credentials: seen once by the seeded advisor, never a copy
+    advisor_id = conn.execute(
+        "SELECT id FROM user WHERE role='advisor' LIMIT 1").fetchone()
+    advisor_id = advisor_id["id"] if advisor_id else None
+    for uid, label in (("u-aino", "Hygiene passport (hygieniapassi)"),
+                       ("u-pekka", "Driving licence C")):
+        if conn.execute("SELECT 1 FROM user WHERE id=?", (uid,)).fetchone():
+            conn.execute(
+                "INSERT INTO credential (id,user_id,label,advisor_id,"
+                "checked_at) VALUES (?,?,?,?,?)",
+                (f"cred-{uid}", uid, label, advisor_id,
+                 (now - timedelta(days=30)).date().isoformat()))
 
     for s in _load_seed("saved_jobs.json", seed_dir):
         conn.execute("INSERT OR IGNORE INTO saved_job (user_id,job_id)"
@@ -265,7 +292,8 @@ def new_id(conn: sqlite3.Connection, prefix: str) -> str:
     """Short sequential id: ap-101, job-061, ... — takes the max numeric
     suffix, ignoring slug ids like 'job-cafe-weekend'."""
     table = {"ap": "application", "job": "job", "hr": "help_request",
-             "u": "user", "emp": "employer", "et": "event_talk"}[prefix]
+             "u": "user", "emp": "employer", "et": "event_talk",
+             "cred": "credential", "hire": "contract_hire"}[prefix]
     n = 0
     for r in conn.execute(
             "SELECT id FROM {} WHERE id LIKE ?".format(table),

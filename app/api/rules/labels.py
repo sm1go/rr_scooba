@@ -51,16 +51,27 @@ def _shift_parts(shift: dict) -> list[str]:
 
 def fits_availability(shifts: list[dict], flexible: bool,
                       slots: list[str]) -> bool:
-    """Every shift must lie inside a selected slot, or schedule_flexible."""
+    """Every shift must lie inside a selected slot, or schedule_flexible.
+    Overnight shifts (end <= start) must fit on both calendar days, and a
+    span outside every named part can never be promised."""
     if flexible:
         return True
     if not shifts or not slots:
         return False
     selected = set(slots)
+    days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
     for shift in shifts:
         day = shift.get("day")
-        for part in _shift_parts(shift):
-            if f"{day}-{part}" not in selected:
+        start, end = _minutes(shift["start"]), _minutes(shift["end"])
+        if end <= start and day in days:
+            spans = [(day, start, 1440),
+                     (days[(days.index(day) + 1) % 7], 0, end)]
+        else:
+            spans = [(day, start, end)]
+        for d, lo, hi in spans:
+            parts = [p for p, (plo, phi) in PARTS.items()
+                     if lo < phi and hi > plo]
+            if not parts or any(f"{d}-{p}" not in selected for p in parts):
                 return False
     return True
 

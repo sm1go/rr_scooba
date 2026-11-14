@@ -1,0 +1,98 @@
+[
+  {
+    "id": "con-schools-south",
+    "employer_id": "emp-kajo",
+    "title": "Cleaning of Espoo schools, south area",
+    "value_eur": 2400000,
+    "starts": "2026-09-01",
+    "ends": "2030-08-31",
+    "due": "2027-03-31",
+    "hires_required": 3,
+    "hires_done": 1,
+    "target_groups": [
+      "under_30",
+      "immigrant_background",
+      "unemployed_6m"
+    ]
+  },
+  {
+    "id": "con-lunch-central",
+    "employer_id": "emp-mallas",
+    "title": "School lunch catering, Espoo centre",
+    "value_eur": 850000,
+    "starts": "2026-08-01",
+    "ends": "2029-07-31",
+    "due": "2027-01-15",
+    "hires_required": 2,
+    "hires_done": 2,
+    "target_groups": [
+      "under_30",
+      "immigrant_background",
+      "unemployed_6m"
+    ]
+  },
+  {
+    "id": "con-tapiola-repair",
+    "employer_id": "emp-tiima",
+    "title": "Tapiola sports hall renovation",
+    "value_eur": 3100000,
+    "starts": "2026-10-01",
+    "ends": "2027-09-30",
+    "due": "2027-01-31",
+    "hires_required": 2,
+    "hires_done": 0,
+    "target_groups": [
+      "under_30",
+      "immigrant_background",
+      "unemployed_6m"
+    ]
+  },
+  {
+    "id": "con-park-winter",
+    "employer_id": "emp-rantala",
+    "title": "Park and street maintenance, winter season",
+    "value_eur": 620000,
+    "starts": "2026-11-01",
+    "ends": "2027-04-30",
+    "due": "2027-01-31",
+    "hires_required": 1,
+    "hires_done": 0,
+    "target_groups": [
+      "under_30",
+      "immigrant_background",
+      "unemployed_6m"
+    ]
+  },
+  {
+    "id": "con-parcel-hubs",
+    "employer_id": "emp-freight",
+    "title": "Parcel hub operations, Leppävaara and Matinkylä",
+    "value_eur": 410000,
+    "starts": "2026-09-15",
+    "ends": "2028-09-14",
+    "due": "2027-08-31",
+    "hires_required": 4,
+    "hires_done": 1,
+    "target_groups": [
+      "under_30",
+      "immigrant_background",
+      "unemployed_6m"
+    ]
+  },
+  {
+    "id": "con-homecare-north",
+    "employer_id": "emp-aurora-care",
+    "title": "Home care support, northern Espoo",
+    "value_eur": 1900000,
+    "starts": "2026-10-01",
+    "ends": "2030-09-30",
+    "due": "2027-06-30",
+    "hires_required": 2,
+    "hires_done": 1,
+    "target_groups": [
+      "under_30",
+      "immigrant_background",
+      "unemployed_6m"
+    ]
+  }
+]

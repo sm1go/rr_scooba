@@ -25,6 +25,7 @@ interface Form {
   languages: { language: string; level: string; task: string }[];
   lifting: string; apply_question: string; cv_required: boolean;
   commitments: string[];
+  contract_id: string;
   positions: number; conditions: Record<string, string>;
 }
 
@@ -35,7 +36,7 @@ const EMPTY: Form = {
   shifts: [], schedule_flexible: false, hours_min: '', hours_max: '',
   contract: '', experience: '', experience_note: '', qualifications: '',
   onboarding: '', languages: [], lifting: '', apply_question: '',
-  cv_required: false, commitments: [], positions: 1, conditions: {},
+  cv_required: false, commitments: [], contract_id: '', positions: 1, conditions: {},
 }
 
 export default function EmployerJobForm() {
@@ -46,7 +47,10 @@ export default function EmployerJobForm() {
   const nav = useNavigate()
   const [cat, setCat] = useState<Catalog | null>(null)
   const [params] = useSearchParams()
-  const [f, setF] = useState<Form>(() => ({ ...EMPTY, employer_id: params.get('employer') ?? '' }))
+  const [f, setF] = useState<Form>(() => ({ ...EMPTY,
+    employer_id: params.get('employer') ?? '',
+    contract_id: params.get('contract') ?? '' }))
+  const [contracts, setContracts] = useState<{ id: string; title: string }[]>([])
   const [step, setStep] = useState(0)
   const [tips, setTips] = useState<WordingTip[]>([])
   const [err, setErr] = useState('')
@@ -62,6 +66,16 @@ export default function EmployerJobForm() {
   const [aiWarnings, setAiWarnings] = useState<string[]>([])
   const [supportAsked, setSupportAsked] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const url = user?.role === 'advisor'
+      ? '/api/advisor/contracts' : '/api/employer/contracts'
+    api<{ contracts: { id: string; title: string; employer?: { id: string } }[] }>(url)
+      .then((r) => setContracts(user?.role === 'advisor'
+        ? r.contracts.filter((c) => !f.employer_id || c.employer?.id === f.employer_id)
+        : r.contracts))
+      .catch(() => undefined)
+  }, [user?.role, f.employer_id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     api<Catalog>('/api/catalog').then(setCat).catch(() => {})
@@ -86,6 +100,7 @@ export default function EmployerJobForm() {
         onboarding: j.onboarding, languages: j.languages,
         lifting: j.lifting ?? '', apply_question: j.apply_question,
         cv_required: j.cv_required, commitments: j.commitments ?? [],
+        contract_id: j.contract_id ?? '',
         positions: j.positions,
         conditions: Object.fromEntries(
           j.conditions.filter((c) => c.value !== 'unknown')
@@ -130,6 +145,7 @@ export default function EmployerJobForm() {
       onboarding: f.onboarding, languages: f.languages.filter((l) => l.language),
       lifting: f.lifting || null, apply_question: f.apply_question,
       cv_required: f.cv_required, commitments: f.commitments,
+      contract_id: f.contract_id || null,
       positions: f.positions, status,
       conditions: f.conditions,
     }
@@ -649,6 +665,17 @@ export default function EmployerJobForm() {
 
       {cur === 'apply' && (
         <Section title={t('employer.step.apply')}>
+          {contracts.length > 0 && (
+            <Field label={t('employer.contractlabel')} id="jf-contract">
+              <select id="jf-contract" value={f.contract_id}
+                      onChange={(e) => setF({ ...f, contract_id: e.target.value })}>
+                <option value="">{t('employer.nocontract')}</option>
+                {contracts.map((c) => (
+                  <option key={c.id} value={c.id}>{c.title}</option>
+                ))}
+              </select>
+            </Field>
+          )}
           {mark('apply_question')}{mark('cv_required')}
           <Field label={t('employer.applyquestion')} id="jf-q">
             <input id="jf-q" value={f.apply_question}

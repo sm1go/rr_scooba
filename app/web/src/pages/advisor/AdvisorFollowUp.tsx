@@ -10,6 +10,7 @@ import { staffHas, useStaffT, type StaffKey } from '../../i18n-staff'
 
 type CallOutcome = 'still_open' | 'filled' | 'no_answer' | 'no_vacancy'
 interface Outcomes {
+  contract_hires?: { done: number; required: number }
   help_requests: { new: number; in_progress: number; done: number }
   applications: number
   applications_by_advisor: number
@@ -123,6 +124,8 @@ export default function AdvisorFollowUp() {
                     sub={s('out.applications.sub', { n: o.applications_by_advisor })} /></li>
           <li><Stat value={o.interviews} label={`${s('out.interviews')} →`} sub={s('out.interviews.sub')} /></li>
           <li><Stat value={o.offers} label={s('out.offers')} /></li>
+          <li><Stat value={`${o.contract_hires?.done ?? 0} / ${o.contract_hires?.required ?? 0}`}
+                    label={t('contracts.followup')} /></li>
         </ol>
         <div className="grid gap-3 md:grid-cols-3 mt-3">
           <Counts title={s('out.help')} items={[

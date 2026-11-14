@@ -123,6 +123,15 @@ export default function EmployerApplications() {
               {a.wants_tryout && (
                 <p className="mt-2 mb-0">{t('employer.wantstryout')}</p>
               )}
+              {a.contract_eligible && (
+                <p className="mt-2 mb-0">{t('employer.contracteligible')}</p>
+              )}
+              {a.shared_credentials?.length > 0 && (
+                <p className="mt-2 mb-0">
+                  {t('employer.creds')}:{' '}
+                  {a.shared_credentials.map((c) => c.label).join(', ')}
+                </p>
+              )}
               {a.meet_at_event && (
                 <p className="mt-2 mb-0">{t('apply.event')}</p>
               )}

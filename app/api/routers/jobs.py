@@ -39,6 +39,106 @@ def _check_commitments(payload: JobIn) -> None:
                             "Open hiring jobs cannot ask for a CV.")
 
 
+def _check_contract(conn, payload: JobIn, employer_id: str) -> None:
+    if payload.contract_id and not conn.execute(
+            "SELECT 1 FROM procurement_contract WHERE id=?"
+            " AND employer_id=?",
+            (payload.contract_id, employer_id)).fetchone():
+        raise HTTPException(422, "That contract does not belong to this "
+                                 "employer.")
+
+
+def _filter_jobs(conn: sqlite3.Connection, *, labels=(),
+                 field=None, slots=None, hours_min=None, hours_max=None,
+                 pay_min=None, pay_unit=None, contract=None,
+                 experience=None, work_mode=None, language=None,
+                 level_max=None, needs=None, needs_mode="yes",
+                 district=None, km=None, at_event=None,
+                 near_station=None, commit=None, city_contract=None,
+                 q=None) -> list[dict]:
+    """Open jobs (decoded) passing all given filters, in DB order."""
+    rows = conn.execute("SELECT * FROM job WHERE status='open'").fetchall()
+    center = _district_center(district) if district else None
+    need_keys = [k for k in (needs or "").split(",") if k]
+    slot_list = [s for s in (slots or "").split(",") if s]
+    want_labels = set(labels or ())
+    want_commit = set(c for c in (commit or "").split(",") if c)
+    out = []
+    for row in rows:
+        job = _decode(row)
+        conds = conditions_out(conn, job["id"])
+        cond_val = {c["key"]: c["value"] for c in conds}
+        known = sum(1 for c in conds if c["value"] != "unknown")
+
+        if want_labels and not want_labels <= _label_ids(job, known):
+            continue
+        if field and job["field"] != field:
+            continue
+        if slot_list and not fits_availability(
+                job["shifts"], job["schedule_flexible"], slot_list):
+            continue
+        if hours_max is not None and (job["hours_max"] is None
+                                      or job["hours_max"] > hours_max):
+            continue
+        if pay_min is not None:
+            unit = pay_unit or "hour"
+            if job["pay_unit"] != unit or job["pay_amount"] is None \
+                    or job["pay_amount"] < pay_min:
+                continue
+        if contract and job["contract"] != contract:
+            continue
+        if experience and job["experience"] != experience:
+            continue
+        if work_mode and job["work_mode"] != work_mode:
+            continue
+        if language and level_max:
+            need = next((n for n in job["languages"]
+                         if (n.get("language") or "").lower()
+                         == language.lower()), None)
+            if need and need.get("level") in CEFR \
+                    and CEFR.index(need["level"]) > CEFR.index(level_max):
+                continue
+        if need_keys:
+            if needs_mode == "not_no":
+                if any(cond_val.get(k) == "no" for k in need_keys):
+                    continue
+            else:
+                if any(cond_val.get(k) != "yes" for k in need_keys):
+                    continue
+        if center and km is not None:
+            if job["work_mode"] != "remote":
+                if job["lat"] is None or haversine_km(
+                        center[0], center[1], job["lat"], job["lon"]) > km:
+                    continue
+        if at_event:
+            ev = conn.execute("SELECT 1 FROM employer_event WHERE employer_id=?",
+                              (job["employer_id"],)).fetchone()
+            if not ev:
+                continue
+        if hours_min is not None and (job["hours_max"] is None
+                                      or job["hours_max"] < hours_min):
+            continue
+        if q:
+            emp = conn.execute("SELECT name FROM employer WHERE id=?",
+                               (job["employer_id"],)).fetchone()
+            hay = " ".join([job["title"], " ".join(job["duties"]),
+                            " ".join(job.get("qualifications") or []),
+                            emp["name"] if emp else ""])
+            if not text_matches(q, hay):
+                continue
+        if want_commit and not want_commit <= set(job["commitments"]):
+            continue
+        if city_contract and not job.get("contract_id"):
+            continue
+        if near_station:
+            if job["work_mode"] == "remote" or job["lat"] is None:
+                continue
+            ns = stations.nearest(job["lat"], job["lon"])
+            if not ns or ns["distance_m"] > 800:
+                continue
+        out.append(job)
+    return out
+
 def _district_center(district_id: str) -> tuple[float, float] | None:
     cat = json.loads((SEED_DIR / "catalog.json").read_text(encoding="utf-8"))
     d = next((d for d in cat["districts"] if d["id"] == district_id), None)
@@ -104,93 +204,26 @@ def list_jobs(
     near_station: int | None = None,
     commute_max: int | None = None,
     commit: str | None = None,
+    city_contract: int | None = None,
     q: str | None = None,
     hours_min: int | None = None,
     conn: sqlite3.Connection = Depends(get_conn),
     user=Depends(optional_user),   # noqa: ARG001 — output identical either way
 ):
     """Open jobs, filtered. Same output for anonymous and signed-in callers."""
-    rows = conn.execute("SELECT * FROM job WHERE status='open'").fetchall()
     center = _district_center(district) if district else None
-    need_keys = [k for k in (needs or "").split(",") if k]
-    slot_list = [s for s in (slots or "").split(",") if s]
-    want_labels = set(label)
-    want_commit = set(c for c in (commit or "").split(",") if c)
-    out = []
-
-    matched: list[sqlite3.Row] = []
-    for row in rows:
-        job = _decode(row)
-        conds = conditions_out(conn, job["id"])
-        cond_val = {c["key"]: c["value"] for c in conds}
-        known = sum(1 for c in conds if c["value"] != "unknown")
-
-        if want_labels and not want_labels <= _label_ids(job, known):
-            continue
-        if field and job["field"] != field:
-            continue
-        if slot_list and not fits_availability(
-                job["shifts"], job["schedule_flexible"], slot_list):
-            continue
-        if hours_max is not None and (job["hours_max"] is None
-                                      or job["hours_max"] > hours_max):
-            continue
-        if pay_min is not None:
-            unit = pay_unit or "hour"
-            if job["pay_unit"] != unit or job["pay_amount"] is None \
-                    or job["pay_amount"] < pay_min:
-                continue
-        if contract and job["contract"] != contract:
-            continue
-        if experience and job["experience"] != experience:
-            continue
-        if work_mode and job["work_mode"] != work_mode:
-            continue
-        if language and level_max:
-            need = next((n for n in job["languages"]
-                         if (n.get("language") or "").lower()
-                         == language.lower()), None)
-            if need and need.get("level") in CEFR \
-                    and CEFR.index(need["level"]) > CEFR.index(level_max):
-                continue
-        if need_keys:
-            if needs_mode == "not_no":
-                if any(cond_val.get(k) == "no" for k in need_keys):
-                    continue
-            else:
-                if any(cond_val.get(k) != "yes" for k in need_keys):
-                    continue
-        if center and km is not None:
-            if job["work_mode"] != "remote":
-                if job["lat"] is None or haversine_km(
-                        center[0], center[1], job["lat"], job["lon"]) > km:
-                    continue
-        if at_event:
-            ev = conn.execute("SELECT 1 FROM employer_event WHERE employer_id=?",
-                              (job["employer_id"],)).fetchone()
-            if not ev:
-                continue
-        if hours_min is not None and (job["hours_max"] is None
-                                      or job["hours_max"] < hours_min):
-            continue
-        if q:
-            emp = conn.execute("SELECT name FROM employer WHERE id=?",
-                               (job["employer_id"],)).fetchone()
-            hay = " ".join([job["title"], " ".join(job["duties"]),
-                            " ".join(job.get("qualifications") or []),
-                            emp["name"] if emp else ""])
-            if not text_matches(q, hay):
-                continue
-        if want_commit and not want_commit <= set(job["commitments"]):
-            continue
-        if near_station:
-            if job["work_mode"] == "remote" or job["lat"] is None:
-                continue
-            ns = stations.nearest(job["lat"], job["lon"])
-            if not ns or ns["distance_m"] > 800:
-                continue
-        out.append(job_out(conn, row, center))
-        matched.append(row)
+    filtered = _filter_jobs(
+        conn, labels=label, field=field, slots=slots,
+        hours_min=hours_min, hours_max=hours_max, pay_min=pay_min,
+        pay_unit=pay_unit, contract=contract, experience=experience,
+        work_mode=work_mode, language=language, level_max=level_max,
+        needs=needs, needs_mode=needs_mode, district=district, km=km,
+        at_event=at_event, near_station=near_station, commit=commit,
+        city_contract=city_contract, q=q)
+    rows_by_id = {r["id"]: r for r in
+                  conn.execute("SELECT * FROM job WHERE status='open'")}
+    matched = [rows_by_id[j["id"]] for j in filtered]
+    out = [job_out(conn, row, center) for row in matched]
 
     # Commute (§5): with a district chosen, attach the cached estimate to
     # every job (no network). commute_max additionally computes every
@@ -329,6 +362,7 @@ def create_job(payload: JobIn, conn: sqlite3.Connection = Depends(get_conn),
             "SELECT 1 FROM employer WHERE id=?", (employer_id,)).fetchone():
         raise HTTPException(422, "Unknown employer.")
     _check_commitments(payload)
+    _check_contract(conn, payload, employer_id)
     if payload.status == "open" and lint.blocking_issues(payload.model_dump()):
         raise HTTPException(422, "The wording must be fixed before publishing.",
                             )  # details returned by check-wording
@@ -340,12 +374,12 @@ def create_job(payload: JobIn, conn: sqlite3.Connection = Depends(get_conn),
         "lat,lon,work_mode,pay_amount,pay_unit,pay_note,shifts,"
         "schedule_flexible,hours_min,hours_max,contract,experience,"
         "experience_note,qualifications,onboarding,languages,lifting,"
-        "apply_question,cv_required,commitments,positions,status,source,confirmed_at)"
+        "apply_question,cv_required,commitments,contract_id,positions,status,source,confirmed_at)"
         " VALUES (:id,:employer_id,:title,:field,:duties,:address,:district,"
         ":lat,:lon,:work_mode,:pay_amount,:pay_unit,:pay_note,:shifts,"
         ":schedule_flexible,:hours_min,:hours_max,:contract,:experience,"
         ":experience_note,:qualifications,:onboarding,:languages,:lifting,"
-        ":apply_question,:cv_required,:commitments,:positions,:status,:source,:confirmed_at)",
+        ":apply_question,:cv_required,:commitments,:contract_id,:positions,:status,:source,:confirmed_at)",
         {**fields, "id": job_id, "employer_id": employer_id, "source": source,
          "confirmed_at": date.today().isoformat()})
     _write_job_conditions(conn, job_id, payload.conditions, source)
@@ -364,6 +398,7 @@ def update_job(job_id: str, payload: JobIn,
         raise HTTPException(404, "Job not found.")
     _check_owner(conn, user, row)
     _check_commitments(payload)
+    _check_contract(conn, payload, row["employer_id"])
     if payload.status == "open" and lint.blocking_issues(payload.model_dump()):
         raise HTTPException(422, "The wording must be fixed before publishing.")
     fields = _job_fields(payload)
@@ -378,7 +413,7 @@ def update_job(job_id: str, payload: JobIn,
         "qualifications=:qualifications,onboarding=:onboarding,"
         "languages=:languages,lifting=:lifting,apply_question=:apply_question,"
         "cv_required=:cv_required,commitments=:commitments,"
-        "positions=:positions,status=:status"
+        "contract_id=:contract_id,positions=:positions,status=:status"
         " WHERE id=:id", {**fields, "id": job_id})
     source = "advisor" if user["role"] == "advisor" else "employer"
     _write_job_conditions(conn, job_id, payload.conditions, source)
@@ -478,3 +513,128 @@ def advisor_check_condition(job_id: str, payload: ConditionCheckIn,
     conn.commit()
     return job_out(conn, conn.execute("SELECT * FROM job WHERE id=?",
                                       (job_id,)).fetchone())
+
+
+# --- combine part-time jobs into a working week (spec B) --------------------
+
+DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+
+
+def _minutes(t: str) -> int:
+    h, m = t.split(":")
+    return int(h) * 60 + int(m)
+
+
+def _hhmm(m: int) -> str:
+    return f"{m // 60:02d}:{m % 60:02d}"
+
+
+def _intervals(shifts: list[dict]) -> list[tuple[int, int, int]]:
+    """(day_idx, start_min, end_min); end <= start crosses midnight."""
+    out = []
+    for s in shifts:
+        try:
+            d = DAYS.index(s["day"])
+            st, en = _minutes(s["start"]), _minutes(s["end"])
+        except (KeyError, ValueError):
+            continue
+        if en <= st:
+            out.append((d, st, 1440))
+            out.append(((d + 1) % 7, 0, en))
+        else:
+            out.append((d, st, en))
+    return out
+
+
+def _compatible(a: dict, b: dict) -> bool:
+    if a["employer_id"] == b["employer_id"]:
+        return False
+    buffer = 30 if a["district"] == b["district"] else 60
+    iv_a, iv_b = _intervals(a["shifts"]), _intervals(b["shifts"])
+    for da, sa, ea in iv_a:
+        for db, sb, eb in iv_b:
+            if da != db:
+                continue
+            if sa < eb and sb < ea:
+                return False            # overlap never allowed
+            if abs(sa - eb) < buffer or abs(sb - ea) < buffer:
+                return False            # too little travel time between
+    return True
+
+
+@router.get("/bundles")
+def list_bundles(
+    hours: int = 30,
+    slots: str | None = None,
+    district: str | None = None,
+    km: float | None = None,
+    q: str | None = None,
+    field: str | None = None,
+    conn: sqlite3.Connection = Depends(get_conn),
+):
+    """Sets of 2-3 compatible part-time jobs that add up to `hours`/week."""
+    hours = max(8, min(40, hours))
+    center = _district_center(district) if district else None
+    jobs = [j for j in _filter_jobs(conn, slots=slots, district=district,
+                                    km=km, q=q, field=field)
+            if j["work_mode"] != "remote" and j["shifts"]
+            and not j["schedule_flexible"] and j["lat"] is not None
+            and j["hours_max"] is not None and j["hours_max"] < hours
+            # hours must be dependable to plan a week around them
+            and j["contract"] != "gig" and j["hours_min"] != 0]
+    rows_by_id = {r["id"]: r for r in
+                  conn.execute("SELECT * FROM job WHERE status='open'")}
+
+    from itertools import combinations
+    bundles = []
+    for size in (2, 3):
+        for combo in combinations(jobs, size):
+            if not all(_compatible(a, b)
+                       for a, b in combinations(combo, 2)):
+                continue
+            hi = sum(j["hours_max"] for j in combo)
+            lo = sum(j["hours_min"] if j["hours_min"] is not None
+                     else j["hours_max"] for j in combo)
+            if hi < hours - 4 or lo > hours + 4:
+                continue
+            dist = 0.0
+            for a, b in combinations(combo, 2):
+                dist = max(dist, haversine_km(a["lat"], a["lon"],
+                                              b["lat"], b["lon"]))
+            bundles.append({"combo": combo, "lo": lo, "hi": hi,
+                            "dist": dist})
+    bundles.sort(key=lambda b: (abs((b["lo"] + b["hi"]) / 2 - hours),
+                                len(b["combo"]), b["dist"],
+                                "".join(j["id"] for j in b["combo"])))
+
+    used: dict[str, int] = {}
+    out = []
+    for b in bundles:
+        if len(out) >= 8:
+            break
+        if any(used.get(j["id"], 0) >= 2 for j in b["combo"]):
+            continue
+        for j in b["combo"]:
+            used[j["id"]] = used.get(j["id"], 0) + 1
+        week: dict[str, list] = {d: [] for d in DAYS}
+        for j in b["combo"]:
+            for s in j["shifts"]:
+                if s.get("day") in week:
+                    week[s["day"]].append({"job_id": j["id"],
+                                           "start": s["start"],
+                                           "end": s["end"]})
+        for d in DAYS:
+            week[d].sort(key=lambda x: x["start"])
+        hourly = all(j["pay_unit"] == "hour" and j["pay_amount"] is not None
+                     for j in b["combo"])
+        out.append({
+            "jobs": [job_out(conn, rows_by_id[j["id"]], center)
+                     for j in b["combo"]],
+            "hours_min": b["lo"], "hours_max": b["hi"],
+            "max_km_apart": round(b["dist"], 1),
+            "week": week,
+            "pay_week_eur": (round(sum(j["pay_amount"] * j["hours_max"]
+                                       for j in b["combo"]), 2)
+                             if hourly else None),
+        })
+    return {"target": hours, "candidates": len(jobs), "bundles": out}

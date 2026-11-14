@@ -8,17 +8,45 @@ import type { Catalog, Profile } from '../types'
 import { CEFR, DAYS, PARTS } from '../types'
 import { ErrorBox, Field, Section, Toggle } from '../components/ui'
 
+const DOC_SUGGESTIONS = [
+  'Hygiene passport (hygieniapassi)', 'Hot work card (tulityökortti)',
+  'Occupational safety card (työturvallisuuskortti)', 'Driving licence C',
+  'Driving licence D', 'Valvira registration', 'First aid EA1',
+  'Welding certificate',
+]
+
 export default function ProfilePage() {
   const { t } = useI18n()
   const { logout } = useAuth()
   const nav = useNavigate()
   const [p, setP] = useState<Profile | null>(null)
+  const [creds, setCreds] = useState<{ id: string; label: string; checked_at: string }[]>([])
+  const [docLabel, setDocLabel] = useState('')
+  const [docBusy, setDocBusy] = useState(false)
+  const [docSent, setDocSent] = useState(false)
+  const loadCreds = () => api<{ credentials: typeof creds }>('/api/me/credentials')
+    .then((r) => setCreds(r.credentials)).catch(() => undefined)
+  const delCred = async (id: string) => {
+    await api(`/api/me/credentials/${id}`, { method: 'DELETE' }).catch(() => undefined)
+    loadCreds()
+  }
+  const sendDocRequest = async () => {
+    setDocBusy(true)
+    try {
+      await api('/api/help-requests', { body: {
+        kind: 'check_document', document_label: docLabel.trim(),
+        consent: true, message: docLabel.trim() } })
+      setDocSent(true); setDocLabel('')
+    } catch { /* consent/contact validation surfaces on the help page */ }
+    setDocBusy(false)
+  }
   const [cat, setCat] = useState<Catalog | null>(null)
   const [err, setErr] = useState('')
   const [savedMsg, setSavedMsg] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [setup, setSetup] = useState<number | null>(null)
 
+  useEffect(() => { loadCreds() }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     api<Profile>('/api/me/profile').then((pr) => {
       setP(pr)
@@ -288,6 +316,40 @@ export default function ProfilePage() {
 
       <button type="button" className="btn btn-primary w-full"
               onClick={() => patch(p)}>{t('profile.save')}</button>
+
+      <Section title={t('profile.documents')}>
+        <div id="documents" />
+        <p className="text-secondary mt-0">{t('profile.documents.hint')}</p>
+        {creds.length > 0 && (
+          <ul className="m-0 mb-3 p-0 list-none grid gap-2">
+            {creds.map((c) => (
+              <li key={c.id} className="flex flex-wrap items-center gap-2 card p-3">
+                <span className="font-medium">{c.label}</span>
+                <span className="text-secondary">
+                  {t('profile.documents.seen', { d: c.checked_at })}
+                </span>
+                <button type="button" className="btn btn-quiet"
+                        onClick={() => delCred(c.id)}>
+                  {t('common.delete')}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <Field label={t('profile.documents.label')} id="doc-label">
+          <input id="doc-label" value={docLabel} list="doc-suggestions"
+                 onChange={(e) => setDocLabel(e.target.value)} />
+          <datalist id="doc-suggestions">
+            {DOC_SUGGESTIONS.map((d) => <option key={d} value={d} />)}
+          </datalist>
+        </Field>
+        <p className="text-secondary mt-2">{t('profile.documents.how')}</p>
+        <button type="button" className="btn btn-secondary" disabled={!docLabel.trim() || docBusy}
+                onClick={sendDocRequest}>
+          {t('profile.documents.send')}
+        </button>
+        {docSent && <p role="status" className="mt-2">{t('profile.documents.sent')}</p>}
+      </Section>
 
       <Section title={t('profile.data')}>
         <div className="flex flex-wrap gap-2">

@@ -3,14 +3,17 @@ behalf of callers, follow-up overview, audit (spec section 3)."""
 
 from __future__ import annotations
 
+import json
 import sqlite3
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .. import auth as auth_mod
 from .. import db as db_mod
 from ..db import get_conn
+from pydantic import BaseModel
+
 from ..models import (ApplicationIn, CallOutcomeIn, EmployerNewIn,
                       HelpRequestUpdate, WalkupTalkIn)
 from ..serialize import _days_ago, help_request_out
@@ -198,9 +201,14 @@ def _outcomes(conn: sqlite3.Connection, days: int | None) -> dict:
         o = r["detail"].rsplit(":", 1)[-1]
         if o in calls:
             calls[o] += 1
+    contract = conn.execute(
+        "SELECT SUM(hires_required) req, SUM(hires_done) done"
+        " FROM procurement_contract").fetchone()
     return {
         "help_requests": {k: hr.get(k, 0)
                           for k in ("new", "in_progress", "done")},
+        "contract_hires": {"done": contract["done"] or 0,
+                           "required": contract["req"] or 0},
         "applications": count("SELECT COUNT(*) FROM application WHERE 1=1"
                               + since("created_at")),
         "applications_by_advisor": count(
@@ -387,3 +395,106 @@ def audit_log(limit: int = Query(default=100, le=500),
         "SELECT id,actor,action,detail,created_at FROM audit_log"
         " ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
     return {"events": [dict(r) for r in rows]}
+
+
+# --- city contracts (työllistämisehto) + credential checks --------------------
+
+@router.get("/advisor/contracts")
+def advisor_contracts(conn: sqlite3.Connection = Depends(get_conn),
+                      user=Depends(auth_mod.current_user)):
+    _advisor(user)
+    today = date.today()
+    out = []
+    for c in conn.execute(
+            "SELECT c.*, e.name employer_name, e.contact_name,"
+            " e.contact_phone, e.contact_email FROM procurement_contract c"
+            " JOIN employer e ON e.id=c.employer_id"
+            " ORDER BY c.due").fetchall():
+        if c["hires_done"] >= c["hires_required"]:
+            status = "done"
+        elif (date.fromisoformat(c["due"]) - today).days <= 90:
+            status = "behind"
+        else:
+            status = "on_track"
+        open_jobs = conn.execute(
+            "SELECT COUNT(*) n FROM job WHERE contract_id=?"
+            " AND status='open'", (c["id"],)).fetchone()["n"]
+        out.append({
+            "id": c["id"], "title": c["title"], "due": c["due"],
+            "starts": c["starts"], "ends": c["ends"],
+            "value_eur": c["value_eur"],
+            "hires_required": c["hires_required"],
+            "hires_done": c["hires_done"], "status": status,
+            "open_jobs": open_jobs,
+            "target_groups": json.loads(c["target_groups"] or "[]"),
+            "employer": {"id": c["employer_id"], "name": c["employer_name"],
+                         "contact_name": c["contact_name"],
+                         "contact_phone": c["contact_phone"],
+                         "contact_email": c["contact_email"]},
+        })
+    return {"contracts": out}
+
+
+class HireIn(BaseModel):
+    hired_on: str
+    note: str = ""
+
+
+@router.post("/advisor/contracts/{contract_id}/hires", status_code=201)
+def record_hire(contract_id: str, payload: HireIn,
+                conn: sqlite3.Connection = Depends(get_conn),
+                user=Depends(auth_mod.current_user)):
+    _advisor(user)
+    con = conn.execute("SELECT * FROM procurement_contract WHERE id=?",
+                       (contract_id,)).fetchone()
+    if not con:
+        raise HTTPException(404, "Contract not found.")
+    try:
+        date.fromisoformat(payload.hired_on)
+    except ValueError:
+        raise HTTPException(422, "Give the date as YYYY-MM-DD.")
+    conn.execute(
+        "INSERT INTO contract_hire (id,contract_id,hired_on,note,advisor_id)"
+        " VALUES (?,?,?,?,?)",
+        (db_mod.new_id(conn, "hire"), contract_id, payload.hired_on,
+         payload.note.strip(), user["id"]))
+    conn.execute(
+        "UPDATE procurement_contract SET hires_done=hires_done+1 WHERE id=?",
+        (contract_id,))
+    # the note stays in the hire row only — audit keeps no personal details
+    db_mod.audit(conn, user["id"], "contract_hire_recorded", contract_id)
+    conn.commit()
+    return {"hires_done": con["hires_done"] + 1,
+            "hires_required": con["hires_required"]}
+
+
+class CredentialIn(BaseModel):
+    label: str
+
+
+@router.post("/advisor/help-requests/{hr_id}/credential", status_code=201)
+def confirm_document(hr_id: str, payload: CredentialIn,
+                     conn: sqlite3.Connection = Depends(get_conn),
+                     user=Depends(auth_mod.current_user)):
+    _advisor(user)
+    hr = conn.execute("SELECT * FROM help_request WHERE id=?",
+                      (hr_id,)).fetchone()
+    if not hr or hr["kind"] != "check_document" or not hr["user_id"]:
+        raise HTTPException(404, "Document check request not found.")
+    label = payload.label.strip()
+    if not label:
+        raise HTTPException(422, "The document label is required.")
+    cred_id = db_mod.new_id(conn, "cred")
+    conn.execute(
+        "INSERT INTO credential (id,user_id,label,advisor_id,checked_at)"
+        " VALUES (?,?,?,?,?)",
+        (cred_id, hr["user_id"], label, user["id"],
+         date.today().isoformat()))
+    conn.execute(
+        "UPDATE help_request SET status='done', advisor_id=?,"
+        " advisor_reply=?, updated_at=datetime('now') WHERE id=?",
+        (user["id"], f"Document seen and confirmed: {label}", hr_id))
+    db_mod.audit(conn, user["id"], "credential_confirmed", cred_id)
+    conn.commit()
+    return {"id": cred_id, "label": label,
+            "checked_at": date.today().isoformat()}

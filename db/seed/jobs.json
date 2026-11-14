@@ -427,7 +427,8 @@
     },
     "commitments": [
       "open_hiring"
-    ]
+    ],
+    "contract_id": "con-schools-south"
   },
   {
     "id": "job-market-shelf",
@@ -628,7 +629,8 @@
     },
     "commitments": [
       "open_hiring"
-    ]
+    ],
+    "contract_id": "con-lunch-central"
   },
   {
     "id": "job-bistro",
@@ -765,7 +767,8 @@
       "accessible_toilet": "yes",
       "lift": "yes"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-homecare-north"
   },
   {
     "id": "job-kotisatama",
@@ -919,7 +922,8 @@
     },
     "commitments": [
       "open_hiring"
-    ]
+    ],
+    "contract_id": "con-parcel-hubs"
   },
   {
     "id": "job-freight-evening",
@@ -976,7 +980,8 @@
       "written_instructions": "yes",
       "quiet_environment": "no"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-parcel-hubs"
   },
   {
     "id": "job-vire-driver",
@@ -1314,7 +1319,8 @@
       "seated_work": "no",
       "quiet_environment": "no"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-tapiola-repair"
   },
   {
     "id": "job-oivo",
@@ -2100,7 +2106,8 @@
       "written_instructions": "yes",
       "quiet_environment": "yes"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-schools-south"
   },
   {
     "id": "job-market-evening-till",
@@ -2289,7 +2296,8 @@
       "written_instructions": "yes",
       "quiet_environment": "yes"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-homecare-north"
   },
   {
     "id": "job-freight-forklift",
@@ -2601,7 +2609,8 @@
     },
     "commitments": [
       "skills_first"
-    ]
+    ],
+    "contract_id": "con-tapiola-repair"
   },
   {
     "id": "job-lumo-senior",
@@ -3287,7 +3296,8 @@
       "seated_work": "yes",
       "written_instructions": "yes"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-tapiola-repair"
   },
   {
     "id": "job-vihrea-autumn",
@@ -3674,7 +3684,8 @@
       "written_instructions": "yes",
       "flexible_breaks": "no"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-homecare-north"
   },
   {
     "id": "job-taikinapuu-cafe",
@@ -5211,7 +5222,8 @@
       "quiet_environment": "no",
       "adjustments_negotiable": "yes"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-park-winter"
   },
   {
     "id": "job-rantala-apprentice",
@@ -5286,7 +5298,8 @@
       "adjustments_negotiable": "yes",
       "written_instructions": "yes"
     },
-    "commitments": []
+    "commitments": [],
+    "contract_id": "con-park-winter"
   },
   {
     "id": "job-rantala-janitor",

@@ -15,6 +15,7 @@ import type { Key } from '../i18n/en'
 const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home; wideOnly?: boolean }[]> = {
   resident: [
     { to: '/', key: 'nav.jobs', short: 'nav.jobs', icon: Home },
+    { to: '/week', key: 'nav.week', short: 'nav.week', icon: CalendarDays, wideOnly: true },
     { to: '/saved', key: 'nav.saved', short: 'nav.saved', icon: Bookmark },
     { to: '/applications', key: 'nav.applications', short: 'nav.applied', icon: FileText },
     { to: '/profile', key: 'nav.profile', short: 'nav.profile', icon: UserIcon },
@@ -31,10 +32,12 @@ const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home;
     { to: '/advisor', key: 'nav.requests', short: 'nav.requests', icon: Inbox },
     { to: '/advisor/jobs', key: 'nav.advisorjobs', short: 'nav.jobs', icon: ClipboardList },
     { to: '/advisor/follow-up', key: 'nav.followup', short: 'nav.followup', icon: ListChecks },
+    { to: '/advisor/contracts', key: 'nav.contracts', short: 'nav.contracts', icon: ClipboardList, wideOnly: true },
     { to: '/advisor/support', key: 'advisor.support', short: 'nav.support', icon: Building2, wideOnly: true },
   ],
   anon: [
     { to: '/', key: 'nav.jobs', short: 'nav.jobs', icon: Home },
+    { to: '/week', key: 'nav.week', short: 'nav.week', icon: CalendarDays, wideOnly: true },
     { to: '/saved', key: 'nav.saved', short: 'nav.saved', icon: Bookmark },
     { to: '/applications', key: 'nav.applications', short: 'nav.applied', icon: FileText },
     { to: '/profile', key: 'nav.profile', short: 'nav.profile', icon: UserIcon },

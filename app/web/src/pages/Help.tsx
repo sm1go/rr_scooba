@@ -23,6 +23,15 @@ export default function Help() {
     new Set((params.get('keys') || '').split(',').filter(Boolean)))
   const [message, setMessage] = useState(() =>
     params.get('q') ? t('help.prefill.q', { q: params.get('q')! }) : '')
+  const jobIds = params.get('jobs')
+  useEffect(() => {
+    if (!jobIds) return
+    Promise.all(jobIds.split(',').map((id) =>
+      api<Job>(`/api/jobs/${id}`).catch(() => null))).then((js) => {
+      const titles = js.filter(Boolean).map((j) => j!.title).join(' + ')
+      if (titles) setMessage(t('help.prefill.jobs', { jobs: titles }))
+    })
+  }, [jobIds, t])
   const [name, setName] = useState('')
   const [method, setMethod] = useState<'phone' | 'sms' | 'email'>('phone')
   const [value, setValue] = useState('')

@@ -26,6 +26,18 @@ export default function AdvisorQueue() {
   const [err, setErr] = useState<unknown>(null)
   const [editing, setEditing] = useState<string | null>(null)
   const [reply, setReply] = useState('')
+  const [docLabel, setDocLabel] = useState<Record<string, string>>({})
+  const [busyDoc, setBusyDoc] = useState('')
+  const confirmDoc = async (h: HelpRequest) => {
+    setBusyDoc(h.id)
+    try {
+      await api(`/api/advisor/help-requests/${h.id}/credential`, {
+        body: { label: (docLabel[h.id] ?? h.document_label ?? '').trim() || 'document' },
+      })
+      load()
+    } catch { setErr(t('common.error')) }
+    setBusyDoc('')
+  }
   const [notes, setNotes] = useState<Record<string, string>>({})
   const [checked, setChecked] = useState<Record<string, 'yes' | 'no'>>({})
 
@@ -117,6 +129,24 @@ export default function AdvisorQueue() {
 
           {h.message && <p className="mt-2 mb-0">{h.message}</p>}
 
+          {h.kind === 'check_document' && (
+            <div className="card p-4 mt-3" style={{ background: 'var(--color-yes-bg)' }}>
+              <p className="m-0 mb-2 font-medium">
+                {t('advisor.doclabel')}: {docLabel[h.id] ?? h.document_label}
+              </p>
+              <div className="flex gap-2 items-center flex-wrap">
+                <input value={docLabel[h.id] ?? h.document_label}
+                       aria-label={t('advisor.doclabel')}
+                       onChange={(e) => setDocLabel((m) => ({ ...m, [h.id]: e.target.value }))}
+                       className="flex-1 min-w-[200px]" />
+                <button type="button" className="btn btn-primary"
+                        disabled={busyDoc === h.id}
+                        onClick={() => confirmDoc(h)}>
+                  {t('advisor.sawdoc')}
+                </button>
+              </div>
+            </div>
+          )}
           {h.kind === 'check_conditions' && h.job && h.condition_keys.length > 0 && (
             <div className="mt-3">
               {h.condition_keys.map((k) => {

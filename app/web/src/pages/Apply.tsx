@@ -25,6 +25,9 @@ export default function Apply() {
   const [answer, setAnswer] = useState('')
   const [meetsMust, setMeetsMust] = useState(false)
   const [wantsTryout, setWantsTryout] = useState(false)
+  const [contractOk, setContractOk] = useState(false)
+  const [shareCreds, setShareCreds] = useState(false)
+  const [credCount, setCredCount] = useState(0)
   const [cv, setCv] = useState('')
   const [share, setShare] = useState<Set<string>>(new Set())
   const [event, setEvent] = useState(false)
@@ -43,7 +46,11 @@ export default function Apply() {
 
   const loadJob = () => {
     setLoadErr(null)
-    api<Job>(`/api/jobs/${id}`).then(setJob).catch((e) => setLoadErr(e))
+    api<Job>(`/api/jobs/${id}`).then((j) => { setJob(j)
+      api<{ credentials: { id: string }[] }>(`/api/me/credentials`)
+        .then((r) => { setCredCount(r.credentials.length)
+                       if (j.qualifications.length) setShareCreds(true) })
+        .catch(() => undefined) }).catch((e) => setLoadErr(e))
   }
   useEffect(loadJob, [id])
 
@@ -97,6 +104,7 @@ export default function Apply() {
           availability_note: availability, answer,
           cv_text: job.cv_required && !openHiring ? cv : undefined,
           meets_must_haves: meetsMust, wants_tryout: wantsTryout,
+          contract_eligible: contractOk, share_credentials: shareCreds,
           shared_needs: [...share], meet_at_event: event,
         },
       })
@@ -161,6 +169,26 @@ export default function Apply() {
                   {job.qualifications.map((q) => <li key={q}>{q}</li>)}
                 </ul>
               )}
+            </div>
+          )}
+          {job.city_contract && (
+            <div className="card p-4 mb-4">
+              <label className="flex items-start gap-3 cursor-pointer font-medium">
+                <input type="checkbox" checked={contractOk}
+                       onChange={(e) => setContractOk(e.target.checked)}
+                       style={{ width: 24, height: 24, marginTop: 2 }} />
+                <span>{t('apply.contract')}</span>
+              </label>
+            </div>
+          )}
+          {credCount > 0 && (
+            <div className="card p-4 mb-4">
+              <label className="flex items-start gap-3 cursor-pointer font-medium">
+                <input type="checkbox" checked={shareCreds}
+                       onChange={(e) => setShareCreds(e.target.checked)}
+                       style={{ width: 24, height: 24, marginTop: 2 }} />
+                <span>{t('apply.sharecreds', { n: credCount })}</span>
+              </label>
             </div>
           )}
           {commits.includes('tryout') && (
@@ -246,6 +274,8 @@ export default function Apply() {
             {openHiring && <dd className="m-0 mt-2">{t('apply.openhiring')}</dd>}
             {meetsMust && <dd className="m-0 mt-2">{t('apply.meetsmust')}</dd>}
             {wantsTryout && <dd className="m-0 mt-2">{t('apply.tryout')}</dd>}
+            {contractOk && <dd className="m-0 mt-2">{t('apply.contract')}</dd>}
+            {shareCreds && <dd className="m-0 mt-2">{t('apply.sharecreds', { n: credCount })}</dd>}
             {job.cv_required && !openHiring && (
               <>
                 <dt className="font-medium mt-2">{t('apply.cv')}</dt>

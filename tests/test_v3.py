@@ -377,7 +377,7 @@ def test_no_programme_ids_on_applications(client, aino):
     r = client.get("/api/me/applications", headers=aino)
     assert r.status_code == 200
     blob = json.dumps(r.json()).lower()
-    for pid in ("pay_subsidy", "program", "eligib", "situation"):
+    for pid in ("pay_subsidy", "program", "eligibility", "situation"):
         assert pid not in blob
 
 

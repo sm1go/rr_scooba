@@ -10,6 +10,8 @@ import JobDetail from './pages/JobDetail'
 import JobPrint from './pages/JobPrint'
 import Apply from './pages/Apply'
 import Help from './pages/Help'
+import WorkWeek from './pages/WorkWeek'
+import AdvisorContracts from './pages/advisor/AdvisorContracts'
 import Applications from './pages/Applications'
 import Saved from './pages/Saved'
 import Profile from './pages/Profile'
@@ -56,6 +58,7 @@ export default function App() {
               <Route path="/jobs/:id/print" element={<JobPrint />} />
               <Route path="/jobs/:id/apply"
                      element={<Guard roles={['resident']}><Apply /></Guard>} />
+              <Route path="/week" element={<WorkWeek />} />
               <Route path="/help" element={<Help />} />
               <Route path="/support" element={<SupportPage />} />
               <Route path="/event" element={<EventPage />} />
@@ -95,6 +98,8 @@ export default function App() {
                      element={<Guard roles={['advisor']}><AdvisorJobCheck /></Guard>} />
               <Route path="/advisor/jobs/:id/apply-for"
                      element={<Guard roles={['advisor']}><AdvisorApplyFor /></Guard>} />
+              <Route path="/advisor/contracts"
+                     element={<AdvisorContracts />} />
               <Route path="/advisor/follow-up"
                      element={<Guard roles={['advisor']}><AdvisorFollowUp /></Guard>} />
               <Route path="/advisor/support"

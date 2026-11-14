@@ -239,6 +239,7 @@ export default function JobsPage({
     if (params.get('district'))
       names.push({ key: 'district', name: cat ? districtName(params.get('district')!, cat.districts) : params.get('district')! })
     if (params.get('at_event')) names.push({ key: 'at_event', name: t('jobs.atevent') })
+    if (params.get('city_contract')) names.push({ key: 'city_contract', name: t('jobs.citycontract') })
     if (params.get('near_station')) names.push({ key: 'near_station', name: t('jobs.nearstation') })
     if (params.get('commute_max'))
       names.push({ key: 'commute_max',
@@ -383,6 +384,14 @@ export default function JobsPage({
       </div>
 
       {home && (
+        <div className="card p-4 mb-3 flex flex-wrap items-center justify-between gap-3">
+          <p className="m-0"><strong>{t('week.card.title')}</strong>{' '}
+            {t('week.card.body')}</p>
+          <Link to="/week" className="btn btn-primary">{t('week.card.link')}</Link>
+        </div>
+      )}
+
+      {home && (
         <div className="card p-4 mb-3 flex flex-wrap items-center justify-between gap-3"
              style={{ background: 'var(--color-yes-bg)' }}>
           <p className="m-0 flex items-start gap-2">
@@ -493,6 +502,11 @@ export default function JobsPage({
                   onClick={() => set('at_event', params.get('at_event') ? null : '1')}
                   className="whitespace-nowrap">
             {t('jobs.atevent')}
+          </Toggle>
+          <Toggle pressed={!!params.get('city_contract')}
+                  onClick={() => set('city_contract', params.get('city_contract') ? null : '1')}
+                  className="whitespace-nowrap">
+            {t('jobs.citycontract')}
           </Toggle>
         </div>
       </div>
