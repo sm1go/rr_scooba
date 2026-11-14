@@ -11,6 +11,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
+@pytest.fixture(autouse=True)
+def _no_real_keys(monkeypatch):
+    """Tests never reach a real external service, even with keys in .env."""
+    from app.api import settings
+    monkeypatch.delitem(settings._ENV, "NVIDIA_API_KEY", raising=False)
+    monkeypatch.delitem(settings._ENV, "DIGITRANSIT_API_KEY", raising=False)
+
+
 @pytest.fixture()
 def conn(tmp_path, monkeypatch):
     db_file = tmp_path / "test.sqlite"
