@@ -16,7 +16,7 @@ import requests
 from . import settings
 
 NVIDIA_BASE = "https://integrate.api.nvidia.com/v1"
-TIMEOUT = 45
+TIMEOUT = 60
 TEMPERATURE = 0.1
 
 
@@ -62,7 +62,8 @@ class NvidiaClient:
         if not self.api_key:
             raise LLMUnavailable("No NVIDIA_API_KEY configured.")
         payload = {"model": self.model, "temperature": TEMPERATURE,
-                   "messages": messages}
+                   "messages": messages,
+                   "chat_template_kwargs": {"enable_thinking": False}}
         headers = {"Authorization": f"Bearer {self.api_key}",
                    "Content-Type": "application/json"}
         url = f"{self.base_url}/chat/completions"
