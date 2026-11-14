@@ -18,7 +18,7 @@ export default function Saved() {
       {jobs.length === 0 && (
         <div className="card p-6 text-center">
           <p>{t('saved.empty')}</p>
-          <Link to="/" className="btn btn-primary">{t('nav.jobs')}</Link>
+          <Link to="/jobs" className="btn btn-primary">{t('nav.jobs')}</Link>
         </div>
       )}
       {jobs.map((j) => <JobRow key={j.id} job={j} />)}

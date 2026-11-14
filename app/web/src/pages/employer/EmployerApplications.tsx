@@ -132,6 +132,13 @@ export default function EmployerApplications() {
                   {a.shared_credentials.map((c) => c.label).join(', ')}
                 </p>
               )}
+              {a.shared_event_records?.length > 0 && (
+                <p className="mt-2 mb-0">
+                  {t('employer.eventrecords')}:{' '}
+                  {a.shared_event_records.map((r) =>
+                    `${r.employer} (${r.date})`).join('; ')}
+                </p>
+              )}
               {a.meet_at_event && (
                 <p className="mt-2 mb-0">{t('apply.event')}</p>
               )}

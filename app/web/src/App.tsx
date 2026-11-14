@@ -5,7 +5,9 @@ import { I18nProvider } from './i18n/i18n'
 import { A11yProvider } from './lib/a11y'
 import { ConfigProvider } from './lib/config'
 import Layout from './components/Layout'
+import Home from './pages/Home'
 import JobsPage from './pages/Jobs'
+import EventDetail from './pages/EventDetail'
 import JobDetail from './pages/JobDetail'
 import JobPrint from './pages/JobPrint'
 import Apply from './pages/Apply'
@@ -18,13 +20,13 @@ import Profile from './pages/Profile'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import SupportPage from './pages/Support'
-import EventPage from './pages/EventPage'
+import AdvisorEvent from './pages/advisor/AdvisorEvent'
 import EventPrint from './pages/EventPrint'
 import EmployerJobs from './pages/employer/EmployerJobs'
 import EmployerJobForm from './pages/employer/EmployerJobForm'
 import EmployerApplications from './pages/employer/EmployerApplications'
 import EmployerCompany from './pages/employer/EmployerCompany'
-import EmployerEventPage from './pages/employer/EmployerEvent'
+import EmployerEventWorkspace from './pages/employer/EmployerEventWorkspace'
 import AdvisorQueue from './pages/advisor/AdvisorQueue'
 import { AdvisorJobs, AdvisorJobCheck, AdvisorApplyFor } from './pages/advisor/AdvisorJobs'
 import AdvisorFollowUp from './pages/advisor/AdvisorFollowUp'
@@ -53,7 +55,10 @@ export default function App() {
           <AuthProvider>
             <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<JobsPage />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/events/:id" element={<EventDetail />} />
+              <Route path="/event" element={<Navigate to="/events/ev-2027-03" replace />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
               <Route path="/jobs/:id/print" element={<JobPrint />} />
               <Route path="/jobs/:id/apply"
@@ -61,7 +66,6 @@ export default function App() {
               <Route path="/week" element={<WorkWeek />} />
               <Route path="/help" element={<Help />} />
               <Route path="/support" element={<SupportPage />} />
-              <Route path="/event" element={<EventPage />} />
               <Route path="/event/print"
                      element={<Guard roles={['resident']}><EventPrint /></Guard>} />
               <Route path="/applications"
@@ -84,7 +88,11 @@ export default function App() {
               <Route path="/employer/company"
                      element={<Guard roles={['employer']}><EmployerCompany /></Guard>} />
               <Route path="/employer/event"
-                     element={<Guard roles={['employer']}><EmployerEventPage /></Guard>} />
+                     element={<Navigate to="/employer/events/ev-2027-03" replace />} />
+              <Route path="/employer/events/:id"
+                     element={<Guard roles={['employer']}><EmployerEventWorkspace /></Guard>} />
+              <Route path="/advisor/events/:id"
+                     element={<Guard roles={['advisor']}><AdvisorEvent /></Guard>} />
 
               <Route path="/advisor"
                      element={<Guard roles={['advisor']}><AdvisorQueue /></Guard>} />

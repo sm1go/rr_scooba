@@ -1,0 +1,494 @@
+[
+  {
+    "id": "ev-2027-03",
+    "name": "Espoo TalentMatch — spring 2027 (demo)",
+    "date": "2027-03-19",
+    "venue": "Aalto University metro square, Otaniemi (demo venue)",
+    "advisor_note": "Advisors from Employment Espoo are there all day to help you talk to employers.",
+    "format": "talentmatch",
+    "language": "en",
+    "starts_at": "2027-03-19T13:00:00",
+    "ends_at": "2027-03-19T17:30:00",
+    "address": "Otaniementie 14, Espoo",
+    "description": "A recruitment event for people who want to show what they can do — employers describe a real need, you meet them by mutual interest.",
+    "programme": [
+      {
+        "start": "13:00",
+        "end": "14:00",
+        "title": "Employer pitches",
+        "kind": "pitch"
+      },
+      {
+        "start": "13:00",
+        "end": "14:30",
+        "title": "Workshop: talking about transferable skills",
+        "kind": "workshop"
+      },
+      {
+        "start": "14:30",
+        "end": "17:30",
+        "title": "1:1 meetings",
+        "kind": "one_to_one"
+      },
+      {
+        "start": "14:30",
+        "end": "17:30",
+        "title": "Job fair",
+        "kind": "fair"
+      },
+      {
+        "start": "13:00",
+        "end": "17:30",
+        "title": "Explore fair",
+        "kind": "presentation"
+      }
+    ],
+    "capacity": 300,
+    "slot_minutes": 10,
+    "need_deadline": "2027-02-19",
+    "publish_date": "2027-03-05",
+    "time_groups": [
+      {
+        "id": "A",
+        "label": "Group A",
+        "entry": "14:30"
+      },
+      {
+        "id": "B",
+        "label": "Group B",
+        "entry": "15:30"
+      },
+      {
+        "id": "C",
+        "label": "Group C",
+        "entry": "16:30"
+      }
+    ],
+    "employers": [
+      {
+        "employer_id": "emp-cafe-koivu",
+        "booth": "A1",
+        "slots": 8,
+        "formats": [
+          "one_to_one",
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Learn the till and the coffee menu with a buddy",
+            "Serve the lunch queue 11:00–14:00",
+            "Do the closing clean-up with a teammate"
+          ],
+          "must_haves": [
+            {
+              "text": "You can stand and move for a 4-hour shift",
+              "why": "lunch service happens standing at the counter"
+            },
+            {
+              "text": "You can work some Saturdays",
+              "why": "Saturday is our busiest day"
+            }
+          ],
+          "will_teach": [
+            "Hygiene basics for food work",
+            "The till system"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "understand lunch orders"
+            }
+          ],
+          "job_ids": [
+            "job-cafe-weekday",
+            "job-cafe-weekend"
+          ]
+        },
+        "need_submitted_at": "2027-02-16",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-siivouspot",
+        "booth": "A2",
+        "slots": 10,
+        "formats": [
+          "one_to_one"
+        ],
+        "need_card": {
+          "first_week": [
+            "Do the school cleaning round with an experienced cleaner",
+            "Learn which products go on which surface"
+          ],
+          "must_haves": [
+            {
+              "text": "You are careful with details",
+              "why": "schools are checked room by room"
+            }
+          ],
+          "will_teach": [
+            "All machines and products",
+            "The safety rules"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A1",
+              "task": "understand the daily work list"
+            }
+          ],
+          "job_ids": []
+        },
+        "need_submitted_at": "2027-02-18",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-market-olari",
+        "booth": "A3",
+        "slots": 6,
+        "formats": [
+          "one_to_one",
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Restock shelves in the morning delivery",
+            "Run the till during the evening rush",
+            "Help customers find products"
+          ],
+          "must_haves": [
+            {
+              "text": "You can lift crates up to 10 kg",
+              "why": "the morning delivery has to be shelved fast"
+            },
+            {
+              "text": "You can work evenings until 21:00",
+              "why": "the evening rush needs extra hands"
+            }
+          ],
+          "will_teach": [
+            "The till and the ordering system"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "help customers at the till"
+            }
+          ],
+          "job_ids": []
+        },
+        "need_submitted_at": "2027-02-15",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-aurora-care",
+        "booth": "A4",
+        "slots": 8,
+        "formats": [
+          "one_to_one",
+          "pitch"
+        ],
+        "need_card": {
+          "first_week": [
+            "Join the morning round with a care worker",
+            "Sit with residents at coffee time",
+            "Help serve lunch"
+          ],
+          "must_haves": [
+            {
+              "text": "You are patient and calm",
+              "why": "residents need time and attention"
+            }
+          ],
+          "will_teach": [
+            "Safe ways to help people move",
+            "The daily routines"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "chat with residents"
+            }
+          ],
+          "job_ids": []
+        },
+        "need_submitted_at": "2027-02-17",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-freight",
+        "booth": "B1",
+        "slots": 12,
+        "formats": [
+          "one_to_one",
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Learn the parcel sorting line",
+            "Load delivery vans with a scanner"
+          ],
+          "must_haves": [
+            {
+              "text": "You can do physical work for a full shift",
+              "why": "parcels are lifted and sorted all shift"
+            }
+          ],
+          "will_teach": [
+            "The scanner and the sorting codes",
+            "Safe lifting"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A1",
+              "task": "understand safety instructions"
+            }
+          ],
+          "job_ids": [
+            "job-freight-pick"
+          ]
+        },
+        "need_submitted_at": "2027-02-19",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-tiima",
+        "booth": "B2",
+        "slots": 8,
+        "formats": [
+          "one_to_one"
+        ],
+        "need_card": {
+          "first_week": [
+            "Work with a finisher on the sports hall site",
+            "Carry materials and keep the site tidy"
+          ],
+          "must_haves": [
+            {
+              "text": "You have a valid occupational safety card",
+              "why": "the site requires it by law"
+            },
+            {
+              "text": "You are on time at 7:00",
+              "why": "the crew briefs together every morning"
+            }
+          ],
+          "will_teach": [
+            "Site routines",
+            "Power tools basics"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "follow spoken instructions on site"
+            }
+          ],
+          "job_ids": [
+            "job-tiima-helper"
+          ]
+        },
+        "need_submitted_at": "2027-02-18",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-otava",
+        "booth": "B3",
+        "slots": 6,
+        "formats": [
+          "one_to_one"
+        ],
+        "need_card": {
+          "first_week": [
+            "Pair with a developer on a real bug",
+            "Join the daily stand-up and demo Fridays"
+          ],
+          "must_haves": [
+            {
+              "text": "You have built something on your own",
+              "why": "we need to see how you solve problems"
+            }
+          ],
+          "will_teach": [
+            "Our stack and code review habits"
+          ],
+          "languages": [
+            {
+              "name": "English",
+              "level": "B2",
+              "task": "discuss technical work"
+            }
+          ],
+          "job_ids": []
+        },
+        "need_submitted_at": "2027-02-22",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-kuusikko",
+        "booth": "B4",
+        "slots": 6,
+        "formats": [
+          "one_to_one",
+          "walk_in"
+        ],
+        "need_card": {
+          "first_week": [
+            "Help teachers in the lunch room and the yard",
+            "Run a craft table for the after-school club"
+          ],
+          "must_haves": [
+            {
+              "text": "You like working with children",
+              "why": "every task is with the kids, not behind a desk"
+            }
+          ],
+          "will_teach": [
+            "The school's daily rhythm",
+            "Child safety basics"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "B1",
+              "task": "talk with children and parents"
+            }
+          ],
+          "job_ids": []
+        },
+        "need_submitted_at": "2027-02-25",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-rantala",
+        "booth": "C1",
+        "slots": 9,
+        "formats": [
+          "one_to_one"
+        ],
+        "need_card": {
+          "first_week": [
+            "Do the maintenance round in two housing companies",
+            "Learn the fault-report app"
+          ],
+          "must_haves": [
+            {
+              "text": "You can use a phone for work reports",
+              "why": "faults are logged in the app, not on paper"
+            }
+          ],
+          "will_teach": [
+            "The round routes",
+            "Basic plumbing and lighting fixes"
+          ],
+          "languages": [
+            {
+              "name": "Finnish",
+              "level": "A2",
+              "task": "read work orders"
+            }
+          ],
+          "job_ids": [
+            "job-rantala-huolto"
+          ]
+        },
+        "need_submitted_at": "2027-02-14",
+        "need_by": "employer",
+        "reminders_sent": 0,
+        "last_reminder_at": null
+      },
+      {
+        "employer_id": "emp-espoolive",
+        "booth": "C2",
+        "slots": 8,
+        "formats": [
+          "walk_in",
+          "pitch"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null,
+        "reminders_sent": 1,
+        "last_reminder_at": "2027-02-20T10:00:00"
+      },
+      {
+        "employer_id": "emp-hymy",
+        "booth": "C3",
+        "slots": 6,
+        "formats": [
+          "one_to_one"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null,
+        "reminders_sent": 1,
+        "last_reminder_at": "2027-02-20T10:00:00"
+      },
+      {
+        "employer_id": "emp-kulma",
+        "booth": "C4",
+        "slots": 10,
+        "formats": [
+          "one_to_one",
+          "walk_in"
+        ],
+        "need_card": null,
+        "need_submitted_at": null,
+        "need_by": null,
+        "reminders_sent": 1,
+        "last_reminder_at": "2027-02-20T10:00:00"
+      }
+    ]
+  },
+  {
+    "id": "ev-2026-11",
+    "name": "Työnantajatreffit at Sello library (demo)",
+    "date": "2026-11-26",
+    "venue": "Leppävaara service point, Sello, 2nd floor",
+    "advisor_note": "Advisors from Employment Espoo are there all day to help you talk to employers.",
+    "format": "treffit",
+    "language": "fi",
+    "starts_at": "2026-11-26T12:00:00",
+    "ends_at": "2026-11-26T15:00:00",
+    "address": "Leppävaarankatu 3–9, Espoo",
+    "description": "Meet employers face to face. An employer presentation at 12:00, then walk-in conversations.",
+    "programme": [
+      {
+        "start": "12:00",
+        "end": "12:30",
+        "title": "Employer presentation",
+        "kind": "presentation"
+      },
+      {
+        "start": "12:30",
+        "end": "15:00",
+        "title": "Walk-in interviews",
+        "kind": "walk_in"
+      }
+    ],
+    "capacity": 0,
+    "slot_minutes": 10,
+    "need_deadline": "",
+    "publish_date": "",
+    "time_groups": []
+  }
+]

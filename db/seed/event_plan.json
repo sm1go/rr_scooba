@@ -13,5 +13,722 @@
     "user_id": "u-aino",
     "event_id": "ev-2026-11",
     "employer_id": "emp-market-olari"
+  },
+  {
+    "user_id": "u-aino",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-pekka",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-amira",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-aino",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-aino",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-pekka",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-amira",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-amira",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent01",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent02",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent02",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-rantala",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent03",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kuusikko",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent03",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent04",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent05",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-rantala",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent05",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent06",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent06",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent07",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-siivouspot",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent08",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kulma",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent08",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent09",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-siivouspot",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent10",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent10",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent11",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-espoolive",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent11",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent12",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-otava",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "English": "B2"
+    }
+  },
+  {
+    "user_id": "u-talent13",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent13",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-espoolive",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent14",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-rantala",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent14",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent15",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent16",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent16",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kulma",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent17",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent18",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent18",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-rantala",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent19",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-rantala",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent19",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent20",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-espoolive",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent21",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-siivouspot",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent21",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent22",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-siivouspot",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent22",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kuusikko",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent23",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent24",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent24",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent25",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kuusikko",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent26",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-siivouspot",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent26",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent27",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent27",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent28",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent29",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kuusikko",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent29",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-rantala",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent30",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent30",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kulma",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent31",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent32",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent32",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-espoolive",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent33",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-market-olari",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent34",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent34",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kuusikko",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent35",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kulma",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent35",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent36",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-siivouspot",
+    "meets": [],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent37",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-hymy",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent37",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent38",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-kulma",
+    "meets": [],
+    "language_levels": {}
+  },
+  {
+    "user_id": "u-talent38",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-freight",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "A1"
+    }
+  },
+  {
+    "user_id": "u-talent39",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-tiima",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
+  },
+  {
+    "user_id": "u-talent40",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-aurora-care",
+    "meets": [
+      0
+    ],
+    "language_levels": {
+      "Finnish": "B1"
+    }
+  },
+  {
+    "user_id": "u-talent40",
+    "event_id": "ev-2027-03",
+    "employer_id": "emp-cafe-koivu",
+    "meets": [
+      0,
+      1
+    ],
+    "language_levels": {
+      "Finnish": "A2"
+    }
   }
 ]

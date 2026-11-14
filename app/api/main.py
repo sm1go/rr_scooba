@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .db import ensure_db
 from .routers import (advisor, ai, auth, catalog, commute, employer, event,
+                      events,
                       jobs, resident)
 
 
@@ -42,3 +43,4 @@ app.include_router(advisor.router)
 app.include_router(ai.router)
 app.include_router(commute.router)
 app.include_router(event.router)
+app.include_router(events.router)

@@ -22,9 +22,10 @@ from .. import db as db_mod
 from .. import llm, settings
 from ..auth import current_user, optional_user
 from ..db import get_conn
-from ..models import (AdvisorNoteIn, FiltersIn, JobDraftIn, SimplifyIn)
+from ..models import (EventCardAiIn,AdvisorNoteIn, FiltersIn, JobDraftIn, SimplifyIn)
 from ..prompts import (ADVISOR_NOTE_SYSTEM, ADVISOR_QUESTIONS_SYSTEM,
-                       FILTERS_SYSTEM, JOB_FROM_PHOTO_SYSTEM, SIMPLIFY_SYSTEM)
+                       EVENT_CARD_SYSTEM, FILTERS_SYSTEM,
+                       JOB_FROM_PHOTO_SYSTEM, SIMPLIFY_SYSTEM)
 from ..rules import call_script, filter_words, lint
 from ..serialize import CONDITION_KEYS, job_out
 
@@ -559,3 +560,36 @@ def advisor_note(payload: AdvisorNoteIn,
     if not isinstance(raw, dict):
         raise HTTPException(502, "The assistant gave an unusable answer.")
     return _clean_note(raw)
+
+
+# --- 6. event card restructuring (v9) ---------------------------------------------
+
+
+@router.post("/ai/event-card")
+def event_card(payload: EventCardAiIn, request: Request,
+               conn: sqlite3.Connection = Depends(get_conn),
+               user=Depends(current_user)):
+    """'Help me write this clearly': restructure the person's own sentences
+    into <=120-char lines. Facts are never added; the person approves."""
+    _rate_limit(request)
+    _require_ai()
+    items = [i.strip() for i in payload.items if i.strip()]
+    if not (1 <= len(items) <= 3):
+        raise HTTPException(422, "Send 1–3 items.")
+    messages = [{"role": "system", "content": EVENT_CARD_SYSTEM},
+                {"role": "user", "content": json.dumps(
+                    {"items": items}, ensure_ascii=False)}]
+    try:
+        out = llm.get_client().chat(messages)
+    except llm.LLMUnavailable as e:
+        raise HTTPException(503, "The AI assistant is not connected.") from e
+    except llm.LLMBadReply as e:
+        raise HTTPException(502, "The assistant gave an unusable answer. "
+                                 "Please try again.") from e
+    lines = [str(l).strip()[:120] for l in out.get("lines") or []]
+    if len(lines) != len(items):
+        raise HTTPException(502, "The assistant gave an unusable answer. "
+                                 "Please try again.")
+    db_mod.audit(conn, "ai", "ai_event_card", str(len(items)))
+    conn.commit()
+    return {"lines": lines}

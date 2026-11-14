@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { api, ApiError } from '../lib/api'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import type { Application, EventTalk } from '../types'
+import type { Application, EventRecord, EventTalk } from '../types'
 import { Chip, ErrorBox, Section } from '../components/ui'
 import { fmtDate } from '../lib/format'
 
@@ -17,6 +17,7 @@ export default function Applications() {
   const { t } = useI18n()
   const [apps, setApps] = useState<Application[] | null>(null)
   const [talks, setTalks] = useState<EventTalk[]>([])
+  const [records, setRecords] = useState<EventRecord[]>([])
   const [err, setErr] = useState('')
 
   const load = () => {
@@ -25,6 +26,8 @@ export default function Applications() {
       .catch((e) => setErr(e instanceof ApiError ? e.message : t('common.error')))
     api<{ talks: EventTalk[] }>('/api/me/event-talks')
       .then((r) => setTalks(r.talks)).catch(() => {})
+    api<{ records: EventRecord[] }>('/api/me/event-records')
+      .then((r) => setRecords(r.records)).catch(() => {})
   }
   useEffect(load, [t])
 
@@ -45,7 +48,7 @@ export default function Applications() {
       {apps.length === 0 && (
         <div className="card p-6 text-center">
           <p>{t('applications.empty')}</p>
-          <Link to="/" className="btn btn-primary">{t('nav.jobs')}</Link>
+          <Link to="/jobs" className="btn btn-primary">{t('nav.jobs')}</Link>
         </div>
       )}
       {apps.map((a) => {
@@ -131,6 +134,19 @@ export default function Applications() {
                   {t('apps.talknote')}: {tk.employer_note}
                 </p>
               )}
+            </article>
+          ))}
+        </Section>
+      )}
+
+      {records.length > 0 && (
+        <Section title={t('ev.after.seen')}>
+          {records.map((r, i) => (
+            <article key={i} className="card p-4 mb-3">
+              <p className="m-0 font-medium">{r.employer} — {fmtDate(r.date)}</p>
+              <ul className="m-0 mt-1 ps-5">
+                {r.observed.map((o, j) => <li key={j}>{o}</li>)}
+              </ul>
             </article>
           ))}
         </Section>

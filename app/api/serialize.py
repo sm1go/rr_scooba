@@ -125,6 +125,8 @@ def application_out(conn: sqlite3.Connection, row: sqlite3.Row,
            "contract_eligible": bool(row["contract_eligible"]),
            "shared_credentials": json.loads(
                row["shared_credentials"] or "[]"),
+           "shared_event_records": json.loads(
+               row["shared_event_records"] or "[]"),
            "status": row["status"], "status_note": row["status_note"],
            "created_by_advisor": bool(row["created_by_advisor"]),
            "created_at": row["created_at"], "updated_at": row["updated_at"]}

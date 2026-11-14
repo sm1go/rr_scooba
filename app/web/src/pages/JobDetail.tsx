@@ -129,7 +129,7 @@ export default function JobDetail() {
 
   return (
     <div className="pb-28">
-      <Link to="/" className="text-secondary">{`← ${t('common.back')}`}</Link>
+      <Link to="/jobs" className="text-secondary">{`← ${t('common.back')}`}</Link>
       <h1 data-page-title tabIndex={-1} className="mt-2">{job.title}</h1>
       <p className="text-secondary" style={{ fontSize: '1.1rem' }}>
         {job.employer?.name}

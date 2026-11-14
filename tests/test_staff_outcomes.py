@@ -45,9 +45,10 @@ def test_outcome_panel_counts(client, advisor):
         assert o["interviews"] >= o["offers"]
         assert o["applications"] >= o["applications_by_advisor"]
     assert all_["applications"] >= o7["applications"]
-    assert all_["event_talks"]["recorded"] == 2
-    assert all_["event_talks"]["answered"] == 1
-    assert all_["event_talks"]["unanswered"] == 1
+    # 2 seeded talks for ev-2026-11 + 15 for ev-2027-03
+    assert all_["event_talks"]["recorded"] == 17
+    assert all_["event_talks"]["answered"] == 11
+    assert all_["event_talks"]["unanswered"] == 6
     assert all_["employer_calls"]["no_answer"] == 0
 
     client.post("/api/advisor/applications", headers=advisor, json={

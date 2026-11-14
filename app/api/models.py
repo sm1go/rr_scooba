@@ -114,6 +114,7 @@ class ApplicationIn(BaseModel):
     wants_tryout: bool = False
     contract_eligible: bool = False
     share_credentials: bool = False
+    share_event_records: bool = False
     shared_needs: list[str] = []
     meet_at_event: bool = False
     name: Optional[str] = None          # advisor applies for someone
@@ -208,3 +209,76 @@ class WalkupTalkIn(BaseModel):
     contact_value: str = Field(min_length=3, max_length=120)
     job_id: Optional[str] = None
     consent: bool
+
+
+# --- event-centred mode (v9) ----------------------------------------------------
+
+class DoneItem(BaseModel):
+    text: str = ""
+    own_words: str = ""
+
+
+class TalentCard(BaseModel):
+    done: list[DoneItem] = []
+    looking_for: str = ""
+    district: str = ""
+    availability: list[str] = []
+
+
+class EventRegisterIn(BaseModel):
+    time_group: str
+    card_language: str = "en"
+    card: TalentCard
+
+
+class RegistrationPatch(BaseModel):
+    card: Optional[TalentCard] = None
+    card_language: Optional[str] = None
+
+
+class InterestIn(BaseModel):
+    meets: list[int] = []
+    language_levels: dict[str, str] = {}
+
+
+class EventInviteIn(BaseModel):
+    registration_id: str
+
+
+class MustHave(BaseModel):
+    text: str
+    why: str
+
+
+class NeedLanguage(BaseModel):
+    name: str
+    level: Literal["A1", "A2", "B1", "B2", "C1", "C2"]
+    task: str = ""
+
+
+class EventCardNeedIn(BaseModel):
+    first_week: list[str] = []
+    must_haves: list[MustHave] = []
+    will_teach: list[str] = []
+    languages: list[NeedLanguage] = []
+    job_ids: list[str] = []
+
+
+class OrgNeedIn(BaseModel):
+    employer_id: str
+    card: EventCardNeedIn
+
+
+class EventCardAiIn(BaseModel):
+    items: list[str]
+
+
+class MeetingTalkIn(BaseModel):
+    """Employer records a meeting talk: what they saw + the answer."""
+    observed: list[str] = []
+    outcome: Literal["next_step", "not_now"]
+    employer_note: str = Field(min_length=1)
+
+
+class VisitorCodeIn(BaseModel):
+    code: str = Field(pattern=r"^\d{4}$")

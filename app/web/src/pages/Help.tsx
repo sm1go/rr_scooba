@@ -75,7 +75,7 @@ export default function Help() {
         <h1 data-page-title tabIndex={-1}>{t('help.sent')}</h1>
         <p>{t('help.sentbody')}</p>
         <p className="text-secondary">{t('help.phone')}</p>
-        <Link to="/" className="btn btn-primary mt-2">{t('nav.jobs')}</Link>
+        <Link to="/jobs" className="btn btn-primary mt-2">{t('nav.jobs')}</Link>
       </div>
     )
   }

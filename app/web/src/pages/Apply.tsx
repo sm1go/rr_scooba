@@ -27,6 +27,8 @@ export default function Apply() {
   const [wantsTryout, setWantsTryout] = useState(false)
   const [contractOk, setContractOk] = useState(false)
   const [shareCreds, setShareCreds] = useState(false)
+  const [shareEvents, setShareEvents] = useState(false)
+  const [eventCount, setEventCount] = useState(0)
   const [credCount, setCredCount] = useState(0)
   const [cv, setCv] = useState('')
   const [share, setShare] = useState<Set<string>>(new Set())
@@ -50,6 +52,9 @@ export default function Apply() {
       api<{ credentials: { id: string }[] }>(`/api/me/credentials`)
         .then((r) => { setCredCount(r.credentials.length)
                        if (j.qualifications.length) setShareCreds(true) })
+        .catch(() => undefined)
+      api<{ records: unknown[] }>(`/api/me/event-records`)
+        .then((r) => setEventCount(r.records.length))
         .catch(() => undefined) }).catch((e) => setLoadErr(e))
   }
   useEffect(loadJob, [id])
@@ -105,6 +110,7 @@ export default function Apply() {
           cv_text: job.cv_required && !openHiring ? cv : undefined,
           meets_must_haves: meetsMust, wants_tryout: wantsTryout,
           contract_eligible: contractOk, share_credentials: shareCreds,
+          share_event_records: shareEvents,
           shared_needs: [...share], meet_at_event: event,
         },
       })
@@ -188,6 +194,16 @@ export default function Apply() {
                        onChange={(e) => setShareCreds(e.target.checked)}
                        style={{ width: 24, height: 24, marginTop: 2 }} />
                 <span>{t('apply.sharecreds', { n: credCount })}</span>
+              </label>
+            </div>
+          )}
+          {eventCount > 0 && (
+            <div className="card p-4 mb-4">
+              <label className="flex items-start gap-3 cursor-pointer font-medium">
+                <input type="checkbox" checked={shareEvents}
+                       onChange={(e) => setShareEvents(e.target.checked)}
+                       style={{ width: 24, height: 24, marginTop: 2 }} />
+                <span>{t('apply.shareevents', { n: eventCount })}</span>
               </label>
             </div>
           )}

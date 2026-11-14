@@ -1634,6 +1634,8 @@ def main():
     print(f"employers: {len(employers)} listed ({len(EMPLOYERS)} new), "
           f"{len(unlisted)} unlisted")
     print(f"stale (>14 days): {stale}")
+    import gen_event_demo
+    gen_event_demo.main()
     return 0
 
 

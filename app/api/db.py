@@ -24,10 +24,10 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 10
 
 SEED_REQUIRED = [
-    "event.json", "employers.json", "jobs.json", "users.json",
+    "events.json", "employers.json", "jobs.json", "users.json",
     "applications.json", "help_requests.json", "saved_jobs.json",
     "procurement.json",
 ]
@@ -86,10 +86,39 @@ def ensure_db(path: Path | None = None) -> Path:
 
 
 def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
-    ev = _load_seed("event.json", seed_dir)
-    conn.execute(
-        "INSERT INTO event (id,name,date,venue,advisor_note)"
-        " VALUES (:id,:name,:date,:venue,:advisor_note)", ev)
+    events = _load_seed("events.json", seed_dir)
+    for ev in events:
+        conn.execute(
+            "INSERT INTO event (id,name,date,venue,advisor_note,format,"
+            "language,starts_at,ends_at,address,description,programme,"
+            "capacity,slot_minutes,need_deadline,publish_date,time_groups)"
+            " VALUES (:id,:name,:date,:venue,:advisor_note,:format,:language,"
+            ":starts_at,:ends_at,:address,:description,:programme,:capacity,"
+            ":slot_minutes,:need_deadline,:publish_date,:time_groups)",
+            {**ev, "programme": json.dumps(ev.get("programme", []),
+                                          ensure_ascii=False),
+             "time_groups": json.dumps(ev.get("time_groups", []),
+                                       ensure_ascii=False)})
+        for ee in ev.get("employers", []):
+            conn.execute(
+                "INSERT INTO employer_event (employer_id,event_id,booth,"
+                "need_card,need_submitted_at,need_by,slots,formats,"
+                "reminders_sent,last_reminder_at)"
+                " VALUES (:employer_id,:event_id,:booth,:need_card,"
+                ":need_submitted_at,:need_by,:slots,:formats,:reminders_sent,"
+                ":last_reminder_at)",
+                {"employer_id": ee["employer_id"], "event_id": ev["id"],
+                 "booth": ee.get("booth", ""),
+                 "need_card": json.dumps(ee["need_card"], ensure_ascii=False)
+                 if ee.get("need_card") else None,
+                 "need_submitted_at": ee.get("need_submitted_at"),
+                 "need_by": ee.get("need_by"), "slots": ee.get("slots", 0),
+                 "formats": json.dumps(ee.get("formats", [])),
+                 "reminders_sent": ee.get("reminders_sent", 0),
+                 "last_reminder_at": ee.get("last_reminder_at")})
+    main_ev = next((e for e in events
+                    if e["id"] == events[0]["id"]), events[0])
+    ev = main_ev  # legacy single-event consumers use the first event's booth list
 
     # employers_unlisted.json: small firms with no job on the map yet
     # (hidden-vacancy call list); hand-written, not from the generator
@@ -102,7 +131,7 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
         if e.get("booth"):
             conn.execute(
                 "INSERT INTO employer_event (employer_id,event_id,booth)"
-                " VALUES (?,?,?)", (e["id"], ev["id"], e["booth"]))
+                " VALUES (?,?,?)", (e["id"], "ev-2026-11", e["booth"]))
 
     for j in _load_seed("jobs.json", seed_dir):
         confirmed = (now - timedelta(days=j.get("confirmed_days_ago", 0))).date()
@@ -216,22 +245,74 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
         conn.execute(
             "INSERT OR IGNORE INTO event_visitor (user_id,event_id,code)"
             " VALUES (?,?,?)", (v["user_id"], v["event_id"], v["code"]))
+    for r in opt("talent_registrations.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO talent_registration (id,event_id,user_id,"
+            "time_group,status,card_language,card,created_at)"
+            " VALUES (?,?,?,?,?,?,?,?)",
+            (r["id"], r["event_id"], r["user_id"], r.get("time_group", ""),
+             r.get("status", "registered"), r.get("card_language", "en"),
+             json.dumps(r.get("card", {}), ensure_ascii=False),
+             (now - timedelta(days=r.get("days_ago", 0))).isoformat()))
     for p in opt("event_plan.json"):
         conn.execute(
-            "INSERT OR IGNORE INTO event_plan (user_id,event_id,employer_id)"
-            " VALUES (?,?,?)", (p["user_id"], p["event_id"], p["employer_id"]))
+            "INSERT OR IGNORE INTO event_plan (user_id,event_id,employer_id,"
+            "meets,language_levels)"
+            " VALUES (?,?,?,?,?)",
+            (p["user_id"], p["event_id"], p["employer_id"],
+             json.dumps(p.get("meets", []), ensure_ascii=False),
+             json.dumps(p.get("language_levels", {}), ensure_ascii=False)))
+    for iv in opt("event_invites.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO event_invite (event_id,employer_id,"
+            "registration_id,created_at) VALUES (?,?,?,?)",
+            (iv["event_id"], iv["employer_id"], iv["registration_id"],
+             (now - timedelta(days=iv.get("days_ago", 0))).isoformat()))
+    # mutual interest + invite -> meeting, computed by the real booking
+    # function (file order is the booking order)
+    from .routers.events import book_if_mutual
+    for iv in opt("event_invites.json"):
+        reg = conn.execute(
+            "SELECT user_id FROM talent_registration WHERE id=?",
+            (iv["registration_id"],)).fetchone()
+        if reg:
+            book_if_mutual(conn, iv["event_id"], iv["employer_id"],
+                           reg["user_id"])
+    conn.commit()
     for t in opt("event_talks.json"):
         talked = now - timedelta(days=t.get("days_ago_talked", 0))
         answered = (now - timedelta(days=t["days_ago_answered"])
                     if t.get("days_ago_answered") is not None else None)
+        meeting = conn.execute(
+            "SELECT id FROM event_meeting WHERE event_id=? AND employer_id=?"
+            " AND user_id=?", (t["event_id"], t["employer_id"],
+                              t.get("user_id"))).fetchone()
         conn.execute(
             "INSERT OR IGNORE INTO event_talk (id,event_id,user_id,employer_id,"
-            "status,outcome,employer_note,talked_at,answered_at)"
-            " VALUES (?,?,?,?,?,?,?,?,?)",
-            (t["id"], t["event_id"], t["user_id"], t["employer_id"],
+            "meeting_id,observed,status,outcome,employer_note,talked_at,"
+            "answered_at)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            (t["id"], t["event_id"], t.get("user_id"), t["employer_id"],
+             meeting["id"] if meeting else None,
+             json.dumps(t.get("observed", []), ensure_ascii=False),
              t["status"], t.get("outcome"), t.get("employer_note", ""),
              talked.isoformat(),
              answered.isoformat() if answered else None))
+    # meetings with a recorded talk count as held, except the demo
+    # employer's booth stays bookable for the on-the-day walkthrough
+    conn.execute(
+        "UPDATE event_meeting SET status='done' WHERE employer_id !="
+        " 'emp-cafe-koivu' AND id IN (SELECT meeting_id FROM event_talk"
+        " WHERE meeting_id IS NOT NULL)")
+    # a few deterministic no-shows so the live board has data
+    conn.execute(
+        "UPDATE event_meeting SET status='no_show' WHERE id IN ("
+        " SELECT m.id FROM event_meeting m WHERE m.event_id='ev-2027-03'"
+        " AND m.employer_id IN ('emp-freight','emp-aurora-care',"
+        " 'emp-espoolive') AND NOT EXISTS (SELECT 1 FROM event_talk t"
+        " WHERE t.meeting_id=m.id) AND m.starts_at = (SELECT MAX("
+        "starts_at) FROM event_meeting WHERE employer_id=m.employer_id"
+        " AND event_id='ev-2027-03'))")
 
 
 def _write_profile(conn: sqlite3.Connection, user_id: str, p: dict) -> None:
@@ -295,7 +376,8 @@ def new_id(conn: sqlite3.Connection, prefix: str) -> str:
     suffix, ignoring slug ids like 'job-cafe-weekend'."""
     table = {"ap": "application", "job": "job", "hr": "help_request",
              "u": "user", "emp": "employer", "et": "event_talk",
-             "cred": "credential", "hire": "contract_hire"}[prefix]
+             "cred": "credential", "hire": "contract_hire",
+             "mt": "event_meeting", "tr": "talent_registration"}[prefix]
     n = 0
     for r in conn.execute(
             "SELECT id FROM {} WHERE id LIKE ?".format(table),

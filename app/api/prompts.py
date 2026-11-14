@@ -160,3 +160,16 @@ Rules:
     "consent_mentioned": bool,   # true only if the note says the person agreed
     "left_out": [str]}           # short notes on anything you did not record and why
 """
+
+EVENT_CARD_SYSTEM = """You restructure text a person wrote about things they have done, for a
+recruitment event card. The person approves every change before it is used.
+
+Rules:
+1. Never add facts, achievements or details the person did not write. Never
+   judge, praise or score. Keep their meaning.
+2. Keep the person's own words where possible; only tighten structure.
+3. Return one line per item, each at most 120 characters, in the same
+   language the person wrote in.
+4. Output one JSON object and nothing else: {"lines": [str]} — same number
+   of lines as items given.
+"""

@@ -104,8 +104,9 @@ def _create_application(conn: sqlite3.Connection, payload: ApplicationIn,
         "INSERT INTO application (id,job_id,user_id,name,contact_method,"
         "contact_value,availability_note,answer,cv_text,shared_needs,"
         "meet_at_event,meets_must_haves,wants_tryout,contract_eligible,"
-        "shared_credentials,status,created_by_advisor)"
-        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "shared_credentials,shared_event_records,status,"
+        "created_by_advisor)"
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (app_id, payload.job_id, user_id, name, payload.contact_method,
          payload.contact_value, payload.availability_note, payload.answer,
          payload.cv_text if not open_hiring else None,
@@ -115,6 +116,8 @@ def _create_application(conn: sqlite3.Connection, payload: ApplicationIn,
          int(payload.contract_eligible) if job["contract_id"] else 0,
          json.dumps(_credential_snapshot(conn, user_id)
                     if payload.share_credentials else []),
+         json.dumps(_event_records_snapshot(conn, user_id)
+                    if getattr(payload, "share_event_records", False) else []),
          "sent", int(by_advisor)))
     db_mod.audit(conn, (user["id"] if user else "advisor"),
                  "application_created",
@@ -169,6 +172,27 @@ def _credential_snapshot(conn: sqlite3.Connection,
             for r in conn.execute(
                 "SELECT label,checked_at FROM credential WHERE user_id=?"
                 " ORDER BY checked_at DESC", (user_id,))]
+
+
+def _event_records_snapshot(conn: sqlite3.Connection,
+                            user_id: str) -> list[dict]:
+    """'Seen at the event' record: employer, date, observed items."""
+    out = []
+    for r in conn.execute(
+            "SELECT t.employer_id, e.name employer, t.talked_at, t.observed"
+            " FROM event_talk t JOIN employer e ON e.id=t.employer_id"
+            " WHERE t.user_id=? AND t.observed != '[]'"
+            " ORDER BY t.talked_at DESC", (user_id,)):
+        out.append({"employer": r["employer"], "date": r["talked_at"][:10],
+                    "observed": json.loads(r["observed"])})
+    return out
+
+
+@router.get("/me/event-records")
+def my_event_records(conn: sqlite3.Connection = Depends(get_conn),
+                     user=Depends(auth_mod.current_user)):
+    _resident(user)
+    return {"records": _event_records_snapshot(conn, user["id"])}
 
 
 @router.get("/me/credentials")

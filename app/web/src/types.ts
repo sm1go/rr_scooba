@@ -131,6 +131,7 @@ export interface Application {
   queue_position: number | null
   contract_eligible: boolean
   shared_credentials: { label: string; checked_at: string }[]
+  shared_event_records: EventRecord[]
   status: 'sent' | 'interview' | 'offer' | 'not_selected' | 'withdrawn' | 'job_closed'
   status_note: string
   created_by_advisor: boolean
@@ -333,4 +334,123 @@ export interface CityContract {
 
 export interface Credential {
   id: string; label: string; checked_at: string; advisor_id: string
+}
+
+// --- v9 event-centred model -------------------------------------------------
+export interface EventSummary {
+  id: string; name: string; date: string; format: string; language: string
+  starts_at: string; ends_at: string; venue: string; address: string
+  description: string; capacity: number; slot_minutes: number
+  need_deadline: string; publish_date: string; phase: string
+  employer_count: number; registered: number
+  programme: { kind: string; start: string; end?: string; title?: string }[]
+  time_groups: { id: string; label?: string; entry: string }[]
+}
+export interface DoneItem { text: string; own_words?: string }
+export interface TalentCardData {
+  done: DoneItem[]; looking_for: string; district: string
+  availability: string[]
+}
+export interface NeedCard {
+  first_week: string[]
+  must_haves: { text: string; why: string }[]
+  will_teach: string[]
+  languages: { name: string; level: string; task: string }[]
+  job_ids: string[]
+}
+export interface NeedEntry {
+  employer_id: string; employer_name?: string; booth: string | null
+  slots: number; formats: string[]
+  need: { card: NeedCard; submitted_at: string; need_by: string } | null
+  fit?: { key: string; [k: string]: unknown }[]
+  interested?: boolean; meets?: number[]
+  language_levels?: Record<string, string>
+}
+export interface EventDetailData extends EventSummary {
+  employers: NeedEntry[]; needs_published: boolean
+}
+export interface MyRegistration {
+  id: string; event_id: string; time_group: string; status: string
+  card_language: string; card: TalentCardData; created_at: string
+}
+export interface MyMeeting {
+  id: string; employer_id: string; employer_name: string
+  booth: string | null; starts_at: string; status: string
+  need_line?: string
+}
+export interface MyEventInterest {
+  employer_id: string; name: string; meets: number[]
+  language_levels: Record<string, string>
+}
+export interface MyEventData {
+  event: EventSummary
+  registration: MyRegistration | null
+  interests: MyEventInterest[]
+  meetings: MyMeeting[]
+  talks: { id: string; employer_id: string; employer_name: string;
+           status: string; outcome: string | null; note: string | null }[]
+  visitor_code: string | null
+  interest_limit: number
+  queue: { employer_id: string; status: string; joined_at: string;
+           employer_name: string }[]
+  entry: string | null
+}
+export interface AnonTalentCard {
+  id: string; looking_for: string
+  done: DoneItem[]; meets: number[]
+  language_levels: Record<string, string>; availability: string[]
+  district: string; credentials: string[]; time_group: string
+  interested: boolean; invited: boolean; invited_at?: string | null
+  fit?: { key: string; [k: string]: unknown }[]
+}
+export interface EmployerWorkspace {
+  event: EventSummary; joined: boolean; booth?: string
+  slots?: number; formats?: string[]
+  need?: { card: NeedCard; submitted_at: string; need_by: string } | null
+  invites_used?: number
+  meetings?: { id: string; starts_at: string; status: string }[]
+  talks?: EventTalk[]
+}
+export interface EmployerDay {
+  event: EventSummary; booth: string | null
+  meetings: { id: string; user_id: string; starts_at: string;
+              status: string }[]
+  next_card: (AnonTalentCard & { meeting_id: string }) | null
+  queue: { user_id: string; status: string; joined_at: string;
+           registration_id: string }[]
+}
+export interface OrganizerDay {
+  event: EventSummary
+  booths: { employer_id: string; name: string; booth: string | null
+            now: string | null; next: string | null
+            done: number; no_show: number; free_slots: number;
+            queue: number }[]
+}
+export interface OrganizerReport {
+  event: EventSummary
+  booths: { employer_id: string; name: string; booth: string | null
+            booked: number; held: number; no_show: number;
+            next_step: number }[]
+  need_cards_on_time_pct: number | null
+  answers_in_7d_pct: number | null
+  fairness: { card_language: string; registered: number; chose: number
+              invited: number; met: number; next_step: number
+              rates: Record<string, number> | null }[]
+}
+export interface EventRecord {
+  employer: string; date: string; observed: string[]
+}
+export interface AdvisorBoard {
+  event: EventSummary
+  employers: {
+    employer_id: string; name: string; booth: string | null; slots: number
+    need_status: string; need_submitted_at: string | null
+    need_by: string | null; reminders_sent: number
+    days_to_deadline: number | null
+    contact_name: string | null; contact_email: string | null
+    contact_phone: string | null
+    invites_used: number; meetings: number
+  }[]
+  talent: { by_time_group: Record<string, number>; waitlist: number;
+            mutual_matches: number; meetings: number }
 }

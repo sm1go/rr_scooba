@@ -1,0 +1,1211 @@
+[
+  {
+    "id": "tr-e1-001",
+    "event_id": "ev-2027-03",
+    "user_id": "u-aino",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Hoidin kassan ja kahvit yksin torikahviossa",
+          "own_words": "Hoidin kassan ja kahvit yksin torikahviossa"
+        },
+        {
+          "text": "Järjestin kirjaston satutunnan vapaaehtoisena",
+          "own_words": "Järjestin kirjaston satutunnan vapaaehtoisena"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 20
+  },
+  {
+    "id": "tr-e1-002",
+    "event_id": "ev-2027-03",
+    "user_id": "u-pekka",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Ajoin jakeluautoa yötöissä kaksi vuotta",
+          "own_words": "Ajoin jakeluautoa yötöissä kaksi vuotta"
+        },
+        {
+          "text": "Korjasin taloyhtiön pyöriä ja rappusia",
+          "own_words": "Korjasin taloyhtiön pyöriä ja rappusia"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "matinkyla",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 19
+  },
+  {
+    "id": "tr-e1-003",
+    "event_id": "ev-2027-03",
+    "user_id": "u-amira",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Cooked iftar meals for sixty people",
+          "own_words": "Cooked iftar meals for sixty people"
+        },
+        {
+          "text": "Kept a neighbourhood WhatsApp group running",
+          "own_words": "Kept a neighbourhood WhatsApp group running"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoonlahti",
+      "availability": [
+        "fri-afternoon",
+        "sat-afternoon"
+      ]
+    },
+    "days_ago": 18
+  },
+  {
+    "id": "tr-e1-004",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent01",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Kept a hockey team's equipment room in order",
+          "own_words": "Kept a hockey team's equipment room in order"
+        },
+        {
+          "text": "Translated letters for a community group",
+          "own_words": "Translated letters for a community group"
+        },
+        {
+          "text": "Walked shelter dogs every weekend",
+          "own_words": "Walked shelter dogs every weekend"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "kauklahti",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 15
+  },
+  {
+    "id": "tr-e1-005",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent02",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        },
+        {
+          "text": "Ran a market stall two summers in a row",
+          "own_words": "Ran a market stall two summers in a row"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "leppavaara",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 14
+  },
+  {
+    "id": "tr-e1-006",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent03",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Fixed bikes for neighbours",
+          "own_words": "Fixed bikes for neighbours"
+        },
+        {
+          "text": "Coached a kids' football team for a season",
+          "own_words": "Coached a kids' football team for a season"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 13
+  },
+  {
+    "id": "tr-e1-007",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent04",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Organised a 40-person food bank shift",
+          "own_words": "Organised a 40-person food bank shift"
+        },
+        {
+          "text": "Handled returns and complaints at a clothing shop",
+          "own_words": "Handled returns and complaints at a clothing shop"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 12
+  },
+  {
+    "id": "tr-e1-008",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent05",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Ran the till alone on Saturdays at a kiosk",
+          "own_words": "Ran the till alone on Saturdays at a kiosk"
+        },
+        {
+          "text": "Built shelves and repaired chairs at home",
+          "own_words": "Built shelves and repaired chairs at home"
+        },
+        {
+          "text": "Cared for two grandparents at home",
+          "own_words": "Cared for two grandparents at home"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 11
+  },
+  {
+    "id": "tr-e1-009",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent06",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        },
+        {
+          "text": "Ran a market stall two summers in a row",
+          "own_words": "Ran a market stall two summers in a row"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "matinkyla",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 10
+  },
+  {
+    "id": "tr-e1-010",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent07",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Handled returns and complaints at a clothing shop",
+          "own_words": "Handled returns and complaints at a clothing shop"
+        },
+        {
+          "text": "Managed the cash box for a school fair",
+          "own_words": "Managed the cash box for a school fair"
+        },
+        {
+          "text": "Cooked lunch for a crew of twenty",
+          "own_words": "Cooked lunch for a crew of twenty"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "matinkyla",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 9
+  },
+  {
+    "id": "tr-e1-011",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent08",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Drove an aunt to appointments every week",
+          "own_words": "Drove an aunt to appointments every week"
+        },
+        {
+          "text": "Packed online orders in a warehouse for a summer",
+          "own_words": "Packed online orders in a warehouse for a summer"
+        },
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoon_keskus",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 8
+  },
+  {
+    "id": "tr-e1-012",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent09",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Led a sewing circle at the library",
+          "own_words": "Led a sewing circle at the library"
+        },
+        {
+          "text": "Ran the till alone on Saturdays at a kiosk",
+          "own_words": "Ran the till alone on Saturdays at a kiosk"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoonlahti",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 7
+  },
+  {
+    "id": "tr-e1-013",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent10",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "en",
+    "card": {
+      "done": [
+        {
+          "text": "Packed online orders in a warehouse for a summer",
+          "own_words": "Packed online orders in a warehouse for a summer"
+        },
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoon_keskus",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 6
+  },
+  {
+    "id": "tr-e1-014",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent11",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Opetin vanhuksia käyttämään puhelinta",
+          "own_words": "Opetin vanhuksia käyttämään puhelinta"
+        },
+        {
+          "text": "Myin toriaalla kaksi kesää",
+          "own_words": "Myin toriaalla kaksi kesää"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "leppavaara",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 5
+  },
+  {
+    "id": "tr-e1-015",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent12",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Pidin harrastusjoukkueen varustehuonetta kunnossa",
+          "own_words": "Pidin harrastusjoukkueen varustehuonetta kunnossa"
+        },
+        {
+          "text": "Käänsin kirjeitä yhdistykselle",
+          "own_words": "Käänsin kirjeitä yhdistykselle"
+        },
+        {
+          "text": "Ulkoilutin koiran tarhalla viikonloppuisin",
+          "own_words": "Ulkoilutin koiran tarhalla viikonloppuisin"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "leppavaara",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 4
+  },
+  {
+    "id": "tr-e1-016",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent13",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Myin toriaalla kaksi kesää",
+          "own_words": "Myin toriaalla kaksi kesää"
+        },
+        {
+          "text": "Johdin ompelupiiriä kirjastossa",
+          "own_words": "Johdin ompelupiiriä kirjastossa"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 15
+  },
+  {
+    "id": "tr-e1-017",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent14",
+    "time_group": "A",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Järjestin 40 hengen ruokajakeluvuoron",
+          "own_words": "Järjestin 40 hengen ruokajakeluvuoron"
+        },
+        {
+          "text": "Hoidin palautukset vaatekaupassa",
+          "own_words": "Hoidin palautukset vaatekaupassa"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "niittykumpu",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 14
+  },
+  {
+    "id": "tr-e1-018",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent15",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Hoidin palautukset vaatekaupassa",
+          "own_words": "Hoidin palautukset vaatekaupassa"
+        },
+        {
+          "text": "Hoidin koulun talkoiden rahat",
+          "own_words": "Hoidin koulun talkoiden rahat"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "tapiola",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 13
+  },
+  {
+    "id": "tr-e1-019",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent16",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Myin toriaalla kaksi kesää",
+          "own_words": "Myin toriaalla kaksi kesää"
+        },
+        {
+          "text": "Johdin ompelupiiriä kirjastossa",
+          "own_words": "Johdin ompelupiiriä kirjastossa"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "espoon_keskus",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 12
+  },
+  {
+    "id": "tr-e1-020",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent17",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Tein ruuat parikymmenelle työmiehelle",
+          "own_words": "Tein ruuat parikymmenelle työmiehelle"
+        },
+        {
+          "text": "Siivosin portaistalon sopimuksella yksin",
+          "own_words": "Siivosin portaistalon sopimuksella yksin"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "olari",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 11
+  },
+  {
+    "id": "tr-e1-021",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent18",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Tein hyllyjä ja korjasin tuoleja kotona",
+          "own_words": "Tein hyllyjä ja korjasin tuoleja kotona"
+        },
+        {
+          "text": "Hoidin kahta vanhusta kotona",
+          "own_words": "Hoidin kahta vanhusta kotona"
+        },
+        {
+          "text": "Korjasin naapurien pyöriä",
+          "own_words": "Korjasin naapurien pyöriä"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 10
+  },
+  {
+    "id": "tr-e1-022",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent19",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Hoidin kahta vanhusta kotona",
+          "own_words": "Hoidin kahta vanhusta kotona"
+        },
+        {
+          "text": "Korjasin naapurien pyöriä",
+          "own_words": "Korjasin naapurien pyöriä"
+        },
+        {
+          "text": "Valmensin lasten jalkapallojoukkuetta kauden",
+          "own_words": "Valmensin lasten jalkapallojoukkuetta kauden"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "olari",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 9
+  },
+  {
+    "id": "tr-e1-023",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent20",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "fi",
+    "card": {
+      "done": [
+        {
+          "text": "Valmensin lasten jalkapallojoukkuetta kauden",
+          "own_words": "Valmensin lasten jalkapallojoukkuetta kauden"
+        },
+        {
+          "text": "Poimin marjoja tilalla joka heinäkuu",
+          "own_words": "Poimin marjoja tilalla joka heinäkuu"
+        }
+      ],
+      "looking_for": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+      "district": "espoonlahti",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 8
+  },
+  {
+    "id": "tr-e1-024",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent21",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Ran the till alone on Saturdays at a kiosk",
+          "own_words": "Ran the till alone on Saturdays at a kiosk"
+        },
+        {
+          "text": "Built shelves and repaired chairs at home",
+          "own_words": "Built shelves and repaired chairs at home"
+        },
+        {
+          "text": "Cared for two grandparents at home",
+          "own_words": "Cared for two grandparents at home"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "olari",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 7
+  },
+  {
+    "id": "tr-e1-025",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent22",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Led a sewing circle at the library",
+          "own_words": "Led a sewing circle at the library"
+        },
+        {
+          "text": "Ran the till alone on Saturdays at a kiosk",
+          "own_words": "Ran the till alone on Saturdays at a kiosk"
+        },
+        {
+          "text": "Built shelves and repaired chairs at home",
+          "own_words": "Built shelves and repaired chairs at home"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "matinkyla",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 6
+  },
+  {
+    "id": "tr-e1-026",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent23",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Drove an aunt to appointments every week",
+          "own_words": "Drove an aunt to appointments every week"
+        },
+        {
+          "text": "Packed online orders in a warehouse for a summer",
+          "own_words": "Packed online orders in a warehouse for a summer"
+        },
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "tapiola",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 5
+  },
+  {
+    "id": "tr-e1-027",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent24",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        },
+        {
+          "text": "Organised a 40-person food bank shift",
+          "own_words": "Organised a 40-person food bank shift"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 4
+  },
+  {
+    "id": "tr-e1-028",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent25",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Kept a hockey team's equipment room in order",
+          "own_words": "Kept a hockey team's equipment room in order"
+        },
+        {
+          "text": "Translated letters for a community group",
+          "own_words": "Translated letters for a community group"
+        },
+        {
+          "text": "Walked shelter dogs every weekend",
+          "own_words": "Walked shelter dogs every weekend"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "olari",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 15
+  },
+  {
+    "id": "tr-e1-029",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent26",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        },
+        {
+          "text": "Organised a 40-person food bank shift",
+          "own_words": "Organised a 40-person food bank shift"
+        },
+        {
+          "text": "Handled returns and complaints at a clothing shop",
+          "own_words": "Handled returns and complaints at a clothing shop"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "leppavaara",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 14
+  },
+  {
+    "id": "tr-e1-030",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent27",
+    "time_group": "B",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Coached a kids' football team for a season",
+          "own_words": "Coached a kids' football team for a season"
+        },
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "leppavaara",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 13
+  },
+  {
+    "id": "tr-e1-031",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent28",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Coached a kids' football team for a season",
+          "own_words": "Coached a kids' football team for a season"
+        },
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        },
+        {
+          "text": "Organised a 40-person food bank shift",
+          "own_words": "Organised a 40-person food bank shift"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "kauklahti",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 12
+  },
+  {
+    "id": "tr-e1-032",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent29",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Kept a hockey team's equipment room in order",
+          "own_words": "Kept a hockey team's equipment room in order"
+        },
+        {
+          "text": "Translated letters for a community group",
+          "own_words": "Translated letters for a community group"
+        },
+        {
+          "text": "Walked shelter dogs every weekend",
+          "own_words": "Walked shelter dogs every weekend"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "niittykumpu",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 11
+  },
+  {
+    "id": "tr-e1-033",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent30",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ar",
+    "card": {
+      "done": [
+        {
+          "text": "Packed online orders in a warehouse for a summer",
+          "own_words": "Packed online orders in a warehouse for a summer"
+        },
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoonlahti",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 10
+  },
+  {
+    "id": "tr-e1-034",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent31",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ru",
+    "card": {
+      "done": [
+        {
+          "text": "Walked shelter dogs every weekend",
+          "own_words": "Walked shelter dogs every weekend"
+        },
+        {
+          "text": "Drove an aunt to appointments every week",
+          "own_words": "Drove an aunt to appointments every week"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "niittykumpu",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 9
+  },
+  {
+    "id": "tr-e1-035",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent32",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ru",
+    "card": {
+      "done": [
+        {
+          "text": "Translated letters for a community group",
+          "own_words": "Translated letters for a community group"
+        },
+        {
+          "text": "Walked shelter dogs every weekend",
+          "own_words": "Walked shelter dogs every weekend"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "tapiola",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 8
+  },
+  {
+    "id": "tr-e1-036",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent33",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ru",
+    "card": {
+      "done": [
+        {
+          "text": "Kept a hockey team's equipment room in order",
+          "own_words": "Kept a hockey team's equipment room in order"
+        },
+        {
+          "text": "Translated letters for a community group",
+          "own_words": "Translated letters for a community group"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "kauklahti",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 7
+  },
+  {
+    "id": "tr-e1-037",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent34",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ru",
+    "card": {
+      "done": [
+        {
+          "text": "Organised a 40-person food bank shift",
+          "own_words": "Organised a 40-person food bank shift"
+        },
+        {
+          "text": "Handled returns and complaints at a clothing shop",
+          "own_words": "Handled returns and complaints at a clothing shop"
+        },
+        {
+          "text": "Managed the cash box for a school fair",
+          "own_words": "Managed the cash box for a school fair"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "otaniemi",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 6
+  },
+  {
+    "id": "tr-e1-038",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent35",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "ru",
+    "card": {
+      "done": [
+        {
+          "text": "Set up phones and tablets for older people",
+          "own_words": "Set up phones and tablets for older people"
+        },
+        {
+          "text": "Ran a market stall two summers in a row",
+          "own_words": "Ran a market stall two summers in a row"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "olari",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 5
+  },
+  {
+    "id": "tr-e1-039",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent36",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "uk",
+    "card": {
+      "done": [
+        {
+          "text": "Coached a kids' football team for a season",
+          "own_words": "Coached a kids' football team for a season"
+        },
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoon_keskus",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 4
+  },
+  {
+    "id": "tr-e1-040",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent37",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "uk",
+    "card": {
+      "done": [
+        {
+          "text": "Led a sewing circle at the library",
+          "own_words": "Led a sewing circle at the library"
+        },
+        {
+          "text": "Ran the till alone on Saturdays at a kiosk",
+          "own_words": "Ran the till alone on Saturdays at a kiosk"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoon_keskus",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 15
+  },
+  {
+    "id": "tr-e1-041",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent38",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "uk",
+    "card": {
+      "done": [
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        },
+        {
+          "text": "Organised a 40-person food bank shift",
+          "own_words": "Organised a 40-person food bank shift"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "tapiola",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 14
+  },
+  {
+    "id": "tr-e1-042",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent39",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "uk",
+    "card": {
+      "done": [
+        {
+          "text": "Cleaned a stairwell company contract alone",
+          "own_words": "Cleaned a stairwell company contract alone"
+        },
+        {
+          "text": "Painted flats for a small contractor",
+          "own_words": "Painted flats for a small contractor"
+        },
+        {
+          "text": "Kept a hockey team's equipment room in order",
+          "own_words": "Kept a hockey team's equipment room in order"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "leppavaara",
+      "availability": [
+        "fri-afternoon",
+        "sat-morning"
+      ]
+    },
+    "days_ago": 13
+  },
+  {
+    "id": "tr-e1-043",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent40",
+    "time_group": "C",
+    "status": "registered",
+    "card_language": "uk",
+    "card": {
+      "done": [
+        {
+          "text": "Fixed bikes for neighbours",
+          "own_words": "Fixed bikes for neighbours"
+        },
+        {
+          "text": "Coached a kids' football team for a season",
+          "own_words": "Coached a kids' football team for a season"
+        },
+        {
+          "text": "Picked berries for a farm every July",
+          "own_words": "Picked berries for a farm every July"
+        }
+      ],
+      "looking_for": "Steady part-time work I can do for a long time",
+      "district": "espoon_keskus",
+      "availability": [
+        "fri-afternoon"
+      ]
+    },
+    "days_ago": 12
+  }
+]

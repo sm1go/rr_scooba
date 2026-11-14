@@ -20,8 +20,8 @@ TIPS = [
      "Age-coded words screen people out and can be illegal.",
      "Describe the work, not the age — e.g. 'a small team that ships weekly'."),
     ("native_language",
-     r"\b(native speaker|native[- ]level|mother[- ]?tongue|fluent\s+\w+|"
-     r"perfect\s+(finnish|swedish|english))\b",
+     r"\b(native\s+\w*\s*speaker|native[- ]level|mother[- ]?tongue|"
+     r"fluent\s+\w+|perfect\s+(finnish|swedish|english))\b",
      "Asking for native-level language screens out capable people — the law "
      "treats it as possible origin discrimination.",
      "Name the task and level instead — e.g. 'Finnish A2 to read the cleaning plan'."),

@@ -14,21 +14,22 @@ import type { Key } from '../i18n/en'
 
 const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home; wideOnly?: boolean }[]> = {
   resident: [
-    { to: '/', key: 'nav.jobs', short: 'nav.jobs', icon: Home },
+    { to: '/', key: 'nav.events', short: 'nav.events', icon: Home },
+    { to: '/jobs', key: 'nav.jobs', short: 'nav.jobs', icon: Briefcase },
     { to: '/week', key: 'nav.week', short: 'nav.week', icon: CalendarDays, wideOnly: true },
     { to: '/saved', key: 'nav.saved', short: 'nav.saved', icon: Bookmark },
     { to: '/applications', key: 'nav.applications', short: 'nav.applied', icon: FileText },
     { to: '/profile', key: 'nav.profile', short: 'nav.profile', icon: UserIcon },
-    { to: '/event', key: 'nav.event', short: 'nav.event', icon: CalendarDays, wideOnly: true },
     { to: '/support', key: 'nav.support.resident', short: 'nav.support', icon: HandCoins, wideOnly: true },
   ],
   employer: [
+    { to: '/employer/events/ev-2027-03', key: 'nav.events', short: 'nav.events', icon: CalendarDays },
     { to: '/employer', key: 'nav.myjobs', short: 'nav.jobs', icon: Briefcase },
     { to: '/employer/applications', key: 'emp.applications', short: 'nav.applied', icon: Inbox },
     { to: '/employer/company', key: 'nav.company', short: 'nav.company', icon: Building2 },
-    { to: '/employer/event', key: 'nav.event', short: 'nav.event', icon: CalendarDays, wideOnly: true },
   ],
   advisor: [
+    { to: '/advisor/events/ev-2027-03', key: 'nav.events', short: 'nav.events', icon: CalendarDays },
     { to: '/advisor', key: 'nav.requests', short: 'nav.requests', icon: Inbox },
     { to: '/advisor/jobs', key: 'nav.advisorjobs', short: 'nav.jobs', icon: ClipboardList },
     { to: '/advisor/follow-up', key: 'nav.followup', short: 'nav.followup', icon: ListChecks },
@@ -36,12 +37,12 @@ const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home;
     { to: '/advisor/support', key: 'advisor.support', short: 'nav.support', icon: Building2, wideOnly: true },
   ],
   anon: [
-    { to: '/', key: 'nav.jobs', short: 'nav.jobs', icon: Home },
+    { to: '/', key: 'nav.events', short: 'nav.events', icon: Home },
+    { to: '/jobs', key: 'nav.jobs', short: 'nav.jobs', icon: Briefcase },
     { to: '/week', key: 'nav.week', short: 'nav.week', icon: CalendarDays, wideOnly: true },
     { to: '/saved', key: 'nav.saved', short: 'nav.saved', icon: Bookmark },
     { to: '/applications', key: 'nav.applications', short: 'nav.applied', icon: FileText },
     { to: '/profile', key: 'nav.profile', short: 'nav.profile', icon: UserIcon },
-    { to: '/event', key: 'nav.event', short: 'nav.event', icon: CalendarDays, wideOnly: true },
     { to: '/support', key: 'nav.support.resident', short: 'nav.support', icon: HandCoins, wideOnly: true },
   ],
 }

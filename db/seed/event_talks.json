@@ -19,5 +19,215 @@
     "outcome": null,
     "employer_note": "",
     "days_ago_talked": 1
+  },
+  {
+    "id": "et-e1-001",
+    "event_id": "ev-2027-03",
+    "user_id": "u-aino",
+    "employer_id": "emp-cafe-koivu",
+    "observed": [
+      "Learn the till and the coffee menu with a buddy",
+      "Serve the lunch queue 11:00–14:00"
+    ],
+    "status": "answered",
+    "days_ago_talked": 2,
+    "outcome": "not_now",
+    "employer_note": "Not this time — needs more spoken Finnish for the till.",
+    "days_ago_answered": 1
+  },
+  {
+    "id": "et-e1-002",
+    "event_id": "ev-2027-03",
+    "user_id": "u-pekka",
+    "employer_id": "emp-freight",
+    "observed": [
+      "Learn the parcel sorting line",
+      "Load delivery vans with a scanner"
+    ],
+    "status": "talked",
+    "days_ago_talked": 3
+  },
+  {
+    "id": "et-e1-003",
+    "event_id": "ev-2027-03",
+    "user_id": "u-amira",
+    "employer_id": "emp-aurora-care",
+    "observed": [
+      "Join the morning round with a care worker",
+      "Sit with residents at coffee time"
+    ],
+    "status": "answered",
+    "days_ago_talked": 4,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 1
+  },
+  {
+    "id": "et-e1-004",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent28",
+    "employer_id": "emp-cafe-koivu",
+    "observed": [
+      "Learn the till and the coffee menu with a buddy",
+      "Serve the lunch queue 11:00–14:00"
+    ],
+    "status": "answered",
+    "days_ago_talked": 5,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 2
+  },
+  {
+    "id": "et-e1-005",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent40",
+    "employer_id": "emp-cafe-koivu",
+    "observed": [
+      "Learn the till and the coffee menu with a buddy",
+      "Serve the lunch queue 11:00–14:00"
+    ],
+    "status": "talked",
+    "days_ago_talked": 2
+  },
+  {
+    "id": "et-e1-006",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent06",
+    "employer_id": "emp-cafe-koivu",
+    "observed": [
+      "Learn the till and the coffee menu with a buddy",
+      "Serve the lunch queue 11:00–14:00"
+    ],
+    "status": "answered",
+    "days_ago_talked": 3,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 2
+  },
+  {
+    "id": "et-e1-007",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent21",
+    "employer_id": "emp-cafe-koivu",
+    "observed": [
+      "Learn the till and the coffee menu with a buddy",
+      "Serve the lunch queue 11:00–14:00"
+    ],
+    "status": "answered",
+    "days_ago_talked": 4,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 1
+  },
+  {
+    "id": "et-e1-008",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent21",
+    "employer_id": "emp-siivouspot",
+    "observed": [
+      "Do the school cleaning round with an experienced cleaner",
+      "Learn which products go on which surface"
+    ],
+    "status": "talked",
+    "days_ago_talked": 5
+  },
+  {
+    "id": "et-e1-009",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent07",
+    "employer_id": "emp-siivouspot",
+    "observed": [
+      "Do the school cleaning round with an experienced cleaner",
+      "Learn which products go on which surface"
+    ],
+    "status": "answered",
+    "days_ago_talked": 2,
+    "outcome": "not_now",
+    "employer_note": "Not this time — needs more spoken Finnish for the till.",
+    "days_ago_answered": 1
+  },
+  {
+    "id": "et-e1-010",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent09",
+    "employer_id": "emp-siivouspot",
+    "observed": [
+      "Do the school cleaning round with an experienced cleaner",
+      "Learn which products go on which surface"
+    ],
+    "status": "answered",
+    "days_ago_talked": 3,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 2
+  },
+  {
+    "id": "et-e1-011",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent22",
+    "employer_id": "emp-siivouspot",
+    "observed": [
+      "Do the school cleaning round with an experienced cleaner",
+      "Learn which products go on which surface"
+    ],
+    "status": "talked",
+    "days_ago_talked": 4
+  },
+  {
+    "id": "et-e1-012",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent26",
+    "employer_id": "emp-siivouspot",
+    "observed": [
+      "Do the school cleaning round with an experienced cleaner",
+      "Learn which products go on which surface"
+    ],
+    "status": "answered",
+    "days_ago_talked": 5,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 2
+  },
+  {
+    "id": "et-e1-013",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent33",
+    "employer_id": "emp-market-olari",
+    "observed": [
+      "Restock shelves in the morning delivery",
+      "Run the till during the evening rush"
+    ],
+    "status": "answered",
+    "days_ago_talked": 2,
+    "outcome": "not_now",
+    "employer_note": "Not this time — needs more spoken Finnish for the till.",
+    "days_ago_answered": 1
+  },
+  {
+    "id": "et-e1-014",
+    "event_id": "ev-2027-03",
+    "user_id": "u-pekka",
+    "employer_id": "emp-market-olari",
+    "observed": [
+      "Restock shelves in the morning delivery",
+      "Run the till during the evening rush"
+    ],
+    "status": "talked",
+    "days_ago_talked": 3
+  },
+  {
+    "id": "et-e1-015",
+    "event_id": "ev-2027-03",
+    "user_id": "u-talent02",
+    "employer_id": "emp-market-olari",
+    "observed": [
+      "Restock shelves in the morning delivery",
+      "Run the till during the evening rush"
+    ],
+    "status": "answered",
+    "days_ago_talked": 4,
+    "outcome": "next_step",
+    "employer_note": "Asked them to come for a trial shift next week.",
+    "days_ago_answered": 1
   }
 ]
