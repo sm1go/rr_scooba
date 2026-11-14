@@ -279,17 +279,31 @@ html[data-contrast="high"] .btn-primary { border: 2px solid #000; }
   main { padding: 0 !important; }
   .print-sheet { max-width: 180mm; margin: 0 auto; }
 }
+.print-facts {
+  display: flex; flex-wrap: wrap; gap: 12px 40px; margin: 20px 0 0; padding: 16px;
+  border: 2px solid var(--color-ink); border-radius: 12px;
+}
+.print-facts dt { font-size: .9rem; text-transform: uppercase; letter-spacing: .04em; color: var(--color-secondary); }
+.print-facts dd { margin: 4px 0 0; font-size: 1.15rem; font-weight: 600; }
+.print-facts dd .block { white-space: nowrap; }
+.print-h2 { font-size: 1.35rem; margin: 22px 0 6px; }
+.print-qr {
+  display: flex; gap: 20px; align-items: center; margin-top: 24px;
+  padding: 12px; border: 1px solid var(--color-hairline); border-radius: 12px;
+}
 .tear-off {
-  display: flex; flex-wrap: wrap; margin-top: 24px;
+  display: grid; grid-template-columns: repeat(8, 1fr); margin-top: 24px;
   border-top: 1px dashed var(--color-secondary);
 }
 .tear-tab {
-  font-size: 1rem; padding: 10px 8px;
-  border-left: 1px dashed var(--color-secondary);
-  transform: rotate(90deg); transform-origin: left top;
-  white-space: nowrap;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  height: 46mm; padding: 6px 4px; overflow: hidden;
+  display: flex; flex-direction: column; gap: 4px; justify-content: flex-start;
+  font-size: .8rem; line-height: 1.2;
+  border-right: 1px dashed var(--color-secondary);
 }
-@media print { .tear-tab { transform: none; border-left: none; border-bottom: 1px dashed #888; width: 100%; } }
+.tear-tab:last-child { border-right: 0; }
+@media print { .print-sheet { font-size: 11pt; } .print-facts, .print-qr { break-inside: avoid; } }
 
 /* RTL: flip physical paddings/margins used in components */
 html[dir="rtl"] .pl-5 { padding-left: 0; padding-right: 1.25rem; }

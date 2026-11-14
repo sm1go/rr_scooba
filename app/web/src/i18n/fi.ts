@@ -78,6 +78,7 @@ const fi: Record<Key, string> = {
   'jobs.quick.fulltime': "Kokoaikainen",
   'jobs.empty.q': "Kartalla ei ole juuri nyt Espoossa töitä haulla {q}.",
   'jobs.empty.q.body': "Uusia töitä tulee joka viikko. Sillä välin voit:",
+  'job.noknown': "Työnantaja ei ole vielä kertonut työpaikasta mitään.",
   'jobs.empty.q.filtered': "Espoossa on {n} työtä haulla {q}, mutta mikään ei sovi kaikkiin muihin valintoihisi.",
   'jobs.empty.q.showall': "Näytä kaikki {n} työtä: {q}",
   'jobs.empty.q.advisor': "kysyä neuvojalta: hän tietää myös töitä, joita ei ilmoiteta;",

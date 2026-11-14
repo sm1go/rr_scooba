@@ -1,7 +1,6 @@
 import type { Condition, Job } from '../types'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import { Link } from 'react-router-dom'
 
 function fmtDate(iso: string | null): string {
   if (!iso) return ''
@@ -9,15 +8,19 @@ function fmtDate(iso: string | null): string {
   return `${parseInt(d)}.${parseInt(m)}.${y}`
 }
 
-/** The 10 conditions + lifting: three clearly different states. */
+/** Only the facts that are known (yes / no) and who says so; the unknown
+    ones are listed once by the caller, not as rows. */
 export default function ConditionTable({
-  job, jobId,
-}: { job: Job; jobId: string }) {
+  job,
+}: { job: Job; jobId?: string }) {
   const { t } = useI18n()
+  const known = job.conditions.filter((c) => c.value !== 'unknown')
+  if (!known.length && !job.lifting)
+    return <p className="m-0">{t('job.noknown')}</p>
   return (
     <div>
       <ul className="list-none p-0 m-0">
-        {job.conditions.map((c: Condition) => (
+        {known.map((c: Condition) => (
           <li key={c.key}
               className="flex flex-wrap items-baseline justify-between gap-2 py-3 border-b"
               style={{ borderColor: 'var(--color-hairline)' }}>
@@ -29,36 +32,21 @@ export default function ConditionTable({
               {c.value === 'no' && (
                 <span className="chip no"><span className="dot" aria-hidden="true" />{t('common.no')}</span>
               )}
-              {c.value === 'unknown' && (
-                <span className="chip wait"><span className="dot" aria-hidden="true" />{t('common.unknown')}</span>
-              )}
               <span className="text-secondary" style={{ fontSize: '1rem' }}>
-                {c.value !== 'unknown' && (
-                  c.source === 'advisor'
-                    ? `${t('job.advisorchecked')} ${fmtDate(c.checked_at)}`
-                    : t('job.employersays')
-                )}
+                {c.source === 'advisor'
+                  ? `${t('job.advisorchecked')} ${fmtDate(c.checked_at)}`
+                  : t('job.employersays')}
                 {c.note && ` · ${c.note}`}
-                {c.value === 'unknown' && (
-                  <>
-                    {' '}
-                    <Link to={`/help?job=${jobId}&keys=${c.key}`}>
-                      {t('job.askcheck')}
-                    </Link>
-                  </>
-                )}
               </span>
             </span>
           </li>
         ))}
-        <li className="flex flex-wrap items-baseline justify-between gap-2 py-3">
-          <span>{t('job.lifting')}</span>
-          <span>
-            {job.lifting
-              ? <span className="chip"><span className="dot" aria-hidden="true" />{job.lifting}</span>
-              : <span className="chip wait"><span className="dot" aria-hidden="true" />{t('common.unknown')}</span>}
-          </span>
-        </li>
+        {job.lifting && (
+          <li className="flex flex-wrap items-baseline justify-between gap-2 py-3">
+            <span>{t('job.lifting')}</span>
+            <span className="chip"><span className="dot" aria-hidden="true" />{job.lifting}</span>
+          </li>
+        )}
       </ul>
     </div>
   )

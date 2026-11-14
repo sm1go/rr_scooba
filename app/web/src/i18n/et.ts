@@ -57,6 +57,7 @@ const et: Partial<Record<Key, string>> = {
   'jobs.quick.fulltime': "Täistööaeg",
   'jobs.empty.q': "Praegu pole Espoo kaardil töid „{q}“.",
   'jobs.empty.q.body': "Uusi töid tuleb iga nädal. Seni saad:",
+  'job.noknown': "Tööandja pole töökoha kohta veel midagi öelnud.",
   'jobs.empty.q.filtered': "Espoos on {n} tööd „{q}“, kuid ükski ei sobi kõigi sinu muude valikutega.",
   'jobs.empty.q.showall': "Näita kõiki {n} tööd: {q}",
   'jobs.empty.q.advisor': "küsida nõustajalt: ta teab ka töid, mida kunagi ei kuulutata;",

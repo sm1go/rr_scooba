@@ -57,6 +57,7 @@ const sq: Partial<Record<Key, string>> = {
   'jobs.quick.fulltime': "Me kohë të plotë",
   'jobs.empty.q': "Tani nuk ka punë „{q}“ në hartën e Espoo-s.",
   'jobs.empty.q.body': "Punë të reja vijnë çdo javë. Ndërkohë mund të:",
+  'job.noknown': "Punëdhënësi nuk ka thënë ende asgjë për vendin e punës.",
   'jobs.empty.q.filtered': "Në Espoo ka {n} punë „{q}“, por asnjë nuk përputhet me të gjitha zgjedhjet e tjera.",
   'jobs.empty.q.showall': "Shfaq të gjitha {n} punët „{q}“",
   'jobs.empty.q.advisor': "pyesni një këshilltar: ai di edhe punë që nuk shpallen kurrë;",

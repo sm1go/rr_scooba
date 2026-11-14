@@ -5,7 +5,7 @@ import { api } from '../lib/api'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import type { Job } from '../types'
-import { daysAgoText, hoursLine, payLine, shiftsLine } from '../lib/format'
+import { daysAgoText, hoursLine, payLine, shiftGroups } from '../lib/format'
 
 /** /jobs/:id/print — a paper notice with a QR code back to the job. */
 export default function JobPrint() {
@@ -29,6 +29,10 @@ export default function JobPrint() {
 
   if (err) return <p>{t('err.gone')}</p>
   if (!job) return <p>{t('common.loading')}</p>
+  const known = job.conditions.filter((c) => c.value !== 'unknown')
+  const base = (import.meta.env.VITE_PUBLIC_BASE_URL as string | undefined)
+    || window.location.origin
+  const shortUrl = `${base.replace(/^https?:\/\//, '')}/jobs/${job.id}`
 
   return (
     <div className="print-sheet max-w-3xl mx-auto">
@@ -39,48 +43,62 @@ export default function JobPrint() {
         </button>
       </div>
 
-      <h1 data-page-title tabIndex={-1}>{job.title}</h1>
-      <p style={{ fontSize: '1.2rem' }}>{job.employer?.name} — {job.address}</p>
+      <h1 data-page-title tabIndex={-1} className="m-0 font-display" style={{ fontSize: '2.4rem', lineHeight: 1.15 }}>
+        {job.title}
+      </h1>
+      <p className="m-0 mt-2" style={{ fontSize: '1.25rem' }}>
+        {job.employer?.name} · {job.address}
+      </p>
 
-      <h2>{t('job.whatyoudo')}</h2>
-      <ul className="pl-5">
+      <dl className="print-facts">
+        <div><dt>{t('job.pay')}</dt><dd>{payLine(job, t)}</dd></div>
+        <div><dt>{t('job.when')}</dt><dd>
+          {shiftGroups(job, t).map((g) => <span key={g} className="block">{g}</span>)}
+          {hoursLine(job, t) && <span className="block">{hoursLine(job, t)}</span>}
+        </dd></div>
+        {job.contract && (
+          <div><dt>{t('job.contract')}</dt><dd>{t(`contract.${job.contract}` as Key)}</dd></div>
+        )}
+      </dl>
+
+      <h2 className="print-h2">{t('job.whatyoudo')}</h2>
+      <ul className="m-0 ps-5" style={{ fontSize: '1.1rem' }}>
         {job.duties.map((d, i) => <li key={i}>{d}</li>)}
       </ul>
 
-      <h2>{t('job.pay')}</h2>
-      <p style={{ fontSize: '1.2rem', fontWeight: 600 }}>{payLine(job, t)}</p>
+      {(known.length > 0 || job.lifting) && (
+        <>
+          <h2 className="print-h2">{t('job.conditions')}</h2>
+          <ul className="list-none m-0 p-0" style={{ fontSize: '1.1rem' }}>
+            {known.map((c) => (
+              <li key={c.key}>
+                <strong>{c.value === 'yes' ? '✓' : '✗'}</strong>{' '}
+                {t(`cond.${c.key}` as Key)}: {c.value === 'yes' ? t('common.yes') : t('common.no')}
+              </li>
+            ))}
+            {job.lifting && <li>{t('job.lifting')}: {job.lifting}</li>}
+          </ul>
+        </>
+      )}
 
-      <h2>{t('job.when')}</h2>
-      <p>{shiftsLine(job, t)}</p>
-      <p>{hoursLine(job, t)}</p>
-      {job.contract && <p>{t(`contract.${job.contract}` as Key)}</p>}
-
-      <h2>{t('job.conditions')}</h2>
-      <ul className="pl-5">
-        {job.conditions.filter((c) => c.value === 'yes').map((c) => (
-          <li key={c.key}>{t(`cond.${c.key}` as Key)}</li>
-        ))}
-      </ul>
-
-      <div className="flex gap-6 items-center mt-6">
+      <div className="print-qr">
         <canvas ref={qrRef} aria-label={t('print.scantext')} />
         <div>
-          <p className="font-medium">{t('print.scantext')}</p>
-          <p className="text-secondary">{t('print.nophone')}</p>
+          <p className="m-0 font-medium" style={{ fontSize: '1.2rem' }}>{t('print.scantext')}</p>
+          <p className="m-0 mt-1">{t('print.nophone')}</p>
+          <p className="m-0 mt-2 text-secondary">
+            {t('print.lastconfirmed')}: {job.stale
+              ? t('jobs.notconfirmed')
+              : daysAgoText(job.confirmed_days_ago, t)}
+          </p>
         </div>
       </div>
-
-      <p className="text-secondary mt-6 border-t pt-3"
-         style={{ borderColor: 'var(--color-hairline)' }}>
-        {t('print.lastconfirmed')}: {job.stale
-          ? t('jobs.notconfirmed')
-          : daysAgoText(job.confirmed_days_ago, t)}
-      </p>
 
       <div className="tear-off" aria-hidden="true">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="tear-tab">
-            {job.title.slice(0, 28)}<br />{job.id}
+            <strong>{job.title.length > 34 ? `${job.title.slice(0, 33)}…` : job.title}</strong>
+            <span>{shortUrl}</span>
           </div>
         ))}
       </div>

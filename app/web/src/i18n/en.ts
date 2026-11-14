@@ -75,6 +75,7 @@ const en = {
   'jobs.quick.fulltime': "Full-time",
   'jobs.empty.q': "There are no {q} jobs on the map in Espoo right now.",
   'jobs.empty.q.body': "New jobs come in every week. Meanwhile you can:",
+  'job.noknown': "The employer has not told us anything about the workplace yet.",
   'jobs.empty.q.filtered': "There are {n} {q} jobs in Espoo, but none fit all your other choices.",
   'jobs.empty.q.showall': "Show all {n} {q} jobs",
   'jobs.empty.q.advisor': "ask an advisor: they also know jobs that are never advertised;",

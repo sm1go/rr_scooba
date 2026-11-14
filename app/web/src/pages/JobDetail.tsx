@@ -107,8 +107,12 @@ export default function JobDetail() {
           .map((c) => t(`commit.desc.${c}` as Key)).join(' ')}`
       : '',
     t('job.conditions'),
-    ...job.conditions.map((c) => `${t(`cond.${c.key}` as Key)}: ${conditionState(c, t)}`),
-    `${t('job.lifting')}: ${job.lifting || t('common.unknown')}`,
+    ...job.conditions.filter((c) => c.value !== 'unknown')
+      .map((c) => `${t(`cond.${c.key}` as Key)}: ${conditionState(c, t)}`),
+    job.lifting ? `${t('job.lifting')}: ${job.lifting}` : '',
+    unknownKeys.length
+      ? `${t('common.unknown')}: ${unknownKeys.map((k) => t(`cond.${k}` as Key)).join(', ')}`
+      : '',
     ...(job.duties ?? []),
   ].filter(Boolean).join('. ')
 
@@ -214,16 +218,22 @@ export default function JobDetail() {
 
       <div id="job-conditions" />
       <Section title={t('job.conditions')}>
+        <ConditionTable job={job} />
         {unknownKeys.length > 0 && (
-          <div className="card p-4 mb-3 flex flex-wrap items-center justify-between gap-3"
+          <div className="card p-4 mt-3 flex flex-wrap items-center justify-between gap-3"
                style={{ background: 'var(--color-wait-bg)' }}>
-            <p className="m-0 font-medium">{t('job.unknownbanner', { n: unknownKeys.length })}</p>
+            <div className="min-w-0 flex-1">
+              <p className="m-0 font-medium">{t('job.unknownbanner', { n: unknownKeys.length })}</p>
+              <p className="m-0 mt-1">
+                {unknownKeys.map((k) => t(`cond.${k}` as Key)).join(', ')}
+                {!job.lifting && `, ${t('job.lifting').toLowerCase()}`}
+              </p>
+            </div>
             <Link to={helpLink(job.id, unknownKeys)} className="btn btn-secondary">
               {t('job.unknownask')}
             </Link>
           </div>
         )}
-        <ConditionTable job={job} jobId={job.id} />
       </Section>
 
       <Section title={t('job.whatyoudo')}>

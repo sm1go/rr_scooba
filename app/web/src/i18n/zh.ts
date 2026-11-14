@@ -57,6 +57,7 @@ const zh: Partial<Record<Key, string>> = {
   'jobs.quick.fulltime': "全职",
   'jobs.empty.q': "目前埃斯波地图上没有“{q}”的职位。",
   'jobs.empty.q.body': "每周都有新职位。在此期间你可以：",
+  'job.noknown': "雇主还没有提供任何关于工作场所的信息。",
   'commit.open_hiring': "无需简历，无需面试",
   'commit.guaranteed_talk': "保证面谈",
   'commit.tryout': "可以先试工",

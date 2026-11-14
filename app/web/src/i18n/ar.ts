@@ -57,6 +57,7 @@ const ar: Partial<Record<Key, string>> = {
   'jobs.quick.fulltime': "دوام كامل",
   'jobs.empty.q': "لا توجد الآن وظائف «{q}» على خريطة إسبو.",
   'jobs.empty.q.body': "تصل وظائف جديدة كل أسبوع. في هذه الأثناء يمكنك:",
+  'job.noknown': "لم يذكر صاحب العمل أي شيء عن مكان العمل بعد.",
   'jobs.empty.q.filtered': "توجد {n} وظائف «{q}» في إسبو، لكن لا يناسب أيٌّ منها كل اختياراتك الأخرى.",
   'jobs.empty.q.showall': "عرض كل وظائف «{q}» ({n})",
   'jobs.empty.q.advisor': "اسأل مستشارًا: فهو يعرف أيضًا وظائف لا يُعلن عنها؛",

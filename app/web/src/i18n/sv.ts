@@ -56,6 +56,7 @@ const sv: Partial<Record<Key, string>> = {
   'jobs.quick.fulltime': "Heltid",
   'jobs.empty.q': "Det finns inga jobb som {q} på kartan i Esbo just nu.",
   'jobs.empty.q.body': "Nya jobb kommer varje vecka. Under tiden kan du:",
+  'job.noknown': "Arbetsgivaren har ännu inte berättat något om arbetsplatsen.",
   'jobs.empty.q.filtered': "Det finns {n} jobb som {q} i Esbo, men inget passar alla dina andra val.",
   'jobs.empty.q.showall': "Visa alla {n} jobb: {q}",
   'jobs.empty.q.advisor': "fråga en rådgivare: hen känner också till jobb som aldrig annonseras;",
