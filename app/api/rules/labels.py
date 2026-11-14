@@ -22,7 +22,19 @@ LABELS_META = [
     {"id": "side_job",   "name": "Side job"},
     {"id": "part_time",  "name": "Part-time"},
     {"id": "access_info","name": "Access details given"},
+    {"id": "near_station","name": "Near a station"},
 ]
+
+
+def station_label(nearest: dict | None) -> dict | None:
+    """near_station label (spec v3 §5): within 800 m, straight line."""
+    if not nearest or nearest["distance_m"] > 800:
+        return None
+    kind = "metro station" if nearest["mode"] == "metro" \
+        else "train station"
+    return {"id": "near_station",
+            "why": f"About {nearest['distance_m']} m from "
+                   f"{nearest['name']} {kind}, in a straight line."}
 
 
 def _minutes(t: str) -> int:

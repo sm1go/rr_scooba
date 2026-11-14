@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 SEED_REQUIRED = [
     "event.json", "employers.json", "jobs.json", "users.json",
@@ -164,6 +164,37 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
         conn.execute("INSERT OR IGNORE INTO saved_job (user_id,job_id)"
                      " VALUES (?,?)", (s["user_id"], s["job_id"]))
 
+    _seed_event(conn, seed_dir, now)
+
+
+def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
+                now: datetime) -> None:
+    """Optional event-mode seed files (spec v3 §8)."""
+    def opt(name: str):
+        p = seed_dir / name
+        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
+
+    for v in opt("event_visitors.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO event_visitor (user_id,event_id,code)"
+            " VALUES (?,?,?)", (v["user_id"], v["event_id"], v["code"]))
+    for p in opt("event_plan.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO event_plan (user_id,event_id,employer_id)"
+            " VALUES (?,?,?)", (p["user_id"], p["event_id"], p["employer_id"]))
+    for t in opt("event_talks.json"):
+        talked = now - timedelta(days=t.get("days_ago_talked", 0))
+        answered = (now - timedelta(days=t["days_ago_answered"])
+                    if t.get("days_ago_answered") is not None else None)
+        conn.execute(
+            "INSERT OR IGNORE INTO event_talk (id,event_id,user_id,employer_id,"
+            "status,outcome,employer_note,talked_at,answered_at)"
+            " VALUES (?,?,?,?,?,?,?,?,?)",
+            (t["id"], t["event_id"], t["user_id"], t["employer_id"],
+             t["status"], t.get("outcome"), t.get("employer_note", ""),
+             talked.isoformat(),
+             answered.isoformat() if answered else None))
+
 
 def _write_profile(conn: sqlite3.Connection, user_id: str, p: dict) -> None:
     conn.execute(
@@ -225,7 +256,7 @@ def new_id(conn: sqlite3.Connection, prefix: str) -> str:
     """Short sequential id: ap-101, job-061, ... — takes the max numeric
     suffix, ignoring slug ids like 'job-cafe-weekend'."""
     table = {"ap": "application", "job": "job", "hr": "help_request",
-             "u": "user", "emp": "employer"}[prefix]
+             "u": "user", "emp": "employer", "et": "event_talk"}[prefix]
     n = 0
     for r in conn.execute(
             "SELECT id FROM {} WHERE id LIKE ?".format(table),

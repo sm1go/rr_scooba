@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "checked_on": "2026-11-14",
+    "disclaimer": "General information, not a decision. Amounts and conditions can change. Employment Espoo or Kela confirms what applies to you.",
+    "note": "Authored by the product lead from the linked public sources. Do not edit amounts without re-checking the source."
+  },
+  "programs": [
+    {
+      "id": "espoo_recruitment_subsidy",
+      "name": "Espoo recruitment subsidy",
+      "amount": "€5,000 once per hire",
+      "paid_to": "employer",
+      "for_employer": "The City of Espoo can pay you €5,000 when you hire an unemployed Espoo jobseeker who is under 30 or speaks a foreign language, has been unemployed for at least 3 months and has an upper-secondary or higher qualification. The contract must last at least 12 months at 80% working time or more. It must be granted before the contract starts. Up to 10 hires per employer per year.",
+      "for_resident": "An employer who hires you may get €5,000 from the city. This can apply if you live in Espoo, are under 30 or speak a foreign language, have been unemployed for at least 3 months and have an upper-secondary or higher qualification. You can tell employers about it.",
+      "resident_when_all": ["unemployed_3m"],
+      "resident_when_any": ["under_30", "foreign_language"],
+      "job_rule": "contract in (permanent, fixed_term) and hours_min >= 30",
+      "source_name": "City of Espoo",
+      "source_url": "https://www.espoo.fi/en/rekrytointituki"
+    },
+    {
+      "id": "espoo_supplement",
+      "name": "Espoo supplement for employment",
+      "amount": "up to €800 a month for up to 12 months",
+      "paid_to": "employer",
+      "for_employer": "On top of a pay subsidy or the 55+ employment subsidy, the city can pay a private or third-sector employer up to €800 a month for up to 12 months for hiring an unemployed Espoo resident. The work must be at least 18 hours a week with collective-agreement pay.",
+      "for_resident": "If an employer hires you with a pay subsidy or the 55+ employment subsidy, the city can add up to €800 a month for the employer. This makes hiring you cheaper for them.",
+      "resident_when_all": ["unemployed"],
+      "resident_when_any": [],
+      "job_rule": "hours_max >= 18",
+      "source_name": "Business Espoo",
+      "source_url": "https://www.espoo.fi/en/business-espoo-helping-companies-thrive/espoo-supplement-employment"
+    },
+    {
+      "id": "pay_subsidy",
+      "name": "Pay subsidy",
+      "amount": "usually 50% of pay costs; 70% when work ability is reduced",
+      "paid_to": "employer",
+      "for_employer": "The employment authority can cover part of the pay costs when you hire an unemployed jobseeker: usually 50%, or 70% for a person with reduced work ability, for 5 or 10 months. It is discretionary and always based on the jobseeker's situation.",
+      "for_resident": "The city can pay part of your wages to the employer for 5 or 10 months. You get a normal job and normal pay. Ask your advisor whether you can get a pay subsidy card to show employers.",
+      "resident_when_all": ["unemployed"],
+      "resident_when_any": [],
+      "job_rule": "contract in (permanent, fixed_term, traineeship)",
+      "source_name": "Job Market Finland",
+      "source_url": "https://tyomarkkinatori.fi/en/more-information-about-services/pay-subsidy"
+    },
+    {
+      "id": "employment_subsidy_55",
+      "name": "Employment subsidy for people aged 55 or over",
+      "amount": "70% of pay costs, up to €1,770 a month, for 10 months",
+      "paid_to": "employer",
+      "for_employer": "For hiring a jobseeker aged 55 or over who has been unemployed for at least 24 of the last 28 months, you can get 70% of the pay costs, up to €1,770 a month, for 10 months. The work must be at least 25 hours a week.",
+      "for_resident": "If you are 55 or older and have been unemployed for about two years, an employer who hires you for at least 25 hours a week can get 70% of your pay costs for 10 months.",
+      "resident_when_all": ["age_55_plus", "unemployed"],
+      "resident_when_any": [],
+      "job_rule": "hours_max >= 25",
+      "source_name": "Job Market Finland",
+      "source_url": "https://tyomarkkinatori.fi/en/more-information-about-services/employment-subsidy-for-those-aged-55-or-over"
+    },
+    {
+      "id": "working_conditions_subsidy",
+      "name": "Subsidy for arranging working conditions",
+      "amount": "up to €4,000 per person for tools or changes; €20 an hour for help from a colleague",
+      "paid_to": "employer",
+      "for_employer": "If an employee's disability or illness requires new tools, furniture or changes at the workplace, you can get up to €4,000 per person. Help given by another employee can be compensated at €20 an hour, up to 20 hours a month for up to 18 months.",
+      "for_resident": "If you need special tools, furniture or changes at the workplace, the employer can get up to €4,000 for them. What you need does not have to be a cost for the employer.",
+      "resident_when_all": ["work_ability"],
+      "resident_when_any": [],
+      "job_rule": "always",
+      "source_name": "Job Market Finland",
+      "source_url": "https://tyomarkkinatori.fi/lisatietoa-palveluista/tyoolosuhteiden-jarjestelytuki"
+    },
+    {
+      "id": "work_tryout",
+      "name": "Work try-out",
+      "amount": "no pay costs for the employer; you keep your unemployment benefit",
+      "paid_to": "nobody",
+      "for_employer": "A registered jobseeker can try the work at your workplace for up to six months. It is not an employment relationship and has no pay costs for you. It is agreed with the employment authority.",
+      "for_resident": "You can try a job or a new field for up to six months and keep the same unemployment benefit. It must be agreed in your employment plan. You may also get an expense allowance.",
+      "resident_when_all": ["unemployed"],
+      "resident_when_any": [],
+      "job_rule": "always",
+      "source_name": "Job Market Finland",
+      "source_url": "https://tyomarkkinatori.fi/en/more-information-about-services/work-try-out"
+    },
+    {
+      "id": "summer_job_voucher",
+      "name": "Espoo summer job voucher",
+      "amount": "€350 to the employer",
+      "paid_to": "employer",
+      "for_employer": "The city pays €350 to an employer who hires a young Espoo resident with a summer job voucher between 1 May and 30 September. The job must be at least 60 hours and pay at least €500. The employer cannot be a private household.",
+      "for_resident": "In 2026 the voucher is for young Espoo residents born 2007–2011. Find a summer job first, then apply for the voucher yourself. The job must be at least 60 hours and pay at least €500.",
+      "resident_when_all": ["born_2007_2011"],
+      "resident_when_any": [],
+      "job_rule": "contract in (summer_job, seasonal)",
+      "source_name": "City of Espoo, Youth Services",
+      "source_url": "https://www.espoo.fi/en/summer-job-voucher"
+    },
+    {
+      "id": "adjusted_unemployment_benefit",
+      "name": "Part-time work with unemployment benefit",
+      "amount": "benefit is reduced in line with your pay, not stopped",
+      "paid_to": "resident",
+      "for_employer": null,
+      "for_resident": "If you work part-time or do short jobs, you can still get an adjusted unemployment benefit. The benefit goes down as your pay goes up. Tell Kela or your unemployment fund about the work.",
+      "resident_when_all": ["unemployed"],
+      "resident_when_any": [],
+      "job_rule": null,
+      "source_name": "Kela",
+      "source_url": "https://www.kela.fi/news/how-do-you-enter-the-workforce-with-little-work-experience"
+    },
+    {
+      "id": "student_income_limit",
+      "name": "Working while you get student financial aid",
+      "amount": "for example €20,127 a year with 9 aid months (2026)",
+      "paid_to": "resident",
+      "for_employer": null,
+      "for_resident": "You can work while you get student financial aid, up to a yearly income limit. In 2026 the limit is €20,127 if you get aid for 9 months and €13,416 if you get aid for 12 months. If you earn more, you may have to pay aid back. Check your own limit in OmaKela.",
+      "resident_when_all": ["student_aid"],
+      "resident_when_any": [],
+      "job_rule": null,
+      "source_name": "Kela",
+      "source_url": "https://www.kela.fi/impact-of-income-higher-education"
+    },
+    {
+      "id": "work_on_old_age_pension",
+      "name": "Working while on old-age pension",
+      "amount": "no income limit; you earn 1.5% of your pay as new pension",
+      "paid_to": "resident",
+      "for_employer": null,
+      "for_resident": "On an old-age pension you can work as much as you like and your pension is not reduced. You also earn new pension: 1.5% of your yearly pay. Your pay can affect other benefits, such as the housing allowance for pensioners, and your tax.",
+      "resident_when_all": ["old_age_pension"],
+      "resident_when_any": [],
+      "job_rule": null,
+      "source_name": "Finnish Centre for Pensions (Työeläke.fi)",
+      "source_url": "https://www.tyoelake.fi/en/how-much-pension/combine-work-and-retirement/"
+    }
+  ],
+  "situations": [
+    {"id": "unemployed", "label": "I am registered as an unemployed jobseeker"},
+    {"id": "unemployed_3m", "label": "I have been unemployed for 3 months or more"},
+    {"id": "under_30", "label": "I am under 30"},
+    {"id": "born_2007_2011", "label": "I was born between 2007 and 2011"},
+    {"id": "age_55_plus", "label": "I am 55 or older"},
+    {"id": "foreign_language", "label": "My first language is not Finnish, Swedish or Sámi"},
+    {"id": "student_aid", "label": "I get student financial aid"},
+    {"id": "old_age_pension", "label": "I get an old-age pension"},
+    {"id": "work_ability", "label": "An illness or disability affects how I work"}
+  ]
+}

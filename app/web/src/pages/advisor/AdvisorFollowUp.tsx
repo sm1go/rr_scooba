@@ -86,6 +86,25 @@ export default function AdvisorFollowUp() {
         ))}
       </Section>
 
+      {ov.event_talks_unanswered.length > 0 && (
+        <Section title={t('advisor.followup.talks')}>
+          {ov.event_talks_unanswered.map((tk) => (
+            <div key={tk.id} className="py-2 border-b"
+                 style={{ borderColor: 'var(--color-hairline)' }}>
+              <strong>{tk.person_name}</strong>
+              <span className="text-secondary">
+                {' — '}{tk.employer_name} · {tk.days_waiting} {t('common.days')}
+              </span>
+              {tk.employer && (
+                <p className="m-0 text-secondary" style={{ fontSize: '1rem' }}>
+                  {tk.employer.contact_name} · {tk.employer.contact_email} · {tk.employer.contact_phone}
+                </p>
+              )}
+            </div>
+          ))}
+        </Section>
+      )}
+
       <Section title={t('advisor.activity')}>
         <ul className="m-0 p-0 list-none">
           {events.map((e) => (

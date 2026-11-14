@@ -145,9 +145,30 @@ def overview(conn: sqlite3.Connection = Depends(get_conn),
         ).fetchone()["c"]
     by_status = {r["status"]: r["c"] for r in conn.execute(
         "SELECT status, COUNT(*) c FROM application GROUP BY status")}
+    # event conversations still unanswered after 7 days (spec v3 §8)
+    talks = []
+    for r in conn.execute(
+            "SELECT t.*, u.name person_name, e.name emp_name,"
+            " e.contact_email, e.contact_phone, e.contact_name"
+            " FROM event_talk t JOIN user u ON u.id=t.user_id"
+            " JOIN employer e ON e.id=t.employer_id"
+            " WHERE t.status='talked' ORDER BY t.talked_at").fetchall():
+        at = datetime.fromisoformat(r["talked_at"].replace("Z", "+00:00"))
+        if at.tzinfo is None:
+            at = at.replace(tzinfo=timezone.utc)
+        days = (datetime.now(timezone.utc) - at).days
+        if days > 7:
+            talks.append({
+                "id": r["id"], "person_name": r["person_name"],
+                "employer_name": r["emp_name"], "days_waiting": days,
+                "employer": {"name": r["emp_name"],
+                             "contact_name": r["contact_name"],
+                             "contact_email": r["contact_email"],
+                             "contact_phone": r["contact_phone"]}})
     return {"open_jobs": open_jobs, "stale_jobs": stale,
             "waiting_over_7_days": waiting, "new_help_requests": new_requests,
-            "applications_by_status": by_status}
+            "applications_by_status": by_status,
+            "event_talks_unanswered": talks}
 
 
 @router.get("/audit")

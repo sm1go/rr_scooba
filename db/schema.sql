@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 3;
+PRAGMA user_version = 4;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -138,7 +138,8 @@ CREATE TABLE help_request (
     contact_value  TEXT NOT NULL DEFAULT '',
     job_id         TEXT REFERENCES job(id),
     kind           TEXT NOT NULL CHECK (kind IN
-        ('check_conditions','prepare_application','arrange_contact','other')),
+        ('check_conditions','prepare_application','arrange_contact','other',
+         'employer_support')),
     condition_keys TEXT NOT NULL DEFAULT '[]',
     message        TEXT NOT NULL DEFAULT '',
     consent        INTEGER NOT NULL DEFAULT 0,
@@ -156,4 +157,54 @@ CREATE TABLE audit_log (
     action     TEXT NOT NULL,
     detail     TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- v3 additions ------------------------------------------------------------
+
+-- cached "simpler version" payloads; invalidated by source_hash on text change
+CREATE TABLE job_text_cache (
+    job_id      TEXT NOT NULL,
+    language    TEXT NOT NULL,
+    source_hash TEXT NOT NULL,
+    payload     TEXT NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (job_id, language)
+);
+
+CREATE TABLE commute_cache (
+    job_id      TEXT NOT NULL,
+    district    TEXT NOT NULL,
+    payload     TEXT NOT NULL,
+    computed_at TEXT NOT NULL,
+    PRIMARY KEY (job_id, district)
+);
+
+-- event mode: one 4-digit visitor number per resident per event
+CREATE TABLE event_visitor (
+    user_id  TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    event_id TEXT NOT NULL REFERENCES event(id),
+    code     TEXT NOT NULL,
+    PRIMARY KEY (user_id, event_id),
+    UNIQUE (event_id, code)
+);
+
+CREATE TABLE event_plan (
+    user_id     TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    event_id    TEXT NOT NULL REFERENCES event(id),
+    employer_id TEXT NOT NULL REFERENCES employer(id),
+    added_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (user_id, event_id, employer_id)
+);
+
+CREATE TABLE event_talk (
+    id            TEXT PRIMARY KEY,
+    event_id      TEXT NOT NULL REFERENCES event(id),
+    user_id       TEXT NOT NULL REFERENCES user(id),
+    employer_id   TEXT NOT NULL REFERENCES employer(id),
+    status        TEXT NOT NULL CHECK (status IN ('talked','answered')),
+    outcome       TEXT CHECK (outcome IN ('next_step','not_now')),
+    employer_note TEXT NOT NULL DEFAULT '',
+    talked_at     TEXT NOT NULL,
+    answered_at   TEXT,
+    UNIQUE (event_id, user_id, employer_id)
 );

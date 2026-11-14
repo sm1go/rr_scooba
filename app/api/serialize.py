@@ -7,7 +7,7 @@ import json
 import sqlite3
 from datetime import date, datetime, timezone
 
-from .rules.labels import haversine_km, job_labels
+from .rules.labels import haversine_km, job_labels, station_label
 
 CONDITION_KEYS = [
     "step_free_entrance", "lift", "accessible_toilet", "seated_work",
@@ -71,6 +71,18 @@ def job_out(conn: sqlite3.Connection, row: sqlite3.Row,
     job["conditions"] = conds
     known = sum(1 for c in conds if c["value"] != "unknown")
     job["labels"] = job_labels(job, known)
+
+    # nearest station: straight line, on-site/hybrid jobs only (spec §5)
+    from . import stations
+    if job["work_mode"] in ("on_site", "hybrid") \
+            and job["lat"] is not None:
+        ns = stations.nearest(job["lat"], job["lon"])
+    else:
+        ns = None
+    job["nearest_station"] = ns
+    sl = station_label(ns)
+    if sl:
+        job["labels"].append(sl)
 
     ev = conn.execute(
         "SELECT e.name,e.date,e.venue,ee.booth FROM employer_event ee"

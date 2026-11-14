@@ -36,7 +36,8 @@ def catalog(conn: sqlite3.Connection = Depends(get_conn)):
 
 @router.get("/event")
 def event(conn: sqlite3.Connection = Depends(get_conn)):
-    """The next event with participating employers and their booths."""
+    """The next event with participating employers, booths and their open
+    jobs (spec v3 §8)."""
     ev = conn.execute("SELECT * FROM event ORDER BY date LIMIT 1").fetchone()
     if not ev:
         return {"event": None, "employers": []}
@@ -44,4 +45,16 @@ def event(conn: sqlite3.Connection = Depends(get_conn)):
         "SELECT e.id, e.name, ee.booth FROM employer_event ee"
         " JOIN employer e ON e.id = ee.employer_id"
         " WHERE ee.event_id=? ORDER BY ee.booth", (ev["id"],))]
+    for emp in employers:
+        emp["jobs"] = [dict(j) for j in conn.execute(
+            "SELECT id,title FROM job WHERE employer_id=? AND status='open'"
+            " ORDER BY title", (emp["id"],))]
     return {"event": dict(ev), "employers": employers}
+
+
+@router.get("/support")
+def support():
+    """City support programmes — verbatim seed data (spec v3 §7).
+    Public; eligibility matching happens in the browser."""
+    from ..support import catalogue
+    return catalogue()

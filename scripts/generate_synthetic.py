@@ -1237,6 +1237,42 @@ def make_saved():
     return [{"user_id": "u-aino", "job_id": "job-weegee"}]
 
 
+def make_event_visitors():
+    """4-digit visitor numbers for the residents seeded in the event story."""
+    return [
+        {"user_id": "u-aino", "event_id": "ev-2026-11", "code": "5821"},
+        {"user_id": "u-pekka", "event_id": "ev-2026-11", "code": "1307"},
+        {"user_id": "u-amira", "event_id": "ev-2026-11", "code": "9042"},
+    ]
+
+
+def make_event_plan():
+    """Aino plans to visit three booths at the recruitment event."""
+    return [
+        {"user_id": "u-aino", "event_id": "ev-2026-11",
+         "employer_id": "emp-cafe-koivu"},
+        {"user_id": "u-aino", "event_id": "ev-2026-11",
+         "employer_id": "emp-siivouspot"},
+        {"user_id": "u-aino", "event_id": "ev-2026-11",
+         "employer_id": "emp-market-olari"},
+    ]
+
+
+def make_event_talks():
+    """Two recorded conversations at Sanna's café booth — one answered."""
+    return [
+        {"id": "et-001", "event_id": "ev-2026-11", "user_id": "u-pekka",
+         "employer_id": "emp-cafe-koivu", "status": "answered",
+         "outcome": "next_step",
+         "employer_note": "Offered a trial Saturday shift — call to agree a time.",
+         "days_ago_talked": 1, "days_ago_answered": 0},
+        {"id": "et-002", "event_id": "ev-2026-11", "user_id": "u-amira",
+         "employer_id": "emp-cafe-koivu", "status": "talked",
+         "outcome": None, "employer_note": "",
+         "days_ago_talked": 1},
+    ]
+
+
 def main(out_dir: Path | None = None):
     out_dir = out_dir or SEED_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -1268,6 +1304,9 @@ def main(out_dir: Path | None = None):
         "applications.json": make_applications(),
         "help_requests.json": make_help_requests(),
         "saved_jobs.json": make_saved(),
+        "event_visitors.json": make_event_visitors(),
+        "event_plan.json": make_event_plan(),
+        "event_talks.json": make_event_talks(),
         "catalog.json": catalog,
     }
     for name, payload in files.items():

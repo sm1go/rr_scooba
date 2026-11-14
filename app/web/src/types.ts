@@ -62,6 +62,18 @@ export interface Job {
   stale: boolean
   distance_km?: number
   applications_count?: number
+  nearest_station: { name: string; mode: 'metro' | 'train'; distance_m: number } | null
+  commute?: Commute | null
+}
+
+export interface Commute {
+  minutes: number
+  walk_m: number
+  transfers: number
+  legs: { mode: string; route: string | null; from: string; to: string; minutes: number }[]
+  arrive_by: string
+  date: string
+  source: string
 }
 
 export interface Catalog {
@@ -126,7 +138,7 @@ export interface HelpRequest {
   contact_method: string
   contact_value: string
   job_id: string | null
-  kind: 'check_conditions' | 'prepare_application' | 'arrange_contact' | 'other'
+  kind: 'check_conditions' | 'prepare_application' | 'arrange_contact' | 'other' | 'employer_support'
   condition_keys: string[]
   message: string
   status: 'new' | 'in_progress' | 'done'
@@ -169,6 +181,119 @@ export interface Overview {
   }[]
   new_help_requests: number
   applications_by_status: Record<string, number>
+  event_talks_unanswered: {
+    id: string
+    person_name: string
+    employer_name: string
+    days_waiting: number
+    employer: { name: string; contact_name: string; contact_email: string; contact_phone: string }
+  }[]
+}
+
+export interface EventTalk {
+  id: string
+  event_id: string
+  user_id: string
+  employer_id: string
+  status: 'talked' | 'answered'
+  outcome: 'next_step' | 'not_now' | null
+  employer_note: string
+  talked_at: string
+  answered_at: string | null
+  employer_name?: string
+  person_name?: string
+  person_contact_method?: string
+  person_contact_value?: string
+  days_waiting?: number
+  employer?: { name: string; contact_name: string; contact_email: string; contact_phone: string } | null
+}
+
+export interface EventInfo {
+  event: { id: string; name: string; date: string; venue: string; advisor_note: string } | null
+  employers: { id: string; name: string; booth: string; jobs: { id: string; title: string }[] }[]
+}
+
+export interface EventPlan {
+  event: EventInfo['event']
+  code: string | null
+  booths: { employer_id: string; name: string; booth: string; jobs: { id: string; title: string }[] }[]
+}
+
+export interface EmployerEvent {
+  event: EventInfo['event']
+  booth: string | null
+  visitors_planned: number
+  talks: EventTalk[]
+}
+
+export interface SupportProgram {
+  id: string
+  name: string
+  amount: string
+  for_employer: string | null
+  for_resident: string | null
+  paid_to: 'employer' | 'resident' | 'nobody'
+  resident_when_all: string[]
+  resident_when_any: string[]
+  job_rule: string | null
+  source_name: string
+  source_url: string
+}
+
+export interface SupportCatalogue {
+  meta: { checked_on: string; disclaimer: string; note?: string }
+  situations: { id: string; label: string }[]
+  programs: SupportProgram[]
+}
+
+export interface FiltersReply {
+  filters: Record<string, unknown>
+  explanation: string[]
+  not_understood: string[]
+  source: 'ai' | 'rules'
+}
+
+export interface JobDraft {
+  draft: Record<string, unknown>
+  missing: string[]
+  wording_warnings: string[]
+  source_quotes: Record<string, string>
+}
+
+export interface CallScript {
+  opening: string
+  questions: { field: string; question: string }[]
+  kinds?: Record<string, string>
+  employer?: { name: string; contact_name: string; contact_email: string; contact_phone: string } | null
+  source: 'ai' | 'rules'
+}
+
+export interface AdvisorNote {
+  type: 'help_request' | 'application' | 'job_conditions'
+  person_name: string | null
+  contact_method: 'phone' | 'sms' | 'email' | null
+  contact_value: string | null
+  job_hint: string | null
+  kind: string | null
+  message: string | null
+  availability_note: string | null
+  answer: string | null
+  needs: string[]
+  conditions: { key: string; value: 'yes' | 'no'; note: string }[]
+  consent_mentioned: boolean
+  left_out: string[]
+}
+
+export interface SimplerSections {
+  title: string | null
+  duties: string[] | null
+  experience_note: string | null
+  qualifications: string[] | null
+  onboarding: string | null
+  pay_note: string | null
+  lifting: string | null
+  apply_question: string | null
+  language_tasks: string[] | null
 }
 
 export const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const

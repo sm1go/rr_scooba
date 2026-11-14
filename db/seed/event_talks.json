@@ -1,0 +1,23 @@
+[
+  {
+    "id": "et-001",
+    "event_id": "ev-2026-11",
+    "user_id": "u-pekka",
+    "employer_id": "emp-cafe-koivu",
+    "status": "answered",
+    "outcome": "next_step",
+    "employer_note": "Offered a trial Saturday shift — call to agree a time.",
+    "days_ago_talked": 1,
+    "days_ago_answered": 0
+  },
+  {
+    "id": "et-002",
+    "event_id": "ev-2026-11",
+    "user_id": "u-amira",
+    "employer_id": "emp-cafe-koivu",
+    "status": "talked",
+    "outcome": null,
+    "employer_note": "",
+    "days_ago_talked": 1
+  }
+]

@@ -14,15 +14,27 @@ export function AdvisorJobs() {
   return (
     <JobsPage
       headerExtra={
-        <Link to="/advisor/jobs/new" className="btn btn-primary">
-          {t('employer.addjob')}
-        </Link>
+        <div className="flex gap-2 flex-wrap">
+          <Link to="/advisor/jobs/new?start=photo" className="btn btn-secondary">
+            {t('advisor.photoadd')}
+          </Link>
+          <Link to="/advisor/note" className="btn btn-secondary">
+            {t('advisor.newnote')}
+          </Link>
+          <Link to="/advisor/jobs/new" className="btn btn-primary">
+            {t('employer.addjob')}
+          </Link>
+        </div>
       }
       rowActions={(j) => (
         <div className="flex gap-2 mt-3 flex-wrap">
           <Link to={`/advisor/jobs/${j.id}/check`} className="btn btn-secondary"
                 style={{ minHeight: 44 }}>
             {t('job.askcheck')}
+          </Link>
+          <Link to={`/advisor/jobs/${j.id}/call`} className="btn btn-secondary"
+                style={{ minHeight: 44 }}>
+            {t('advisor.callscript')}
           </Link>
           <Link to={`/advisor/jobs/${j.id}/edit`} className="btn btn-secondary"
                 style={{ minHeight: 44 }}>

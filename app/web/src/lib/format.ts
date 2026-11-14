@@ -71,7 +71,7 @@ export function slotsText(slots: string[], t: T): string {
 }
 
 /** "13 Nov 2026" (locale-aware). */
-export function fmtDate(iso: string | null | undefined, lang: 'en' | 'fi' = 'en'): string {
+export function fmtDate(iso: string | null | undefined, lang: string = 'en'): string {
   if (!iso) return ''
   const d = new Date(iso.length === 10 ? `${iso}T00:00:00` : iso)
   if (Number.isNaN(d.getTime())) return iso

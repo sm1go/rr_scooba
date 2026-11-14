@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "source": "OpenStreetMap via Nominatim (Overpass mirrors unreachable from build machine)",
+    "attribution": "© OpenStreetMap contributors (ODbL)",
+    "bbox": "60.05,24.40,60.40,25.05",
+    "fetched": "2026-11-14"
+  },
+  "stations": [
+    {
+      "name": "Aalto-yliopisto",
+      "mode": "metro",
+      "lat": 60.1844626,
+      "lon": 24.8235709
+    },
+    {
+      "name": "Espoon rautatieasema",
+      "mode": "train",
+      "lat": 60.2048787,
+      "lon": 24.656084
+    },
+    {
+      "name": "Espoonlahti",
+      "mode": "metro",
+      "lat": 60.1493914,
+      "lon": 24.6547265
+    },
+    {
+      "name": "Finnoo",
+      "mode": "metro",
+      "lat": 60.1530493,
+      "lon": 24.7118863
+    },
+    {
+      "name": "Kaitaa",
+      "mode": "metro",
+      "lat": 60.1495897,
+      "lon": 24.6907894
+    },
+    {
+      "name": "Kauklahti",
+      "mode": "train",
+      "lat": 60.1894325,
+      "lon": 24.6003833
+    },
+    {
+      "name": "Kauniainen",
+      "mode": "train",
+      "lat": 60.2118012,
+      "lon": 24.7296147
+    },
+    {
+      "name": "Keilaniemi",
+      "mode": "metro",
+      "lat": 60.1756478,
+      "lon": 24.8294759
+    },
+    {
+      "name": "Kera",
+      "mode": "train",
+      "lat": 60.2165545,
+      "lon": 24.7556506
+    },
+    {
+      "name": "Kilo",
+      "mode": "train",
+      "lat": 60.2179166,
+      "lon": 24.7824059
+    },
+    {
+      "name": "Kivenlahti",
+      "mode": "metro",
+      "lat": 60.1554592,
+      "lon": 24.6363448
+    },
+    {
+      "name": "Koivuhovi",
+      "mode": "train",
+      "lat": 60.2070123,
+      "lon": 24.7022998
+    },
+    {
+      "name": "Koivusaari",
+      "mode": "metro",
+      "lat": 60.1635642,
+      "lon": 24.8537669
+    },
+    {
+      "name": "Lauttasaari",
+      "mode": "metro",
+      "lat": 60.1594633,
+      "lon": 24.8787064
+    },
+    {
+      "name": "Leppävaaran asema",
+      "mode": "train",
+      "lat": 60.2178405,
+      "lon": 24.8138146
+    },
+    {
+      "name": "Matinkylä",
+      "mode": "metro",
+      "lat": 60.15968,
+      "lon": 24.7391256
+    },
+    {
+      "name": "Mäkkylä",
+      "mode": "train",
+      "lat": 60.2212452,
+      "lon": 24.8430991
+    },
+    {
+      "name": "Niittykumpu",
+      "mode": "metro",
+      "lat": 60.1703645,
+      "lon": 24.7630169
+    },
+    {
+      "name": "Soukka",
+      "mode": "metro",
+      "lat": 60.1415359,
+      "lon": 24.6698548
+    },
+    {
+      "name": "Tapiola",
+      "mode": "metro",
+      "lat": 60.1750223,
+      "lon": 24.8038175
+    },
+    {
+      "name": "Tuomarila",
+      "mode": "train",
+      "lat": 60.2060712,
+      "lon": 24.6817591
+    },
+    {
+      "name": "Urheilupuisto",
+      "mode": "metro",
+      "lat": 60.1745591,
+      "lon": 24.7810824
+    },
+    {
+      "name": "Valimo",
+      "mode": "train",
+      "lat": 60.2220289,
+      "lon": 24.8758264
+    }
+  ]
+}

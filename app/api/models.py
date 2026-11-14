@@ -121,7 +121,7 @@ class StatusIn(BaseModel):
 class HelpRequestIn(BaseModel):
     job_id: Optional[str] = None
     kind: Literal["check_conditions", "prepare_application",
-                  "arrange_contact", "other"]
+                  "arrange_contact", "other", "employer_support"]
     condition_keys: list[str] = []
     message: str = ""
     consent: bool
@@ -147,3 +147,39 @@ class EmployerNewIn(BaseModel):
     contact_name: str = ""
     contact_email: str = ""
     contact_phone: str = ""
+
+
+# --- v3 additions ------------------------------------------------------------
+
+CONTENT_LANGUAGES = ["en", "fi", "sv", "ru", "ar", "et", "zh", "fa", "sq",
+                     "uk"]
+
+
+class JobDraftIn(BaseModel):
+    image_base64: Optional[str] = None
+    image_mime: Optional[Literal["image/jpeg", "image/png"]] = None
+    text: Optional[str] = None
+
+
+class FiltersIn(BaseModel):
+    text: str = Field(max_length=600)
+    ui_language: str = "en"
+
+
+class SimplifyIn(BaseModel):
+    job_id: str
+    language: Literal["en", "fi", "sv", "ru", "ar", "et", "zh", "fa", "sq",
+                      "uk"]
+
+
+class AdvisorNoteIn(BaseModel):
+    text: str = Field(min_length=1, max_length=4000)
+
+
+class TalkIn(BaseModel):
+    code: str = Field(pattern=r"^\d{4}$")
+
+
+class TalkAnswerIn(BaseModel):
+    outcome: Literal["next_step", "not_now"]
+    employer_note: str = Field(min_length=1)

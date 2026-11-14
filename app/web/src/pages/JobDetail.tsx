@@ -1,25 +1,33 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { api } from '../lib/api'
+import { api, ApiError } from '../lib/api'
 import { useAuth } from '../lib/auth'
+import { useConfig } from '../lib/config'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import type { Catalog, Job } from '../types'
+import type { Catalog, Commute, Job, SimplerSections, SupportCatalogue } from '../types'
 import { Chip, ErrorState, Section } from '../components/ui'
 import { labelText } from '../components/JobRow'
 import JobMap from '../components/JobMap'
 import ConditionTable from '../components/ConditionTable'
 import ListenButton from '../components/ListenButton'
 import { daysAgoText, districtName, hoursLine, payLine, shiftsLine } from '../lib/format'
+import { employerProgramsFor } from '../lib/support'
 
 export default function JobDetail() {
   const { id } = useParams()
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const { user } = useAuth()
+  const cfg = useConfig()
   const [job, setJob] = useState<Job | null>(null)
   const [cat, setCat] = useState<Catalog | null>(null)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<unknown>(null)
+  const [commute, setCommute] = useState<Commute | null>(null)
+  const [simpler, setSimpler] = useState<SimplerSections | null>(null)
+  const [simplerErr, setSimplerErr] = useState('')
+  const [simplerBusy, setSimplerBusy] = useState(false)
+  const [maySupport, setMaySupport] = useState(false)
 
   const load = () => {
     setError(null)
@@ -34,6 +42,39 @@ export default function JobDetail() {
         .catch(() => {})
     }
   }, [id, user])
+
+  // Commute: only when the routing service is connected; needs the
+  // resident's district as the trip origin (§5).
+  useEffect(() => {
+    setCommute(null)
+    if (!cfg.commute || !job || user?.role !== 'resident') return
+    api<{ district: string | null }>('/api/me/profile')
+      .then((p) => p.district
+        ? api<Commute>(`/api/commute?job_id=${job.id}&district=${p.district}`)
+            .then(setCommute).catch(() => undefined)
+        : undefined)
+      .catch(() => undefined)
+  }, [cfg.commute, job, user])
+
+  // Quiet support line — employer-side programmes that fit this job (§7).
+  useEffect(() => {
+    if (!job) return
+    api<SupportCatalogue>('/api/support')
+      .then((c) => setMaySupport(employerProgramsFor(job, c.programs).length > 0))
+      .catch(() => undefined)
+  }, [job])
+
+  const simplify = async () => {
+    setSimplerBusy(true); setSimplerErr('')
+    try {
+      const r = await api<{ sections: SimplerSections }>('/api/ai/simplify', {
+        body: { job_id: job!.id, language: lang },
+      })
+      setSimpler(r.sections)
+    } catch (e) {
+      setSimplerErr(e instanceof ApiError ? e.message : t('job.simpler.fail'))
+    } finally { setSimplerBusy(false) }
+  }
 
   if (error) {
     return (
@@ -70,6 +111,48 @@ export default function JobDetail() {
         {cat && ` · ${districtName(job.district, cat.districts)}`}
         {job.distance_km != null && ` · ${job.distance_km} km`}
       </p>
+      {job.nearest_station && (
+        <p className="text-secondary">
+          {t('jobs.station.line', {
+            d: job.nearest_station.distance_m,
+            name: job.nearest_station.name,
+            kind: t(`station.${job.nearest_station.mode}` as Key),
+          })}
+        </p>
+      )}
+      {commute && (
+        <p className="text-secondary">
+          {t('jobs.commute', {
+            m: commute.minutes,
+            modes: commute.legs.filter((l) => l.mode !== 'WALK')
+              .map((l) => l.route ? `${l.mode} ${l.route}` : l.mode.toLowerCase())
+              .join(' + ') || 'walk',
+            district: cat && user ? districtName(job.district, cat.districts) : job.district,
+            t: commute.arrive_by.slice(11, 16),
+          })}
+        </p>
+      )}
+
+      <div className="flex gap-2 items-center flex-wrap mb-4">
+        {simpler ? (
+          <button type="button" className="btn btn-quiet" onClick={() => setSimpler(null)}>
+            {t('job.simpler.original')}
+          </button>
+        ) : (
+          <button type="button" className="btn btn-quiet" disabled={simplerBusy || !cfg.ai}
+                  onClick={simplify}>
+            {t('job.simpler')}
+          </button>
+        )}
+        <Link to={`/jobs/${job.id}/print`} className="btn btn-quiet">
+          {t('job.print')}
+        </Link>
+        {!cfg.ai && <span className="text-secondary">{t('ai.off')}</span>}
+        {simplerErr && <span className="text-secondary">{simplerErr}</span>}
+      </div>
+      {simpler && (
+        <p className="card p-3 mb-4 text-secondary">{t('job.simpler.machine')}</p>
+      )}
 
       {job.labels.length > 0 && (
         <div className="mb-5">
@@ -89,7 +172,7 @@ export default function JobDetail() {
 
       <Section title={t('job.whatyoudo')}>
         <ul className="m-0 pl-5">
-          {job.duties.map((d, i) => <li key={i} className="mb-2">{d}</li>)}
+          {(simpler?.duties ?? job.duties).map((d, i) => <li key={i} className="mb-2">{d}</li>)}
         </ul>
       </Section>
 
@@ -132,24 +215,29 @@ export default function JobDetail() {
         <p className="m-0">
           {job.experience ? t(`experience.${job.experience}` as Key) : t('common.unknown')}
         </p>
-        {job.experience_note && <p className="text-secondary mt-1">{job.experience_note}</p>}
-        {job.qualifications.length > 0 && (
+        {(simpler?.experience_note ?? job.experience_note) && (
+          <p className="text-secondary mt-1">{simpler?.experience_note ?? job.experience_note}</p>
+        )}
+        {(simpler?.qualifications ?? job.qualifications).length > 0 && (
           <ul className="pl-5 mt-2 mb-2">
-            {job.qualifications.map((q, i) => <li key={i}>{q}</li>)}
+            {(simpler?.qualifications ?? job.qualifications).map((q, i) => <li key={i}>{q}</li>)}
           </ul>
         )}
         {job.languages.length > 0 && (
           <ul className="pl-5 mt-2 mb-0">
             {job.languages.map((l, i) => (
-              <li key={i}>{l.language} {l.level}{l.task ? ` — ${l.task}` : ''}</li>
+              <li key={i}>{l.language} {l.level}
+                {(simpler?.language_tasks?.[i] ?? l.task)
+                  ? ` — ${simpler?.language_tasks?.[i] ?? l.task}` : ''}
+              </li>
             ))}
           </ul>
         )}
       </Section>
 
-      {job.onboarding && (
+      {(simpler?.onboarding ?? job.onboarding) && (
         <Section title={t('job.training')}>
-          <p className="m-0">{job.onboarding}</p>
+          <p className="m-0">{simpler?.onboarding ?? job.onboarding}</p>
         </Section>
       )}
 
@@ -164,6 +252,12 @@ export default function JobDetail() {
           <p className="m-0 text-secondary">{job.event.venue} · {t('job.booth')} {job.event.booth}</p>
           <p className="m-0 mt-1">{t('job.eventnote')}</p>
         </Section>
+      )}
+
+      {maySupport && (
+        <p className="text-secondary">
+          {t('job.maysupport')} <Link to="/support">{t('job.seesupport')}</Link>
+        </p>
       )}
 
       <p className="text-secondary">

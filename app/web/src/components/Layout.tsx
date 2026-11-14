@@ -4,35 +4,39 @@ import {
 } from 'react-router-dom'
 import {
   Bookmark, FileText, Home, Menu as MenuIcon, User as UserIcon,
-  Briefcase, Inbox, ClipboardList, Building2, ListChecks,
+  Briefcase, Inbox, ClipboardList, Building2, ListChecks, CalendarDays,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useA11y } from '../lib/a11y'
-import { useI18n, type Lang } from '../i18n/i18n'
+import { useI18n, LANGS, type Lang } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 
-const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home }[]> = {
+const NAV: Record<string, { to: string; key: Key; short: Key; icon: typeof Home; wideOnly?: boolean }[]> = {
   resident: [
     { to: '/', key: 'nav.jobs', short: 'nav.jobs', icon: Home },
     { to: '/saved', key: 'nav.saved', short: 'nav.saved', icon: Bookmark },
     { to: '/applications', key: 'nav.applications', short: 'nav.applied', icon: FileText },
     { to: '/profile', key: 'nav.profile', short: 'nav.profile', icon: UserIcon },
+    { to: '/event', key: 'nav.event', short: 'nav.event', icon: CalendarDays, wideOnly: true },
   ],
   employer: [
     { to: '/employer', key: 'nav.myjobs', short: 'nav.jobs', icon: Briefcase },
     { to: '/employer/applications', key: 'emp.applications', short: 'nav.applied', icon: Inbox },
     { to: '/employer/company', key: 'nav.company', short: 'nav.company', icon: Building2 },
+    { to: '/employer/event', key: 'nav.event', short: 'nav.event', icon: CalendarDays, wideOnly: true },
   ],
   advisor: [
     { to: '/advisor', key: 'nav.requests', short: 'nav.requests', icon: Inbox },
     { to: '/advisor/jobs', key: 'nav.advisorjobs', short: 'nav.jobs', icon: ClipboardList },
     { to: '/advisor/follow-up', key: 'nav.followup', short: 'nav.followup', icon: ListChecks },
+    { to: '/advisor/support', key: 'advisor.support', short: 'nav.support', icon: Building2, wideOnly: true },
   ],
   anon: [
     { to: '/', key: 'nav.jobs', short: 'nav.jobs', icon: Home },
     { to: '/saved', key: 'nav.saved', short: 'nav.saved', icon: Bookmark },
     { to: '/applications', key: 'nav.applications', short: 'nav.applied', icon: FileText },
     { to: '/profile', key: 'nav.profile', short: 'nav.profile', icon: UserIcon },
+    { to: '/event', key: 'nav.event', short: 'nav.event', icon: CalendarDays, wideOnly: true },
   ],
 }
 
@@ -84,21 +88,13 @@ function A11yPanel() {
 function LangSwitch() {
   const { lang, setLang } = useI18n()
   return (
-    <div role="group" aria-label="Language" className="flex card overflow-hidden">
-      {(['en', 'fi'] as Lang[]).map((l) => (
-        <button key={l} type="button" onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className="px-3 py-2"
-                style={{
-                  minHeight: 44,
-                  background: lang === l ? 'var(--color-ink)' : 'transparent',
-                  color: lang === l ? 'var(--color-btn-text)' : 'var(--color-ink)',
-                  border: 'none', fontWeight: 500,
-                }}>
-          {l.toUpperCase()}
-        </button>
+    <select aria-label="Language" value={lang}
+            onChange={(e) => setLang(e.target.value as Lang)}
+            style={{ minHeight: 44, width: 'auto' }}>
+      {LANGS.map((l) => (
+        <option key={l.id} value={l.id}>{l.name}</option>
       ))}
-    </div>
+    </select>
   )
 }
 
@@ -225,7 +221,7 @@ export default function Layout() {
       </main>
 
       <nav className="bottom-nav" aria-label="Main">
-        {links.map((l) => {
+        {links.filter((l) => !l.wideOnly).map((l) => {
           const Icon = l.icon
           return (
             <NavLink key={l.to} to={l.to} end={l.to === '/'}

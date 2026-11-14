@@ -9,6 +9,7 @@ from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .. import db as db_mod
+from .. import settings, stations
 from ..auth import current_user, optional_user
 from ..db import get_conn, SEED_DIR
 from ..models import ConditionCheckIn, JobIn, WordingCheckIn
@@ -58,6 +59,8 @@ def list_jobs(
     district: str | None = None,
     km: float | None = None,
     at_event: int | None = None,
+    near_station: int | None = None,
+    commute_max: int | None = None,
     q: str | None = None,
     conn: sqlite3.Connection = Depends(get_conn),
     user=Depends(optional_user),   # noqa: ARG001 — output identical either way
@@ -70,6 +73,7 @@ def list_jobs(
     want_labels = set(label)
     out = []
 
+    matched: list[sqlite3.Row] = []
     for row in rows:
         job = _decode(row)
         conds = conditions_out(conn, job["id"])
@@ -128,7 +132,42 @@ def list_jobs(
                             emp["name"] if emp else ""]).lower()
             if q.lower() not in hay:
                 continue
+        if near_station:
+            if job["work_mode"] == "remote" or job["lat"] is None:
+                continue
+            ns = stations.nearest(job["lat"], job["lon"])
+            if not ns or ns["distance_m"] > 800:
+                continue
         out.append(job_out(conn, row, center))
+        matched.append(row)
+
+    # commute_max needs a district as the trip origin (§5). Results come from
+    # the 7-day cache; missing ones are computed, at most 5 calls per request.
+    # Jobs whose commute cannot be computed are kept and marked commute: null.
+    if commute_max is not None:
+        if not district:
+            raise HTTPException(422,
+                                "commute_max needs a district to start from.")
+        from . import commute as commute_mod
+        computed = 0
+        for item, row in zip(out, matched):
+            job = _decode(row)
+            payload = None
+            try:
+                if settings.commute_enabled() and computed < 5:
+                    payload = commute_mod.compute_commute(
+                        conn, job, district)
+                    computed += 1
+                elif settings.commute_enabled():
+                    payload = commute_mod.cached_commute(
+                        conn, job["id"], district)
+            except Exception:
+                payload = None
+            item["commute"] = payload
+        out = [j for j in out
+               if j["commute"] is None
+               or j["commute"].get("minutes") is None
+               or j["commute"]["minutes"] <= commute_max]
 
     out.sort(key=lambda j: j["title"])
     out.sort(key=lambda j: j["confirmed_at"] or "", reverse=True)

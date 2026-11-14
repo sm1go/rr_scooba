@@ -11,7 +11,7 @@ const BASE = 'http://127.0.0.1:5173'
 const PORT = 9223
 const rd = (f) => readFileSync(join(tmpdir(), f), 'utf8').trim()
 const tokAino = rd('tok_aino.txt'), tokSanna = rd('tok_sanna.txt'),
-  tokLeena = rd('tok_advisor.txt'), jobId = rd('jobid.txt')
+  tokLeena = rd('tok_advisor.txt'), jobId = 'job-market-till'
 
 mkdirSync(SHOTS, { recursive: true })
 const chrome = spawn(CHROME, [
@@ -39,6 +39,7 @@ const js = (expression) => send('Runtime.evaluate', { expression, awaitPromise: 
 
 async function shot(file, url, {
   width = 1440, height = 900, token, lang, a11y, run, wait = 2600,
+  postWait = 1200,
 } = {}) {
   await send('Emulation.setDeviceMetricsOverride',
     { width, height, deviceScaleFactor: 1, mobile: width < 500 })
@@ -52,41 +53,63 @@ async function shot(file, url, {
   if (store.length) await js(store.join(';'))
   await send('Page.navigate', { url: BASE + url })
   await sleep(wait)
-  if (run) { await js(run); await sleep(900) }
+  if (run) { await js(run); await sleep(postWait) }
   const r = await send('Page.captureScreenshot', { format: 'png' })
   writeFileSync(join(SHOTS, file), Buffer.from(r.result.data, 'base64'))
   console.log('wrote', file)
 }
 
-await shot('home-wide.png', '/')
-await shot('home-360.png', '/', { width: 360, height: 780 })
-await shot('home-360-xlarge.png', '/', {
-  width: 360, height: 780,
-  a11y: { textSize: 'xlarge', contrast: false, easierReading: false, reduceMotion: false, listen: true },
+const typeInto = (id, text) => `
+  const inp = document.getElementById(${JSON.stringify(id)});
+  const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+  setter.call(inp, ${JSON.stringify(text)});
+  inp.dispatchEvent(new Event('input', { bubbles: true }));`
+const clickText = (sel, text) =>
+  `[...document.querySelectorAll(${JSON.stringify(sel)})]
+     .find(b => b.textContent.trim() === ${JSON.stringify(text)})?.click()`
+const clickContains = (sel, text) =>
+  `[...document.querySelectorAll(${JSON.stringify(sel)})]
+     .find(b => b.textContent.includes(${JSON.stringify(text)}))?.click()`
+
+// v3 §2: free-text filter -> "This is what we set"
+await shot('home-looking.png', '/', {
+  run: `${typeInto('ask-filters', 'two mornings a week near Matinkylä')};
+        ${clickText('button', 'Find jobs')}`,
+  postWait: 2500,
 })
-await shot('job-detail.png', `/jobs/${jobId}`)
-await shot('job-detail-conditions.png', `/jobs/${jobId}`, {
-  run: `document.getElementById('job-conditions').scrollIntoView()`,
+// v3 §3+5: job page station line + simpler-version controls (no key)
+await shot('job-v3.png', `/jobs/${jobId}`)
+await shot('job-print.png', `/jobs/${jobId}/print`)
+// v3 §7: support wizard
+await shot('support-1.png', '/support', {
+  run: `${clickContains('label', '3 months')}; ${clickContains('label', 'under 30')}`,
 })
-await shot('apply.png', `/jobs/${jobId}/apply`, { token: tokAino })
-await shot('applications.png', '/applications', { token: tokAino })
-await shot('profile.png', '/profile', { token: tokAino })
-await shot('employer-jobs.png', '/employer', { token: tokSanna })
-await shot('employer-form-conditions.png', '/employer/jobs/new', {
-  token: tokSanna,
-  run: `document.querySelector('summary').click();
-        [...document.querySelectorAll('ol li button')]
-          .find(b => b.textContent.startsWith('8.')).click()`,
-  wait: 3200,
+await shot('support-2.png', '/support', {
+  run: `${clickContains('label', '3 months')}; ${clickContains('label', 'under 30')};
+        setTimeout(() => ${clickContains('button', 'Show')}, 300)`,
+  postWait: 1500,
 })
-await shot('employer-applications.png', '/employer/applications', { token: tokSanna })
-await shot('advisor-queue.png', '/advisor', { token: tokLeena })
-await shot('advisor-followup.png', '/advisor/follow-up', { token: tokLeena })
-await shot('sign-in.png', '/sign-in')
-await shot('home-fi-contrast.png', '/', {
-  lang: 'fi',
-  a11y: { textSize: 'normal', contrast: true, easierReading: false, reduceMotion: false, listen: true },
+// v3 §1: employer start tiles
+await shot('employer-form-start.png', '/employer/jobs/new', { token: tokSanna })
+// review step with support panel: manual tile -> all steps -> 10. Preview
+await shot('employer-form-review.png', '/employer/jobs/new', {
+  token: tokSanna, wait: 3000,
+  run: `${clickContains('button', 'myself')};
+        setTimeout(() => {
+          document.querySelector('details summary')?.click();
+          ${clickContains('ol li button', '10.')};
+        }, 700)`,
+  postWait: 2200,
 })
+// v3 §4: advisor call script + note (no-key state)
+await shot('advisor-call.png', `/advisor/jobs/${jobId}/call`, { token: tokLeena })
+await shot('advisor-note.png', '/advisor/note', { token: tokLeena })
+// v3 §8: event pages
+await shot('event.png', '/event', { token: tokAino, wait: 3200 })
+await shot('employer-event.png', '/employer/event', { token: tokSanna, wait: 3200 })
+// v3 §6: Arabic RTL
+await shot('home-ar-360.png', '/', { lang: 'ar', width: 360, height: 780 })
+await shot('home-ar-wide.png', '/', { lang: 'ar' })
 
 ws.close()
 chrome.kill()

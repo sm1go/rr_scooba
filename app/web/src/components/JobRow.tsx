@@ -11,10 +11,12 @@ const LABEL_KEY = {
   students: 'label.students', retirement: 'label.retirement',
   first_job: 'label.first_job', side_job: 'label.side_job',
   part_time: 'label.part_time', access_info: 'label.access_info',
+  near_station: 'label.near_station',
 } as const
 
 export function labelText(id: string, t: (k: Key) => string) {
-  return t((LABEL_KEY[id as keyof typeof LABEL_KEY] ?? 'label.part_time') as Key)
+  const k = LABEL_KEY[id as keyof typeof LABEL_KEY]
+  return k ? t(k) : id
 }
 
 /** One job row — the whole card opens the job (title is the real link).

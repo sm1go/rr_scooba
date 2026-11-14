@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../../lib/api'
 import { useAuth } from '../../lib/auth'
+import { useConfig } from '../../lib/config'
 import { useI18n } from '../../i18n/i18n'
 import type { Key } from '../../i18n/en'
-import type { Catalog, Job, WordingTip } from '../../types'
+import type { Catalog, Job, JobDraft, SupportCatalogue, WordingTip } from '../../types'
 import { CEFR, DAYS } from '../../types'
 import { ErrorBox, Field, Section, Toggle } from '../../components/ui'
+import { employerProgramsFor } from '../../lib/support'
 
 const STEPS = ['title', 'duties', 'where', 'pay', 'hours', 'contract',
                'language', 'conditions', 'apply', 'preview'] as const
@@ -38,6 +40,7 @@ const EMPTY: Form = {
 export default function EmployerJobForm() {
   const { t } = useI18n()
   const { user } = useAuth()
+  const cfg = useConfig()
   const { id } = useParams()
   const nav = useNavigate()
   const [cat, setCat] = useState<Catalog | null>(null)
@@ -47,6 +50,16 @@ export default function EmployerJobForm() {
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  // v3 photo/text draft flow (§1)
+  const [phase, setPhase] = useState<'start' | 'text' | 'form'>(id ? 'form' : 'start')
+  const [noticeText, setNoticeText] = useState('')
+  const [draftBusy, setDraftBusy] = useState(false)
+  const [aiFields, setAiFields] = useState<Set<string>>(new Set())
+  const [missing, setMissing] = useState<string[]>([])
+  const [quotes, setQuotes] = useState<Record<string, string>>({})
+  const [aiWarnings, setAiWarnings] = useState<string[]>([])
+  const [supportAsked, setSupportAsked] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     api<Catalog>('/api/catalog').then(setCat).catch(() => {})
@@ -128,8 +141,165 @@ export default function EmployerJobForm() {
   }
 
   const stepIds = useMemo(() => STEPS, [])
+
+  // --- photo / text -> draft (§1) -------------------------------------------
+
+  const applyDraft = (r: JobDraft) => {
+    const d = r.draft as Record<string, unknown>
+    const filled = new Set<string>()
+    const nf: Form = { ...EMPTY, employer_id: f.employer_id }
+    const take = (k: keyof Form, src: string, v: unknown) => {
+      if (v === null || v === undefined || v === '') return
+      ;(nf as unknown as Record<string, unknown>)[k] = v
+      filled.add(src)
+    }
+    take('title', 'title', d.title)
+    take('field', 'field', d.field)
+    if (Array.isArray(d.duties) && d.duties.length) {
+      nf.duties = (d.duties as string[]).join('\n'); filled.add('duties')
+    }
+    take('address', 'address', d.address)
+    take('district', 'district', d.district)
+    take('work_mode', 'work_mode', d.work_mode)
+    take('pay_amount', 'pay_amount', d.pay_amount != null ? String(d.pay_amount) : null)
+    take('pay_unit', 'pay_unit', d.pay_unit)
+    take('pay_note', 'pay_note', d.pay_note)
+    if (Array.isArray(d.shifts)) {
+      nf.shifts = d.shifts as Form['shifts']; if (nf.shifts.length) filled.add('shifts')
+    }
+    take('schedule_flexible', 'shifts', d.schedule_flexible === true ? true : null)
+    take('hours_min', 'hours', d.hours_min != null ? String(d.hours_min) : null)
+    take('hours_max', 'hours', d.hours_max != null ? String(d.hours_max) : null)
+    take('contract', 'contract', d.contract)
+    take('experience', 'experience', d.experience)
+    take('experience_note', 'experience_note', d.experience_note)
+    take('positions', 'positions', typeof d.positions === 'number' ? d.positions : null)
+    if (Array.isArray(d.qualifications) && d.qualifications.length) {
+      nf.qualifications = (d.qualifications as string[]).join('\n')
+      filled.add('qualifications')
+    }
+    take('onboarding', 'onboarding', d.onboarding)
+    if (Array.isArray(d.languages) && d.languages.length) {
+      nf.languages = d.languages as Form['languages']; filled.add('languages')
+    }
+    take('lifting', 'lifting', d.lifting)
+    take('apply_question', 'apply_question', d.apply_question)
+    take('cv_required', 'cv_required', d.cv_required === true ? true : null)
+    if (d.conditions && typeof d.conditions === 'object') {
+      nf.conditions = d.conditions as Record<string, string>
+      if (Object.keys(nf.conditions).length) filled.add('conditions')
+    }
+    setF(nf)
+    setAiFields(filled)
+    setMissing(r.missing)
+    setQuotes(r.source_quotes || {})
+    setAiWarnings(r.wording_warnings || [])
+    setPhase('form')
+    setStep(0)
+  }
+
+  const draft = async (body: Record<string, unknown>) => {
+    setDraftBusy(true); setErr('')
+    try {
+      const r = await api<JobDraft>('/api/ai/job-draft', { body })
+      applyDraft(r)
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : t('common.error'))
+    } finally { setDraftBusy(false) }
+  }
+
+  const readPhoto = (file: File) => {
+    const img = new Image()
+    img.onload = () => {
+      const scale = Math.min(1, 1600 / Math.max(img.width, img.height))
+      const c = document.createElement('canvas')
+      c.width = Math.round(img.width * scale)
+      c.height = Math.round(img.height * scale)
+      c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height)
+      URL.revokeObjectURL(img.src)
+      const mime = 'image/jpeg'
+      draft({ image_base64: c.toDataURL(mime, 0.85).split(',')[1], image_mime: mime })
+    }
+    img.onerror = () => setErr(t('common.error'))
+    img.src = URL.createObjectURL(file)
+  }
+
+  const mark = (k: string) => aiFields.has(k) ? (
+    <p className="text-secondary m-0 mb-2" style={{ fontSize: '1rem' }}>
+      {t('employer.fromphoto')}
+      {quotes[k] && (
+        <details className="mt-1">
+          <summary className="cursor-pointer">{t('employer.fromphoto.quote')}</summary>
+          <p className="m-0 mt-1">{quotes[k]}</p>
+        </details>
+      )}
+    </p>
+  ) : null
+
   if (!loaded) return <p>{t('common.loading')}</p>
   const cur = stepIds[step]
+
+  // --- start screen: three large tiles (§1) ----------------------------------
+  if (phase === 'start') {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <Link to={user?.role === 'advisor' ? '/advisor/jobs' : '/employer'}
+              className="text-secondary">{`← ${t('common.back')}`}</Link>
+        <h1 data-page-title tabIndex={-1} className="mt-2">
+          {t('employer.start.title')}
+        </h1>
+        {err && <ErrorBox>{err}</ErrorBox>}
+        {!cfg.ai && <p className="card p-4">{t('employer.start.ai_off')}</p>}
+
+        <div className="grid gap-3 md:grid-cols-3">
+          <button type="button" className="card p-6 text-left start-tile"
+                  disabled={draftBusy || !cfg.ai}
+                  onClick={() => fileRef.current?.click()}>
+            <span className="font-display block" style={{ fontSize: '1.2rem' }}>
+              {t('employer.start.photo')}
+            </span>
+          </button>
+          <button type="button" className="card p-6 text-left start-tile"
+                  disabled={!cfg.ai}
+                  onClick={() => setPhase('text' as 'start')}>
+            <span className="font-display block" style={{ fontSize: '1.2rem' }}>
+              {t('employer.start.text')}
+            </span>
+          </button>
+          <button type="button" className="card p-6 text-left start-tile"
+                  onClick={() => setPhase('form')}>
+            <span className="font-display block" style={{ fontSize: '1.2rem' }}>
+              {t('employer.start.manual')}
+            </span>
+          </button>
+        </div>
+        <input ref={fileRef} type="file" accept="image/*" capture="environment"
+               className="hidden" aria-hidden="true" tabIndex={-1}
+               onChange={(e) => { const fl = e.target.files?.[0]; if (fl) readPhoto(fl) }} />
+        {draftBusy && <p role="status">{t('employer.drafting')}</p>}
+        <p className="text-secondary mt-2">{t('employer.notice')}</p>
+      </div>
+    )
+  }
+  if (phase === 'text') {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <button type="button" className="btn btn-quiet"
+                onClick={() => setPhase('start')}>{`← ${t('employer.start.back')}`}</button>
+        <h1 data-page-title tabIndex={-1} className="mt-2">{t('employer.start.text')}</h1>
+        {err && <ErrorBox>{err}</ErrorBox>}
+        <Field label={t('employer.start.textlabel')} id="notice-text">
+          <textarea id="notice-text" rows={10} value={noticeText}
+                    onChange={(e) => setNoticeText(e.target.value)} />
+        </Field>
+        <button type="button" className="btn btn-primary"
+                disabled={draftBusy || !noticeText.trim()}
+                onClick={() => draft({ text: noticeText })}>
+          {draftBusy ? t('employer.drafting') : t('employer.start.read')}
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -174,6 +344,7 @@ export default function EmployerJobForm() {
 
       {cur === 'title' && (
         <Section title={t('employer.step.title')}>
+          {mark('title')}{mark('field')}
           {user?.role === 'advisor' && (
             <Field label={t('employer.company')} id="jf-emp">
               <select id="jf-emp" value={f.employer_id} required
@@ -207,6 +378,7 @@ export default function EmployerJobForm() {
 
       {cur === 'duties' && (
         <Section title={t('employer.step.duties')}>
+          {mark('duties')}
           <Field label={t('employer.dutieshelp')} id="jf-duties">
             <textarea id="jf-duties" rows={6} value={f.duties}
                       onChange={(e) => setF({ ...f, duties: e.target.value })} />
@@ -216,6 +388,7 @@ export default function EmployerJobForm() {
 
       {cur === 'where' && (
         <Section title={t('employer.step.where')}>
+          {mark('address')}{mark('district')}{mark('work_mode')}
           <Field label={t('job.where')} id="jf-address">
             <input id="jf-address" value={f.address}
                    onChange={(e) => setF({ ...f, address: e.target.value })} />
@@ -242,6 +415,7 @@ export default function EmployerJobForm() {
 
       {cur === 'pay' && (
         <Section title={t('employer.step.pay')}>
+          {mark('pay_amount')}{mark('pay_unit')}{mark('pay_note')}
           <div className="flex gap-2">
             <Field label={t('job.pay')} id="jf-pay">
               <input id="jf-pay" type="number" step="0.01" inputMode="decimal"
@@ -265,6 +439,7 @@ export default function EmployerJobForm() {
 
       {cur === 'hours' && (
         <Section title={t('employer.step.hours')}>
+          {mark('shifts')}{mark('hours')}
           <Toggle pressed={f.schedule_flexible}
                   onClick={() => setF({ ...f, schedule_flexible: !f.schedule_flexible })}>
             {t('common.flexible')}
@@ -325,6 +500,8 @@ export default function EmployerJobForm() {
 
       {cur === 'contract' && (
         <Section title={t('employer.step.contract')}>
+          {mark('contract')}{mark('experience')}{mark('experience_note')}
+          {mark('positions')}{mark('qualifications')}{mark('onboarding')}
           <Field label={t('jobs.contract')} id="jf-contract">
             <select id="jf-contract" value={f.contract}
                     onChange={(e) => setF({ ...f, contract: e.target.value })}>
@@ -366,6 +543,7 @@ export default function EmployerJobForm() {
 
       {cur === 'language' && (
         <Section title={t('employer.step.language')}>
+          {mark('languages')}
           {f.languages.map((l, i) => (
             <div key={i} className="flex gap-2 mb-2 items-center flex-wrap">
               <input value={l.language} aria-label={t('jobs.language')}
@@ -406,6 +584,7 @@ export default function EmployerJobForm() {
 
       {cur === 'conditions' && (
         <Section title={t('employer.step.conditions')}>
+          {mark('conditions')}{mark('lifting')}
           <p className="text-secondary mt-0">{t('employer.conditionshelp')}</p>
           {cat?.condition_keys.map((c) => (
             <div key={c.id}
@@ -438,6 +617,7 @@ export default function EmployerJobForm() {
 
       {cur === 'apply' && (
         <Section title={t('employer.step.apply')}>
+          {mark('apply_question')}{mark('cv_required')}
           <Field label={t('employer.applyquestion')} id="jf-q">
             <input id="jf-q" value={f.apply_question}
                    onChange={(e) => setF({ ...f, apply_question: e.target.value })} />
@@ -451,6 +631,16 @@ export default function EmployerJobForm() {
 
       {cur === 'preview' && (
         <Section title={t('employer.step.preview')}>
+          {missing.length > 0 && (
+            <div className="card p-4 mb-4">
+              <h3 className="m-0 mb-2" style={{ fontSize: '1.05rem' }}>
+                {t('employer.missing')}
+              </h3>
+              <ul className="m-0 pl-5">
+                {missing.map((k) => <li key={k}>{k}</li>)}
+              </ul>
+            </div>
+          )}
           <h2 className="m-0 font-display">{f.title || '—'}</h2>
           <p className="text-secondary">{f.address} {f.district && `· ${f.district}`}</p>
           <ul className="pl-5">
@@ -458,6 +648,29 @@ export default function EmployerJobForm() {
               <li key={i}>{d}</li>
             ))}
           </ul>
+          {aiWarnings.length > 0 && (
+            <div className="card p-4 mb-4">
+              <h3 className="m-0 mb-2" style={{ fontSize: '1.05rem' }}>
+                {t('employer.wordingtips')}
+              </h3>
+              {aiWarnings.map((w, i) => <p key={i} className="m-0 mb-2">{w}</p>)}
+            </div>
+          )}
+          <SupportPanel form={f} asked={supportAsked}
+                        onAsk={async () => {
+                          try {
+                            await api('/api/help-requests', {
+                              body: {
+                                kind: 'employer_support',
+                                message: `${f.title} — ${t('employer.support.title')}`,
+                                consent: true,
+                              },
+                            })
+                            setSupportAsked(true)
+                          } catch (e) {
+                            setErr(e instanceof ApiError ? e.message : t('common.error'))
+                          }
+                        }} />
           {tips.length > 0 && (
             <div className="card p-4 mb-4" role="region"
                  aria-label={t('employer.wordingtips')}>
@@ -520,6 +733,44 @@ export default function EmployerJobForm() {
           </>
         )}
       </div>
+    </div>
+  )
+}
+
+/** "City support that may fit this job" on the review step (§7). */
+function SupportPanel({ form, asked, onAsk }: {
+  form: Form; asked: boolean; onAsk: () => void
+}) {
+  const { t } = useI18n()
+  const [matches, setMatches] = useState<{ name: string; amount: string }[]>([])
+  useEffect(() => {
+    api<SupportCatalogue>('/api/support').then((c) => {
+      const pseudo = {
+        contract: form.contract || null,
+        hours_min: form.hours_min ? +form.hours_min : null,
+        hours_max: form.hours_max ? +form.hours_max : null,
+      } as Job
+      setMatches(employerProgramsFor(pseudo, c.programs)
+        .map((p) => ({ name: p.name, amount: p.amount })))
+    }).catch(() => undefined)
+  }, [form.contract, form.hours_min, form.hours_max])
+
+  if (!matches.length) return null
+  return (
+    <div className="card p-4 mb-4">
+      <h3 className="m-0 mb-2" style={{ fontSize: '1.05rem' }}>
+        {t('employer.support.title')}
+      </h3>
+      <ul className="m-0 pl-5 mb-3">
+        {matches.map((m, i) => <li key={i}>{m.name} — {m.amount}</li>)}
+      </ul>
+      {asked ? (
+        <p className="m-0">{t('employer.support.sent')}</p>
+      ) : (
+        <button type="button" className="btn btn-secondary" onClick={onAsk}>
+          {t('employer.support.call')}
+        </button>
+      )}
     </div>
   )
 }

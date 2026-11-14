@@ -2,14 +2,15 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useAuth } from '../lib/auth'
+import { useConfig } from '../lib/config'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import type { Catalog, Job, Profile } from '../types'
+import type { Catalog, FiltersReply, Job, Profile } from '../types'
 import { CEFR, DAYS, PARTS } from '../types'
 import JobRow, { labelText } from '../components/JobRow'
 import JobMap from '../components/JobMap'
 import { ErrorState, Field, HelpCard, Toggle } from '../components/ui'
-import { districtName } from '../lib/format'
+import { districtName, slotsText } from '../lib/format'
 
 const QUICK_LABELS = ['students', 'retirement', 'first_job', 'side_job',
                       'part_time', 'access_info'] as const
@@ -20,8 +21,9 @@ export default function JobsPage({
   rowActions?: (j: Job) => ReactNode
   headerExtra?: ReactNode
 }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const { user } = useAuth()
+  const cfg = useConfig()
   const [cat, setCat] = useState<Catalog | null>(null)
   const [params, setParams] = useSearchParams()
   const [jobs, setJobs] = useState<Job[] | null>(null)
@@ -31,6 +33,9 @@ export default function JobsPage({
   const [more, setMore] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
+  const [askText, setAskText] = useState('')
+  const [askReply, setAskReply] = useState<FiltersReply | null>(null)
+  const [askBusy, setAskBusy] = useState(false)
 
   useEffect(() => {
     api<Catalog>('/api/catalog').then(setCat).catch(() => {})
@@ -102,6 +107,35 @@ export default function JobsPage({
     setParams(np)
   }
 
+  // "Tell us what you are looking for" — free text -> filters (§2)
+  const askFilters = async () => {
+    if (!askText.trim()) return
+    setAskBusy(true); setAskReply(null)
+    try {
+      const r = await api<FiltersReply>('/api/ai/filters', {
+        body: { text: askText.trim().slice(0, 600), ui_language: lang },
+      })
+      setAskReply(r)
+      const p = new URLSearchParams()
+      const f = r.filters as Record<string, unknown>
+      ;(f.labels as string[] | undefined)?.forEach((l) => p.append('label', l))
+      for (const k of ['field', 'work_mode', 'district', 'experience',
+                       'level_max', 'language', 'pay_unit'] as const) {
+        if (f[k] != null) p.set(k, String(f[k]))
+      }
+      if (Array.isArray(f.slots) && f.slots.length) p.set('slots', (f.slots as string[]).join(','))
+      if (Array.isArray(f.needs) && f.needs.length) {
+        p.set('needs', (f.needs as string[]).join(','))
+        p.set('needs_mode', 'yes')
+      }
+      for (const k of ['hours_max', 'pay_min', 'km', 'commute_max'] as const) {
+        if (typeof f[k] === 'number') p.set(k, String(f[k]))
+      }
+      if (f.near_station === true) p.set('near_station', '1')
+      setParams(p)
+    } catch { setAskReply(null) } finally { setAskBusy(false) }
+  }
+
   const activeFilterNames = useMemo(() => {
     const names: { key: string; name: string }[] = []
     params.getAll('label').forEach((l) =>
@@ -109,7 +143,7 @@ export default function JobsPage({
     if (params.get('field'))
       names.push({ key: 'field', name: t(`field.${params.get('field')}` as Key) })
     if (params.get('slots'))
-      names.push({ key: 'slots', name: `${params.get('slots')!.split(',').length} ${t('jobs.whenwork')}` })
+      names.push({ key: 'slots', name: slotsText(params.get('slots')!.split(','), t) })
     if (params.get('hours_max'))
       names.push({ key: 'hours_max', name: `≤${params.get('hours_max')} ${t('common.hweek')}` })
     if (params.get('pay_min'))
@@ -124,6 +158,9 @@ export default function JobsPage({
     if (params.get('district'))
       names.push({ key: 'district', name: cat ? districtName(params.get('district')!, cat.districts) : params.get('district')! })
     if (params.get('at_event')) names.push({ key: 'at_event', name: t('jobs.atevent') })
+    if (params.get('near_station')) names.push({ key: 'near_station', name: t('jobs.nearstation') })
+    if (params.get('commute_max'))
+      names.push({ key: 'commute_max', name: `≤${params.get('commute_max')} min` })
     if (params.get('q')) names.push({ key: 'q', name: `"${params.get('q')}"` })
     if (params.get('work_mode'))
       names.push({ key: 'work_mode', name: t(`common.${params.get('work_mode') === 'on_site' ? 'onsite' : params.get('work_mode')}` as Key) })
@@ -189,6 +226,39 @@ export default function JobsPage({
         </div>
       </div>
 
+      <div className="card p-4 mb-3">
+        <label htmlFor="ask-filters" className="font-medium block mb-2">
+          {t('jobs.lookingfor')}
+        </label>
+        <div className="flex gap-2 flex-wrap">
+          <input id="ask-filters" value={askText} maxLength={600}
+                 placeholder={t('jobs.lookingfor.ex')}
+                 onChange={(e) => setAskText(e.target.value)}
+                 onKeyDown={(e) => { if (e.key === 'Enter') askFilters() }}
+                 className="flex-1" style={{ minWidth: 220 }} />
+          <button type="button" className="btn btn-primary" disabled={askBusy}
+                  onClick={askFilters}>
+            {t('jobs.findjobs')}
+          </button>
+        </div>
+        {askReply && (
+          <div className="mt-3" role="status">
+            <p className="m-0 font-medium">{t('jobs.weset')}</p>
+            <ul className="m-0 mt-1 pl-5">
+              {askReply.explanation.map((x, i) => <li key={i}>{x}</li>)}
+            </ul>
+            {askReply.not_understood.length > 0 && (
+              <>
+                <p className="m-0 mt-2 font-medium">{t('jobs.couldnot')}</p>
+                <ul className="m-0 mt-1 pl-5 text-secondary">
+                  {askReply.not_understood.map((x, i) => <li key={i}>{x}</li>)}
+                </ul>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
       <button type="button" className="btn btn-secondary mb-3"
               aria-expanded={more} onClick={() => setMore((m) => !m)}>
         {t('jobs.morefilters')}
@@ -204,6 +274,11 @@ export default function JobsPage({
               {labelText(l, t)}
             </Toggle>
           ))}
+          <Toggle pressed={!!params.get('near_station')}
+                  onClick={() => set('near_station', params.get('near_station') ? null : '1')}
+                  className="whitespace-nowrap">
+            {t('jobs.nearstation')}
+          </Toggle>
           <Toggle pressed={!!params.get('at_event')}
                   onClick={() => set('at_event', params.get('at_event') ? null : '1')}
                   className="whitespace-nowrap">
@@ -328,6 +403,13 @@ export default function JobsPage({
                        onChange={(e) => set('km', e.target.value || null)} />
               </div>
             </Field>
+            {cfg.commute && (
+              <Field label={t('jobs.commute')} id="f-commute">
+                <input id="f-commute" type="number" min="1" inputMode="numeric"
+                       value={params.get('commute_max') ?? ''} placeholder="min"
+                       onChange={(e) => set('commute_max', e.target.value || null)} />
+              </Field>
+            )}
           </div>
           <h3 className="mt-5">{t('jobs.needs')}</h3>
           <div className="flex gap-3 mb-2" role="radiogroup">

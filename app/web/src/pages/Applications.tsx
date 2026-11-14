@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { api, ApiError } from '../lib/api'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
-import type { Application } from '../types'
-import { Chip, ErrorBox } from '../components/ui'
+import type { Application, EventTalk } from '../types'
+import { Chip, ErrorBox, Section } from '../components/ui'
 import { fmtDate } from '../lib/format'
 
 const TRACK = ['sent', 'interview', 'offer'] as const
@@ -16,12 +16,15 @@ const TONE: Record<string, 'yes' | 'no' | 'wait'> = {
 export default function Applications() {
   const { t } = useI18n()
   const [apps, setApps] = useState<Application[] | null>(null)
+  const [talks, setTalks] = useState<EventTalk[]>([])
   const [err, setErr] = useState('')
 
   const load = () => {
     api<{ applications: Application[] }>('/api/me/applications')
       .then((r) => setApps(r.applications))
       .catch((e) => setErr(e instanceof ApiError ? e.message : t('common.error')))
+    api<{ talks: EventTalk[] }>('/api/me/event-talks')
+      .then((r) => setTalks(r.talks)).catch(() => {})
   }
   useEffect(load, [t])
 
@@ -100,6 +103,33 @@ export default function Applications() {
           </article>
         )
       })}
+
+      {talks.length > 0 && (
+        <Section title={t('apps.eventtalks')}>
+          {talks.map((tk) => (
+            <article key={tk.id} className="card p-4 mb-3">
+              <div className="flex justify-between gap-3 flex-wrap">
+                <p className="m-0 font-medium">
+                  {t('apps.talked')} {tk.employer_name} — {fmtDate(tk.talked_at)}
+                </p>
+                <Chip tone={tk.status === 'answered' ? 'yes' : 'wait'}>
+                  {tk.status === 'answered' ? t('empevent.answered') : t('empevent.needsanswer')}
+                </Chip>
+              </div>
+              {tk.outcome && (
+                <p className="m-0 mt-2">
+                  {tk.outcome === 'next_step' ? t('empevent.nextstep') : t('empevent.notnow')}
+                </p>
+              )}
+              {tk.employer_note && (
+                <p className="m-0 mt-1 text-secondary">
+                  {t('apps.talknote')}: {tk.employer_note}
+                </p>
+              )}
+            </article>
+          ))}
+        </Section>
+      )}
     </div>
   )
 }

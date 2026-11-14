@@ -8,7 +8,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .db import ensure_db
-from .routers import advisor, auth, catalog, employer, jobs, resident
+from .routers import (advisor, ai, auth, catalog, commute, employer, event,
+                      jobs, resident)
 
 
 @asynccontextmanager
@@ -17,7 +18,7 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="Espoo Work Map API", version="2.0.0", lifespan=lifespan)
+app = FastAPI(title="Espoo Work Map API", version="3.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,3 +39,6 @@ app.include_router(auth.router)
 app.include_router(resident.router)
 app.include_router(employer.router)
 app.include_router(advisor.router)
+app.include_router(ai.router)
+app.include_router(commute.router)
+app.include_router(event.router)
