@@ -178,3 +178,32 @@ Table `badge(id, user_id, employer_id NULL, event_id, kind, label, note, given_b
 - Seed about 30 badges: attended for E0 participants, about 12 kudos from E0 employers, 2 hired, 2 organizer. Aino has attended + 2 kudos + organizer "pitched".
 - Seed about 20 connections, including talent-to-talent ones.
 - Passes for every E1 registration and E1 employer user.
+
+## 8. Simplify: one loop, one next step, choose one card at a time (v6, decision D016)
+
+The owner found the event pages overloaded: the solution was hard to see. The menu and other pages stay as they are. Only the event experience is simplified, and a demo bar is added.
+
+**8.1 Steps instead of tabs (talent and employer).** A stepper at the top of the event page shows the person's own loop, with done steps ticked and the current one highlighted. Clicking a step shows its content.
+- Talent: **1 Register → 2 Choose employers → 3 Meet → 4 Answers**.
+- Employer: **1 Your need card → 2 Choose people → 3 Meet → 4 Answer everyone**.
+- The organizer keeps the Before / On the day / After tabs.
+- Anonymous visitors see the overview with the need cards and the sign-in call to action.
+- Default step = the first step not done. Talent: not registered → 1; registered → 2 until the event day; on the event day → 3; after the event → 4. Employer: no need card → 1; card sent → 2; event day → 3; after → 4.
+
+**8.2 "Your next step" card.** Always first under the stepper: one plain sentence and one primary button, e.g.
+- "Register — it takes 2 minutes";
+- "Choose up to 5 employers (2 chosen)";
+- "You have 3 talks on 19 March — show my pass";
+- "2 employers answered you".
+
+**8.3 Choose one card at a time (both sides).**
+- One full card is shown with two big buttons, **Skip** and **I want to meet** (talent) or **Invite** (employer). Arrow keys also work (← skip, → choose). Above the card: "3 of 12" and "Chosen 2 of 5" / "Invites 3 of 8".
+- Skipped cards are kept only in the browser (localStorage per event and user). They come back under "Look again at skipped".
+- A "Show as a list" toggle keeps the full list for accessibility and power users.
+- **Match moment:** when a choice makes the interest mutual, a dialog says "It's a match! <Company> also wants to meet you. Your talk: Thu 19 Mar 14:40, booth A1" (employer side: "It's a match! Person 024 also chose you. Talk at 15:30"). The choose endpoints return the booked meeting when one is created.
+
+**8.4 Secondary material moves down.** Programme, the employer tiles and the floor plan go into a collapsed "About this event" section at the bottom of every step. For anonymous visitors the employer tiles stay open. Meet = pass + meetings + floor plan. Answers = answers, seen-at-the-event, badges, people met, earlier events.
+
+**8.5 Demo bar.** When `/api/config` returns `demo: true` (env `DEMO_MODE`, default on), a thin bar at the very top says "Demo — see as: Jobseeker (Aino) · Employer (Sanna) · Organizer (Leena) · Signed out". One click signs in with the demo account and opens E1 in that role. Seed data must make the match moment demoable:
+- at least one E1 employer has already invited Aino and Aino has not chosen it yet;
+- at least one E1 person has already chosen Sanna's company and has not been invited yet.
