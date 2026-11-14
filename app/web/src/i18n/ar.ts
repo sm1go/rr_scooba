@@ -365,6 +365,12 @@ const ar: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'رأيت المستند',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'ورديات بحسب الجدول — تعمل بعضها فقط:',
+  'job.break': 'يشمل استراحة غير مدفوعة {n} دقيقة لكل وردية',
+  'employer.break': 'استراحة غير مدفوعة لكل وردية',
+  'employer.rotashifts': 'هذه ورديات جدولة — يعمل الشخص بعضها فقط',
+  'employer.shiftsum': 'الورديات تساوي {n} ساعة أسبوعياً بعد الاستراحات',
+  'employer.shiftsum.warn': 'هذا لا يطابق الساعات التي أدخلتها. تحقق من الأوقات أو علّمها كجدولة.',
 }
 
 export default ar

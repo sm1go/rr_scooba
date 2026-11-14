@@ -365,6 +365,12 @@ const sq: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'E pashë dokumentin',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'Turne sipas orarit — punon vetëm disa prej tyre:',
+  'job.break': 'Përfshin një pushim të papaguar {n} minuta për çdo turn',
+  'employer.break': 'Pushim i papaguar për çdo turn',
+  'employer.rotashifts': 'Këto janë turne orari — personi punon vetëm disa prej tyre',
+  'employer.shiftsum': 'Turnet bëjnë {n} orë në javë pas pushimeve',
+  'employer.shiftsum.warn': 'Kjo nuk përputhet me orët që futët. Kontrolloni orët ose shënojeni si orar.',
 }
 
 export default sq

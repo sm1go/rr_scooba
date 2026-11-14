@@ -1500,6 +1500,94 @@ def _assign_contracts(jobs: list[dict], catalog: dict) -> None:
             j["contract_id"] = con["id"]
 
 
+def _fix_hours(jobs: list[dict]) -> None:
+    """Make listed shift times consistent with stated hours, deterministically.
+    alt days or rota-like totals -> rota=1; otherwise model the unpaid break
+    or shorten shifts; lower stated hours when shifts genuinely total less."""
+    DAY_MIN = 24 * 60
+
+    def _m(t: str) -> int:
+        h, m = t.split(":")
+        return int(h) * 60 + int(m)
+
+    def _fmt(m: int) -> str:
+        m %= DAY_MIN
+        return f"{m // 60:02d}:{m % 60:02d}"
+
+    def _per_day(shifts: list[dict]) -> dict:
+        best: dict[str, int] = {}
+        for sh in shifts:
+            dur = (_m(sh["end"]) - _m(sh["start"])) % DAY_MIN
+            if dur > best.get(sh["day"], 0):
+                best[sh["day"]] = dur
+        return best
+
+    def _effective(j: dict) -> float:
+        """Weekly paid hours implied by shifts minus the unpaid break."""
+        per = _per_day(j["shifts"])
+        return sum(per.values()) / 60.0 - len(per) * j["break_min"] / 60.0
+
+    rota = broke = shortened = lowered = 0
+    for j in jobs:
+        prev_break = j.get("break_min", 0)
+        j["break_min"] = prev_break          # idempotent: keep explicit
+        j["rota"] = j.get("rota", 0)
+        shifts = j.get("shifts") or []
+        if not shifts or j.get("schedule_flexible"):
+            j["rota"] = 0
+            j["break_min"] = 0
+            continue
+        per = _per_day(shifts)
+        days = len(per)
+        alt = len(shifts) > days
+        tot = sum(per.values()) / 60.0
+        hmax = j.get("hours_max")
+        hmin = j.get("hours_min")
+        if hmax is None:
+            hmax = tot
+        if hmin is None:
+            hmin = hmax
+        if j["rota"] or alt or tot - hmax > 1.0 * days + 0.01:
+            j["rota"] = 1
+            j["break_min"] = 0
+            rota += 1
+            continue
+        j["rota"] = 0
+        # already consistent from a previous run -> keep as is
+        if hmin - 0.01 <= _effective(j) <= hmax + 0.01:
+            continue
+        excess = tot - hmax
+        if excess <= 0.01:
+            j["break_min"] = 0
+            if tot < hmin - 0.01:
+                j["hours_min"] = j["hours_max"] = round(tot, 2)
+                lowered += 1
+            continue
+        e = excess / days
+        if e <= 0.25 + 0.01:
+            j["break_min"] = 15
+        elif e <= 0.5 + 0.01:
+            j["break_min"] = 30
+        else:
+            for sh in shifts:
+                sh["end"] = _fmt(_m(sh["end"]) - 30)
+            j["break_min"] = 30
+            shortened += 1
+        if j["break_min"]:
+            broke += 1
+    # consistency check for every non-rota fixed-shift job
+    for j in jobs:
+        if not j.get("shifts") or j.get("schedule_flexible") or j.get("rota"):
+            continue
+        lo = j["hours_min"] if j["hours_min"] is not None else j["hours_max"]
+        eff = _effective(j)
+        assert lo - 0.01 <= eff <= j["hours_max"] + 0.01, (
+            f"{j['id']}: effective {eff:.2f} h outside "
+            f"[{lo},{j['hours_max']}]")
+    print(f"hours fix: {rota} rota, {broke} break-added, "
+          f"{shortened} shortened, {lowered} hours-lowered")
+
+
 def main():
     new_ids = {j["id"] for j in JOBS}
     new_emp_ids = {e[0] for e in EMPLOYERS}
@@ -1532,6 +1620,7 @@ def main():
     validate(jobs, employers + unlisted, catalog)
     _assign_commitments(jobs)
     _assign_contracts(jobs, catalog)
+    _fix_hours(jobs)
 
     _dump("jobs.json", jobs)
     _dump("employers.json", employers)

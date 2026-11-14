@@ -365,6 +365,12 @@ const fa: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'سند را دیدم',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'شیفت\u200cها بر اساس برنامه چرخشی — شما فقط بخشی از آنها را کار می\u200cکنید:',
+  'job.break': 'شامل {n} دقیقه استراحت بدون حقوق در هر شیفت',
+  'employer.break': 'استراحت بدون حقوق در هر شیفت',
+  'employer.rotashifts': 'اینها شیفت\u200cهای چرخشی هستند — فرد فقط برخی از آنها را کار می\u200cکند',
+  'employer.shiftsum': 'شیفت\u200cها پس از کسر استراحت {n} ساعت در هفته می\u200cشوند',
+  'employer.shiftsum.warn': 'این با ساعات واردشده مطابقت ندارد. زمان\u200cها را بررسی کنید یا به\u200cعنوان چرخشی علامت بزنید.',
 }
 
 export default fa

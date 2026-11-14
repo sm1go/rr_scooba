@@ -365,6 +365,12 @@ const et: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'Nägin dokumenti',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'Vahetused graafiku järgi — töötad osa neist:',
+  'job.break': 'Sisaldab {n}-minutilist tasustamata pausi vahetuse kohta',
+  'employer.break': 'Tasustamata paus vahetuse kohta',
+  'employer.rotashifts': 'Need on graafikuvahetused — inimene töötab ainult osa neist',
+  'employer.shiftsum': 'Vahetused annavad {n} h nädalas peale pause',
+  'employer.shiftsum.warn': 'See ei vasta sisestatud tundidele. Kontrolli aegu või märgi graafikuks.',
 }
 
 export default et

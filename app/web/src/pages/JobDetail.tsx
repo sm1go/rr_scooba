@@ -12,7 +12,7 @@ import JobMap from '../components/JobMap'
 import ConditionTable from '../components/ConditionTable'
 import ListenButton from '../components/ListenButton'
 import {
-  conditionState, daysAgoText, districtName, fmtDate, helpLink, hoursLine, payLine, shiftsLine,
+  conditionState, daysAgoText, districtName, fmtDate, helpLink, hoursLine, payLine, shiftNote, shiftsLine,
 } from '../lib/format'
 import { commuteLine, legText } from '../lib/commute'
 import { employerProgramsFor } from '../lib/support'
@@ -100,7 +100,7 @@ export default function JobDetail() {
   const unknownKeys = job.conditions.filter((c) => c.value === 'unknown').map((c) => c.key)
   const listenText = [
     job.title, job.employer?.name, payLine(job, t),
-    hoursLine(job, t), shiftsLine(job, t),
+    hoursLine(job, t), shiftNote(job, t), shiftsLine(job, t),
     commute && originName ? commuteLine(commute, originName, t) : '',
     (job.commitments ?? []).length
       ? `${t('job.promises')}: ${(job.commitments ?? [])
@@ -278,7 +278,13 @@ export default function JobDetail() {
       </Section>
 
       <Section title={t('job.when')}>
+        {job.rota && <p className="m-0">{t('job.rota')}</p>}
         <p className="m-0">{shiftsLine(job, t)}</p>
+        {job.break_min > 0 && (
+          <p className="m-0 mt-1 text-secondary">
+            {t('job.break', { n: job.break_min })}
+          </p>
+        )}
         {(job.hours_min != null || job.hours_max != null) && (
           <p className="m-0 mt-1">{hoursLine(job, t)}</p>
         )}

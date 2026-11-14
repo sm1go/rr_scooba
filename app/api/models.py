@@ -69,6 +69,8 @@ class JobIn(BaseModel):
     pay_note: str = ""
     shifts: list[Shift] = []
     schedule_flexible: bool = False
+    break_min: Literal[0, 15, 30, 45, 60] = 0
+    rota: bool = False
     hours_min: Optional[int] = None
     hours_max: Optional[int] = None
     contract: Optional[Literal["permanent", "fixed_term", "seasonal", "gig",

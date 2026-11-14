@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 SEED_REQUIRED = [
     "event.json", "employers.json", "jobs.json", "users.json",
@@ -112,14 +112,14 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
             "schedule_flexible,hours_min,hours_max,contract,experience,"
             "experience_note,qualifications,onboarding,languages,lifting,"
             "apply_question,cv_required,commitments,positions,status,source,"
-            "contract_id,confirmed_at)"
+            "contract_id,break_min,rota,confirmed_at)"
             " VALUES (:id,:employer_id,:title,:field,:duties,:address,:district,"
             ":lat,:lon,:work_mode,:pay_amount,:pay_unit,:pay_note,:shifts,"
             ":schedule_flexible,:hours_min,:hours_max,:contract,:experience,"
             ":experience_note,:qualifications,:onboarding,:languages,:lifting,"
             ":apply_question,:cv_required,:commitments,:positions,:status,"
             ":source,:contract_id,"
-            ":confirmed_at)",
+            ":break_min,:rota,:confirmed_at)",
             {**j,
              "duties": json.dumps(j.get("duties", []), ensure_ascii=False),
              "shifts": json.dumps(j.get("shifts", []), ensure_ascii=False),
@@ -129,7 +129,9 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
              "confirmed_at": confirmed.isoformat(),
              "commitments": json.dumps(j.get("commitments", []),
                                        ensure_ascii=False),
-             "contract_id": j.get("contract_id")})
+             "contract_id": j.get("contract_id"),
+             "break_min": j.get("break_min", 0),
+             "rota": int(j.get("rota", 0))})
         _write_conditions(conn, j["id"], j.get("conditions", {}), "employer")
 
     from . import auth as auth_mod

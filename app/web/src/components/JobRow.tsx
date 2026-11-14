@@ -6,7 +6,7 @@ import type { Condition, Job } from '../types'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import { Chip } from './ui'
-import { conditionState, daysAgoText, helpLink, hoursLine, payLine, shiftGroups } from '../lib/format'
+import { conditionState, daysAgoText, helpLink, hoursLine, payLine, shiftGroups, shiftNote } from '../lib/format'
 import { commuteLine, getCommute } from '../lib/commute'
 import { useConfig } from '../lib/config'
 import { useA11y } from '../lib/a11y'
@@ -170,7 +170,9 @@ export default function JobRow({
             <div className="m-0 mt-1 flex items-start gap-2">
               <Clock size={18} aria-hidden="true" className="shrink-0 mt-1" />
               <ul className="list-none p-0 m-0">
+                {job.rota && <li>{t('job.rota')}</li>}
                 {shiftGroups(job, t).map((g) => <li key={g}>{g}</li>)}
+                {shiftNote(job, t) && !job.rota && <li>{shiftNote(job, t)}</li>}
               </ul>
             </div>
           )}

@@ -695,6 +695,12 @@ const fi: Record<Key, string> = {
   'help.prefill.jobs': 'Haluan hakea näitä töitä: {jobs}. Voitko auttaa hakemuksissa?',
   'common.cancel': 'Peruuta',
   'common.anywhere': 'Kaikkialla',
+  'job.rota': 'Vuorot vuorolistassa — teet vain osan näistä:',
+  'job.break': 'Sisältää {n} min palkattoman tauon per vuoro',
+  'employer.break': 'Palkaton tauko per vuoro',
+  'employer.rotashifts': 'Nämä ovat vuorolistavuoroja — henkilö tekee vain osan niistä',
+  'employer.shiftsum': 'Vuorot tekevät {n} h viikossa tauot vähennettynä',
+  'employer.shiftsum.warn': 'Tämä ei täsmää antamiesi tuntien kanssa. Tarkista ajat tai merkitse vuorolistaksi.',
 }
 
 export default fi

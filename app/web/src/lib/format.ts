@@ -2,7 +2,7 @@ import type { Condition, Job } from '../types'
 import type { Key } from '../i18n/en'
 import { DAYS, PARTS } from '../types'
 
-type T = (k: Key) => string
+type T = (k: Key, vars?: Record<string, string | number>) => string
 
 export function payLine(j: Job, t: T): string {
   if (j.pay_amount == null) return j.pay_note || t('common.toagreed')
@@ -51,8 +51,33 @@ export function shiftsLine(j: Job, t: T): string {
   return shiftGroups(j, t).join('; ')
 }
 
+/** Extra line about the listed times: rota lead-in or unpaid break. */
+export function shiftNote(j: Job, t: T): string {
+  if (j.rota) return t('job.rota')
+  if (j.break_min > 0) return t('job.break', { n: j.break_min })
+  return ''
+}
+
+/** Weekly hours the shifts add up to once the unpaid break is taken out.
+ *  Longest shift per day counts, overnight wraps midnight. */
+export function weeklyHours(shifts: { day: string; start: string; end: string }[],
+                            breakMin: number): number {
+  const mins = (x: string) => {
+    const [h, m] = x.split(':').map(Number)
+    return h * 60 + m
+  }
+  const per = new Map<string, number>()
+  for (const s of shifts) {
+    const dur = (mins(s.end) - mins(s.start) + 1440) % 1440
+    if (dur > (per.get(s.day) ?? 0)) per.set(s.day, dur)
+  }
+  return Math.round((sumNums([...per.values()]) - per.size * breakMin) / 6) / 10
+}
+const sumNums = (ns: number[]) => ns.reduce((a, b) => a + b, 0)
+
 export function jobLine(j: Job, t: T): string {
-  const bits = [payLine(j, t), hoursLine(j, t), shiftsLine(j, t)].filter(Boolean)
+  const bits = [payLine(j, t), hoursLine(j, t), shiftsLine(j, t),
+                shiftNote(j, t)].filter(Boolean)
   return bits.join(' · ')
 }
 

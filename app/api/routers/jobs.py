@@ -313,6 +313,7 @@ def _job_fields(payload: JobIn) -> dict:
         d[f] = json.dumps(d[f], ensure_ascii=False)
     d["schedule_flexible"] = int(d["schedule_flexible"])
     d["cv_required"] = int(d["cv_required"])
+    d["rota"] = int(d["rota"])
     return d
 
 
@@ -374,12 +375,12 @@ def create_job(payload: JobIn, conn: sqlite3.Connection = Depends(get_conn),
         "lat,lon,work_mode,pay_amount,pay_unit,pay_note,shifts,"
         "schedule_flexible,hours_min,hours_max,contract,experience,"
         "experience_note,qualifications,onboarding,languages,lifting,"
-        "apply_question,cv_required,commitments,contract_id,positions,status,source,confirmed_at)"
+        "apply_question,cv_required,commitments,contract_id,positions,status,source,confirmed_at,break_min,rota)"
         " VALUES (:id,:employer_id,:title,:field,:duties,:address,:district,"
         ":lat,:lon,:work_mode,:pay_amount,:pay_unit,:pay_note,:shifts,"
         ":schedule_flexible,:hours_min,:hours_max,:contract,:experience,"
         ":experience_note,:qualifications,:onboarding,:languages,:lifting,"
-        ":apply_question,:cv_required,:commitments,:contract_id,:positions,:status,:source,:confirmed_at)",
+        ":apply_question,:cv_required,:commitments,:contract_id,:positions,:status,:source,:confirmed_at,:break_min,:rota)",
         {**fields, "id": job_id, "employer_id": employer_id, "source": source,
          "confirmed_at": date.today().isoformat()})
     _write_job_conditions(conn, job_id, payload.conditions, source)
@@ -413,8 +414,8 @@ def update_job(job_id: str, payload: JobIn,
         "qualifications=:qualifications,onboarding=:onboarding,"
         "languages=:languages,lifting=:lifting,apply_question=:apply_question,"
         "cv_required=:cv_required,commitments=:commitments,"
-        "contract_id=:contract_id,positions=:positions,status=:status"
-        " WHERE id=:id", {**fields, "id": job_id})
+        "contract_id=:contract_id,positions=:positions,status=:status,"
+        "break_min=:break_min,rota=:rota WHERE id=:id", {**fields, "id": job_id})
     source = "advisor" if user["role"] == "advisor" else "employer"
     _write_job_conditions(conn, job_id, payload.conditions, source)
     db_mod.audit(conn, user["id"], "job_updated", job_id)
@@ -577,7 +578,7 @@ def list_bundles(
     center = _district_center(district) if district else None
     jobs = [j for j in _filter_jobs(conn, slots=slots, district=district,
                                     km=km, q=q, field=field)
-            if j["work_mode"] != "remote" and j["shifts"]
+            if j["work_mode"] != "remote" and j["shifts"] and not j["rota"]
             and not j["schedule_flexible"] and j["lat"] is not None
             and j["hours_max"] is not None and j["hours_max"] < hours
             # hours must be dependable to plan a week around them

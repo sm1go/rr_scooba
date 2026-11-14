@@ -5,7 +5,7 @@ import { api } from '../lib/api'
 import { useI18n } from '../i18n/i18n'
 import type { Key } from '../i18n/en'
 import type { Job } from '../types'
-import { daysAgoText, hoursLine, payLine, shiftGroups } from '../lib/format'
+import { daysAgoText, hoursLine, payLine, shiftGroups, shiftNote } from '../lib/format'
 
 /** /jobs/:id/print — a paper notice with a QR code back to the job. */
 export default function JobPrint() {
@@ -53,7 +53,9 @@ export default function JobPrint() {
       <dl className="print-facts">
         <div><dt>{t('job.pay')}</dt><dd>{payLine(job, t)}</dd></div>
         <div><dt>{t('job.when')}</dt><dd>
+          {job.rota && <span className="block">{t('job.rota')}</span>}
           {shiftGroups(job, t).map((g) => <span key={g} className="block">{g}</span>)}
+          {shiftNote(job, t) && !job.rota && <span className="block">{shiftNote(job, t)}</span>}
           {hoursLine(job, t) && <span className="block">{hoursLine(job, t)}</span>}
         </dd></div>
         {job.contract && (

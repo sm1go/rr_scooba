@@ -39,6 +39,8 @@ export interface Job {
   pay_note: string
   shifts: Shift[]
   schedule_flexible: boolean
+  break_min: number
+  rota: boolean
   hours_min: number | null
   hours_max: number | null
   contract: string | null

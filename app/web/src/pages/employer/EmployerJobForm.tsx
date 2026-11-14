@@ -9,6 +9,7 @@ import type { Catalog, Job, JobDraft, SupportCatalogue, WordingTip } from '../..
 import { CEFR, DAYS } from '../../types'
 import { ErrorBox, Field, Section, Toggle } from '../../components/ui'
 import { employerProgramsFor } from '../../lib/support'
+import { weeklyHours } from '../../lib/format'
 
 const STEPS = ['title', 'duties', 'where', 'pay', 'hours', 'contract',
                'language', 'conditions', 'promises', 'apply', 'preview'] as const
@@ -19,7 +20,8 @@ interface Form {
   district: string; work_mode: 'on_site' | 'hybrid' | 'remote';
   pay_amount: string; pay_unit: 'hour' | 'month'; pay_note: string;
   shifts: { day: string; start: string; end: string }[];
-  schedule_flexible: boolean; hours_min: string; hours_max: string;
+  schedule_flexible: boolean; break_min: string; rota: boolean;
+  hours_min: string; hours_max: string;
   contract: string; experience: string; experience_note: string;
   qualifications: string; onboarding: string;
   languages: { language: string; level: string; task: string }[];
@@ -29,11 +31,20 @@ interface Form {
   positions: number; conditions: Record<string, string>;
 }
 
+/** True when the shifts after breaks don't match the stated hours range. */
+function hoursMismatch(f: Form): boolean {
+  const w = weeklyHours(f.shifts, +f.break_min)
+  const lo = f.hours_min ? +f.hours_min : null
+  const hi = f.hours_max ? +f.hours_max : null
+  return (hi != null && w > hi + 0.01) || (lo != null && w < lo - 0.01)
+}
+
 const EMPTY: Form = {
   employer_id: '',
   title: '', field: '', duties: '', address: '', district: '',
   work_mode: 'on_site', pay_amount: '', pay_unit: 'hour', pay_note: '',
-  shifts: [], schedule_flexible: false, hours_min: '', hours_max: '',
+  shifts: [], schedule_flexible: false, break_min: '0', rota: false,
+  hours_min: '', hours_max: '',
   contract: '', experience: '', experience_note: '', qualifications: '',
   onboarding: '', languages: [], lifting: '', apply_question: '',
   cv_required: false, commitments: [], contract_id: '', positions: 1, conditions: {},
@@ -92,6 +103,7 @@ export default function EmployerJobForm() {
         pay_amount: j.pay_amount != null ? String(j.pay_amount) : '',
         pay_unit: j.pay_unit ?? 'hour', pay_note: j.pay_note,
         shifts: j.shifts, schedule_flexible: j.schedule_flexible,
+        break_min: String(j.break_min ?? 0), rota: j.rota ?? false,
         hours_min: j.hours_min != null ? String(j.hours_min) : '',
         hours_max: j.hours_max != null ? String(j.hours_max) : '',
         contract: j.contract ?? '', experience: j.experience ?? '',
@@ -137,6 +149,7 @@ export default function EmployerJobForm() {
       pay_unit: f.pay_amount ? f.pay_unit : null,
       pay_note: f.pay_note, shifts: f.shifts,
       schedule_flexible: f.schedule_flexible,
+      break_min: +f.break_min, rota: f.rota,
       hours_min: f.hours_min ? +f.hours_min : null,
       hours_max: f.hours_max ? +f.hours_max : null,
       contract: f.contract || null, experience: f.experience || null,
@@ -514,6 +527,34 @@ export default function EmployerJobForm() {
                       })}>
                 {t('employer.addshift')}
               </button>
+              <div className="mt-3">
+                <Field label={t('employer.break')} id="jf-break">
+                  <select id="jf-break" value={f.break_min}
+                          onChange={(e) => setF({ ...f, break_min: e.target.value })}>
+                    {[0, 15, 30, 45, 60].map((n) => (
+                      <option key={n} value={n}>{n} min</option>
+                    ))}
+                  </select>
+                </Field>
+                <div className="mt-2">
+                  <Toggle pressed={f.rota}
+                          onClick={() => setF({ ...f, rota: !f.rota })}>
+                    {t('employer.rotashifts')}
+                  </Toggle>
+                </div>
+                {f.shifts.length > 0 && (
+                  <p className="m-0 mt-2">
+                    {t('employer.shiftsum', {
+                      n: weeklyHours(f.shifts, +f.break_min),
+                    })}
+                  </p>
+                )}
+                {f.shifts.length > 0 && !f.rota && hoursMismatch(f) && (
+                  <p className="m-0 mt-1 text-secondary" role="status">
+                    {t('employer.shiftsum.warn')}
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </Section>

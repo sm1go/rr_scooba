@@ -365,6 +365,12 @@ const uk: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'Я бачив документ',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'Зміни за графіком — ви працюєте лише частину з них:',
+  'job.break': 'Включає {n} хв неоплачуваної перерви за зміну',
+  'employer.break': 'Неоплачувана перерва за зміну',
+  'employer.rotashifts': 'Це зміни за графіком — людина працює лише частину з них',
+  'employer.shiftsum': 'Зміни дають {n} год на тиждень після перерв',
+  'employer.shiftsum.warn': 'Це не збігається з вказаними годинами. Перевірте час або позначте як графік.',
 }
 
 export default uk

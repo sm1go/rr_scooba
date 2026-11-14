@@ -365,6 +365,12 @@ const ru: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'Я видел документ',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'Смены по графику — вы работаете только часть из них:',
+  'job.break': 'Включает {n} мин неоплачиваемого перерыва за смену',
+  'employer.break': 'Неоплачиваемый перерыв за смену',
+  'employer.rotashifts': 'Это смены по графику — человек работает только часть из них',
+  'employer.shiftsum': 'Смены дают {n} ч в неделю после перерывов',
+  'employer.shiftsum.warn': 'Это не совпадает с указанными часами. Проверьте время или отметьте как график.',
 }
 
 export default ru

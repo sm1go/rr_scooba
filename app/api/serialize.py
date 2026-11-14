@@ -18,7 +18,7 @@ CONDITION_KEYS = [
 JOB_FIELDS = [
     "id", "employer_id", "title", "field", "duties", "address", "district",
     "lat", "lon", "work_mode", "pay_amount", "pay_unit", "pay_note", "shifts",
-    "schedule_flexible", "hours_min", "hours_max", "contract", "experience",
+    "schedule_flexible", "break_min", "rota", "hours_min", "hours_max", "contract", "experience",
     "experience_note", "qualifications", "onboarding", "languages", "lifting",
     "apply_question", "cv_required", "commitments", "contract_id",
     "positions", "status", "source",
@@ -26,7 +26,7 @@ JOB_FIELDS = [
 ]
 _JSON_FIELDS = {"duties", "shifts", "qualifications", "languages",
                 "commitments"}
-_BOOL_FIELDS = {"schedule_flexible", "cv_required"}
+_BOOL_FIELDS = {"schedule_flexible", "cv_required", "rota"}
 STALE_DAYS = 14
 
 

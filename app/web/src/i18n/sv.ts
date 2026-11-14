@@ -362,6 +362,12 @@ const sv: Partial<Record<Key, string>> = {
   'advisor.sawdoc': 'Jag såg dokumentet',
   'help.kind.check_document': 'Check a licence or certificate',
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
+  'job.rota': 'Skift enligt schema — du arbetar några av dessa:',
+  'job.break': 'Inkluderar {n} minuters obetald rast per skift',
+  'employer.break': 'Obetald rast per skift',
+  'employer.rotashifts': 'Detta är schemaskift — personen arbetar bara några av dem',
+  'employer.shiftsum': 'Skiften blir {n} h i veckan efter raster',
+  'employer.shiftsum.warn': 'Detta matchar inte timmarna du angett. Kontrollera tiderna eller markera som schema.',
 }
 
 export default sv

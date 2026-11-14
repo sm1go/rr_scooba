@@ -692,6 +692,12 @@ const en = {
   'help.prefill.jobs': 'I want to apply to these jobs: {jobs}. Can you help me prepare the applications?',
   'common.cancel': 'Cancel',
   'common.anywhere': 'Anywhere',
+  'job.rota': 'Shifts on a rota — you work some of these:',
+  'job.break': 'Includes a {n}-minute unpaid break each shift',
+  'employer.break': 'Unpaid break per shift',
+  'employer.rotashifts': 'These are rota shifts — the person works only some of them',
+  'employer.shiftsum': 'Your shifts add up to {n} h a week after breaks',
+  'employer.shiftsum.warn': 'This does not match the hours you entered. Check the times or mark it as a rota.',
 } as const
 
 export type Key = keyof typeof en
