@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VCScout — pitch</title>
+<style>
+  @font-face { font-family:"Geist"; src:url(assets/fonts/geist-latin-wght-normal.woff2) format("woff2"); font-weight:100 900; }
+  @font-face { font-family:"Geist Mono"; src:url(assets/fonts/geist-mono-latin.woff2) format("woff2"); font-weight:100 900; }
+  @font-face { font-family:"Hedvig"; src:url(assets/fonts/hedvig-letters-serif-latin-400-normal.woff2) format("woff2"); }
+  :root { --navy:#152636; --navy2:#19364a; --ink:#141414; --sec:#5a6472; --bg:#f7f9fb; --line:#e3e8ee; --blue:#1b6fd8; --mint:#a8ead0; --mint-ink:#0f6b4f; --warn:#b4530b; --warn-bg:#fdeedd; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:#0b131b; font-family:"Geist", system-ui, sans-serif; color:var(--ink); overflow:hidden; }
+  .deck { position:absolute; left:50%; top:50%; width:1920px; height:1080px; transform-origin:0 0; }
+  .s { position:absolute; inset:0; display:none; background:var(--bg); padding:96px 128px; overflow:hidden; }
+  .s.on { display:block; }
+  .s.dark { background:radial-gradient(1200px 700px at 80% 0%, #21486a 0%, transparent 60%), linear-gradient(160deg, #10202e, #152636 55%, #0f2b3a); color:#eef3f8; }
+
+  .tag { display:inline-block; font-family:"Geist Mono", monospace; font-size:20px; letter-spacing:.12em; text-transform:uppercase; padding:8px 16px; border-radius:10px; background:var(--mint); color:#0b3a2c; margin-bottom:30px; }
+  .mono { font-family:"Geist Mono", monospace; }
+  h1, h2, h3, .serif { font-family:"Hedvig", Georgia, serif; font-weight:400; letter-spacing:-.015em; }
+  h1 { font-size:124px; line-height:1.02; }
+  h2 { font-size:72px; line-height:1.08; max-width:1560px; }
+  h3 { font-size:38px; line-height:1.15; }
+  em { font-style:italic; color:var(--blue); font-family:"Hedvig", Georgia, serif; }
+  .dark em { color:#7fb6ff; }
+  .lead { font-size:34px; line-height:1.42; color:var(--sec); max-width:1400px; }
+  .dark .lead { color:#b8c6d4; }
+  .mt { margin-top:48px; } .mt-s { margin-top:24px; }
+
+  .row { display:flex; gap:72px; align-items:center; }
+  .col { flex:1; min-width:0; }
+  .shot { display:block; width:100%; border-radius:18px; border:1px solid var(--line); box-shadow:0 26px 60px -26px rgba(21,38,54,.35), 0 2px 6px rgba(21,38,54,.06); background:#fff; }
+  .dark .shot { border-color:#2b465c; box-shadow:0 30px 80px -20px rgba(0,0,0,.6); }
+
+  .points { list-style:none; display:grid; gap:32px; }
+  .points li { font-size:30px; line-height:1.35; padding-left:44px; position:relative; color:var(--sec); }
+  .points li b { color:var(--ink); font-weight:600; display:block; font-size:33px; margin-bottom:4px; }
+  .points li::before { content:""; position:absolute; left:0; top:12px; width:18px; height:18px; border-radius:50%; background:var(--blue); }
+  .dark .points li { color:#b8c6d4; } .dark .points li b { color:#fff; } .dark .points li::before { background:var(--mint); }
+
+  .feat { position:absolute; top:52px; left:128px; font-family:"Geist Mono", monospace; font-size:20px; letter-spacing:.14em; text-transform:uppercase; color:var(--blue); }
+  .feat::before { content:""; display:inline-block; width:40px; height:2px; background:currentColor; vertical-align:middle; margin-right:14px; }
+  .story { padding-top:130px; }
+  .note { font-family:"Geist Mono", monospace; font-size:18px; color:#8a95a3; }
+  .dark .note { color:#7d90a3; }
+  .pn { position:absolute; right:128px; bottom:52px; font-family:"Geist Mono", monospace; font-size:18px; color:#9aa5b2; }
+  .foot { position:absolute; left:128px; bottom:52px; }
+
+  .three { display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
+  .four { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  .tile { background:#fff; border:1px solid var(--line); border-radius:22px; padding:40px 40px 44px; }
+  .tile p { font-size:27px; line-height:1.4; color:var(--sec); }
+  .tile h3 { margin-bottom:14px; }
+  .tile .num { font-family:"Geist Mono", monospace; font-size:20px; color:var(--blue); letter-spacing:.1em; margin-bottom:18px; }
+  .dark .tile { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.12); } .dark .tile p { color:#b8c6d4; } .dark .tile h3 { color:#fff; }
+
+  .bar { display:flex; align-items:center; gap:28px; margin-top:22px; }
+  .bar .lbl { width:420px; font-size:28px; color:#b8c6d4; }
+  .bar .fill { height:64px; border-radius:12px; }
+  .bar .val { font-family:"Hedvig", Georgia, serif; font-size:84px; line-height:1; }
+
+  .chain { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:40px; }
+  .chain span { font-size:26px; padding:14px 24px; border-radius:16px; background:#fff; border:1px solid var(--line); }
+  .chain span.n { background:var(--navy); color:#fff; border-color:var(--navy); }
+  .chain span.me { background:var(--mint); color:#0b3a2c; border-color:var(--mint); }
+  .chain i { font-style:normal; color:#9aa5b2; font-size:26px; }
+
+  .badge { display:inline-block; font-size:24px; padding:8px 18px; border-radius:999px; border:1.5px solid; margin-right:12px; }
+  .b-said { color:#1d4e89; border-color:#9cc0ea; background:#eef5fd; }
+  .b-doc { color:#1d4e89; border-color:#7fa7d6; background:#e5eefa; }
+  .b-inf { color:var(--warn); border-color:#f0b98c; background:var(--warn-bg); }
+
+  .flow { display:flex; align-items:stretch; gap:0; margin-top:56px; }
+  .flow div { flex:1; padding:26px 26px 30px; border-top:5px solid var(--mint); position:relative; }
+  .flow div + div { margin-left:18px; }
+  .flow b { display:block; font-size:30px; color:#fff; margin-bottom:10px; font-weight:600; }
+  .flow p { font-size:24px; line-height:1.4; color:#b8c6d4; }
+  .flow .k { font-family:"Geist Mono", monospace; font-size:18px; letter-spacing:.12em; color:var(--mint); margin-bottom:14px; text-transform:uppercase; }
+
+  .nav { position:fixed; bottom:14px; right:14px; z-index:9; display:flex; gap:6px; opacity:.6; }
+  .nav button { border:0; border-radius:8px; padding:6px 12px; font-size:16px; cursor:pointer; background:#fff; }
+  @page { size:1920px 1080px; margin:0; }
+  @media print {
+    html, body { background:none; overflow:visible; }
+    .deck { position:static; transform:none !important; width:1920px; height:auto; }
+    .s { display:block !important; position:relative; width:1920px; height:1080px; break-after:page; }
+    .nav { display:none; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- 1 Cover -->
+<section class="s dark on">
+  <div class="row" style="height:100%;gap:64px">
+    <div class="col" style="flex:0 0 900px">
+      <div class="tag">Junction 2026 · Cala · Make Unicorns Real</div>
+      <p class="serif" style="font-size:44px;margin-bottom:28px"><span style="display:inline-flex;width:64px;height:64px;border-radius:50%;background:#eef3f8;color:var(--navy);align-items:center;justify-content:center;font-family:Geist;font-size:40px;vertical-align:middle;margin-right:16px">✱</span>vcscout<span style="color:var(--mint)">.</span></p>
+      <h1>The right people are <em>closer</em> than you think.</h1>
+      <p class="lead mt">Funding paths for first-time founders, built on Cala's sourced data on companies, rounds, investors and people.</p>
+      <p class="note mt">Team ScoobaNi · vcscout.onrender.com</p>
+    </div>
+    <div class="col"><img class="shot" src="assets/handshake-chips.png" alt="" style="transform:rotate(-2deg)"></div>
+  </div>
+</section>
+
+<!-- 2 Problem -->
+<section class="s dark">
+  <div class="tag">Seed → Series A within two years</div>
+  <h2>Raising a seed round is hard. <em>The next round is harder.</em></h2>
+  <div style="margin-top:80px">
+    <div class="bar"><div class="lbl">Raised a seed in Q1 2018</div><div class="fill" style="width:612px;background:#5d7a93"></div><div class="val">30.6%</div></div>
+    <div class="bar"><div class="lbl">Raised a seed in Q1 2022</div><div class="fill" style="width:308px;background:var(--mint)"></div><div class="val" style="color:var(--mint)">15.4%</div></div>
+  </div>
+  <p class="lead" style="margin-top:72px;max-width:1500px">A first check from a fund with a small network and no follow-on record can be a <b style="color:#fff">dead end</b>: at Series A the founder is back to cold outreach.</p>
+  <p class="note foot">Source: Carta, VC Fund Performance report (2024), as cited in the VCScout demo</p>
+  <div class="pn">02</div>
+</section>
+
+<!-- 3 User and need -->
+<section class="s">
+  <div class="tag">Real need</div>
+  <h2>A first-time founder has three questions, and today they're answered by 40 tabs and guesswork.</h2>
+  <div class="three" style="margin-top:72px">
+    <div class="tile"><div class="num">01</div><h3>Who backs companies like mine?</h3><p>Not who says they invest in AI, but who actually <b style="color:var(--ink)">led rounds</b> for comparable startups.</p></div>
+    <div class="tile"><div class="num">02</div><h3>Will this fund get me to the next round?</h3><p>Which seed investors connect to whoever <b style="color:var(--ink)">led the Series A</b> of the same companies.</p></div>
+    <div class="tile"><div class="num">03</div><h3>How do I get a warm intro?</h3><p>Who sits <b style="color:var(--ink)">between me and that investor</b>: shared employers, schools, boards.</p></div>
+  </div>
+  <p class="lead" style="margin-top:56px;font-size:30px">Cala's brief named this first: <i>"helping founders find the investors who actually take the lead in funding companies like theirs."</i></p>
+  <div class="pn">03</div>
+</section>
+
+<!-- 4 One sentence in -->
+<section class="s">
+  <div class="row" style="height:100%">
+    <div class="col" style="flex:0 0 620px">
+      <div class="tag">The product</div>
+      <h2 style="font-size:68px">One sentence in. A map of investors out.</h2>
+      <p class="lead mt" style="font-size:30px">Describe your startup. VCScout maps the investors behind companies like yours, following one old idea: <b style="color:var(--ink)">six degrees of separation</b>.</p>
+      <p class="note mt">A fresh Cala query takes about a minute</p>
+    </div>
+    <div class="col"><img class="shot" src="assets/hero.png" alt="VCScout landing page"></div>
+  </div>
+  <div class="pn">04</div>
+</section>
+
+<!-- 5 Feature 1 -->
+<section class="s story">
+  <div class="feat">Feature 01 · Comparable startups</div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:0 0 560px">
+      <h2 style="font-size:62px">Comparable startups, <em>with receipts.</em></h2>
+      <ul class="points mt">
+        <li><b>Similar companies from Cala</b>with a reason why each one is similar</li>
+        <li><b>Their full funding history</b>Pre-seed, Seed, Series A, Series B</li>
+        <li><b>Who led, who joined</b>and a link to the source of every round</li>
+      </ul>
+    </div>
+    <div class="col" style="display:grid;gap:30px">
+      <img class="shot" src="assets/similar.png" alt="Similar startups">
+      <img class="shot" src="assets/rounds.png" alt="Funding rounds" style="height:340px;object-fit:cover;object-position:top">
+    </div>
+  </div>
+  <div class="pn">05</div>
+</section>
+
+<!-- 6 Feature 2 -->
+<section class="s story">
+  <div class="feat">Feature 02 · Funding paths</div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:0 0 600px">
+      <h2 style="font-size:62px">Funding paths, <em>not dead ends.</em></h2>
+      <ul class="points mt">
+        <li><b>Seed lead → next-round lead</b>each seed investor is linked to whoever led the next round of the same company</li>
+        <li><b>Check conflict</b>funds linked to a close competitor are flagged for you to verify</li>
+        <li><b>Observed chronology</b>lines show the order of real rounds, not a promised introduction</li>
+      </ul>
+    </div>
+    <div class="col"><img class="shot" src="assets/paths.png" alt="Funding paths"></div>
+  </div>
+  <div class="pn">06</div>
+</section>
+
+<!-- 7 Graph -->
+<section class="s story">
+  <div class="feat">Feature 02 · Relationship graph</div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:0 0 520px">
+      <h2 style="font-size:60px">The whole story, stage by stage.</h2>
+      <p class="lead mt" style="font-size:30px">Your idea → similar startups → their founders → funds → partners, from Pre-seed to Series B.</p>
+      <p class="lead mt-s" style="font-size:30px">Highlight one company to trace its story, or select a fund to see the partners behind the deal.</p>
+    </div>
+    <div class="col"><img class="shot" src="assets/graph.png" alt="Relationship graph"></div>
+  </div>
+  <div class="pn">07</div>
+</section>
+
+<!-- 8 Feature 3 -->
+<section class="s story">
+  <div class="feat">Feature 03 · Six handshakes</div>
+  <h2 style="font-size:64px">Pick an investor. VCScout finds the people in between.</h2>
+  <div class="chain">
+    <span class="me">Ada · you</span><i>→ worked at →</i><span class="n">Uber</span><i>←</i><span>Siadhal Magos, Metaview co-founder</span><i>→</i><span class="n">Metaview</span><i>← board →</i><span>Jonathan Heiliger, investor</span>
+  </div>
+  <div class="row" style="margin-top:48px;align-items:flex-start;gap:48px">
+    <div class="col"><img class="shot" src="assets/who-to-meet.png" alt="Who would you like to meet"></div>
+    <div class="col"><img class="shot" src="assets/handshake-chips.png" alt="Path person by person"></div>
+  </div>
+  <p class="serif" style="font-size:40px;margin-top:36px">Two handshakes, not six.</p>
+  <p class="note" style="position:absolute;right:128px;bottom:52px">Ada is a fictional founder · links from saved Cala results</p>
+</section>
+
+<!-- 9 Trust -->
+<section class="s story">
+  <div class="feat">Trust by design</div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:0 0 640px">
+      <h2 style="font-size:60px">VCScout never claims two people know each other.</h2>
+      <p class="lead mt-s" style="font-size:30px">Every link carries a label and a source to check:</p>
+      <div style="display:grid;gap:22px;margin-top:32px">
+        <p style="font-size:28px;color:var(--sec)"><span class="badge b-said">You said so</span>you added it yourself</p>
+        <p style="font-size:28px;color:var(--sec)"><span class="badge b-doc">Documented</span>stated in a Cala source</p>
+        <p style="font-size:28px;color:var(--sec)"><span class="badge b-inf">Inferred</span>overlapping years at the same place</p>
+      </div>
+      <p class="lead mt" style="font-size:28px">The score is a ranking signal, <b style="color:var(--ink)">not a probability</b> that an intro will happen.</p>
+    </div>
+    <div class="col" style="display:flex;gap:28px;align-items:flex-start">
+      <img class="shot" src="assets/hop-evidence.png" alt="Hop evidence" style="width:56%">
+      <img class="shot" src="assets/labels.png" alt="Link labels" style="width:44%;margin-top:120px">
+    </div>
+  </div>
+  <div class="pn">09</div>
+</section>
+
+<!-- 10 Intro draft -->
+<section class="s story">
+  <div class="feat">From path to first message</div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:0 0 620px">
+      <h2 style="font-size:62px">A draft asking for the intro. <em>Nothing is sent.</em></h2>
+      <ul class="points mt">
+        <li><b>An ask to the bridge person</b>that names the shared ground: "we may both be linked to Uber"</li>
+        <li><b>A forwardable blurb</b>for them to pass on to the investor</li>
+        <li><b>Drafts stay in the browser</b>the founder edits, copies and decides</li>
+      </ul>
+    </div>
+    <div class="col" style="display:flex;justify-content:center"><img class="shot" src="assets/intro-draft.png" alt="Intro draft" style="width:80%"></div>
+  </div>
+  <div class="pn">10</div>
+</section>
+
+<!-- 11 Use of Cala -->
+<section class="s dark">
+  <div class="tag">Use of Cala</div>
+  <h2>Cala isn't an add-on. The connected graph <em>is</em> the product.</h2>
+  <div class="flow">
+    <div><div class="k">Companies</div><b>Similar startups</b><p>from one sentence about your idea</p></div>
+    <div><div class="k">Funding rounds</div><b>Who led, who joined</b><p>lead vs participant, stage, date, amount, source</p></div>
+    <div><div class="k">Investors</div><b>Seed → next lead</b><p>the same company's next round reveals follow-on reach</p></div>
+    <div><div class="k">People</div><b>Founders, partners, boards</b><p>roles and employers with years</p></div>
+    <div><div class="k">Connections</div><b>Your path</b><p>shared employers and boards, each hop with its source</p></div>
+  </div>
+  <p class="lead" style="margin-top:64px;font-size:30px;max-width:1600px">Web search returns pages. Cala returns <b style="color:#fff">structured, sourced, connected</b> records, and that's the only reason a path like Ada → Uber → Metaview → investor can be found and shown with its sources.</p>
+  <div class="pn">11</div>
+</section>
+
+<!-- 12 Close -->
+<section class="s dark">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+    <div class="tag" style="align-self:flex-start">Ready for Slush</div>
+    <h1 style="font-size:112px">Find your way in.</h1>
+    <div class="four" style="margin-top:72px">
+      <div class="tile"><h3>Real need</h3><p>first-time founders raising their first round, and thinking two rounds ahead</p></div>
+      <div class="tile"><h3>Execution</h3><p>live web app, end to end: idea → comparables → paths → intro draft</p></div>
+      <div class="tile"><h3>Originality</h3><p>six degrees of separation on funding data: paths, not lists</p></div>
+      <div class="tile"><h3>Use of Cala</h3><p>companies, rounds, investors and people, connected and sourced</p></div>
+    </div>
+    <p class="mono" style="font-size:26px;margin-top:64px;color:var(--mint)">vcscout.onrender.com · demo: youtu.be/nJiaRHkBwz8</p>
+  </div>
+</section>
+
+</div>
+<div class="nav"><button data-d="-1">&larr;</button><button data-d="1">&rarr;</button></div>
+<script>
+  const deck = document.getElementById('deck');
+  const slides = [...deck.querySelectorAll('.s')];
+  let i = 0;
+  const fit = () => { const k = Math.min(innerWidth / 1920, innerHeight / 1080); deck.style.transform = `scale(${k}) translate(-50%, -50%)`; };
+  const show = n => { i = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, j) => s.classList.toggle('on', j === i)); };
+  addEventListener('resize', fit); fit();
+  addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) show(i + 1);
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) show(i - 1);
+  });
+  document.querySelector('.nav').addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(i + Number(b.dataset.d)); });
+  deck.addEventListener('click', () => show(i + 1));
+</script>
+</body>
+</html>
