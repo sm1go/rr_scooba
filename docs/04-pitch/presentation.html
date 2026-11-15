@@ -3,179 +3,352 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Espoo Work Map — Rethinking Recruitment</title>
+<title>Espoo Work Map — pitch</title>
 <style>
-  :root { --blue:#0050bb; --ink:#14213d; --muted:#5b6b82; --bg:#f5f7fb; --card:#fff; --accent:#00a37a; }
+  @font-face { font-family:"Geist"; src:url(assets/fonts/geist-latin-wght-normal.woff2) format("woff2"); font-weight:100 900; }
+  @font-face { font-family:"Geist"; src:url(assets/fonts/geist-latin-ext-wght-normal.woff2) format("woff2"); font-weight:100 900; unicode-range:U+0100-024F; }
+  @font-face { font-family:"Hedvig"; src:url(assets/fonts/hedvig-letters-serif-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family:"Hedvig"; src:url(assets/fonts/hedvig-letters-serif-latin-ext-400-normal.woff2) format("woff2"); unicode-range:U+0100-024F; }
+  :root { --canvas:#faf9f7; --card:#fff; --hair:#e8e6e3; --ink:#171717; --sec:#585856; --brand:#0f7a58; --brand-bg:#e3f4ee; --wait:#b4530b; --wait-bg:#fdeedd; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  html, body { height:100%; font-family: "Inter", "Segoe UI", system-ui, sans-serif; color:var(--ink); background:#0b1730; }
-  .slide { position:absolute; inset:0; display:none; padding:6vh 7vw; background:var(--bg); flex-direction:column; justify-content:center; }
-  .slide.active { display:flex; }
-  .slide.dark { background:linear-gradient(135deg,#003a8c,#0050bb 60%,#1a73e8); color:#fff; }
-  .slide.dark p, .slide.dark li { color:#e3ecff; }
-  h1 { font-size:clamp(2.2rem,5vw,4rem); line-height:1.1; margin-bottom:.6em; }
-  h2 { font-size:clamp(1.6rem,3.2vw,2.6rem); margin-bottom:.8em; color:var(--blue); }
-  .dark h2 { color:#fff; }
-  p, li { font-size:clamp(1rem,1.6vw,1.35rem); line-height:1.5; color:var(--muted); }
-  ul { padding-left:1.2em; } li { margin:.35em 0; }
-  b { color:var(--ink); } .dark b { color:#fff; }
-  .kicker { text-transform:uppercase; letter-spacing:.12em; font-size:.9rem; opacity:.8; margin-bottom:1em; }
-  .grid { display:grid; gap:1.2rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-  .card { background:var(--card); border-radius:14px; padding:1.2rem 1.4rem; box-shadow:0 2px 10px rgba(20,33,61,.08); border-top:4px solid var(--blue); }
-  .card h3 { font-size:1.15rem; margin-bottom:.5em; }
-  .card p, .card li { font-size:1rem; }
-  .big { font-size:clamp(2rem,4vw,3.2rem); font-weight:700; color:var(--blue); }
-  .flow { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:1.2rem 0 1.6rem; }
-  .step { background:var(--blue); color:#fff; border-radius:999px; padding:.55rem 1.1rem; font-weight:600; font-size:clamp(.9rem,1.4vw,1.15rem); }
-  .arrow { color:var(--muted); font-size:1.4rem; }
-  .quote { font-size:clamp(1.3rem,2.4vw,2rem); font-style:italic; color:#fff; border-left:4px solid #8fd3ff; padding-left:1rem; margin-top:1rem; }
-  code { background:#e8eef9; padding:.1em .35em; border-radius:4px; font-size:.95em; }
-  .footer { position:fixed; bottom:2.5vh; right:3vw; font-size:.85rem; color:#8a97ab; z-index:5; }
-  .nav { position:fixed; bottom:2vh; left:3vw; z-index:5; display:flex; gap:.4rem; }
-  .nav button { border:0; background:#ffffffcc; border-radius:8px; padding:.35rem .8rem; cursor:pointer; font-size:1rem; }
-  @page { size:1280px 720px; margin:0; }
+  html, body { background:#2b2b29; font-family:"Geist", system-ui, sans-serif; color:var(--ink); overflow:hidden; }
+  .deck { position:absolute; left:50%; top:50%; width:1920px; height:1080px; transform-origin:0 0; }
+  .s { position:absolute; inset:0; display:none; background:var(--canvas); padding:96px 128px; overflow:hidden; }
+  .s.on { display:block; }
+  .s.ink { background:var(--ink); color:var(--canvas); }
+  .s.green { background:var(--brand); color:#fff; }
+
+  .eyebrow { font-size:22px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--brand); margin-bottom:28px; }
+  .ink .eyebrow, .green .eyebrow { color:#9fdcc4; }
+  .green .eyebrow { color:#cdeee0; }
+  h1, h2, h3, .serif { font-family:"Hedvig", Georgia, serif; font-weight:400; letter-spacing:-.01em; }
+  h1 { font-size:132px; line-height:1.02; }
+  h2 { font-size:76px; line-height:1.08; max-width:1500px; }
+  h3 { font-size:40px; line-height:1.15; }
+  .lead { font-size:36px; line-height:1.4; color:var(--sec); max-width:1400px; }
+  .ink .lead { color:#c9c8c4; } .green .lead { color:#e3f4ee; }
+  .mt { margin-top:48px; } .mt-s { margin-top:24px; }
+  em { font-style:normal; color:var(--brand); }
+  .ink em { color:#7fd3b0; }
+
+  .row { display:flex; gap:72px; align-items:center; }
+  .col { flex:1; min-width:0; }
+  .shot { display:block; width:100%; border-radius:18px; border:1px solid var(--hair); box-shadow:0 24px 60px -24px rgba(23,23,23,.28), 0 2px 6px rgba(23,23,23,.06); background:#fff; }
+  .phone { width:420px; flex:none; border:14px solid var(--ink); border-radius:62px; overflow:hidden; box-shadow:0 30px 70px -20px rgba(23,23,23,.45); background:#fff; }
+  .phone img { display:block; width:100%; }
+  .phones { display:flex; gap:56px; align-items:flex-start; }
+
+  .points { list-style:none; display:grid; gap:34px; }
+  .points li { font-size:32px; line-height:1.35; padding-left:44px; position:relative; color:var(--sec); }
+  .points li b { color:var(--ink); font-weight:600; display:block; font-size:34px; margin-bottom:4px; }
+  .points li::before { content:""; position:absolute; left:0; top:13px; width:18px; height:18px; border-radius:50%; background:var(--brand); }
+
+  .steps { position:absolute; top:56px; left:128px; right:128px; display:flex; gap:14px; }
+  .steps span { font-size:20px; padding:10px 20px; border-radius:999px; border:1px solid var(--hair); color:#8a8986; background:#fff; }
+  .steps span.cur { border-color:var(--brand); color:var(--ink); font-weight:600; box-shadow:0 0 0 1px var(--brand) inset; }
+  .steps span.done { color:var(--sec); }
+  .steps span.done::before { content:"✓ "; color:var(--brand); }
+  .story { padding-top:150px; }
+
+  .three { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+  .tile { background:var(--card); border:1px solid var(--hair); border-radius:24px; padding:44px 44px 48px; }
+  .tile .big { font-family:"Hedvig", Georgia, serif; font-size:88px; line-height:1; color:var(--brand); margin-bottom:20px; }
+  .tile h3 { margin-bottom:14px; }
+  .tile p { font-size:28px; line-height:1.4; color:var(--sec); }
+  .ink .tile { background:#222220; border-color:#34342f; } .ink .tile p { color:#b9b8b3; } .ink .tile .big { color:#7fd3b0; }
+
+  .loop { display:flex; align-items:stretch; gap:0; margin-top:72px; }
+  .loop > div { flex:1; position:relative; padding:36px 28px 0; border-top:6px solid var(--brand); }
+  .loop > div::before { content:attr(data-n); position:absolute; top:-34px; left:28px; width:60px; height:60px; border-radius:50%; background:var(--brand); color:#fff; font-size:28px; font-weight:600; display:flex; align-items:center; justify-content:center; }
+  .loop h3 { font-size:38px; margin:28px 0 12px; }
+  .loop p { font-size:25px; line-height:1.4; color:var(--sec); }
+  .loop .when { font-size:20px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--brand); margin-top:18px; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:16px; }
+  .chip { font-size:26px; padding:14px 26px; border-radius:999px; background:var(--brand-bg); color:var(--brand); font-weight:500; }
+  .ink .chip { background:#1f3a30; color:#9fdcc4; }
+  .no { background:#fdeaea; color:#b3261e; text-decoration:line-through; }
+
+  .quote { font-family:"Hedvig", Georgia, serif; font-size:78px; line-height:1.15; max-width:1560px; }
+  .src { font-size:24px; color:#9a9994; margin-top:40px; }
+  .foot { position:absolute; left:128px; bottom:56px; font-size:20px; color:#9a9994; letter-spacing:.04em; }
+  .ink .foot, .green .foot { color:rgba(255,255,255,.55); }
+  .pn { position:absolute; right:128px; bottom:56px; font-size:20px; color:#9a9994; }
+  .ink .pn, .green .pn { color:rgba(255,255,255,.55); }
+
+  .crit { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .crit div { border-top:4px solid var(--brand); padding-top:22px; }
+  .crit b { display:block; font-size:30px; margin-bottom:8px; }
+  .crit span { font-size:24px; color:var(--sec); line-height:1.4; display:block; }
+  .crit i { font-style:normal; color:var(--brand); font-weight:600; }
+
+  .nav { position:fixed; bottom:14px; right:14px; z-index:9; display:flex; gap:6px; opacity:.6; }
+  .nav button { border:0; border-radius:8px; padding:6px 12px; font-size:16px; cursor:pointer; background:#fff; }
+  @page { size:1920px 1080px; margin:0; }
   @media print {
-    html, body { background:none; }
-    .slide { display:flex !important; position:relative; width:1280px; height:720px; break-after:page; padding:48px 80px; }
-    .nav, .footer { display:none !important; }
-    h1 { font-size:76px; } h2 { font-size:46px; } .kicker { font-size:15px; }
-    p, li { font-size:25px; } .card h3 { font-size:25px; } .card p, .card li { font-size:21px; }
-    .big { font-size:54px; } .quote { font-size:34px; } .step { font-size:19px; } code { font-size:16px; }
-    .grid { gap:18px; } .card { padding:18px 22px; }
+    html, body { background:none; overflow:visible; }
+    .deck { position:static; transform:none !important; width:1920px; height:auto; }
+    .s { display:block !important; position:relative; width:1920px; height:1080px; break-after:page; }
+    .nav { display:none; }
     * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
 </style>
 </head>
 <body>
+<div class="deck" id="deck">
 
-<section class="slide dark active">
-  <div class="kicker">Junction 2026 · City of Espoo · Rethinking Recruitment</div>
-  <h1>Espoo Work Map<br>proof, not prose</h1>
-  <p>A signal layer for City of Espoo recruitment events: before, during and after the event day.</p>
-  <p class="quote">Stronger signal, less noise.</p>
-</section>
-
-<section class="slide">
-  <h2>The problem</h2>
-  <p style="margin-bottom:1.2rem">CVs are written by AI and screened by AI, so both sides talk through machine-generated text instead of real understanding.</p>
-  <div class="grid">
-    <div class="card"><h3>Employers</h3><p>Describe their needs <b>late and vaguely</b>, often only in the presentation on the day. They get flooded with irrelevant approaches.</p></div>
-    <div class="card"><h3>Talent</h3><p>Can't show what they can <b>actually do</b>. Polished profiles all look alike. Language becomes a gate ("good Finnish") with no reason given.</p></div>
-    <div class="card"><h3>Organiser (City)</h3><p>Lots of registrations, <b>little insight</b> into real skills, queues instead of conversations, no visible follow-up.</p></div>
+<!-- 1 Cover -->
+<section class="s on">
+  <div class="row" style="height:100%">
+    <div class="col">
+      <div class="eyebrow">Junction 2026 · City of Espoo · Rethinking Recruitment</div>
+      <h1>Espoo<br>Work Map</h1>
+      <p class="lead mt">Recruitment events where people meet because they <em>fit</em>, not because their CV was polished.</p>
+      <p class="serif" style="font-size:44px;margin-top:64px">From people, for people.</p>
+    </div>
+    <div class="phone" style="transform:rotate(-3deg);margin-right:40px"><img src="assets/phone-day.png" alt=""></div>
   </div>
 </section>
 
-<section class="slide">
-  <h2>Why it matters in Espoo</h2>
-  <div class="grid">
-    <div class="card"><div class="big">~19 000</div><p>unemployed people in Espoo, against roughly 650 open job ads</p></div>
-    <div class="card"><div class="big">1 300</div><p>people registered for TalentMatch 2024, with 40+ organisations. Employer time is the bottleneck</p></div>
-    <div class="card"><div class="big">2 weeks</div><p>before the event: the employer list appears. Real needs often only on the day</p></div>
+<!-- 2 The question -->
+<section class="s ink">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+    <div class="eyebrow">The challenge</div>
+    <p class="quote">How can Espoo's recruitment events help companies and talent <em>really find each other</em>, when CVs are written by AI and screened by AI?</p>
+    <p class="src">City of Espoo, Junction 2026 challenge brief</p>
   </div>
-  <p style="margin-top:1.4rem">Two event families today: <b>TalentMatch</b> (international, English, 1:1 matching) and <b>Työnantajatreffit</b> (Finnish, walk-in interviews). We designed for both, in person and online.</p>
+  <div class="pn">2</div>
 </section>
 
-<section class="slide">
-  <h2>Our solution: one time-driven loop</h2>
-  <div class="flow">
-    <span class="step">1 Register</span><span class="arrow">→</span>
-    <span class="step">2 Choose</span><span class="arrow">→</span>
-    <span class="step">3 Your plan</span><span class="arrow">→</span>
-    <span class="step">4 Event day</span><span class="arrow">→</span>
-    <span class="step">5 Answers</span>
+<!-- 3 What breaks today -->
+<section class="s">
+  <div class="eyebrow">What breaks at events today</div>
+  <h2>The information arrives late, and it's mostly noise.</h2>
+  <div class="three mt" style="margin-top:72px">
+    <div class="tile"><div class="big">2 weeks</div><h3>Needs arrive late</h3><p>The employer list is published two weeks before the event. The real role is often explained only in the presentation on the day.</p></div>
+    <div class="tile"><div class="big">1 300</div><h3>Everyone queues for everyone</h3><p>1 300 people registered for TalentMatch 2024, with 40+ organisations. Employer time is the bottleneck, so walk-in queues waste it.</p></div>
+    <div class="tile"><div class="big">AI × AI</div><h3>CVs all look the same</h3><p>AI-written profiles all look alike. People who did real work can't show it, and "good Finnish" is asked for with no reason given.</p></div>
   </div>
-  <ul>
-    <li>Employers file a <b>need card</b> before a deadline: what you will do in the first week, max 3 must-haves <i>with a reason</i>, and each language need as a task plus a CEFR level.</li>
-    <li>Talent writes <b>"3 things I have done", in their own words</b>. No CV.</li>
-    <li>Both sides choose with hard limits (talent: 5 employers; employer: as many invites as slots). <b>Mutual interest books a 1:1 talk automatically.</b></li>
-    <li>Event day: a <b>Now / Next</b> screen, a QR pass and a venue map with the route.</li>
-    <li>Within 7 days every talk gets an <b>answer</b>: a concrete next step (interview, work try-out, call) or "not this time" with a reason.</li>
-  </ul>
+  <div class="foot">Sources: espoo.fi TalentMatch and Työnantajatreffit pages (see docs/01-research/10-espoo-events-today.md)</div>
+  <div class="pn">3</div>
 </section>
 
-<section class="slide">
-  <h2>Three roles, one event</h2>
-  <div class="grid">
-    <div class="card"><h3>Talent: Aino, Pekka, Amira</h3><ul><li>Need cards shown one at a time, with a "Match!" moment</li><li>Personal plan with a "How to prepare" list built from the must-haves</li><li>Answers become records for future applications</li></ul></div>
-    <div class="card"><h3>Employer: Sanna</h3><ul><li>Need card checked by a wording checker</li><li>Anonymous cards in random order</li><li>Scan the QR, note what was seen at the talk, answer everyone</li></ul></div>
-    <div class="card"><h3>Organiser: Leena (City)</h3><ul><li>Need card status: on time / late / missing, plus reminders</li><li>Funnel: registered → chose → met → next step</li><li>Fairness panel by registration language</li></ul></div>
+<!-- 4 Our bet -->
+<section class="s green">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+    <div class="eyebrow">Our bet</div>
+    <h2 style="font-size:92px;max-width:1600px">Stop matching documents. Match <u style="text-decoration-thickness:4px;text-underline-offset:10px">what people have done</u> to <u style="text-decoration-thickness:4px;text-underline-offset:10px">what the job really needs</u>, and let both sides choose.</h2>
+    <div class="chips" style="margin-top:72px">
+      <span class="chip" style="background:#fff;color:var(--brand)">A real need, early</span>
+      <span class="chip" style="background:#fff;color:var(--brand)">Proof in your own words</span>
+      <span class="chip" style="background:#fff;color:var(--brand)">Meet only when it's mutual</span>
+      <span class="chip" style="background:#fff;color:var(--brand)">Every talk gets an answer</span>
+    </div>
   </div>
+  <div class="pn">4</div>
 </section>
 
-<section class="slide">
-  <h2>Online event</h2>
-  <div class="grid">
-    <div class="card"><h3>Video 1:1 talks</h3><p>Jitsi calls that open 5 minutes before the booked slot. The name is shown only when the call starts.</p></div>
-    <div class="card"><h3>Virtual booths</h3><p>Each employer has a booth with Q&amp;A, so people without a match can still ask questions.</p></div>
-    <div class="card"><h3>Stage &amp; lounge</h3><p>A lobby, stage programme and networking lounge for people who want to meet peers.</p></div>
+<!-- 5 The loop -->
+<section class="s">
+  <div class="eyebrow">How it works</div>
+  <h2>One event, one clock, five steps.</h2>
+  <div class="loop">
+    <div data-n="1"><h3>Need card</h3><p>The employer describes the first weeks of the job and up to 3 must-haves, each with a reason.</p><div class="when">Before the deadline</div></div>
+    <div data-n="2"><h3>Register</h3><p>The jobseeker writes 3 things they have done, in their own words. No CV.</p><div class="when">3 weeks before</div></div>
+    <div data-n="3"><h3>Choose</h3><p>Up to 5 employers each. Employers invite as many people as they have slots. Mutual interest books a talk.</p><div class="when">Until 5 days before</div></div>
+    <div data-n="4"><h3>Event day</h3><p>A plan with times and booths. Scan the QR, talk, note what you saw.</p><div class="when">On the day</div></div>
+    <div data-n="5"><h3>Answer</h3><p>Every talk ends with a concrete next step or a reason why not.</p><div class="when">Within 7 days</div></div>
   </div>
-  <p style="margin-top:1.4rem">The same loop and rules as in person. Only the "place" changes.</p>
-</section>
-
-<section class="slide">
-  <h2>Responsible by design</h2>
-  <div class="grid">
-    <div class="card"><h3>No bias inputs</h3><p>Before the meeting, employers see <b>no name, country, photo, school, age or career dates</b>. Card order is random and nobody is ranked.</p></div>
-    <div class="card"><h3>AI only as a helper</h3><p>Optional (NVIDIA Build, OpenAI-compatible). It only restructures text the person wrote, and the person accepts or edits it. Rules-based fallback, every call audited. No scoring of people.</p></div>
-    <div class="card"><h3>Measured fairness</h3><p>Outcome rates by registration language. Groups under 10 people show no rates (k-anonymity).</p></div>
-    <div class="card"><h3>Privacy</h3><p>Synthetic data only. Badges are controlled by the person, and attendance or "hired" badges never affect matching.</p></div>
+  <div class="tile" style="margin-top:88px;display:flex;align-items:center;gap:48px;padding:36px 44px">
+    <p class="serif" style="font-size:40px;color:var(--ink);flex:none">Three roles, one page each</p>
+    <p style="font-size:28px">The <b style="color:var(--ink)">employer</b>, the <b style="color:var(--ink)">jobseeker</b> and the <b style="color:var(--ink)">city organiser</b> each see their own steps. The app always shows the single next thing to do. Nothing can happen out of order.</p>
   </div>
+  <div class="pn">5</div>
 </section>
 
-<section class="slide">
-  <h2>Under the hood</h2>
-  <div class="grid">
-    <div class="card"><h3>Backend</h3><ul><li>Python <b>FastAPI</b> + SQLite</li><li>Deterministic rules: wording checker, slot scheduler, phase logic</li><li>One clock <code>app_now()</code>, phases registration → matched → live → after</li></ul></div>
-    <div class="card"><h3>Frontend</h3><ul><li><b>React 19</b> + Vite + TypeScript + Tailwind</li><li>Leaflet venue map, QR passes</li><li>Multilingual UI (i18n), accessible fonts</li></ul></div>
-    <div class="card"><h3>Demo engine</h3><ul><li>Demo clock moves the event through its phases</li><li>Simulates other employers (never the presenter)</li><li>One-click reset, re-seeded synthetic data</li></ul></div>
+<!-- 6 Sanna need card -->
+<section class="s story">
+  <div class="steps"><span class="cur">1 Need card</span><span>2 Register</span><span>3 Choose</span><span>4 Event day</span><span>5 Answer</span></div>
+  <div class="row">
+    <div class="col" style="flex:0 0 580px">
+      <div class="eyebrow">Sanna, Kahvila Koivu</div>
+      <h2 style="font-size:64px">"What will the person actually do?"</h2>
+      <ul class="points mt">
+        <li><b>The first weeks, not a job title</b>Learn the till, serve the lunch queue, close up</li>
+        <li><b>Max 3 must-haves, each with a why</b>"Saturday is our busiest day"</li>
+        <li><b>Language as a task</b>Finnish A2, to understand lunch orders, not "good Finnish"</li>
+      </ul>
+    </div>
+    <div class="col"><img class="shot" src="assets/need.png" alt="Need card"></div>
   </div>
-  <div class="grid" style="margin-top:1.2rem">
-    <div class="card"><div class="big">~7.8k</div><p>lines of Python (API)</p></div>
-    <div class="card"><div class="big">~21k</div><p>lines of TypeScript (web)</p></div>
-    <div class="card"><div class="big">250+</div><p>automated tests (pytest)</p></div>
+  <div class="pn">6</div>
+</section>
+
+<!-- 7 Aino's card -->
+<section class="s story">
+  <div class="steps"><span class="done">1 Need card</span><span class="cur">2 Register</span><span>3 Choose</span><span>4 Event day</span><span>5 Answer</span></div>
+  <div class="eyebrow">Aino, a student looking for her first job</div>
+  <h2 style="font-size:64px">Sanna sees what Aino has done, not who she is.</h2>
+  <div class="row mt" style="align-items:flex-start">
+    <div class="col"><img class="shot" src="assets/aino-card.png" alt="Anonymous talent card"></div>
+    <div style="flex:0 0 480px">
+      <p style="font-size:26px;color:var(--sec);margin-bottom:18px">Hidden until they meet:</p>
+      <div class="chips">
+        <span class="chip no">Name</span><span class="chip no">Photo</span><span class="chip no">Country</span><span class="chip no">School</span><span class="chip no">Age</span><span class="chip no">Career dates</span>
+      </div>
+      <p style="font-size:28px;line-height:1.45;color:var(--sec);margin-top:40px">Cards come in <b style="color:var(--ink)">random order</b> and nobody is ranked. Facts like the hygiene passport are <b style="color:var(--ink)">checked by a city advisor</b>, not just claimed.</p>
+    </div>
   </div>
+  <div class="pn">7</div>
 </section>
 
-<section class="slide">
-  <h2>Demo in 3 minutes</h2>
-  <ol style="padding-left:1.2em">
-    <li><b>Sanna</b> (employer) files her need card: first-week tasks, must-haves with a reason, Finnish B1 "for customer phone calls".</li>
-    <li><b>Aino</b> (talent) registers with 3 things she has done, then picks employers one card at a time. Match!</li>
-    <li>Move the <b>demo clock</b> to "matching closed": her plan and her "How to prepare" list.</li>
-    <li>Event day: Now/Next, scan the QR, Sanna notes what she saw at the talk.</li>
-    <li>After: Sanna proposes a work try-out and Aino replies "Yes, I'll come".</li>
-    <li><b>Leena</b> (City) sees late need cards, the funnel and the fairness panel.</li>
-  </ol>
+<!-- 8 Choose / mutual -->
+<section class="s story">
+  <div class="steps"><span class="done">1 Need card</span><span class="done">2 Register</span><span class="cur">3 Choose</span><span>4 Event day</span><span>5 Answer</span></div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:0 0 600px">
+      <div class="eyebrow">Mutual choice</div>
+      <h2 style="font-size:64px">A talk is booked only when both say yes.</h2>
+      <ul class="points mt">
+        <li><b>Aino picks up to 5 employers</b>one card at a time, ticking which must-haves she meets</li>
+        <li><b>Sanna has 8 slots, so 8 invites</b>no flood of approaches</li>
+        <li><b>Match! Talk at 15:00</b>the time is set automatically</li>
+      </ul>
+    </div>
+    <div class="col" style="display:grid;gap:36px">
+      <img class="shot" src="assets/choose.png" alt="Choosing employers">
+      <img class="shot" src="assets/choices.png" alt="Your choices">
+    </div>
+  </div>
+  <div class="pn">8</div>
 </section>
 
-<section class="slide dark">
-  <h2>From hackathon to pilot</h2>
-  <ul>
-    <li>Run next to existing TalentMatch and Työnantajatreffit events, with no platform change needed.</li>
-    <li>Pilot one event: measure answers within 7 days and next steps per talk, by language group.</li>
-    <li>Self-hostable stack (FastAPI + SQLite + open models) fits public-sector procurement.</li>
-  </ul>
-  <p class="quote">Companies bring a real need, talent brings proof, Espoo sets the table.</p>
-  <p style="margin-top:2rem">github.com/sm1go/rr_scooba</p>
+<!-- 9 Event day -->
+<section class="s story">
+  <div class="steps"><span class="done">1 Need card</span><span class="done">2 Register</span><span class="done">3 Choose</span><span class="cur">4 Event day</span><span>5 Answer</span></div>
+  <div class="row" style="align-items:flex-start;gap:56px">
+    <div class="col" style="flex:0 0 520px">
+      <div class="eyebrow">On the day</div>
+      <h2 style="font-size:60px">Talks, not queues.</h2>
+      <ul class="points mt">
+        <li><b>Now / Next</b>who, which booth, and how to prepare</li>
+        <li><b>Show the QR pass</b>Sanna scans it to open Aino's profile</li>
+        <li><b>Sanna ticks what she saw Aino do</b>evidence from the talk, not from a CV</li>
+      </ul>
+    </div>
+    <div class="phones">
+      <div class="phone" style="width:360px"><img src="assets/phone-day.png" alt=""></div>
+      <div class="phone" style="width:360px"><img src="assets/phone-pass.png" alt=""></div>
+    </div>
+  </div>
+  <div class="pn">9</div>
 </section>
 
-<div class="nav"><button onclick="go(-1)">&larr;</button><button onclick="go(1)">&rarr;</button></div>
-<div class="footer" id="counter"></div>
+<!-- 10 Answer -->
+<section class="s story">
+  <div class="steps"><span class="done">1 Need card</span><span class="done">2 Register</span><span class="done">3 Choose</span><span class="done">4 Event day</span><span class="cur">5 Answer</span></div>
+  <div class="row" style="align-items:flex-start">
+    <div class="col">
+      <div class="eyebrow">After the event</div>
+      <h2 style="font-size:68px">Every talk ends with an answer.</h2>
+      <p class="lead mt-s" style="font-size:32px">Within 7 days: a concrete next step (interview, work try-out or a call, with a date and place) or "not this time" with a reason.</p>
+      <div class="tile mt" style="padding:36px 40px">
+        <p class="serif" style="font-size:38px;color:var(--ink);line-height:1.3">"Calm with a long queue and asked good questions about the till. Come and try a lunch shift with us."</p>
+        <p style="font-size:24px;margin-top:16px">Sanna → Aino · work try-out on Wed 24 March 10:30</p>
+      </div>
+      <p style="font-size:26px;color:var(--sec);margin-top:32px">Records like this go with Aino's next applications <b style="color:var(--ink)">instead of a CV</b>.</p>
+    </div>
+    <div class="phone" style="width:400px"><img src="assets/phone-after.png" alt=""></div>
+  </div>
+  <div class="pn">10</div>
+</section>
 
+<!-- 11 Organizer -->
+<section class="s">
+  <div class="eyebrow">Leena, City of Espoo event organiser</div>
+  <h2 style="font-size:64px">The city sees the gaps before the event, and the bias after it.</h2>
+  <div class="row mt" style="align-items:flex-start;gap:56px">
+    <div class="col">
+      <img class="shot" src="assets/chase.png" alt="Need card status" style="height:560px;object-fit:cover;object-position:top">
+      <p style="font-size:26px;color:var(--sec);margin-top:22px"><b style="color:var(--ink)">Need cards:</b> on time, late or missing. Send a reminder, or write the card for the employer.</p>
+    </div>
+    <div class="col">
+      <img class="shot" src="assets/fair.png" alt="Fairness check">
+      <p style="font-size:26px;color:var(--sec);margin-top:22px"><b style="color:var(--ink)">Fairness check:</b> registered → invited → met → next step, by the language of the card. Groups under 10 people show no rates.</p>
+    </div>
+  </div>
+  <div class="pn">11</div>
+</section>
+
+<!-- 12 Online -->
+<section class="s">
+  <div class="row" style="height:100%">
+    <div class="col" style="flex:0 0 600px">
+      <div class="eyebrow">In person and online</div>
+      <h2 style="font-size:64px">The same loop works online.</h2>
+      <ul class="points mt">
+        <li><b>1:1 video talks</b>the call opens 5 minutes before your slot</li>
+        <li><b>Stage and employer pitches</b>a programme in one lobby</li>
+        <li><b>Virtual booths with Q&amp;A</b>for people who didn't get a match</li>
+        <li><b>Networking lounge</b>meet other jobseekers too</li>
+      </ul>
+    </div>
+    <div class="col"><img class="shot" src="assets/online.png" alt="Online event lobby"></div>
+  </div>
+  <div class="pn">12</div>
+</section>
+
+<!-- 13 Responsible & feasible -->
+<section class="s ink">
+  <div class="eyebrow">Responsible and feasible</div>
+  <h2>People decide. Rules are transparent. AI only helps people write.</h2>
+  <div class="three" style="margin-top:72px">
+    <div class="tile"><h3>No scoring of people</h3><p>No ranking and no AI judging candidates. Matching follows simple, tested rules: must-haves, hours, area, language task.</p></div>
+    <div class="tile"><h3>AI as a writing aid</h3><p>Optional. It turns what the person wrote into clear lines, and they accept or edit them. If the AI is off, everything still works.</p></div>
+    <div class="tile"><h3>Ready to pilot</h3><p>FastAPI + SQLite + React, self-hostable for the city. A demo clock plays the whole event in minutes.</p></div>
+  </div>
+  <div class="three" style="margin-top:80px">
+    <div><div class="serif" style="font-size:110px;color:#7fd3b0;line-height:1">250+</div><p style="font-size:28px;color:#b9b8b3;margin-top:12px">automated tests</p></div>
+    <div><div class="serif" style="font-size:110px;color:#7fd3b0;line-height:1">10</div><p style="font-size:28px;color:#b9b8b3;margin-top:12px">interface languages, incl. Finnish, Swedish, Arabic, Ukrainian</p></div>
+    <div><div class="serif" style="font-size:110px;color:#7fd3b0;line-height:1">0</div><p style="font-size:28px;color:#b9b8b3;margin-top:12px">real personal data: synthetic demo data only</p></div>
+  </div>
+  <div class="pn">13</div>
+</section>
+
+<!-- 14 Pilot -->
+<section class="s green">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+    <div class="eyebrow">The ask</div>
+    <h2 style="font-size:96px">Pilot it at Espoo TalentMatch.</h2>
+    <p class="lead mt" style="font-size:36px;max-width:1500px">It runs next to the current event format, with no new platform for employers to learn. We would measure:</p>
+    <div class="three" style="margin-top:48px">
+      <div class="tile" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)"><h3 style="color:#fff">Need cards on time</h3><p style="color:#e3f4ee">Do employers say what they need early enough?</p></div>
+      <div class="tile" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)"><h3 style="color:#fff">Answers within 7 days</h3><p style="color:#e3f4ee">Does every talk get a next step or a reason?</p></div>
+      <div class="tile" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)"><h3 style="color:#fff">Fair invites</h3><p style="color:#e3f4ee">Are people invited equally, whatever language they write in?</p></div>
+    </div>
+    <p class="serif" style="font-size:48px;margin-top:72px">From people, for people.</p>
+  </div>
+  <div class="foot">github.com/sm1go/rr_scooba · synthetic demo data only</div>
+</section>
+
+</div>
+<div class="nav"><button data-d="-1">&larr;</button><button data-d="1">&rarr;</button></div>
 <script>
-  const slides = [...document.querySelectorAll('.slide')];
+  const deck = document.getElementById('deck');
+  const slides = [...deck.querySelectorAll('.s')];
   let i = 0;
-  function show(n) {
-    i = Math.max(0, Math.min(slides.length - 1, n));
-    slides.forEach((s, k) => s.classList.toggle('active', k === i));
-    document.getElementById('counter').textContent = (i + 1) + ' / ' + slides.length;
-  }
-  function go(d) { show(i + d); }
-  document.addEventListener('keydown', e => {
-    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) go(1);
-    if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
+  const fit = () => {
+    const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+    deck.style.transform = `scale(${k}) translate(-50%, -50%)`;
+  };
+  const show = n => { i = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, j) => s.classList.toggle('on', j === i)); };
+  addEventListener('resize', fit); fit();
+  addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) show(i + 1);
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) show(i - 1);
   });
-  document.addEventListener('click', e => { if (!e.target.closest('.nav')) go(1); });
-  show(0);
+  document.querySelector('.nav').addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(i + Number(b.dataset.d)); });
+  deck.addEventListener('click', () => show(i + 1));
 </script>
 </body>
 </html>
