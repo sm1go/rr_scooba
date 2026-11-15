@@ -1,59 +1,77 @@
-# rr_scooba — Rethinking Recruitment (Junction x City of Espoo)
+# Espoo Work Map
 
-Working repository of our Junction hackathon team for the **City of Espoo** challenge
-**"Rethinking Recruitment"**: how can Espoo's recruitment and matchmaking events help companies
-and talent find relevant, genuine connections when CVs are AI-written and screening is AI-assisted?
+**Recruitment events where employers bring a real need, talent brings what they have actually done, and every conversation ends with an answer.**
 
-> North star (from the brief): *stronger signal and less noise* throughout registering for,
-> attending and following up on an event.
+Team **ScoobaNi** · Junction 2026 · City of Espoo challenge *Rethinking Recruitment*
 
-## Status
+**Live demo:** https://express-oboe-jx34fft.tmp.now/ (synthetic data; use the yellow demo bar)
 
-| Phase | State |
+---
+
+## The problem
+
+CVs are increasingly written by AI and screened by AI, so companies and job seekers talk to each other through machine-generated text. At the City of Espoo's recruitment events (TalentMatch, Työnantajatreffit):
+
+- employers describe their needs **late and vaguely**, often only on the event day;
+- talent struggles to show **what they can actually do**;
+- language and degree requirements act as gates without saying what they are for;
+- the City sees many registrations but **little signal and no visible follow-up**.
+
+Espoo has about 19,000 unemployed people and about 650 open job ads, so employers' time at an event is the scarcest resource.
+
+## What we built
+
+One time-driven loop for both sides, for in-person and online events:
+
+**Register → Choose → Your plan → Event day → Answers**
+
+| Stage | Employer | Talent |
+|---|---|---|
+| Before | Writes a **need card** before a deadline: what the person does in the first weeks, at most 3 must-haves *each with a reason*, what we will teach, languages as *task + CEFR level*. A wording checker blocks discriminatory or vague requirements. | Registers with **3 things I have done**, in their own words and any language. No CV. |
+| Choose | Sees **anonymous cards** (no name, country, photo, school, age) in random order and invites up to their number of talk slots. | Picks up to **5 employers**, one card at a time, and ticks which must-haves they meet. |
+| Match | When interest is mutual, a 10-minute talk is booked automatically. | Gets a **personal plan**: times, booths on a venue map with a route, and *How to prepare* tips built from each employer's must-haves. |
+| Event day | Scans the talent's QR pass, opens their profile and records **what they actually saw** the person do. | **Now / Next** screen with countdowns; online events have Jitsi video talks, a stage, virtual booths with Q&A and a networking lounge. |
+| After | Must answer every talk within **7 days**, with a concrete next step (interview, work try-out, call) or a reason. | Confirms the next step or asks for another time. "Seen at the event" records and badges can be shared in later applications instead of a CV. |
+
+The **City organizer** sees which need cards are on time, late or missing (with reminders and "write it with them by phone"), a live booth board on the day, and a report with outcome numbers and a **fairness panel**.
+
+## Responsible by design
+
+- **People decide, not AI.** Matching is deterministic rules and mutual choice; nobody is scored or ranked. AI (optional, NVIDIA Nemotron via NVIDIA Build) only restructures text a person wrote, and the person accepts or edits the result. Everything works without AI.
+- **No bias inputs before the meeting.** Employers see no name, nationality, photo, education, age or career dates on cards. Card order is random. Only skill recognitions ("solved the task at the booth") appear on cards; attendance and hiring badges never affect matching, so first-timers are not disadvantaged.
+- **Fairness is measured.** Outcome rates by registration language, shown only for groups of 10 or more people.
+- **Privacy.** Contact details are shown only after the person shows their pass, and only the fields they chose to share. Badges are positive only and the person can hide any of them.
+- **Synthetic data only.** Every person, company, job and event in this repository is fictional.
+
+## Try the demo (about 3 minutes)
+
+The yellow bar at the top switches roles with one click and moves a **demo clock** through the event phases. Other employers are simulated; the demo employer is controlled by you.
+
+1. **Reset demo** → **Jobseeker (Aino)** → open *Espoo TalentMatch — spring 2027* → register → choose 3–4 employers.
+2. **Matching closed** → Aino's plan: matched talks, preparation tips, venue map with her route.
+3. **Event day** → Now/Next card and QR pass. As **Employer (Sanna)**: enter Aino's visitor number, record what you saw and propose a next step.
+4. **After the event** → Aino sees answers with concrete next steps and confirms one.
+5. **Organizer (Leena)** → need-card status, event report and fairness panel.
+6. Repeat on *Espoo TalentMatch Online* for video talks, the lobby, booth Q&A and the lounge.
+
+Demo accounts (password `demo1234`): `aino@example.com` (job seeker), `sanna@example.com` (employer, in-person event), `liisa@example.com` (employer, online event), `advisor@example.com` (City organizer). Also on `/sign-in`.
+
+Between events the app also offers a job map with verified working conditions, combining part-time jobs into one week, jobs from City procurement employment clauses, and a support/subsidy guide.
+
+## Tech
+
+| Part | Stack |
 |---|---|
-| 0. Challenge intake | Done — brief + indexed stakeholders / pain points / constraints / judging criteria |
-| 1. Research & problem analysis | Done — 7 notes incl. Junction tech partners and prior art |
-| 2. Multi-agent ideation (3 rounds) | Done — 58 raw ideas → 20 consolidated features → final vote |
-| 3. Feature catalog & shortlist | Done — *TalentMatch Signal* selected for the first prototype |
-| 4. MVP build (`app/` + `db/`) | **Espoo Work Map (v2)** rebuilt per `docs/03-product/app-v2-spec.md`; v1 preserved in git tag `demo-v1` |
+| Backend | Python, FastAPI, SQLite (schema in `db/schema.sql`, synthetic seed in `db/seed/`) |
+| Frontend | React, TypeScript, Vite, Tailwind CSS, Leaflet (OpenStreetMap), QR codes |
+| Optional services | NVIDIA Build (Nemotron) for text help, Digitransit (HSL) for commute times, Jitsi Meet for online talks |
+| Languages | UI in 10 languages spoken in Espoo (en, fi, sv, ru, ar, et, zh, fa, sq, uk), right-to-left for Arabic and Farsi |
+| Accessibility | Keyboard support, large text, high contrast, easier reading, read-aloud |
+| Tests | 250+ pytest tests (`python -m pytest -q`) |
 
-## Timeline (Junction 2026, Europe/Helsinki)
+## Run locally
 
-| When | What |
-|---|---|
-| Sat 14 Nov 12:00 | Submissions open on the Junction Platform |
-| Sun 15 Nov 10:00 | **Final submission** (hard deadline) |
-| Sun 15 Nov 14:00 | Final ceremony — challenge winners at 15:10 |
-
-## Repository map
-
-| Path | Contents |
-|---|---|
-| `docs/00-challenge/` | Original challenge brief (verbatim) + working index (S/P/C/J IDs) |
-| `docs/01-research/` | Research and problem analysis: context, regulation, market, data sources |
-| `docs/02-ideation/` | Multi-agent ideation: method, Round 1 proposals, Round 2 cross-reviews, Round 3 votes |
-| `docs/03-product/` | Consolidated feature catalog, scoring outputs, shortlist |
-| `docs/04-pitch/` | Pitch material: short slide deck (`presentation.html`); `team-projects/` decks for our other Junction projects (OtaPath, Muutto, Taimi) with sources |
-| `docs/decisions/` | Decision log |
-| `app/` | Application code — Espoo Work Map v2 (`app/api` FastAPI, `app/web` React) |
-| `db/` | Database schema, migrations, synthetic seed data |
-| `scripts/` | Helper scripts (e.g. score aggregation) |
-| `AGENTS.md` | Working agreement and conventions for the team and AI agents |
-
-## Key documents
-
-- [Challenge brief](docs/00-challenge/challenge-brief.md) · [Tech challenges (stackable)](docs/00-challenge/tech-challenges.md)
-- Research: [Espoo & TalentMatch](docs/01-research/01-context-espoo-and-talentmatch.md) · [AI in hiring](docs/01-research/02-ai-in-hiring-evidence.md) · [Regulation](docs/01-research/03-regulatory-fact-sheet.md) · [Market & data](docs/01-research/04-market-and-data-sources.md) · [Junction tech partners](docs/01-research/05-junction-2026-tech-partners.md) · [Prior art](docs/01-research/06-prior-art-open-source.md) · [Espoo mentor validation](docs/01-research/07-espoo-mentor-validation.md) · [Espoo labour market 2026](docs/01-research/08-espoo-local-situation-2026.md) · [Pro-employment trends](docs/01-research/09-pro-employment-trends.md) · [Espoo events today](docs/01-research/10-espoo-events-today.md)
-- [Ideation method](docs/02-ideation/README.md) · [Round 1 digest — all 58 raw ideas](docs/02-ideation/round-1-digest.md) · [Round 2 brief](docs/02-ideation/round-2-brief.md)
-- Product: [Feature catalogue F01–F20](docs/03-product/feature-catalog.md) · [Shortlist & MVP](docs/03-product/shortlist.md) · [Architecture](docs/03-product/architecture.md) · [Scoring](docs/03-product/scoring/summary.md)
-- Build contract: [App v2 spec (authoritative)](docs/03-product/app-v2-spec.md) · [API contract pointer](docs/03-product/api-contract.md) · [Finnish-style design guide](docs/03-product/design-guide.md) · [Event mode spec (v4, current)](docs/03-product/event-mode-spec.md)
-- Pitch: [Short slide deck (PDF)](docs/04-pitch/presentation.pdf) · [HTML source](docs/04-pitch/presentation.html). Re-export PDFs with `bash scripts/export-pdfs.sh`
-- Other team projects (PDF): [OtaPath — Beyond the Clinic](docs/04-pitch/team-projects/otapath-beyond-the-clinic.pdf) · [Muutto — The Internet Butler](docs/04-pitch/team-projects/muutto-internet-butler.pdf) · [Taimi — Personal Economic Trainer](docs/04-pitch/team-projects/taimi-personal-economic-trainer.pdf) · [Sources and video transcripts](docs/04-pitch/team-projects/sources.md)
-- [Decision log](docs/decisions/decision-log.md)
-
-## Run the demo locally
-
-Requires Python and Node.js. In separate terminals:
+Requires Python 3.13+ and Node.js 22+.
 
 ```bash
 pip install -r requirements.txt
@@ -66,43 +84,41 @@ npm install
 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
-Open `http://127.0.0.1:5173`. The app uses synthetic data only and no AI —
-all matching is deterministic rules from the spec.
+Open http://127.0.0.1:5173. Optional keys go in a git-ignored `.env` file at the repo root:
 
-Demo accounts (password `demo1234`): `aino@example.com` (student),
-`pekka@example.com` (retiree), `amira@example.com` (access needs),
-`sanna@example.com` (employer), `advisor@example.com` (city advisor Leena).
-A demo panel on `/sign-in` logs in as any of them with one tap.
+```
+NVIDIA_API_KEY=...
+DIGITRANSIT_API_KEY=...
+```
 
-## Deploy (Render)
+Without them, AI help and commute times are hidden; everything else works.
 
-One Docker container serves both the API and the built frontend from the
-same origin (`Dockerfile` + `render.yaml` Blueprint at the repo root).
+## Deploy
 
-1. In Render: **New → Blueprint** → connect the GitHub repo → pick it.
-2. Render reads `render.yaml` and asks for two optional env vars:
-   `NVIDIA_API_KEY` and `DIGITRANSIT_API_KEY`. Enter them or leave blank —
-   without keys the AI helper and commute-time features stay hidden.
-3. **Apply.** The first deploy takes a few minutes (image build + seed).
-4. Free plan sleeps after ~15 min idle — the first request after sleep
-   takes ~30–60 s. `healthCheckPath` is `/api/config`.
-
-The database is synthetic and rebuilt from `db/seed` on every start
-(`TM_DB_PATH=/tmp/talentmatch.sqlite` — ephemeral by design).
-
-**Demo accounts** (password `demo1234`): `aino@example.com` (jobseeker),
-`sanna@example.com` (employer), `advisor@example.com` (organizer/Leena).
-The yellow demo bar signs in with one tap and moves the demo clock
-(3 weeks before → matching closed → event day → after the event);
-**Reset demo** rebuilds the database (`POST /api/demo/reset`, or restart
-the service).
-
-### Docker locally
+One Docker container serves the API and the built frontend from the same origin.
 
 ```bash
 docker build -t ewm .
-docker run --rm -p 8080:8000 -e DEMO_MODE=1 ewm
-# open http://127.0.0.1:8080  — same-origin: frontend + /api from FastAPI
-# with the optional keys:
-docker run --rm -p 8080:8000 --env-file .env ewm
+docker run --rm -p 8080:8000 -e DEMO_MODE=1 ewm        # http://127.0.0.1:8080
+docker run --rm -p 8080:8000 --env-file .env ewm        # with optional keys
 ```
+
+**Render:** New → Blueprint → select this repository → enter the optional keys → Apply (`render.yaml`). The database is rebuilt from the seed on every start. On the free plan the service sleeps after about 15 minutes idle; the first request then takes 30–60 seconds.
+
+## Repository
+
+| Path | Contents |
+|---|---|
+| `app/api/` | FastAPI backend (routers, rules, wording checker, demo clock) |
+| `app/web/` | React frontend |
+| `db/` | Schema and synthetic seed data |
+| `scripts/` | Seed generators and helpers |
+| `tests/` | Backend tests |
+| `docs/00-challenge/` | The original challenge brief |
+| `docs/01-research/` | Research: Espoo context, AI in hiring, regulation, current Espoo events, pro-employment practices in other cities |
+| `docs/02-ideation/` | Multi-agent ideation rounds |
+| `docs/03-product/` | Specifications; the current one is [event-mode-spec.md](docs/03-product/event-mode-spec.md) |
+| `docs/04-pitch/` | Pitch deck and submission texts |
+| `docs/decisions/` | [Decision log](docs/decisions/decision-log.md) |
+
+Key reading: [challenge brief](docs/00-challenge/challenge-brief.md) · [how Espoo events work today](docs/01-research/10-espoo-events-today.md) · [Espoo labour market 2026](docs/01-research/08-espoo-local-situation-2026.md) · [regulation](docs/01-research/03-regulatory-fact-sheet.md) · [pitch deck](docs/04-pitch/presentation.pdf)
