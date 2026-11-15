@@ -3,84 +3,134 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muutto — The Internet Butler</title>
+<title>Muutto — The Internet Butler (Exa)</title>
 <link rel="stylesheet" href="deck.css">
-<style>:root { --c1:#3b2fc9; --c2:#6a5cff; }</style>
+<style>
+  :root { --c1:#3b2fc9; --c2:#6a5cff; }
+  .flow { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:.4rem 0 1.4rem; }
+  .step { background:var(--c1); color:#fff; border-radius:999px; padding:.5rem 1.05rem; font-weight:600; font-size:clamp(.9rem,1.35vw,1.1rem); }
+  .arrow { color:var(--muted); font-size:1.3rem; }
+  table { border-collapse:collapse; width:100%; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(20,33,61,.08); }
+  th, td { text-align:left; padding:.7rem 1rem; font-size:clamp(.95rem,1.3vw,1.1rem); border-bottom:1px solid #e6e9f2; vertical-align:top; }
+  th { background:#eeecff; color:var(--c1); }
+  td:first-child { font-weight:700; white-space:nowrap; color:var(--ink); }
+  .src { font-size:.9rem; color:var(--muted); margin-top:1rem; }
+  @media print { th, td { font-size:19px; padding:10px 14px; } .src { font-size:16px; } }
+</style>
 </head>
 <body>
 
 <section class="slide dark active">
   <div class="kicker">Junction 2026 · Agentic AI Track · The Internet Butler by Exa · Team ScoobaNi</div>
   <h1>Muutto</h1>
-  <p>Meet <b>Exavier</b>, an Exa-powered internet butler that finds you a home when you move for a new job.</p>
-  <p class="quote">You got the job. The butler finds the home.</p>
+  <p>Got the job in the Helsinki region. Now, where to live?</p>
+  <p>An Exa-powered butler, <b>Pukki</b>, does the digging: it ranks areas by your real commute and daily life, finds live listings, researches the flat and the landlord, and writes the applications.</p>
+  <p class="quote">Every fact links to its source. Nothing is sent without your approval.</p>
 </section>
 
 <section class="slide">
   <h2>The challenge</h2>
-  <p style="margin-bottom:1.2rem">Exa asks for a <b>personal agent that takes tedious tasks off people's hands</b>. It should find what matters across the web, work out what needs to happen and get the task as close to done as it can, leaving the final approval to the user. The demo must run on a real case.</p>
+  <p style="margin-bottom:1.2rem">Exa asks for <b>a personal agent that takes a tedious task off people's hands</b>: find what matters across the web, work out what needs to happen, get the task as close to done as possible, leave the final approval to the user, and demo it on a real case.</p>
   <div class="grid">
-    <div class="card"><h3>Use of Exa <span class="pct">20%</span></h3><p>Information that could not come from training data alone</p></div>
-    <div class="card"><h3>Usefulness <span class="pct">20%</span></h3><p>For a specific group of real people</p></div>
-    <div class="card"><h3>Clarity <span class="pct">20%</span></h3><p>Clarity in showing sources</p></div>
-    <div class="card"><h3>Originality <span class="pct">20%</span></h3><p>How original the idea is</p></div>
-    <div class="card"><h3>Working implementation <span class="pct">20%</span></h3><p>Live queries, including the judges' own</p></div>
+    <div class="card"><h3>Use of Exa</h3><p>Information that could not come from a model's training data alone</p></div>
+    <div class="card"><h3>Usefulness</h3><p>For a specific group of real people</p></div>
+    <div class="card"><h3>Sources</h3><p>How clearly the sources are shown</p></div>
+    <div class="card"><h3>Originality</h3><p>A distinct idea and approach</p></div>
+    <div class="card"><h3>Live demo</h3><p>Works on live queries, including the judges' own</p></div>
   </div>
 </section>
 
 <section class="slide">
   <h2>The problem</h2>
-  <p style="margin-bottom:1.2rem">You got the job in Helsinki. Congrats. Now the hard part: <b>where do you actually live?</b></p>
+  <p style="margin-bottom:1.2rem">You got the job. Now the hard part: <b>where do you actually live?</b></p>
   <div class="grid">
-    <div class="card"><div class="big">3</div><p>rental portals</p></div>
-    <div class="card"><div class="big">40</div><p>open browser tabs</p></div>
-    <div class="card"><div class="big">0</div><p>answers you can trust</p></div>
+    <div class="card"><h3>Scattered</h3><p>Listings on Oikotie, Vuokraovi and Etuovi; commute, noise, schools and city plans each on a different site.</p></div>
+    <div class="card"><h3>Unfamiliar</h3><p>People moving for work don't know the neighbourhoods, the landlords or the local rules, and often not the language.</p></div>
+    <div class="card"><h3>Untrusted</h3><p>Dozens of tabs, but few answers you can check. Generic chatbots guess when they don't know.</p></div>
   </div>
-  <p style="margin-top:1.2rem">This hits international newcomers hardest: they don't know the neighbourhoods, the landlords or the language.</p>
+  <p style="margin-top:1.2rem">Who it is for: <b>people relocating to the Helsinki region for work</b>, to rent or to buy.</p>
 </section>
 
 <section class="slide">
   <h2>One sentence in, a ranked move file out</h2>
-  <p style="margin-bottom:1.2rem">Tell Muutto where you will work and what matters to you. It researches in layers:</p>
+  <div class="flow">
+    <span class="step">Describe the move</span><span class="arrow">→</span>
+    <span class="step">Areas ranked</span><span class="arrow">→</span>
+    <span class="step">Live listings</span><span class="arrow">→</span>
+    <span class="step">Deep research</span><span class="arrow">→</span>
+    <span class="step">Applications to approve</span>
+  </div>
   <div class="grid">
-    <div class="card"><h3>Layer 1 · Areas</h3><p>8 neighbourhoods measured in parallel, plus 29 live listings</p></div>
-    <div class="card"><h3>Layer 2 · The map</h3><p>Drive-time zones that follow the real road network; click anywhere for a route. Noise layer from official decibel maps, street by street</p></div>
-    <div class="card"><h3>Layer 3 · The city</h3><p>City plans and what residents actually say</p></div>
-    <div class="card"><h3>Layer 4 · One flat</h3><p>The agent digs into the building, street works and risks, then gives you questions for the viewing</p></div>
+    <div class="card"><h3>About 20–27 seconds</h3><p>The workplace is geocoded and candidate postal areas (Statistics Finland Paavo) are measured in parallel.</p></div>
+    <div class="card"><h3>Real commute</h3><p>Transit, car and bike times (OSRM, Digitransit); drive-time zones along real roads (Valhalla), minute by minute.</p></div>
+    <div class="card"><h3>Daily life</h3><p>Shops, schools, daycare, parks and stops (OpenStreetMap, city registers), air quality (FMI), traffic noise (City of Helsinki, Väylävirasto).</p></div>
+    <div class="card"><h3>What's changing</h3><p>Local street works, city decisions and plans for the coming years, plus dated resident voices, found with Exa.</p></div>
   </div>
 </section>
 
 <section class="slide">
-  <h2>Your criteria, sourced answers, real action</h2>
+  <h2>Live listings, read properly</h2>
   <div class="grid">
-    <div class="card"><h3>Ask anything</h3><p>A criterion that is only yours, e.g. <i>"safe to walk home at night"</i>. Exa checks every area and the ranking is re-sorted.</p></div>
-    <div class="card"><h3>Every answer has a source</h3><p>No dummy data: every number names its source. When data is missing, Muutto says <b>"unknown"</b> instead of guessing.</p></div>
-    <div class="card"><h3>It acts, you approve</h3><p>Exavier stops waiting for you. He researches each landlord and drafts <b>5 tailored applications in Finnish and English</b>. Nothing is sent until you approve.</p></div>
-    <div class="card"><h3>It keeps watching</h3><p>An <b>Exa Monitor</b> watches your chosen areas for new listings.</p></div>
+    <div class="card"><h3>From the portals, live</h3><p>Listings with photos from Oikotie, Vuokraovi and Etuovi through <b>Exa Search + Contents</b>, filtered to your budget and rooms.</p></div>
+    <div class="card"><h3>Facts from the text</h3><p>Built year, lift, sauna, energy class, pipe renovation: read from the listing itself, each with its source.</p></div>
+    <div class="card"><h3>The flat's history</h3><p>Earlier, already delisted pages of the same flat, so you see how long it has been on the market and what changed.</p></div>
   </div>
 </section>
 
 <section class="slide">
-  <h2>Why Muutto fits the brief</h2>
+  <h2>Ask for anything, get a sourced answer</h2>
   <div class="grid">
-    <div class="card"><h3>Use of Exa</h3><p>Five Exa tools in one butler (Exavier), including Search, Contents, Agent and Monitors. Live listings, plans and resident voices are not in any model's training data.</p></div>
-    <div class="card"><h3>Usefulness</h3><p>Built for people relocating to Helsinki for work.</p></div>
-    <div class="card"><h3>Clarity</h3><p>Every answer quotes its source, and "unknown" is an allowed answer.</p></div>
-    <div class="card"><h3>Originality and working demo</h3><p>Layered research, from city scale down to one flat, ending in ready applications. It runs on live queries.</p></div>
+    <div class="card"><h3>Your own criteria</h3><p>"Public sauna", "near the sea", "safe at night": venues go to <b>Exa Places</b>, questions to <b>Exa Search</b>, with a judged, quoted answer for every area. The ranking re-sorts.</p></div>
+    <div class="card"><h3>Deep research on one flat</h3><p><b>Exa Agent</b> looks into the building, the landlord, street works and risks, verifies the citations and gives you questions for the viewing.</p></div>
+    <div class="card"><h3>"Unknown" is an answer</h3><p>Every number in the UI names its source. When a source is missing, Muutto says <b>unknown</b> instead of guessing.</p></div>
   </div>
 </section>
 
 <section class="slide">
-  <h2>Demo video</h2>
+  <h2>Pukki applies for you, you approve</h2>
+  <ul>
+    <li>For your <b>five best flats</b>, Pukki researches each landlord: tenant requirements, how to apply and reviews, all quoted.</li>
+    <li>It writes a <b>tailored application in Finnish and English</b> from your profile and lists what is still missing.</li>
+    <li>Nothing goes out until you press <b>Approve</b>. In the demo, sending is test-only, to your own inbox.</li>
+    <li>Paste the landlord's reply and it becomes a <b>calendar event</b> for the viewing.</li>
+    <li>An <b>Exa Monitor</b> keeps watching your areas and flags new listings.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Exa does the digging</h2>
+  <table>
+    <tr><th>Exa tool</th><th>What Muutto uses it for</th></tr>
+    <tr><td>Search</td><td>Live listings, local works and city decisions, quoted answers to your own criteria, landlord research</td></tr>
+    <tr><td>Contents</td><td>Full listing text and photos, facts read from the page, delisted history of the same flat</td></tr>
+    <tr><td>Places</td><td>Venue criteria such as a public sauna near each area</td></tr>
+    <tr><td>Agent</td><td>Deep research on one flat and its landlord, with verified citations</td></tr>
+    <tr><td>Monitors</td><td>Watching chosen areas for new listings after the search is done</td></tr>
+  </table>
+  <p class="src">Next.js 15 · React · Exa API · OpenAI · Leaflet. Open data: Statistics Finland, OpenStreetMap, FMI, City of Helsinki, Väylävirasto, Digitransit, OSRM, Valhalla.</p>
+</section>
+
+<section class="slide">
+  <h2>How Muutto answers the judging</h2>
+  <div class="grid">
+    <div class="card"><h3>Beyond training data</h3><p>Today's listings, delisted pages, this year's street works and resident voices. None of it is in a model's memory.</p></div>
+    <div class="card"><h3>Real people, real task</h3><p>People moving to the Helsinki region for work, from "where should I live" to sent applications.</p></div>
+    <div class="card"><h3>Sources everywhere</h3><p>Every number and claim links to its source, and missing data shows as "unknown".</p></div>
+    <div class="card"><h3>Original and live</h3><p>Research in layers, from city to one flat, ending in action the user approves. Runs on any live query.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Demo</h2>
   <iframe class="video" src="https://www.youtube-nocookie.com/embed/Cr_2XMM_pfw" title="Muutto demo" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
-  <p style="margin-top:.8rem"><a href="https://youtu.be/Cr_2XMM_pfw">youtu.be/Cr_2XMM_pfw</a></p>
+  <p style="margin-top:.8rem"><a href="https://youtu.be/Cr_2XMM_pfw">youtu.be/Cr_2XMM_pfw</a> · <a href="https://github.com/KowaloskiX/muutto">github.com/KowaloskiX/muutto</a></p>
 </section>
 
 <section class="slide dark">
   <h2>Muutto</h2>
-  <p>Search, read, compare, draft, monitor. One butler, and the final click stays yours.</p>
-  <p class="quote">You got the job. The butler finds the home.</p>
-  <p style="margin-top:2rem">Built at Junction 2026 with Exa.</p>
+  <p>Search, read, compare, research, draft, monitor. One butler, and the final click stays yours.</p>
+  <p class="quote">You got the job. Pukki finds the home.</p>
+  <p style="margin-top:2rem">Built at Junction 2026 with Exa · github.com/KowaloskiX/muutto</p>
 </section>
 
 <script src="deck.js"></script>
