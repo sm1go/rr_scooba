@@ -15,13 +15,19 @@ export default function Stepper({ steps, current, onSelect, doneBefore,
 }) {
   const { t } = useI18n()
   const activeRef = useRef<HTMLButtonElement | null>(null)
+  const listRef = useRef<HTMLOListElement | null>(null)
   useEffect(() => {
-    activeRef.current?.scrollIntoView(
-      { inline: 'center', block: 'nearest' })
+    // scroll the pill row itself, not via scrollIntoView: that scrolls
+    // every ancestor and on mobile can widen the page viewport
+    const el = activeRef.current, list = listRef.current
+    if (el && list) {
+      list.scrollLeft =
+        el.offsetLeft - (list.clientWidth - el.offsetWidth) / 2
+    }
   }, [current])
   return (
-    <nav aria-label={label}>
-      <ol className="stepper m-0 p-0 list-none">
+    <nav aria-label={label} className="stepper-nav">
+      <ol ref={listRef} className="stepper m-0 p-0 list-none">
         {steps.map((s, i) => {
           const done = i < doneBefore
           const active = i === current

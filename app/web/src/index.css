@@ -396,6 +396,8 @@ html[data-contrast="high"] .emp-tile:hover { border-color: #000; }
 /* §8 stepper + card chooser */
 .stepper { display: flex; gap: 8px; flex-wrap: wrap; }
 .stepper-step {
+  position: relative; /* contain the absolute .sr-only "done" label —
+    otherwise it escapes the pill scroller and widens the document */
   display: inline-flex; align-items: center; gap: 8px;
   min-height: 44px; padding: 8px 14px; font: inherit;
   border: 1px solid var(--color-hairline); border-radius: 10px;
@@ -458,6 +460,10 @@ html[data-contrast="high"] .stepper-step { border-color: #000; }
   font-size: .72rem; color: var(--color-secondary); font-weight: 400;
 }
 
+/* the nav hosts a horizontal scroll container — let it shrink inside
+   grid/flex parents instead of forcing the column wide */
+.stepper-nav { min-width: 0; max-width: 100%; }
+
 /* mobile: compact horizontally scrollable stepper pills */
 @media (max-width: 767px) {
   .stepper {
@@ -469,5 +475,8 @@ html[data-contrast="high"] .stepper-step { border-color: #000; }
   .stepper-step { min-height: 40px; padding: 6px 10px; }
   .stepper-text { flex-direction: row; }
   .stepper-lock { display: none; }
+  /* next-step card: stack text above the button */
+  .next-card { flex-direction: column; align-items: stretch !important; }
+  .next-card .btn { width: 100%; }
 }
 .venue-map figcaption ol { line-height: 1.6; }

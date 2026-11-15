@@ -250,7 +250,9 @@ function fmtTime(iso: string) {
   return iso.includes('T') ? iso.split('T')[1].slice(0, 5) : iso
 }
 
-function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
+function BoothDay({ id, firstWeek, online }: {
+  id: string; firstWeek: string[]; online?: boolean
+}) {
   const { t } = useI18n()
   const [day, setDay] = useState<EmployerDay | null>(null)
   const [code, setCode] = useState('')
@@ -315,7 +317,7 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
 
   return (
     <div className="grid gap-4">
-      <ScanBox eventId={id} allowVisitorCode />
+      {!online && <ScanBox eventId={id} allowVisitorCode />}
       {day.booth && (
         <p className="m-0 font-medium">{t('ev.booth')} {day.booth}</p>
       )}
@@ -351,7 +353,7 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
           </article>
           {name ? (
             <p className="font-medium">{t('ev.emp.day.name', { n: name })}</p>
-          ) : (
+          ) : !online && (
             <div className="flex gap-2 flex-wrap items-center">
               <label className="grid gap-1">
                 <span>{t('ev.emp.day.code')}</span>
@@ -429,19 +431,21 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
           </form>
         </Section>
       )}
-      <Section title={t('ev.emp.day.queue')}>
-        {day.queue.length === 0 ? (
-          <p className="text-secondary">{t('ev.emp.day.queue.empty')}</p>
-        ) : (
-          <p className="m-0">
-            {t('ev.emp.day.queue.n', { n: day.queue.length })}
-          </p>
-        )}
-        <button type="button" className="btn btn-secondary"
-                disabled={day.queue.length === 0} onClick={callNext}>
-          {t('ev.emp.day.call')}
-        </button>
-      </Section>
+      {!online && (
+        <Section title={t('ev.emp.day.queue')}>
+          {day.queue.length === 0 ? (
+            <p className="text-secondary">{t('ev.emp.day.queue.empty')}</p>
+          ) : (
+            <p className="m-0">
+              {t('ev.emp.day.queue.n', { n: day.queue.length })}
+            </p>
+          )}
+          <button type="button" className="btn btn-secondary"
+                  disabled={day.queue.length === 0} onClick={callNext}>
+            {t('ev.emp.day.call')}
+          </button>
+        </Section>
+      )}
     </div>
   )
 }
@@ -763,7 +767,7 @@ export default function EmployerEventWorkspace() {
       {ev.format === 'online' && evFull && (
         <OnlineLobby ev={evFull} now={now}
                      employers={evFull.employers} />)}
-      <BoothDay id={id!}
+      <BoothDay id={id!} online={ev.format === 'online'}
                 firstWeek={ws.need?.card.first_week ?? []} />
     </div>
   )
@@ -787,7 +791,10 @@ export default function EmployerEventWorkspace() {
           ))}
         </ul>
       )}
-      <p className="m-0 text-secondary">{t('ev.emp.nameattalk')}</p>
+      <p className="m-0 text-secondary">
+        {t(ev.format === 'online'
+          ? 'ev.emp.nameattalk.online' : 'ev.emp.nameattalk')}
+      </p>
     </Section>
   )
 
@@ -877,7 +884,7 @@ export default function EmployerEventWorkspace() {
                steps={[t('emp.step.need'), t('emp.step.choose'),
                        t('emp.step.schedule'), t('emp.step.day'),
                        t('emp.step.answer')]} />
-      <div className="card p-4 flex gap-3 items-center flex-wrap"
+      <div className="card next-card p-4 flex gap-3 items-center flex-wrap"
            style={{ borderColor: 'var(--color-brand)' }}>
         <strong className="text-secondary uppercase"
                 style={{ fontSize: '.8rem', letterSpacing: '.04em' }}>

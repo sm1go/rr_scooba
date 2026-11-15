@@ -741,6 +741,7 @@ const et: Partial<Record<Key, string>> = {
   'ev.emp.schedule': 'Sinu ajakava',
   'ev.emp.anon': 'anonüümne inimene (nimi vestluses)',
   'ev.emp.nameattalk': 'Nimed ilmuvad vestluses, pärast skaneerimist või koodi.',
+  'ev.emp.nameattalk.online': 'Nimed on näha videokõnes.',
   'ev.emp.needfirst': 'Kirjuta esmalt oma vajaduskaart',
   'ev.emp.due': 'Vastused {n} päeva jooksul',
   'ev.emp.late': 'Hilinenud — vastused oleks pidanud olema {d}',
@@ -795,6 +796,11 @@ const et: Partial<Record<Key, string>> = {
   'lounge.done': 'On teinud',
   'lounge.note': 'Ainult eesnimed. Näed osalejaid pärast liitumist.',
   'lounge.joinfirst': 'Liitu alaga, et näha osalejaid ja ühendust võtta.',
+
+  'next.online.now': 'Sinu kõne on praegu — liitu videokõnega',
+  'next.online.next': 'Sinu järgmine kõne algab {t} — liitu videokõnega',
+  'next.online.plan': 'Sul on {n} kõnet {d} — liitu fuajee kaudu',
+  'next.online.plan.btn': 'Ava fuajee',
 
 }
 

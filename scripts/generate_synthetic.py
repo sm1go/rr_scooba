@@ -113,7 +113,7 @@ EMPLOYERS = [
     ("emp-oivo",         "Maalaus Oivo", "Painting and small repair work.",
      "Antti Sarlin", None),
     ("emp-lumo",         "Lumo Systems Oy", "Booking software for tradespeople, Otaniemi.",
-     "Sanna Virtanen", "D2"),
+     "Aaro Lindholm", "D2"),
     ("emp-otava",        "Otava Cloud Oy", "Cloud hosting in Keilaniemi.",
      "Mikael Sund", None),
     ("emp-vihrea",       "Puutarhapalvelu Vihreä", "Parks and garden work for the city.",

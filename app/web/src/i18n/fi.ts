@@ -1071,6 +1071,7 @@ const fi: Record<Key, string> = {
   'ev.emp.schedule': 'Aikataulusi',
   'ev.emp.anon': 'nimetön henkilö (nimi keskustelussa)',
   'ev.emp.nameattalk': 'Nimet näkyvät keskustelussa, skannauksen tai koodin jälkeen.',
+  'ev.emp.nameattalk.online': 'Nimet näkyvät videopuhelussa.',
   'ev.emp.needfirst': 'Kirjoita ensin tarvekorttisi',
   'ev.emp.due': 'Vastauksia jäljellä {n} päivää',
   'ev.emp.late': 'Myöhässä — vastausten määräaika oli {d}',
@@ -1125,6 +1126,11 @@ const fi: Record<Key, string> = {
   'lounge.done': 'On tehnyt',
   'lounge.note': 'Vain etunimet näkyvät. Näet osallistujat liittymisen jälkeen.',
   'lounge.joinfirst': 'Liity tilaan nähdäksesi osallistujat ja yhdistääksesi.',
+
+  'next.online.now': 'Puhelusi on nyt — liity videopuheluun',
+  'next.online.next': 'Seuraava puhelusi alkaa {t} — liity videopuheluun',
+  'next.online.plan': 'Sinulla on {n} puhelua {d} — liity aulan kautta',
+  'next.online.plan.btn': 'Avaa aula',
 
 }
 

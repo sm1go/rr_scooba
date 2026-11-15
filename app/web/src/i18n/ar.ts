@@ -741,6 +741,7 @@ const ar: Partial<Record<Key, string>> = {
   'ev.emp.schedule': 'جدولك',
   'ev.emp.anon': 'شخص مجهول (الاسم في المحادثة)',
   'ev.emp.nameattalk': 'تظهر الأسماء في المحادثة، بعد المسح أو الرمز.',
+  'ev.emp.nameattalk.online': 'تظهر الأسماء في مكالمة الفيديو.',
   'ev.emp.needfirst': 'اكتب بطاقة حاجتك أولاً',
   'ev.emp.due': 'الإجابات خلال {n} أيام',
   'ev.emp.late': 'متأخر — كانت الإجابات مستحقة في {d}',
@@ -795,6 +796,11 @@ const ar: Partial<Record<Key, string>> = {
   'lounge.done': 'قام بـ',
   'lounge.note': 'الأسماء الأولى فقط. سترى من هو هنا بعد الانضمام.',
   'lounge.joinfirst': 'انضم إلى الصالة لرؤية الحاضرين والتواصل معهم.',
+
+  'next.online.now': 'محادثتك الآن — انضم إلى مكالمة الفيديو',
+  'next.online.next': 'محادثتك التالية تبدأ {t} — انضم إلى مكالمة الفيديو',
+  'next.online.plan': 'لديك {n} محادثات في {d} — انضم عبر الردهة',
+  'next.online.plan.btn': 'افتح الردهة',
 
 }
 

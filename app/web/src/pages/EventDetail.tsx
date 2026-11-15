@@ -667,9 +667,11 @@ export default function EventDetail() {
       {!currentM && !nextM && meetings.length === 0 && (
         <p className="text-secondary">{t('ev.meetings.none')}</p>
       )}
-      <PassInline eventId={id!} />
-      <p className="m-0 text-secondary">{t('ev.day.passtext')}</p>
-      <ScanBox eventId={id!} />
+      {!online && (<>
+        <PassInline eventId={id!} />
+        <p className="m-0 text-secondary">{t('ev.day.passtext')}</p>
+        <ScanBox eventId={id!} />
+      </>)}
       {pastM.length > 0 && (
         <Section title={t('ev.day.done.list')}>
           <ul className="m-0 ps-5">
@@ -931,7 +933,8 @@ export default function EventDetail() {
          : phase === 'registration' || phase === 'matched' ? opensDay : null,
   ]
 
-  const next = !reg
+  const next: { text: string; btn: string; to?: number; link?: string } =
+  !reg
     ? (choosingOpen
        ? { text: t('next.register'), btn: t('next.register.btn'), to: 0 }
        : { text: t('ev.register.closed'), btn: '', to: -1 })
@@ -942,8 +945,19 @@ export default function EventDetail() {
     ? { text: t('next.plan', { n: meetings.length }),
         btn: t('next.plan.btn'), to: 2 }
     : phase === 'live'
-    ? { text: t('next.meet', { n: meetings.length, d: fmtDate(ev.date) }),
-        btn: t('next.meet.btn'), to: 3 }
+    ? (online
+       ? (currentM?.video_url
+          ? { text: t('next.online.now'), btn: t('ev.day.join'),
+              link: currentM.video_url }
+          : nextM?.video_url
+          ? { text: t('next.online.next',
+                      { t: fmtTime(nextM.starts_at) }),
+              btn: t('ev.day.join'), link: nextM.video_url }
+          : { text: t('next.online.plan', { n: meetings.length,
+                                           d: fmtDate(ev.date) }),
+              btn: t('next.online.plan.btn'), to: 3 })
+       : { text: t('next.meet', { n: meetings.length, d: fmtDate(ev.date) }),
+           btn: t('next.meet.btn'), to: 3 })
     : { text: t('next.answers', { n: talksAnswered }),
         btn: t('next.answers.btn'), to: 4 }
 
@@ -1001,16 +1015,19 @@ export default function EventDetail() {
                    steps={[t('ev.step.register'), t('ev.step.choose'),
                            t('ev.step.plan'), t('ev.step.day'),
                            t('ev.step.answers')]} />
-          <div className="card p-4 flex gap-3 items-center flex-wrap"
+          <div className="card next-card p-4 flex gap-3 items-center flex-wrap"
                style={{ borderColor: 'var(--color-brand)' }}>
             <strong className="text-secondary uppercase"
                     style={{ fontSize: '.8rem', letterSpacing: '.04em' }}>
               {t('next.title')}</strong>
             <span className="flex-1" style={{ minWidth: 160 }}>
               {next.text}</span>
-            {next.to >= 0 && (
+            {next.link ? (
+              <a className="btn btn-primary" href={next.link}
+                 target="_blank" rel="noreferrer">{next.btn}</a>
+            ) : (next.to ?? -1) >= 0 && (
               <button type="button" className="btn btn-primary"
-                      onClick={() => setStep(next.to)}>
+                      onClick={() => setStep(next.to ?? -1)}>
                 {next.btn}</button>
             )}
           </div>

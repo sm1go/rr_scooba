@@ -541,11 +541,7 @@
           "must_haves": [
             {
               "text": "Some programming experience — a course, a hobby project or work",
-              "why": "needed from the first week on this job"
-            },
-            {
-              "text": "Several years of backend work",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'fix bugs and build small features in our Python backend'"
             }
           ],
           "will_teach": [
@@ -556,12 +552,12 @@
             {
               "name": "English",
               "level": "B2",
-              "task": "daily work with customers and the team"
+              "task": "work in our English-speaking team"
             },
             {
-              "name": "English",
-              "level": "C1",
-              "task": "daily work with customers and the team"
+              "name": "Finnish",
+              "level": "A2",
+              "task": "handle deliveries"
             }
           ],
           "job_ids": [
@@ -602,12 +598,12 @@
             {
               "name": "Finnish",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "answer Finnish tickets"
             },
             {
               "name": "English",
               "level": "B2",
-              "task": "daily work with customers and the team"
+              "task": "answer English tickets"
             }
           ],
           "job_ids": [
@@ -637,7 +633,7 @@
           "must_haves": [
             {
               "text": "ISTQB Foundation (nice to have)",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'plan and run tests; automate them with Playwright'"
             }
           ],
           "will_teach": [
@@ -648,12 +644,12 @@
             {
               "name": "English",
               "level": "B2",
-              "task": "daily work with customers and the team"
+              "task": "work in the team — Finnish not needed"
             },
             {
-              "name": "English",
-              "level": "B2",
-              "task": "daily work with customers and the team"
+              "name": "Finnish",
+              "level": "B1",
+              "task": "test Finnish UI texts (bonus)"
             }
           ],
           "job_ids": [
@@ -683,11 +679,11 @@
           "must_haves": [
             {
               "text": "SQL",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'build sales dashboards for retail clients (Power BI)'"
             },
             {
               "text": "IT support vocational qualification or similar experience",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'help store staff by phone and remote tools'"
             }
           ],
           "will_teach": [
@@ -698,12 +694,12 @@
             {
               "name": "English",
               "level": "B2",
-              "task": "daily work with customers and the team"
+              "task": "work in the team"
             },
             {
               "name": "Finnish",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "present to Finnish clients (plus)"
             }
           ],
           "job_ids": [
@@ -744,12 +740,12 @@
             {
               "name": "Finnish",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "help customers at the desk"
             },
             {
               "name": "English",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "help international visitors"
             }
           ],
           "job_ids": [
@@ -790,12 +786,12 @@
             {
               "name": "English",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "serve hotel guests"
             },
             {
               "name": "Finnish",
               "level": "A1",
-              "task": "daily work with customers and the team"
+              "task": "greet guests"
             }
           ],
           "job_ids": [
@@ -836,12 +832,12 @@
             {
               "name": "Finnish",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "answer calls and greet visitors"
             },
             {
               "name": "English",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "welcome international guests"
             }
           ],
           "job_ids": [
@@ -882,12 +878,12 @@
             {
               "name": "Finnish",
               "level": "A2",
-              "task": "daily work with customers and the team"
+              "task": "greet guests"
             },
             {
               "name": "English",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "help international guests"
             }
           ],
           "job_ids": [
@@ -965,12 +961,12 @@
             {
               "name": "Finnish",
               "level": "A2",
-              "task": "daily work with customers and the team"
+              "task": "serve customers"
             },
             {
               "name": "English",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "serve tourists"
             }
           ],
           "job_ids": [
@@ -1010,12 +1006,7 @@
             {
               "name": "Finnish",
               "level": "A2",
-              "task": "daily work with customers and the team"
-            },
-            {
-              "name": "Finnish",
-              "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "answer simple customer questions"
             }
           ],
           "job_ids": [
@@ -1056,12 +1047,7 @@
             {
               "name": "Finnish",
               "level": "B1",
-              "task": "daily work with customers and the team"
-            },
-            {
-              "name": "Finnish",
-              "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "talk with residents and write care notes"
             }
           ],
           "job_ids": [
@@ -1091,7 +1077,7 @@
           "must_haves": [
             {
               "text": "Forklift licence",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'move pallets with a reach truck'"
             }
           ],
           "will_teach": [
@@ -1102,12 +1088,7 @@
             {
               "name": "English",
               "level": "A2",
-              "task": "daily work with customers and the team"
-            },
-            {
-              "name": "English",
-              "level": "A2",
-              "task": "daily work with customers and the team"
+              "task": "read pick lists and safety signs"
             }
           ],
           "job_ids": [
@@ -1148,7 +1129,7 @@
             {
               "name": "Finnish",
               "level": "A2",
-              "task": "daily work with customers and the team"
+              "task": "understand the supervisor's instructions"
             }
           ],
           "job_ids": [
@@ -1177,15 +1158,15 @@
           "must_haves": [
             {
               "text": "Driving licence B",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'daily rounds in housing companies: heating, water, lighting, doors'"
             },
             {
               "text": "Occupational safety card (työturvallisuuskortti)",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'daily rounds in housing companies: heating, water, lighting, doors'"
             },
             {
               "text": "Driving licence B (tractor training given)",
-              "why": "needed from the first week on this job"
+              "why": "for work like 'clear snow from entrances and paths by hand and with a small tractor'"
             }
           ],
           "will_teach": [
@@ -1196,12 +1177,12 @@
             {
               "name": "Finnish",
               "level": "B1",
-              "task": "daily work with customers and the team"
+              "task": "talk with residents and write fault notes"
             },
             {
-              "name": "Finnish",
+              "name": "Swedish",
               "level": "A2",
-              "task": "daily work with customers and the team"
+              "task": "greet staff in the Swedish-language wing (nice to have)"
             }
           ],
           "job_ids": [

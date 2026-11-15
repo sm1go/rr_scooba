@@ -734,6 +734,7 @@ const sv: Partial<Record<Key, string>> = {
   'ev.emp.schedule': 'Ditt schema',
   'ev.emp.anon': 'en anonym person (namn vid samtalet)',
   'ev.emp.nameattalk': 'Namn syns vid samtalet, efter skanning eller kod.',
+  'ev.emp.nameattalk.online': 'Namn syns i videosamtalet.',
   'ev.emp.needfirst': 'Skriv ditt behovskort först',
   'ev.emp.due': 'Svar inom {n} dagar',
   'ev.emp.late': 'Sen — svaren skulle vara inne {d}',
@@ -788,6 +789,11 @@ const sv: Partial<Record<Key, string>> = {
   'lounge.done': 'Har gjort',
   'lounge.note': 'Endast förnamn. Du ser vilka som är här efter att du gått med.',
   'lounge.joinfirst': 'Gå med i loungen för att se vilka som är här och skapa kontakt.',
+
+  'next.online.now': 'Ditt samtal är nu — gå med i videosamtalet',
+  'next.online.next': 'Ditt nästa samtal börjar kl. {t} — gå med i videosamtalet',
+  'next.online.plan': 'Du har {n} samtal {d} — gå med via lobbyn',
+  'next.online.plan.btn': 'Öppna lobbyn',
 
 }
 

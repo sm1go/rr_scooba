@@ -741,6 +741,7 @@ const sq: Partial<Record<Key, string>> = {
   'ev.emp.schedule': 'Orari yt',
   'ev.emp.anon': 'person anonim (emri në bisedë)',
   'ev.emp.nameattalk': 'Emrat shfaqen në bisedë, pas skanimit ose kodit.',
+  'ev.emp.nameattalk.online': 'Emrat shfaqen në telefonatën video.',
   'ev.emp.needfirst': 'Shkruaje së pari kartën e nevojës',
   'ev.emp.due': 'Përgjigjet brenda {n} ditësh',
   'ev.emp.late': 'Vonë — përgjigjet duhej deri më {d}',
@@ -795,6 +796,11 @@ const sq: Partial<Record<Key, string>> = {
   'lounge.done': 'Ka bërë',
   'lounge.note': 'Vetëm emrat e parë. Sheh kush është këtu pasi të hysh.',
   'lounge.joinfirst': 'Bëhu pjesë e sallës për të parë kush është këtu dhe për t’u lidhur.',
+
+  'next.online.now': 'Biseda jote është tani — bashkohu në telefonatën video',
+  'next.online.next': 'Biseda jote e radhës fillon në {t} — bashkohu në telefonatën video',
+  'next.online.plan': 'Ke {n} biseda më {d} — bashkohu nga salla e pritjes',
+  'next.online.plan.btn': 'Hap sallën e pritjes',
 
 }
 

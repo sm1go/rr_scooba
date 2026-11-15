@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -380,13 +381,48 @@ DONE_FI = [
     "Opetin vanhuksia käyttämään puhelinta",
 ]
 
+LOOKING_EN = [
+    "Steady part-time work I can keep for a long time",
+    "A job with people, a few days a week",
+    "Work where I can use my hands",
+    "Shop or café work near home",
+    "Cleaning or kitchen work, mornings or evenings",
+    "Care or helper work with older people",
+    "Warehouse or delivery work I can learn fast",
+    "Customer work where I can use my languages",
+    "A calm job I can combine with family life",
+    "Work with children or in a school",
+    "Any honest work — I learn quickly",
+    "Computer or office work I can grow into",
+]
+LOOKING_FI = [
+    "Vakaa osa-aikatyö, jota voin tehdä pitkään",
+    "Työ ihmisten parissa muutamana päivänä viikossa",
+    "Työ, jossa pääsen käyttämään käsiä",
+    "Kaupan tai kahvilan työ lähellä kotia",
+    "Siivous- tai keittiötyö aamuin tai illoin",
+    "Vanhusten avustamis- tai hoitotyö",
+    "Varasto- tai jakelutyö, jonka opin nopeasti",
+    "Asiakastyö, jossa pääsen käyttämään kieliä",
+    "Rauhallinen työ, jonka voin yhdistää perhe-elämään",
+    "Työ lasten kanssa tai koulussa",
+    "Rehellistä työtä — opin nopeasti",
+    "Toimisto- tai tietokonetyö, jossa voin kasvaa",
+]
 LOOKING = {
-    "en": "Steady part-time work I can do for a long time",
-    "fi": "Vakaa osa-aikatyö, jota voin tehdä pitkään",
-    "ar": "Steady part-time work I can do for a long time",
-    "ru": "Steady part-time work I can do for a long time",
-    "uk": "Steady part-time work I can do for a long time",
+    "en": LOOKING_EN[0],
+    "fi": LOOKING_FI[0],
+    "ar": LOOKING_EN[0],
+    "ru": LOOKING_EN[0],
+    "uk": LOOKING_EN[0],
 }
+
+
+def _looking(done_texts: list[str], lang: str) -> str:
+    """A plain phrase that varies with the person's done items."""
+    pool = LOOKING_FI if lang == "fi" else LOOKING_EN
+    h = int(_rank("look|" + "|".join(done_texts))[:6], 16)
+    return pool[h % len(pool)]
 
 DISTRICTS = ["leppavaara", "tapiola", "otaniemi", "matinkyla", "olari",
              "niittykumpu", "espoon_keskus", "espoonlahti", "kauklahti"]
@@ -448,7 +484,7 @@ def _card_for(i: int, lang: str) -> dict:
     items = [pool[(start + k * 7) % len(pool)] for k in range(n)]
     return {
         "done": [{"text": t, "own_words": t} for t in items],
-        "looking_for": LOOKING[lang],
+        "looking_for": _looking(items, lang),
         "district": DISTRICTS[int(_rank(f"d{i}")[:4], 16) % len(DISTRICTS)],
         "availability": ["fri-afternoon"]
         + (["sat-morning"] if int(_rank(f"a{i}")[:2], 16) % 2 else []),
@@ -462,21 +498,24 @@ def _special_card(uid: str) -> dict:
              "own_words": "Hoidin kassan ja kahvit yksin torikahviossa"},
             {"text": "Järjestin kirjaston satutunnan vapaaehtoisena",
              "own_words": "Järjestin kirjaston satutunnan vapaaehtoisena"}],
-            "looking_for": LOOKING["fi"], "district": "otaniemi",
+            "looking_for": "Kaupan, kahvilan tai kirjaston työ",
+            "district": "otaniemi",
             "availability": ["fri-afternoon", "sat-morning"]},
         "u-pekka": {"done": [
             {"text": "Ajoin jakeluautoa yötöissä kaksi vuotta",
              "own_words": "Ajoin jakeluautoa yötöissä kaksi vuotta"},
             {"text": "Korjasin taloyhtiön pyöriä ja rappusia",
              "own_words": "Korjasin taloyhtiön pyöriä ja rappusia"}],
-            "looking_for": LOOKING["fi"], "district": "matinkyla",
+            "looking_for": "Kuljetus- tai korjaustyö, jossa näkee tuloksen",
+            "district": "matinkyla",
             "availability": ["fri-afternoon"]},
         "u-amira": {"done": [
             {"text": "Cooked iftar meals for sixty people",
              "own_words": "Cooked iftar meals for sixty people"},
             {"text": "Kept a neighbourhood WhatsApp group running",
              "own_words": "Kept a neighbourhood WhatsApp group running"}],
-            "looking_for": LOOKING["ar"], "district": "espoonlahti",
+            "looking_for": "Kitchen or community work, part-time",
+            "district": "espoonlahti",
             "availability": ["fri-afternoon", "sat-afternoon"]},
     }
     return cards[uid]
@@ -538,6 +577,31 @@ FIELD_WELCOME = {
 LEGAL = {"oy", "ab", "ky", "oyj", "tmi", "osakeyhtio", "ry", "r.y."}
 
 
+_BAR_HIGH = re.compile(
+    r"\b(years|senior|expert|extensive|proven|solid|deep)\b", re.I)
+_BAR_LOW = re.compile(
+    r"\b(some|basic|hobby|interest|willing|familiar|motivation)\b", re.I)
+_TOPIC_RX = [
+    ("dev", re.compile(
+        r"program|backend|frontend|developer|cod|software|python", re.I)),
+    ("clean", re.compile(r"clean", re.I)),
+    ("service", re.compile(r"customer|till|shop|sales|serv", re.I)),
+    ("drive", re.compile(r"driv|licen[cs]e|\bcar\b", re.I)),
+    ("child", re.compile(r"child|kids|school", re.I)),
+    ("physical", re.compile(r"lift|physical|stand|carry", re.I)),
+    ("lang", re.compile(r"finnish|swedish|english", re.I)),
+]
+
+
+def _topic(text: str) -> str:
+    """Rough topic bucket so contradictory requirements on the same
+    subject can be filtered out."""
+    for name, rx in _TOPIC_RX:
+        if rx.search(text):
+            return name
+    return (text.lower().split() or [""])[0]
+
+
 def _employer_need(eid: str, jobs: list, lang: str) -> dict | None:
     """Build a need card for an employer from their open jobs.
     Deterministic; passes the wording checker."""
@@ -558,12 +622,26 @@ def _employer_need(eid: str, jobs: list, lang: str) -> dict | None:
             break
     first_week = [t[0].upper() + t[1:] for t in first_week[:5]]
     must = []
+    bars: dict[str, str] = {}
     for j in open_jobs:
+        duty0 = ((j.get("duties") or [""])[0]).rstrip(".")
+        why = (f"for work like '{duty0[0].lower() + duty0[1:]}'"
+               if duty0 else "needed in the daily work")
         for q in (j.get("qualifications") or []):
             t = q.rstrip(".")
-            if t and t not in {m["text"] for m in must}:
-                why = "needed from the first week on this job"
-                must.append({"text": t[0].upper() + t[1:], "why": why})
+            if not t or t in {m["text"] for m in must}:
+                continue
+            bar = ("high" if _BAR_HIGH.search(t)
+                   else "low" if _BAR_LOW.search(t) else "")
+            topic = _topic(t)
+            # skip a requirement that contradicts one already kept —
+            # e.g. "Some programming experience" vs "Several years of
+            # backend work" from a different job ad
+            if bar and bars.get(topic) and bars[topic] != bar:
+                continue
+            if bar:
+                bars[topic] = bar
+            must.append({"text": t[0].upper() + t[1:], "why": why})
             if len(must) >= 3:
                 break
         if len(must) >= 3:
@@ -583,11 +661,14 @@ def _employer_need(eid: str, jobs: list, lang: str) -> dict | None:
     langs = []
     for j in open_jobs:
         for l in (j.get("languages") or []):
-            if len(langs) < 2 and l.get("language"):
-                langs.append({"name": l["language"],
+            name = l.get("language")
+            # one level per language; use the job's own task text
+            if len(langs) < 2 and name and \
+                    name not in {x["name"] for x in langs}:
+                langs.append({"name": name,
                               "level": l.get("level") or "A2",
-                              "task": "daily work with customers and "
-                                      "the team"})
+                              "task": l.get("task")
+                              or "daily work with customers and the team"})
         if len(langs) >= 2:
             break
     if not langs:

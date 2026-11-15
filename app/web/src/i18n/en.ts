@@ -1068,6 +1068,7 @@ const en = {
   'ev.emp.schedule': 'Your schedule',
   'ev.emp.anon': 'an anonymous person (name at the talk)',
   'ev.emp.nameattalk': 'Names appear at the talk, after the scan or code.',
+  'ev.emp.nameattalk.online': 'Names appear in the video call.',
   'ev.emp.needfirst': 'Write your need card first',
   'ev.emp.due': 'Answers due in {n} days',
   'ev.emp.late': 'Late — answers were due {d}',
@@ -1124,6 +1125,11 @@ const en = {
   'lounge.done': 'Has done',
   'lounge.note': 'First names only. You see who is here after you join.',
   'lounge.joinfirst': 'Join the lounge to see who is here and connect.',
+  'next.online.now': 'Your talk is on now — join the video call',
+  'next.online.next': 'Your next talk starts at {t} — join the video call',
+  'next.online.plan': 'You have {n} talks on {d} — join from the lobby',
+  'next.online.plan.btn': 'Open the lobby',
+
 } as const
 
 export type Key = keyof typeof en

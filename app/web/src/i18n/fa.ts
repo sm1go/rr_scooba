@@ -741,6 +741,7 @@ const fa: Partial<Record<Key, string>> = {
   'ev.emp.schedule': 'برنامه شما',
   'ev.emp.anon': 'شخص ناشناس (نام در گفتگو)',
   'ev.emp.nameattalk': 'نام\u200cها در گفتگو، پس از اسکن یا کد، دیده می\u200cشوند.',
+  'ev.emp.nameattalk.online': 'نام‌ها در تماس ویدیویی نمایش داده می‌شوند.',
   'ev.emp.needfirst': 'اول کارت نیاز خود را بنویسید',
   'ev.emp.due': 'پاسخ\u200cها تا {n} روز',
   'ev.emp.late': 'دیر شده — پاسخ\u200cها باید تا {d} می\u200cبودند',
@@ -795,6 +796,11 @@ const fa: Partial<Record<Key, string>> = {
   'lounge.done': 'انجام داده',
   'lounge.note': 'فقط نام\u200cهای کوچک. پس از پیوستن می\u200cبینید چه کسی اینجاست.',
   'lounge.joinfirst': 'برای دیدن حاضران و ارتباط با آن\u200cها به سالن بپیوندید.',
+
+  'next.online.now': 'گفتگوی شما اکنون است — به تماس ویدیویی بپیوندید',
+  'next.online.next': 'گفتگوی بعدی شما ساعت {t} است — به تماس ویدیویی بپیوندید',
+  'next.online.plan': 'شما {n} گفتگو در {d} دارید — از لابی بپیوندید',
+  'next.online.plan.btn': 'باز کردن لابی',
 
 }
 
