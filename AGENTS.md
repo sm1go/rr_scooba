@@ -33,3 +33,4 @@ Applies to every human and AI agent working in this repository.
 ## Tooling
 
 - Python 3.14 (`python`) and Node 25 are available on the dev machine.
+- Pitch decks are HTML in `docs/04-pitch/`; the deliverable is PDF. After editing a deck run `bash scripts/export-pdfs.sh` (headless Chrome, one 1280x720 page per slide) and commit the PDFs.

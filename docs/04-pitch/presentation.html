@@ -32,6 +32,17 @@
   .footer { position:fixed; bottom:2.5vh; right:3vw; font-size:.85rem; color:#8a97ab; z-index:5; }
   .nav { position:fixed; bottom:2vh; left:3vw; z-index:5; display:flex; gap:.4rem; }
   .nav button { border:0; background:#ffffffcc; border-radius:8px; padding:.35rem .8rem; cursor:pointer; font-size:1rem; }
+  @page { size:1280px 720px; margin:0; }
+  @media print {
+    html, body { background:none; }
+    .slide { display:flex !important; position:relative; width:1280px; height:720px; break-after:page; padding:48px 80px; }
+    .nav, .footer { display:none !important; }
+    h1 { font-size:76px; } h2 { font-size:46px; } .kicker { font-size:15px; }
+    p, li { font-size:25px; } .card h3 { font-size:25px; } .card p, .card li { font-size:21px; }
+    .big { font-size:54px; } .quote { font-size:34px; } .step { font-size:19px; } code { font-size:16px; }
+    .grid { gap:18px; } .card { padding:18px 22px; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
 </style>
 </head>
 <body>

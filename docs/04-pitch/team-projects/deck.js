@@ -2,6 +2,10 @@
   const slides = [...document.querySelectorAll('.slide')];
   document.body.insertAdjacentHTML('beforeend',
     '<div class="nav"><button data-d="-1">&larr;</button><button data-d="1">&rarr;</button></div><div class="footer" id="counter"></div>');
+  document.querySelectorAll('iframe.video').forEach(f => {
+    const id = f.src.split('/embed/')[1];
+    f.insertAdjacentHTML('afterend', `<a class="thumb" href="https://youtu.be/${id}"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="Demo video"><span>&#9654;</span></a>`);
+  });
   let i = 0;
   const show = n => {
     i = Math.max(0, Math.min(slides.length - 1, n));

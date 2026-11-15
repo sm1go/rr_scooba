@@ -47,8 +47,8 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 - [Ideation method](docs/02-ideation/README.md) · [Round 1 digest — all 58 raw ideas](docs/02-ideation/round-1-digest.md) · [Round 2 brief](docs/02-ideation/round-2-brief.md)
 - Product: [Feature catalogue F01–F20](docs/03-product/feature-catalog.md) · [Shortlist & MVP](docs/03-product/shortlist.md) · [Architecture](docs/03-product/architecture.md) · [Scoring](docs/03-product/scoring/summary.md)
 - Build contract: [App v2 spec (authoritative)](docs/03-product/app-v2-spec.md) · [API contract pointer](docs/03-product/api-contract.md) · [Finnish-style design guide](docs/03-product/design-guide.md) · [Event mode spec (v4, current)](docs/03-product/event-mode-spec.md)
-- Pitch: [Short slide deck](docs/04-pitch/presentation.html) (open in a browser, arrow keys to navigate)
-- Other team projects: [OtaPath — Beyond the Clinic](docs/04-pitch/team-projects/otapath-beyond-the-clinic.html) · [Muutto — The Internet Butler](docs/04-pitch/team-projects/muutto-internet-butler.html) · [Taimi — Personal Economic Trainer](docs/04-pitch/team-projects/taimi-personal-economic-trainer.html) · [Sources and video transcripts](docs/04-pitch/team-projects/sources.md)
+- Pitch: [Short slide deck (PDF)](docs/04-pitch/presentation.pdf) · [HTML source](docs/04-pitch/presentation.html). Re-export PDFs with `bash scripts/export-pdfs.sh`
+- Other team projects (PDF): [OtaPath — Beyond the Clinic](docs/04-pitch/team-projects/otapath-beyond-the-clinic.pdf) · [Muutto — The Internet Butler](docs/04-pitch/team-projects/muutto-internet-butler.pdf) · [Taimi — Personal Economic Trainer](docs/04-pitch/team-projects/taimi-personal-economic-trainer.pdf) · [Sources and video transcripts](docs/04-pitch/team-projects/sources.md)
 - [Decision log](docs/decisions/decision-log.md)
 
 ## Run the demo locally
@@ -73,3 +73,36 @@ Demo accounts (password `demo1234`): `aino@example.com` (student),
 `pekka@example.com` (retiree), `amira@example.com` (access needs),
 `sanna@example.com` (employer), `advisor@example.com` (city advisor Leena).
 A demo panel on `/sign-in` logs in as any of them with one tap.
+
+## Deploy (Render)
+
+One Docker container serves both the API and the built frontend from the
+same origin (`Dockerfile` + `render.yaml` Blueprint at the repo root).
+
+1. In Render: **New → Blueprint** → connect the GitHub repo → pick it.
+2. Render reads `render.yaml` and asks for two optional env vars:
+   `NVIDIA_API_KEY` and `DIGITRANSIT_API_KEY`. Enter them or leave blank —
+   without keys the AI helper and commute-time features stay hidden.
+3. **Apply.** The first deploy takes a few minutes (image build + seed).
+4. Free plan sleeps after ~15 min idle — the first request after sleep
+   takes ~30–60 s. `healthCheckPath` is `/api/config`.
+
+The database is synthetic and rebuilt from `db/seed` on every start
+(`TM_DB_PATH=/tmp/talentmatch.sqlite` — ephemeral by design).
+
+**Demo accounts** (password `demo1234`): `aino@example.com` (jobseeker),
+`sanna@example.com` (employer), `advisor@example.com` (organizer/Leena).
+The yellow demo bar signs in with one tap and moves the demo clock
+(3 weeks before → matching closed → event day → after the event);
+**Reset demo** rebuilds the database (`POST /api/demo/reset`, or restart
+the service).
+
+### Docker locally
+
+```bash
+docker build -t ewm .
+docker run --rm -p 8080:8000 -e DEMO_MODE=1 ewm
+# open http://127.0.0.1:8080  — same-origin: frontend + /api from FastAPI
+# with the optional keys:
+docker run --rm -p 8080:8000 --env-file .env ewm
+```
