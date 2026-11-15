@@ -4,135 +4,222 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Muutto — The Internet Butler (Exa)</title>
-<link rel="stylesheet" href="deck.css">
 <style>
-  :root { --c1:#3b2fc9; --c2:#6a5cff; }
-  .flow { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:.4rem 0 1.4rem; }
-  .step { background:var(--c1); color:#fff; border-radius:999px; padding:.5rem 1.05rem; font-weight:600; font-size:clamp(.9rem,1.35vw,1.1rem); }
-  .arrow { color:var(--muted); font-size:1.3rem; }
-  table { border-collapse:collapse; width:100%; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(20,33,61,.08); }
-  th, td { text-align:left; padding:.7rem 1rem; font-size:clamp(.95rem,1.3vw,1.1rem); border-bottom:1px solid #e6e9f2; vertical-align:top; }
-  th { background:#eeecff; color:var(--c1); }
-  td:first-child { font-weight:700; white-space:nowrap; color:var(--ink); }
-  .src { font-size:.9rem; color:var(--muted); margin-top:1rem; }
-  @media print { th, td { font-size:19px; padding:10px 14px; } .src { font-size:16px; } }
+  @font-face { font-family:"Geist"; src:url(../assets/fonts/geist-latin-wght-normal.woff2) format("woff2"); font-weight:100 900; }
+  @font-face { font-family:"Geist"; src:url(../assets/fonts/geist-latin-ext-wght-normal.woff2) format("woff2"); font-weight:100 900; unicode-range:U+0100-024F; }
+  @font-face { font-family:"Hedvig"; src:url(../assets/fonts/hedvig-letters-serif-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family:"Hedvig"; src:url(../assets/fonts/hedvig-letters-serif-latin-ext-400-normal.woff2) format("woff2"); unicode-range:U+0100-024F; }
+  :root { --night:#14112b; --night2:#221c4d; --violet:#6a5cff; --violet-soft:#ecebff; --mint:#2fbf8f; --mint-soft:#dff6ee;
+          --paper:#f7f6fb; --ink:#16142a; --sec:#5d5a75; --hair:#e4e2ee; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:#0c0a1d; font-family:"Geist", system-ui, sans-serif; color:var(--ink); overflow:hidden; }
+  .deck { position:absolute; left:50%; top:50%; width:1920px; height:1080px; transform-origin:0 0; }
+  .s { position:absolute; inset:0; display:none; background:var(--paper); padding:100px 130px; overflow:hidden; }
+  .s.on { display:block; }
+  .s.night { background:radial-gradient(1200px 700px at 85% 20%, #3a2f8f 0%, transparent 60%), linear-gradient(160deg,var(--night),var(--night2)); color:#fff; }
+  .eyebrow { font-size:22px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--violet); margin-bottom:30px; }
+  .night .eyebrow { color:#b7b0ff; }
+  h1, h2, .serif { font-family:"Hedvig", Georgia, serif; font-weight:400; letter-spacing:-.015em; }
+  h1 { font-size:190px; line-height:.95; }
+  h2 { font-size:78px; line-height:1.06; max-width:1560px; }
+  .lead { font-size:36px; line-height:1.4; color:var(--sec); max-width:1380px; margin-top:28px; }
+  .night .lead { color:#d6d3f5; }
+  .row { display:grid; gap:28px; margin-top:56px; }
+  .c2 { grid-template-columns:repeat(2,1fr); } .c3 { grid-template-columns:repeat(3,1fr); } .c4 { grid-template-columns:repeat(4,1fr); } .c5 { grid-template-columns:repeat(5,1fr); }
+  .card { background:#fff; border:1px solid var(--hair); border-radius:28px; padding:38px 40px; }
+  .card h3 { font-size:32px; font-weight:650; margin-bottom:14px; letter-spacing:-.01em; }
+  .card p { font-size:25px; line-height:1.45; color:var(--sec); }
+  .card .n { font-family:"Hedvig",serif; font-size:30px; color:var(--violet); margin-bottom:18px; }
+  .chip { display:inline-block; font-size:19px; font-weight:600; padding:7px 15px; border-radius:999px; background:var(--mint-soft); color:#13704f; margin:14px 8px 0 0; }
+  .chip.v { background:var(--violet-soft); color:#3b2fc9; }
+  .big { font-family:"Hedvig",serif; font-size:120px; line-height:1; color:var(--violet); }
+  .quote { font-family:"Hedvig",serif; font-size:52px; line-height:1.25; margin-top:56px; max-width:1400px; border-left:6px solid var(--mint); padding-left:36px; }
+  .flow { display:flex; align-items:stretch; gap:0; margin-top:90px; }
+  .flow .st { flex:1; background:#fff; border:1px solid var(--hair); border-radius:26px; padding:44px 34px; min-height:420px; position:relative; }
+  .flow .st + .st { margin-left:34px; }
+  .flow .st + .st::before { content:"→"; position:absolute; left:-30px; top:50%; transform:translateY(-50%); font-size:30px; color:var(--violet); }
+  .flow .k { font-size:18px; font-weight:700; letter-spacing:.12em; color:var(--violet); text-transform:uppercase; }
+  .flow .t { font-size:36px; font-weight:650; margin-top:12px; line-height:1.2; }
+  .flow .d { font-size:26px; color:var(--sec); margin-top:16px; line-height:1.4; }
+  table { width:100%; border-collapse:separate; border-spacing:0; margin-top:50px; background:#fff; border:1px solid var(--hair); border-radius:28px; overflow:hidden; }
+  th, td { text-align:left; padding:26px 36px; font-size:27px; border-bottom:1px solid var(--hair); }
+  tr:last-child td { border-bottom:0; }
+  th { font-size:19px; letter-spacing:.14em; text-transform:uppercase; color:var(--violet); background:var(--violet-soft); }
+  td:first-child { font-weight:700; width:300px; }
+  td:last-child { color:var(--sec); }
+  .foot { position:absolute; left:130px; right:130px; bottom:56px; display:flex; justify-content:space-between; font-size:19px; color:#8f8ba8; }
+  .night .foot { color:#9d97cf; }
+  .goat { position:absolute; right:130px; top:120px; width:360px; height:360px; border-radius:50%; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; font-size:200px; }
+  .tag { display:inline-flex; gap:12px; margin-top:44px; }
+  .tag span { font-size:22px; font-weight:600; border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:10px 20px; color:#e9e6ff; }
+  .split { display:grid; grid-template-columns:1.05fr 1fr; gap:70px; align-items:center; margin-top:40px; }
+  .checks { list-style:none; margin-top:10px; }
+  .checks li { font-size:30px; line-height:1.4; padding:20px 0 20px 64px; position:relative; border-bottom:1px solid var(--hair); }
+  .checks li::before { content:"✓"; position:absolute; left:0; top:20px; width:42px; height:42px; border-radius:50%; background:var(--mint-soft); color:#13704f; font-size:24px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .checks b { font-weight:650; }
+  .mock { background:#fff; border:1px solid var(--hair); border-radius:28px; padding:34px; box-shadow:0 30px 60px -30px rgba(40,30,120,.35); }
+  .mock .h { font-size:20px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--sec); }
+  .mock .mail { font-size:24px; line-height:1.5; color:var(--ink); margin-top:16px; background:var(--paper); border-radius:18px; padding:24px 26px; }
+  .mock .btns { display:flex; gap:16px; margin-top:24px; }
+  .mock .btn { font-size:22px; font-weight:650; padding:14px 26px; border-radius:14px; border:1px solid var(--hair); }
+  .mock .btn.p { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .vid { width:1240px; height:698px; border:0; border-radius:28px; margin-top:40px; box-shadow:0 30px 70px -30px rgba(0,0,0,.6); }
+  .thumb { display:none; }
+  .nav { position:fixed; bottom:18px; left:18px; z-index:5; display:flex; gap:8px; }
+  .nav button { border:0; background:#ffffffcc; border-radius:10px; padding:8px 14px; cursor:pointer; font-size:16px; }
+  .counter { position:fixed; bottom:24px; right:24px; color:#8f8ba8; font-size:14px; z-index:5; }
+  @page { size:1920px 1080px; margin:0; }
+  @media print {
+    html, body { background:none; overflow:visible; }
+    .deck { position:static; transform:none !important; width:auto; height:auto; }
+    .s { display:block !important; position:relative; width:1920px; height:1080px; break-after:page; }
+    .nav, .counter, .vid { display:none !important; }
+    .thumb { display:block; width:1000px; margin-top:40px; border-radius:28px; overflow:hidden; position:relative; }
+    .thumb img { width:100%; display:block; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
 </style>
 </head>
 <body>
+<div class="deck" id="deck">
 
-<section class="slide dark active">
-  <div class="kicker">Junction 2026 · Agentic AI Track · The Internet Butler by Exa · Team ScoobaNi</div>
+<section class="s night on">
+  <div class="eyebrow">Junction 2026 · The Internet Butler by Exa</div>
+  <div class="goat" aria-hidden="true">🐐</div>
   <h1>Muutto</h1>
-  <p>Got the job in the Helsinki region. Now, where to live?</p>
-  <p>An Exa-powered butler, <b>Pukki</b>, does the digging: it ranks areas by your real commute and daily life, finds live listings, researches the flat and the landlord, and writes the applications.</p>
-  <p class="quote">Every fact links to its source. Nothing is sent without your approval.</p>
+  <p class="lead" style="font-size:44px;max-width:1150px">Got the job in the Helsinki region.<br>Now, where do you actually live?</p>
+  <p class="quote">Pukki, an Exa-powered butler, does the digging — and the final click stays yours.</p>
+  <div class="tag"><span>Exa Search</span><span>Contents</span><span>Places</span><span>Agent</span><span>Monitors</span></div>
 </section>
 
-<section class="slide">
-  <h2>The challenge</h2>
-  <p style="margin-bottom:1.2rem">Exa asks for <b>a personal agent that takes a tedious task off people's hands</b>: find what matters across the web, work out what needs to happen, get the task as close to done as possible, leave the final approval to the user, and demo it on a real case.</p>
-  <div class="grid">
-    <div class="card"><h3>Use of Exa</h3><p>Information that could not come from a model's training data alone</p></div>
-    <div class="card"><h3>Usefulness</h3><p>For a specific group of real people</p></div>
-    <div class="card"><h3>Sources</h3><p>How clearly the sources are shown</p></div>
-    <div class="card"><h3>Originality</h3><p>A distinct idea and approach</p></div>
-    <div class="card"><h3>Live demo</h3><p>Works on live queries, including the judges' own</p></div>
+<section class="s">
+  <div class="eyebrow">The problem</div>
+  <h2>Moving for a job means weeks of tabs, guesswork and Finnish forms.</h2>
+  <div class="row c3">
+    <div class="card"><div class="n">01</div><h3>Scattered</h3><p>Listings on Oikotie, Vuokraovi and Etuovi. Commute, noise, schools and city plans each on another site.</p></div>
+    <div class="card"><div class="n">02</div><h3>Unfamiliar</h3><p>Newcomers don't know the neighbourhoods, the landlords or the rules — often not the language either.</p></div>
+    <div class="card"><div class="n">03</div><h3>Unverifiable</h3><p>Chatbots answer from old training data and guess when they don't know. Nothing you can check.</p></div>
   </div>
+  <div class="foot"><span>For people relocating to the Helsinki region for work — to rent or to buy</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>The problem</h2>
-  <p style="margin-bottom:1.2rem">You got the job. Now the hard part: <b>where do you actually live?</b></p>
-  <div class="grid">
-    <div class="card"><h3>Scattered</h3><p>Listings on Oikotie, Vuokraovi and Etuovi; commute, noise, schools and city plans each on a different site.</p></div>
-    <div class="card"><h3>Unfamiliar</h3><p>People moving for work don't know the neighbourhoods, the landlords or the local rules, and often not the language.</p></div>
-    <div class="card"><h3>Untrusted</h3><p>Dozens of tabs, but few answers you can check. Generic chatbots guess when they don't know.</p></div>
-  </div>
-  <p style="margin-top:1.2rem">Who it is for: <b>people relocating to the Helsinki region for work</b>, to rent or to buy.</p>
-</section>
-
-<section class="slide">
-  <h2>One sentence in, a ranked move file out</h2>
+<section class="s">
+  <div class="eyebrow">How it works</div>
+  <h2>One sentence in. A sourced move file out.</h2>
   <div class="flow">
-    <span class="step">Describe the move</span><span class="arrow">→</span>
-    <span class="step">Areas ranked</span><span class="arrow">→</span>
-    <span class="step">Live listings</span><span class="arrow">→</span>
-    <span class="step">Deep research</span><span class="arrow">→</span>
-    <span class="step">Applications to approve</span>
+    <div class="st"><div class="k">Step 1</div><div class="t">Describe the move</div><div class="d">"New job in Keilaniemi, 2 rooms, under €1,300, near the sea."</div></div>
+    <div class="st"><div class="k">Step 2</div><div class="t">Areas ranked</div><div class="d">Postal areas by real commute and daily life, in ~20–27 s</div></div>
+    <div class="st"><div class="k">Step 3</div><div class="t">Live listings</div><div class="d">Today's flats with photos, facts and history</div></div>
+    <div class="st"><div class="k">Step 4</div><div class="t">Deep research</div><div class="d">Building, landlord, street works, risks</div></div>
+    <div class="st"><div class="k">Step 5</div><div class="t">Approve & send</div><div class="d">Applications in Finnish and English, waiting for you</div></div>
   </div>
-  <div class="grid">
-    <div class="card"><h3>About 20–27 seconds</h3><p>The workplace is geocoded and candidate postal areas (Statistics Finland Paavo) are measured in parallel.</p></div>
-    <div class="card"><h3>Real commute</h3><p>Transit, car and bike times (OSRM, Digitransit); drive-time zones along real roads (Valhalla), minute by minute.</p></div>
-    <div class="card"><h3>Daily life</h3><p>Shops, schools, daycare, parks and stops (OpenStreetMap, city registers), air quality (FMI), traffic noise (City of Helsinki, Väylävirasto).</p></div>
-    <div class="card"><h3>What's changing</h3><p>Local street works, city decisions and plans for the coming years, plus dated resident voices, found with Exa.</p></div>
-  </div>
+  <div class="foot"><span>Exa finds and reads the web · open data measures the areas</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>Live listings, read properly</h2>
-  <div class="grid">
-    <div class="card"><h3>From the portals, live</h3><p>Listings with photos from Oikotie, Vuokraovi and Etuovi through <b>Exa Search + Contents</b>, filtered to your budget and rooms.</p></div>
-    <div class="card"><h3>Facts from the text</h3><p>Built year, lift, sauna, energy class, pipe renovation: read from the listing itself, each with its source.</p></div>
-    <div class="card"><h3>The flat's history</h3><p>Earlier, already delisted pages of the same flat, so you see how long it has been on the market and what changed.</p></div>
+<section class="s">
+  <div class="eyebrow">Layer by layer</div>
+  <h2>From the whole region down to one flat.</h2>
+  <div class="row c4">
+    <div class="card"><h3>Commute</h3><p>Transit, car and bike times; drive-time zones along real roads, minute by minute.</p><span class="chip">Digitransit</span><span class="chip">OSRM</span><span class="chip">Valhalla</span></div>
+    <div class="card"><h3>Daily life</h3><p>Shops, schools, daycare, parks, stops, air quality and street-level traffic noise.</p><span class="chip">OpenStreetMap</span><span class="chip">FMI</span><span class="chip">City of Helsinki</span></div>
+    <div class="card"><h3>What's changing</h3><p>Street works, city decisions, plans for the coming years and dated resident voices.</p><span class="chip v">Exa Search</span></div>
+    <div class="card"><h3>Live listings</h3><p>Oikotie, Vuokraovi, Etuovi — filtered to your budget, facts read from the text, delisted history of the same flat.</p><span class="chip v">Exa Search</span><span class="chip v">Contents</span></div>
   </div>
+  <div class="foot"><span>Every number names its source. Missing data shows as "unknown".</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>Ask for anything, get a sourced answer</h2>
-  <div class="grid">
-    <div class="card"><h3>Your own criteria</h3><p>"Public sauna", "near the sea", "safe at night": venues go to <b>Exa Places</b>, questions to <b>Exa Search</b>, with a judged, quoted answer for every area. The ranking re-sorts.</p></div>
-    <div class="card"><h3>Deep research on one flat</h3><p><b>Exa Agent</b> looks into the building, the landlord, street works and risks, verifies the citations and gives you questions for the viewing.</p></div>
-    <div class="card"><h3>"Unknown" is an answer</h3><p>Every number in the UI names its source. When a source is missing, Muutto says <b>unknown</b> instead of guessing.</p></div>
+<section class="s">
+  <div class="eyebrow">Ask for anything</div>
+  <h2>Your criteria, answered with quotes — not guesses.</h2>
+  <div class="split">
+    <ul class="checks">
+      <li><b>"Public sauna", "near the sea"</b> — venues go to Exa Places for every area</li>
+      <li><b>"Safe to walk home at night"</b> — Exa Search, a judged and quoted answer per area; the ranking re-sorts</li>
+      <li><b>One flat, deep</b> — Exa Agent researches building, landlord and risks, verifies the citations, writes viewing questions</li>
+      <li><b>"Unknown"</b> is an allowed answer</li>
+    </ul>
+    <div class="mock">
+      <div class="h">Criterion · Safe at night</div>
+      <div class="mail"><b>Lauttasaari</b> — mostly calm, few reports after dark.<br><span style="color:#5d5a75">"…the area feels quiet in the evenings…"</span><br><span class="chip">source · resident forum, 2026</span></div>
+      <div class="mail" style="margin-top:14px"><b>Area X</b> — <span style="color:#b4530b">unknown</span>: no recent source found.</div>
+    </div>
   </div>
+  <div class="foot"><span>Illustration of the answer format · real answers quote live sources</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>Pukki applies for you, you approve</h2>
-  <ul>
-    <li>For your <b>five best flats</b>, Pukki researches each landlord: tenant requirements, how to apply and reviews, all quoted.</li>
-    <li>It writes a <b>tailored application in Finnish and English</b> from your profile and lists what is still missing.</li>
-    <li>Nothing goes out until you press <b>Approve</b>. In the demo, sending is test-only, to your own inbox.</li>
-    <li>Paste the landlord's reply and it becomes a <b>calendar event</b> for the viewing.</li>
-    <li>An <b>Exa Monitor</b> keeps watching your areas and flags new listings.</li>
-  </ul>
+<section class="s">
+  <div class="eyebrow">Pukki applies for you</div>
+  <h2>The butler does the work. You press Approve.</h2>
+  <div class="split">
+    <ul class="checks">
+      <li>Researches the landlord of your <b>5 best flats</b>: requirements, how to apply, reviews — quoted</li>
+      <li>Writes a <b>tailored application in Finnish and English</b> from your profile, lists what is missing</li>
+      <li><b>Nothing is sent until you approve</b> (demo: test sending to your own inbox)</li>
+      <li>A landlord reply becomes a <b>calendar event</b>; an <b>Exa Monitor</b> keeps watching for new listings</li>
+    </ul>
+    <div class="mock">
+      <div class="h">Application · draft 2 of 5</div>
+      <div class="mail">Hei! Olen muuttamassa Espooseen uuden työn vuoksi ja olen kiinnostunut asunnostanne…<br><span style="color:#5d5a75">Missing: proof of income</span></div>
+      <div class="btns"><span class="btn p">Approve & send</span><span class="btn">Edit</span><span class="btn">Skip</span></div>
+    </div>
+  </div>
+  <div class="foot"><span>Human in control: drafts, never auto-sends</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>Exa does the digging</h2>
+<section class="s">
+  <div class="eyebrow">Built on Exa</div>
+  <h2>Five Exa tools, one butler.</h2>
   <table>
-    <tr><th>Exa tool</th><th>What Muutto uses it for</th></tr>
-    <tr><td>Search</td><td>Live listings, local works and city decisions, quoted answers to your own criteria, landlord research</td></tr>
-    <tr><td>Contents</td><td>Full listing text and photos, facts read from the page, delisted history of the same flat</td></tr>
+    <tr><th>Exa</th><th>What Muutto does with it</th></tr>
+    <tr><td>Search</td><td>Live listings · local works and city decisions · quoted answers to your criteria · landlord research</td></tr>
+    <tr><td>Contents</td><td>Full listing text and photos · facts read from the page · delisted history of the same flat</td></tr>
     <tr><td>Places</td><td>Venue criteria such as a public sauna near each area</td></tr>
     <tr><td>Agent</td><td>Deep research on one flat and its landlord, with verified citations</td></tr>
-    <tr><td>Monitors</td><td>Watching chosen areas for new listings after the search is done</td></tr>
+    <tr><td>Monitors</td><td>Watches your chosen areas for new listings</td></tr>
   </table>
-  <p class="src">Next.js 15 · React · Exa API · OpenAI · Leaflet. Open data: Statistics Finland, OpenStreetMap, FMI, City of Helsinki, Väylävirasto, Digitransit, OSRM, Valhalla.</p>
+  <div class="foot"><span>Next.js 15 · React · Exa API · OpenAI · Leaflet</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>How Muutto answers the judging</h2>
-  <div class="grid">
-    <div class="card"><h3>Beyond training data</h3><p>Today's listings, delisted pages, this year's street works and resident voices. None of it is in a model's memory.</p></div>
-    <div class="card"><h3>Real people, real task</h3><p>People moving to the Helsinki region for work, from "where should I live" to sent applications.</p></div>
-    <div class="card"><h3>Sources everywhere</h3><p>Every number and claim links to its source, and missing data shows as "unknown".</p></div>
-    <div class="card"><h3>Original and live</h3><p>Research in layers, from city to one flat, ending in action the user approves. Runs on any live query.</p></div>
+<section class="s">
+  <div class="eyebrow">Against the judging</div>
+  <h2>Why Muutto fits the Internet Butler brief.</h2>
+  <div class="row c5">
+    <div class="card"><h3>Beyond training data</h3><p>Today's listings, delisted pages, this year's street works.</p></div>
+    <div class="card"><h3>Real people</h3><p>Newcomers moving to the Helsinki region for work.</p></div>
+    <div class="card"><h3>Sources shown</h3><p>Every fact links out; gaps say "unknown".</p></div>
+    <div class="card"><h3>Original</h3><p>Region → area → flat → application, in one flow.</p></div>
+    <div class="card"><h3>Live</h3><p>Runs on any query the judges type.</p></div>
   </div>
+  <div class="foot"><span>Task handed off as far as possible — final approval stays with the user</span><span>Muutto · Junction 2026</span></div>
 </section>
 
-<section class="slide">
-  <h2>Demo</h2>
-  <iframe class="video" src="https://www.youtube-nocookie.com/embed/Cr_2XMM_pfw" title="Muutto demo" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
-  <p style="margin-top:.8rem"><a href="https://youtu.be/Cr_2XMM_pfw">youtu.be/Cr_2XMM_pfw</a> · <a href="https://github.com/KowaloskiX/muutto">github.com/KowaloskiX/muutto</a></p>
+<section class="s">
+  <div class="eyebrow">Demo</div>
+  <h2>Watch Pukki find a home.</h2>
+  <iframe class="vid" src="https://www.youtube-nocookie.com/embed/Cr_2XMM_pfw" title="Muutto demo" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <a class="thumb" href="https://youtu.be/Cr_2XMM_pfw"><img src="https://i.ytimg.com/vi/Cr_2XMM_pfw/hqdefault.jpg" alt="Muutto demo video"></a>
+  <div class="foot"><span>youtu.be/Cr_2XMM_pfw</span><span>github.com/KowaloskiX/muutto</span></div>
 </section>
 
-<section class="slide dark">
-  <h2>Muutto</h2>
-  <p>Search, read, compare, research, draft, monitor. One butler, and the final click stays yours.</p>
+<section class="s night">
+  <div class="eyebrow">Muutto</div>
+  <h2 style="font-size:96px">Search, read, compare, research, draft, monitor.</h2>
   <p class="quote">You got the job. Pukki finds the home.</p>
-  <p style="margin-top:2rem">Built at Junction 2026 with Exa · github.com/KowaloskiX/muutto</p>
+  <div class="foot"><span>Built at Junction 2026 with Exa</span><span>github.com/KowaloskiX/muutto</span></div>
 </section>
 
-<script src="deck.js"></script>
+</div>
+<div class="nav"><button data-d="-1">&larr;</button><button data-d="1">&rarr;</button></div>
+<div class="counter" id="counter"></div>
+<script>
+  const deck = document.getElementById('deck');
+  const slides = [...document.querySelectorAll('.s')];
+  let i = 0;
+  const fit = () => { const k = Math.min(innerWidth / 1920, innerHeight / 1080); deck.style.transform = `scale(${k}) translate(-50%,-50%)`; };
+  const show = n => { i = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, j) => s.classList.toggle('on', j === i)); document.getElementById('counter').textContent = (i + 1) + ' / ' + slides.length; };
+  addEventListener('resize', fit); fit(); show(0);
+  addEventListener('keydown', e => { if (['ArrowRight','PageDown',' '].includes(e.key)) show(i + 1); if (['ArrowLeft','PageUp'].includes(e.key)) show(i - 1); });
+  addEventListener('click', e => { const b = e.target.closest('.nav button'); if (b) return show(i + Number(b.dataset.d)); if (!e.target.closest('iframe, a')) show(i + 1); });
+</script>
 </body>
 </html>
