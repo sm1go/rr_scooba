@@ -98,6 +98,7 @@ a { color:var(--acc); font-weight:700; }
     <div class="card"><div class="big">~1 in 3</div><p>relapse within a year of remission (figure used in our demo).</p></div>
     <div class="card"><div class="big">Unwatched</div><p>Nobody sees the early drift. Questionnaires and streak apps feel like homework — and guilt on a bad day.</p></div>
   </div>
+  <p style="margin-top:30px;font-size:28px;color:var(--ink)">That gap between discharge and relapse — <b>that is the window OtaPath is built for.</b></p>
 </section>
 
 <section class="slide">
@@ -117,18 +118,26 @@ a { color:var(--acc); font-weight:700; }
 
 <section class="slide plain">
   <h2>Smart sensing — it never asks how you feel, it notices</h2>
-  <div class="grid" style="margin-bottom:22px">
-    <div class="card"><h3>Voice</h3><p>Vocal energy, pitch variation, speech-to-pause ratio, initiation latency — computed in the browser.</p></div>
-    <div class="card"><h3>Photo</h3><p>Luminance and colour vibrancy of the captured moment.</p></div>
-    <div class="card"><h3>Words</h3><p>Sensory detail, themes and emotional tone of the spoken reflection (OpenAI or local heuristics).</p></div>
-    <div class="card"><h3>Movement</h3><p>Distance walked, fog cleared, places visited.</p></div>
+  <div class="row" style="align-items:flex-start">
+    <div style="flex:1.05">
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
+        <div class="card"><h3>Voice</h3><p>Vocal energy, pitch variation, speech-to-pause ratio, initiation latency — computed in the browser.</p></div>
+        <div class="card"><h3>Photo</h3><p>Luminance and colour vibrancy of the captured moment.</p></div>
+        <div class="card"><h3>Words</h3><p>Sensory detail, themes and emotional tone of the spoken reflection (OpenAI or local heuristics).</p></div>
+        <div class="card"><h3>Movement</h3><p>Distance walked, fog cleared, places visited.</p></div>
+      </div>
+      <ul>
+        <li>Every signal is compared against the <b>patient's own baseline</b>, never a population norm.</li>
+        <li>A <b>contextual bandit</b> learns which places and soundscapes lift each person.</li>
+        <li><b>Comfort Mode</b>: an indoor session for days when a walk isn't possible.</li>
+        <li>Honest prototype: scores are demo signals; clinical validation is future work.</li>
+      </ul>
+    </div>
+    <div style="flex:1">
+      <img class="shot" style="width:100%" src="../assets/otapath/c-memories.png" alt="Memory capsules in the clinician portal">
+      <p class="note" style="text-align:center">Memory capsules — each a place, a photo, a voice note and its signals.</p>
+    </div>
   </div>
-  <ul>
-    <li>Every signal is compared against the <b>patient's own baseline</b>, never a population norm.</li>
-    <li>A <b>contextual bandit</b> learns which places and soundscapes lift each person, so the next quest fits them.</li>
-    <li><b>Comfort Mode</b>: an indoor sensory session for days when a walk isn't possible — no streaks broken.</li>
-    <li>Honest prototype: acoustic/image scores are demo signals; clinical validation is future work.</li>
-  </ul>
 </section>
 
 <section class="slide dark">
@@ -177,6 +186,12 @@ a { color:var(--acc); font-weight:700; }
       <div class="card g" style="margin-bottom:16px"><h3>Privacy by design</h3><p>Heavy analysis runs in the browser or behind RLS; audio is cached, not endlessly stored. Synthetic demo patients only.</p></div>
       <div class="card g"><h3>Degrades gracefully</h3><p>No ElevenLabs key? On-device Web Audio synthesis. No Overpass? Procedural destinations. The app works offline-ish by default.</p></div>
     </div>
+  </div>
+  <div class="loop" style="margin:30px 0 0">
+    <div class="step"><h3>Patient app</h3><p>Map, capsules, audio — sensing in-browser.</p></div>
+    <div class="step"><h3>API routes</h3><p>Server-side Supabase client, optional AI calls.</p></div>
+    <div class="step"><h3>Supabase</h3><p>Postgres + RLS, Auth, audio storage.</p></div>
+    <div class="step"><h3>Clinician portal</h3><p>Trends, triage, missions, check-ins.</p></div>
   </div>
 </section>
 
