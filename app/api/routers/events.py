@@ -2087,3 +2087,233 @@ def event_after(event_id: str,
                          "people": people})
     out["mine"] = mine
     return out
+
+
+
+# --- online event: virtual booth Q&A + networking lounge (§9.7) ------------------
+
+def _booth_participant(conn, ev, user) -> bool:
+    """Registered talent, an employer user at this event, or an advisor."""
+    if not user:
+        return False
+    if user["role"] == "advisor":
+        return True
+    if user["role"] == "employer":
+        return bool(conn.execute(
+            "SELECT 1 FROM employer_event WHERE event_id=?"
+            " AND employer_id=?",
+            (ev["id"], user["employer_id"] or "")).fetchone())
+    reg = _registration(conn, ev["id"], user["id"])
+    return bool(reg and reg["status"] == "registered")
+
+
+def _booth_check(conn, ev, employer_id: str):
+    ee = conn.execute(
+        "SELECT ee.booth, ee.slots, e.name emp_name, e.tagline, e.field,"
+        " e.logo_color FROM employer_event ee JOIN employer e"
+        " ON e.id=ee.employer_id WHERE ee.event_id=? AND ee.employer_id=?",
+        (ev["id"], employer_id)).fetchone()
+    if not ee:
+        raise HTTPException(404, "No such booth.")
+    return ee
+
+
+def _question_out(conn, q) -> dict:
+    u = conn.execute("SELECT name FROM user WHERE id=?",
+                     (q["user_id"],)).fetchone()
+    return {"id": q["id"], "employer_id": q["employer_id"],
+            "asked_by": (u["name"].split()[0] if u and u["name"] else "?"),
+            "user_id": q["user_id"], "text": q["text"],
+            "answer": q["answer"], "answered_by": q["answered_by"],
+            "created_at": q["created_at"],
+            "answered_at": q["answered_at"]}
+
+
+@router.get("/events/{event_id}/booths/{employer_id}")
+def virtual_booth(event_id: str, employer_id: str,
+                  conn: sqlite3.Connection = Depends(get_conn),
+                  user=Depends(current_user)):
+    """Virtual booth page: employer info, need card, open jobs, Q&A board.
+    Visible to event participants only; questioners show first name only."""
+    ev = _get_event(conn, event_id)
+    if not _booth_participant(conn, ev, user):
+        raise HTTPException(403, "Only event participants can see "
+                                 "the booth board.")
+    ee = _booth_check(conn, ev, employer_id)
+    need = next((i for i in _need_cards(conn, ev)
+                 if i["employer_id"] == employer_id), None)
+    from ..serialize import job_out
+    jobs = [job_out(conn, r) for r in conn.execute(
+        "SELECT * FROM job WHERE employer_id=? AND status='open'"
+        " ORDER BY title", (employer_id,))]
+    qs = [_question_out(conn, q) for q in conn.execute(
+        "SELECT * FROM event_question WHERE event_id=? AND employer_id=?"
+        " ORDER BY created_at", (event_id, employer_id))]
+    return {"event_id": event_id, "employer_id": employer_id,
+            "name": ee["emp_name"], "tagline": ee["tagline"],
+            "field": ee["field"], "logo_color": ee["logo_color"],
+            "booth": ee["booth"], "need_item": need,
+            "open_jobs": jobs, "questions": qs,
+            "can_ask": user["role"] == "resident",
+            "can_answer": (user["role"] == "employer"
+                           and user["employer_id"] == employer_id)}
+
+
+@router.post("/events/{event_id}/booths/{employer_id}/questions",
+             status_code=201)
+def post_question(event_id: str, employer_id: str, payload: dict,
+                  conn: sqlite3.Connection = Depends(get_conn),
+                  user=Depends(current_user)):
+    """Registered talent asks the booth (max 300 chars, wording checked,
+    first name only on the board)."""
+    ev = _get_event(conn, event_id)
+    _resident(user)
+    reg = _registration(conn, event_id, user["id"])
+    if not reg or reg["status"] != "registered":
+        raise HTTPException(403, "Register for the event before "
+                                 "asking questions.")
+    _booth_check(conn, ev, employer_id)
+    text = (payload.get("text") or "").strip()
+    if not text:
+        raise HTTPException(422, "Write a question first.")
+    if len(text) > 300:
+        raise HTTPException(422, "Keep the question under "
+                                 "300 characters.")
+    issues = lint.blocking_issues({"qualifications": [text]})
+    if issues:
+        raise HTTPException(422, {"message": "The wording must be fixed "
+                                             "before sending.",
+                                  "issues": issues})
+    qid = db_mod.new_id(conn, "eq")
+    conn.execute(
+        "INSERT INTO event_question (id,event_id,employer_id,user_id,text,"
+        "created_at) VALUES (?,?,?,?,?,?)",
+        (qid, event_id, employer_id, user["id"], text,
+         app_now(conn).isoformat()))
+    conn.commit()
+    row = conn.execute("SELECT * FROM event_question WHERE id=?",
+                       (qid,)).fetchone()
+    return _question_out(conn, row)
+
+
+@router.post("/events/{event_id}/questions/{question_id}/answer")
+def answer_question(event_id: str, question_id: str, payload: dict,
+                    conn: sqlite3.Connection = Depends(get_conn),
+                    user=Depends(current_user)):
+    """Only a user belonging to the booth's employer answers."""
+    _employer(user)
+    q = conn.execute(
+        "SELECT * FROM event_question WHERE id=? AND event_id=?",
+        (question_id, event_id)).fetchone()
+    if not q:
+        raise HTTPException(404, "No such question.")
+    if user["employer_id"] != q["employer_id"]:
+        raise HTTPException(403, "Only this employer's team answers "
+                                 "its booth.")
+    answer = (payload.get("answer") or "").strip()
+    if not answer:
+        raise HTTPException(422, "Write an answer first.")
+    conn.execute(
+        "UPDATE event_question SET answer=?, answered_by=?, answered_at=?"
+        " WHERE id=?",
+        (answer, user["name"].split()[0], app_now(conn).isoformat(),
+         question_id))
+    conn.commit()
+    row = conn.execute("SELECT * FROM event_question WHERE id=?",
+                       (question_id,)).fetchone()
+    return _question_out(conn, row)
+
+
+# --- networking lounge -----------------------------------------------------------
+
+def _lounge_out(conn, ev, user) -> dict:
+    joined = bool(user) and bool(conn.execute(
+        "SELECT 1 FROM lounge_member WHERE event_id=? AND user_id=?",
+        (ev["id"], user["id"])).fetchone())
+    members = []
+    for m in conn.execute(
+            "SELECT lm.user_id, lm.joined_at, u.name, tr.card"
+            " FROM lounge_member lm JOIN user u ON u.id=lm.user_id"
+            " LEFT JOIN talent_registration tr"
+            "  ON tr.event_id=lm.event_id AND tr.user_id=lm.user_id"
+            "  AND tr.status != 'cancelled'"
+            " WHERE lm.event_id=? ORDER BY lm.joined_at", (ev["id"],)):
+        card = json.loads(m["card"] or "{}")
+        done = card.get("done") or []
+        members.append({
+            "user_id": m["user_id"],
+            "first_name": (m["name"].split()[0] if m["name"] else "?"),
+            "looking_for": card.get("looking_for", ""),
+            "done": done[0].get("text", "") if done else "",
+            "joined_at": m["joined_at"],
+            "connected": bool(user) and user["id"] != m["user_id"]
+            and bool(conn.execute(
+                "SELECT 1 FROM connection WHERE event_id=? AND"
+                " ((user_a=? AND user_b=?) OR (user_a=? AND user_b=?))",
+                (ev["id"], user["id"], m["user_id"],
+                 m["user_id"], user["id"])).fetchone())})
+    return {"event_id": ev["id"], "joined": joined, "members": members}
+
+
+@router.get("/events/{event_id}/lounge")
+def lounge(event_id: str, conn: sqlite3.Connection = Depends(get_conn),
+           user=Depends(current_user)):
+    """Networking lounge: members with first name, looking-for and one
+    thing done."""
+    ev = _get_event(conn, event_id)
+    if not _booth_participant(conn, ev, user):
+        raise HTTPException(403, "Only event participants can use "
+                                 "the lounge.")
+    return _lounge_out(conn, ev, user)
+
+
+@router.put("/events/{event_id}/lounge")
+def lounge_join(event_id: str,
+                conn: sqlite3.Connection = Depends(get_conn),
+                user=Depends(current_user)):
+    ev = _get_event(conn, event_id)
+    if not _booth_participant(conn, ev, user):
+        raise HTTPException(403, "Only event participants can join "
+                                 "the lounge.")
+    conn.execute(
+        "INSERT OR IGNORE INTO lounge_member (event_id,user_id,joined_at)"
+        " VALUES (?,?,?)", (event_id, user["id"], app_now(conn).isoformat()))
+    conn.commit()
+    return _lounge_out(conn, ev, user)
+
+
+@router.delete("/events/{event_id}/lounge")
+def lounge_leave(event_id: str,
+                 conn: sqlite3.Connection = Depends(get_conn),
+                 user=Depends(current_user)):
+    ev = _get_event(conn, event_id)
+    conn.execute(
+        "DELETE FROM lounge_member WHERE event_id=? AND user_id=?",
+        (event_id, user["id"]))
+    conn.commit()
+    return _lounge_out(conn, ev, user)
+
+
+@router.post("/events/{event_id}/lounge/connect/{other_id}")
+def lounge_connect(event_id: str, other_id: str,
+                   conn: sqlite3.Connection = Depends(get_conn),
+                   user=Depends(current_user)):
+    """Connect two lounge members. Both must have joined; connecting twice
+    is idempotent."""
+    ev = _get_event(conn, event_id)
+    if other_id == user["id"]:
+        raise HTTPException(409, "You are already you.")
+    mine = conn.execute(
+        "SELECT 1 FROM lounge_member WHERE event_id=? AND user_id=?",
+        (event_id, user["id"])).fetchone()
+    theirs = conn.execute(
+        "SELECT 1 FROM lounge_member WHERE event_id=? AND user_id=?",
+        (event_id, other_id)).fetchone()
+    if not mine or not theirs:
+        raise HTTPException(403, "Connecting is between lounge members.")
+    a, b = sorted([user["id"], other_id])
+    conn.execute(
+        "INSERT OR IGNORE INTO connection (user_a,user_b,event_id)"
+        " VALUES (?,?,?)", (a, b, event_id))
+    conn.commit()
+    return {"ok": True, "connected": True}

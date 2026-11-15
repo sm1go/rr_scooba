@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Check, Lock } from 'lucide-react'
 import { useI18n } from '../i18n/i18n'
 
@@ -13,6 +14,11 @@ export default function Stepper({ steps, current, onSelect, doneBefore,
   label: string
 }) {
   const { t } = useI18n()
+  const activeRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    activeRef.current?.scrollIntoView(
+      { inline: 'center', block: 'nearest' })
+  }, [current])
   return (
     <nav aria-label={label}>
       <ol className="stepper m-0 p-0 list-none">
@@ -23,6 +29,7 @@ export default function Stepper({ steps, current, onSelect, doneBefore,
           return (
             <li key={i}>
               <button type="button"
+                      ref={active ? activeRef : undefined}
                       className={`stepper-step${active ? ' active' : ''}` +
                                  (lock ? ' locked' : '')}
                       aria-current={active ? 'step' : undefined}

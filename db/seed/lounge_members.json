@@ -1,0 +1,52 @@
+[
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-pekka",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-amira",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent01",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent02",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent03",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent04",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent05",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent06",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent07",
+    "joined_at": "2027-02-10T10:05:00"
+  },
+  {
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent08",
+    "joined_at": "2027-02-10T10:05:00"
+  }
+]

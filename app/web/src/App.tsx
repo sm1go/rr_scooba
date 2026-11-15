@@ -8,6 +8,8 @@ import Layout from './components/Layout'
 import Home from './pages/Home'
 import JobsPage from './pages/Jobs'
 import EventDetail from './pages/EventDetail'
+import BoothPage from './pages/BoothPage'
+import LoungePage from './pages/LoungePage'
 import CompanyProfile from './pages/CompanyProfile'
 import EventPass from './pages/EventPass'
 import PersonProfile from './pages/PersonProfile'
@@ -63,6 +65,8 @@ export default function App() {
               <Route path="/events/:id" element={<EventDetail />} />
               <Route path="/companies/:id" element={<CompanyProfile />} />
               <Route path="/events/:id/pass" element={<EventPass />} />
+              <Route path="/events/:id/booths/:employerId" element={<BoothPage />} />
+              <Route path="/events/:id/lounge" element={<LoungePage />} />
               <Route path="/p/:token" element={<PersonProfile />} />
               <Route path="/event" element={<Navigate to="/events/ev-2027-03" replace />} />
               <Route path="/jobs/:id" element={<JobDetail />} />

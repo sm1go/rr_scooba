@@ -12,6 +12,7 @@ import Stepper from '../../components/Stepper'
 import CardChooser from '../../components/CardChooser'
 import type { Meeting } from '../../components/CardChooser'
 import ScanBox from '../../components/ScanBox'
+import OnlineLobby from '../../components/OnlineLobby'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 const LANGS = ['Finnish', 'Swedish', 'English', 'Russian', 'Arabic', 'Estonian',
@@ -758,8 +759,13 @@ export default function EmployerEventWorkspace() {
   )
 
   const day = (
-    <BoothDay id={id!}
-              firstWeek={ws.need?.card.first_week ?? []} />
+    <div className="grid gap-4">
+      {ev.format === 'online' && evFull && (
+        <OnlineLobby ev={evFull} now={now}
+                     employers={evFull.employers} />)}
+      <BoothDay id={id!}
+                firstWeek={ws.need?.card.first_week ?? []} />
+    </div>
   )
 
   const schedule = (

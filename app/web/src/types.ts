@@ -526,3 +526,24 @@ export interface MyBadge {
   hidden: boolean; created_at: string
   event_name: string; event_id: string; giver_name: string | null
 }
+
+// §9.7 online event: virtual booth Q&A + networking lounge
+export interface EventQuestion {
+  id: string; employer_id: string; asked_by: string; user_id: string
+  text: string; answer: string | null; answered_by: string | null
+  created_at: string; answered_at: string | null
+}
+export interface BoothData {
+  event_id: string; employer_id: string; name: string
+  tagline?: string; field?: string; logo_color?: string
+  booth: string | null; need_item: NeedEntry | null
+  open_jobs: Job[]; questions: EventQuestion[]
+  can_ask: boolean; can_answer: boolean
+}
+export interface LoungeMember {
+  user_id: string; first_name: string; looking_for: string; done: string
+  joined_at: string; connected: boolean
+}
+export interface LoungeData {
+  event_id: string; joined: boolean; members: LoungeMember[]
+}

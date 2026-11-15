@@ -95,10 +95,15 @@ E3_EVENT = {
     "programme": [
         {"start": "09:55", "end": "10:00", "title": "Lobby opens",
          "kind": "presentation"},
-        {"start": "10:00", "end": "10:45", "title": "Employer pitches",
+        {"start": "10:00", "end": "10:30", "title": "Employer pitches",
          "kind": "pitch"},
-        {"start": "11:00", "end": "14:00", "title": "1:1 video meetings",
+        {"start": "10:30", "end": "13:30", "title": "1:1 video meetings",
          "kind": "one_to_one"},
+        {"start": "11:00", "end": "11:30",
+         "title": "Workshop: talking about transferable skills",
+         "kind": "workshop"},
+        {"start": "13:30", "end": "14:00",
+         "title": "Networking lounge open hour", "kind": "lounge"},
     ],
     "capacity": 80, "slot_minutes": 15,
     "need_deadline": "2027-01-30", "publish_date": "2027-01-26",
@@ -315,12 +320,12 @@ NEED = {
 E1_EMPLOYERS = [
     ("emp-cafe-koivu",  "A1",  8,  ["one_to_one", "walk_in"], "2027-02-16"),
     ("emp-siivouspot",  "A2",  10, ["one_to_one"],            "2027-02-18"),
-    ("emp-market-olari","A3",  6,  ["one_to_one", "walk_in"], "2027-02-15"),
+    ("emp-market-olari","A3",  8,  ["one_to_one", "walk_in"], "2027-02-15"),
     ("emp-aurora-care", "A4",  8,  ["one_to_one", "pitch"],   "2027-02-17"),
     ("emp-freight",     "B1",  12, ["one_to_one", "walk_in"], "2027-02-19"),
     ("emp-tiima",       "B2",  8,  ["one_to_one"],            "2027-02-18"),
     ("emp-otava",       "B3",  6,  ["one_to_one"],            "2027-02-22"),  # late
-    ("emp-kuusikko",    "B4",  6,  ["one_to_one", "walk_in"], "2027-02-25"),  # late
+    ("emp-kuusikko",    "B4",  8,  ["one_to_one", "walk_in"], "2027-02-25"),  # late
     ("emp-rantala",     "C1",  9,  ["one_to_one"],            "2027-02-14"),
     ("emp-espoolive",   "C2",  8,  ["walk_in", "pitch"],      None),
     ("emp-hymy",        "C3",  6,  ["one_to_one"],            None),
@@ -986,6 +991,44 @@ def main() -> int:
     _dump("connections.json", conns)
     print(f"passes: {len(passes)}, badges: {len(badges)}, "
           f"connections: {len(conns)}")
+
+    # --- §9.7 online event: booth Q&A board + networking lounge ---------
+    e3_users = [r["user_id"] for r in regs
+                if r["event_id"] == E3 and r["status"] == "registered"]
+    cname = {e["id"]: e.get("contact_name") or "The booth team"
+             for e in _load("employers.json")}
+    QTEXT = [
+        ("emp-lumo", "Is this job remote or at the office?",
+         "Two days remote, three at the Leppävaara office."),
+        ("emp-lumo", "Do I need customer service experience?",
+         "No — we teach you. Finnish A2 is enough to start."),
+        ("emp-lumo", "What are the usual shift times?", None),
+        ("emp-otava", "Can I work only daytime shifts?",
+         "Yes, most of our warehouse shifts are 7–15."),
+        ("emp-koodikallio", "Is the IT support job English-only?",
+         "English works; Finnish is a plus for some customers."),
+        ("emp-koodikallio", "Do you provide a laptop for remote days?",
+         None),
+        ("emp-datavirta", "Is there a mentor for the first weeks?",
+         "Every new person pairs with a named buddy for 6 weeks."),
+        ("emp-linja", "Can students work just weekends?", None),
+        ("emp-laguuni", "Are the shifts fixed or rotating?",
+         "Rotating, published three weeks ahead."),
+        ("emp-avara", "Is the warehouse work heavy lifting?", None),
+    ]
+    qs = [{"id": f"eq-{k + 1:03d}", "event_id": E3, "employer_id": eid,
+           "user_id": e3_users[k % len(e3_users)], "text": text,
+           "answer": ans, "answered_by": cname.get(eid) if ans else None,
+           "created_at": f"2027-02-10T11:{10 + k:02d}:00",
+           "answered_at": f"2027-02-10T11:{40 + k:02d}:00" if ans else None}
+          for k, (eid, text, ans) in enumerate(QTEXT)]
+    _dump("event_questions.json", qs)
+
+    lounge = [{"event_id": E3, "user_id": uid,
+               "joined_at": "2027-02-10T10:05:00"}
+              for uid in e3_users[:10]]
+    _dump("lounge_members.json", lounge)
+    print(f"questions: {len(qs)}, lounge: {len(lounge)}")
 
     _enrich_employers()
     _event_needs()

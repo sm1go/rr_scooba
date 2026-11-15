@@ -11,10 +11,11 @@ export type RouteStop = {
 
 const ROWS = ['A', 'B', 'C', 'D']
 const W = 760
-const ROW_Y = [70, 150, 230, 310]
-const BOX_W = 150
+const H = 470
+const ROW_Y = [100, 180, 260, 340]
+const BOX_W = 140
 const BOX_H = 56
-const COL_X = [70, 235, 400, 565]
+const COL_X = [60, 215, 370, 525]
 
 function initials(name: string) {
   const skip = new Set(['oy', 'ab', 'ky', 'oyj', 'tmi'])
@@ -26,9 +27,10 @@ function initials(name: string) {
 /** §9.6 venue schematic: entrance at the bottom, info & advisor desk,
  * stage and workshop on the side, booth rows A–D. Booked booths are
  * numbered in time order and joined by a dashed route. */
-export default function VenueMap({ booths, route }: {
+export default function VenueMap({ booths, route, highlight }: {
   booths: Booth[]
   route?: RouteStop[]
+  highlight?: string
 }) {
   const { t } = useI18n()
   const byBooth = new Map(booths.filter((b) => b.booth)
@@ -52,22 +54,23 @@ export default function VenueMap({ booths, route }: {
 
   return (
     <figure className="venue-map m-0">
-      <svg viewBox={`0 0 ${W} 420`} role="img" className="w-full"
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" className="w-full"
            aria-label={t('map.title')} style={{ height: 'auto' }}>
-        <rect x={8} y={8} width={W - 16} height={404}
+        <rect x={8} y={8} width={W - 16} height={H - 16}
               fill="var(--color-surface, #fff)"
               stroke="var(--color-border, #999)" rx={10} />
-        {/* stage + workshop on the right edge */}
-        <rect x={W - 120} y={60} width={96} height={70} rx={8}
+        {/* stage: wide band across the top of the hall */}
+        <rect x={60} y={20} width={605} height={52} rx={8}
               fill="none" stroke="var(--color-border, #999)"
               strokeDasharray="4 3" />
-        <text x={W - 72} y={98} textAnchor="middle" fontSize={13}
+        <text x={362} y={52} textAnchor="middle" fontSize={14}
               fill="currentColor">{t('map.stage')}</text>
-        <rect x={W - 120} y={150} width={96} height={70} rx={8}
+        {/* workshop room: side box outside the booth grid */}
+        <rect x={675} y={ROW_Y[3]} width={70} height={BOX_H} rx={8}
               fill="none" stroke="var(--color-border, #999)"
               strokeDasharray="4 3" />
-        <text x={W - 72} y={188} textAnchor="middle" fontSize={13}
-              fill="currentColor">{t('map.workshop')}</text>
+        <text x={710} y={ROW_Y[3] + BOX_H / 2 + 5} textAnchor="middle"
+              fontSize={11} fill="currentColor">{t('map.workshop')}</text>
         {ROWS.map((row, ri) => (
           <g key={row}>
             <text x={30} y={ROW_Y[ri] + BOX_H / 2 + 5} fontSize={15}
@@ -76,24 +79,32 @@ export default function VenueMap({ booths, route }: {
               const code = `${row}${ci + 1}`
               const b = byBooth.get(code)
               const n = b ? stopOf.get(b.id) : undefined
+              if (!b) {
+                return (
+                  <rect key={code} x={x} y={ROW_Y[ri]}
+                        width={BOX_W} height={BOX_H} rx={8}
+                        fill="none"
+                        stroke="var(--color-border, #999)"
+                        strokeOpacity={0.4} strokeDasharray="4 3" />
+                )
+              }
               return (
                 <g key={code}>
                   <rect x={x} y={ROW_Y[ri]} width={BOX_W} height={BOX_H}
                         rx={8}
-                        fill={b ? (b.logo_color || '#5a6472') : 'none'}
+                        fill={b.logo_color || '#5a6472'}
                         stroke={n ? 'var(--color-yes, #1a7f37)'
-                                 : 'var(--color-border, #999)'}
-                        strokeWidth={n ? 3 : 1}
-                        strokeDasharray={b ? undefined : '4 3'} />
+                                 : highlight === code
+                                   ? 'var(--color-brand, #005ea8)'
+                                   : 'var(--color-border, #999)'}
+                        strokeWidth={n || highlight === code ? 4 : 1} />
                   <text x={x + BOX_W / 2} y={ROW_Y[ri] + 24}
                         textAnchor="middle" fontSize={13}
-                        fontWeight={600}
-                        fill={b ? '#fff' : 'currentColor'}>
-                    {b ? initials(b.name) : code}
+                        fontWeight={600} fill="#fff">
+                    {initials(b.name)}
                   </text>
                   <text x={x + BOX_W / 2} y={ROW_Y[ri] + 42}
-                        textAnchor="middle" fontSize={12}
-                        fill={b ? '#fff' : 'var(--color-secondary, #666)'}>
+                        textAnchor="middle" fontSize={12} fill="#fff">
                     {code}
                   </text>
                   {n && (
@@ -116,15 +127,15 @@ export default function VenueMap({ booths, route }: {
             fill="none" stroke="var(--color-yes, #1a7f37)"
             strokeWidth={2.5} strokeDasharray="7 5" />
         )}
-        {/* entrance + info desk at the bottom */}
-        <rect x={W / 2 - 60} y={392} width={120} height={20} rx={4}
-              fill="var(--color-brand, #005ea8)" />
-        <text x={W / 2} y={406} textAnchor="middle" fontSize={12}
-              fill="#fff">{t('map.entrance')}</text>
-        <rect x={60} y={382} width={180} height={26} rx={8}
+        {/* entrance + info desk along the bottom */}
+        <rect x={60} y={H - 66} width={180} height={26} rx={8}
               fill="none" stroke="var(--color-border, #999)" />
-        <text x={150} y={399} textAnchor="middle" fontSize={12}
+        <text x={150} y={H - 49} textAnchor="middle" fontSize={12}
               fill="currentColor">{t('map.infodesk')}</text>
+        <rect x={W / 2 - 60} y={H - 64} width={120} height={22} rx={4}
+              fill="var(--color-brand, #005ea8)" />
+        <text x={W / 2} y={H - 49} textAnchor="middle" fontSize={12}
+              fill="#fff">{t('map.entrance')}</text>
       </svg>
       {stops.length > 0 && (
         <figcaption>

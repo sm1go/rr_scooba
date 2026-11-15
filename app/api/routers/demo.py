@@ -67,7 +67,11 @@ def _stage_now(ev: sqlite3.Row, stage: str) -> datetime:
     if stage == "matching_closed":
         return mc + timedelta(hours=1)
     if stage == "live":
-        return sa + timedelta(hours=1, minutes=35)
+        # mid-meeting-block: E1 talks run 14:30-17:30 -> 15:05;
+        # the online event's video talks run 10:30-13:30 -> 11:35
+        return (sa + timedelta(hours=1, minutes=35)
+                if ev["format"] == "online"
+                else sa + timedelta(hours=2, minutes=5))
     if stage == "after":
         return ea + timedelta(days=2)
     raise HTTPException(422, "Unknown stage.")

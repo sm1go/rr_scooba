@@ -153,7 +153,7 @@
       {
         "employer_id": "emp-market-olari",
         "booth": "A3",
-        "slots": 6,
+        "slots": 8,
         "formats": [
           "one_to_one",
           "walk_in"
@@ -348,7 +348,7 @@
       {
         "employer_id": "emp-kuusikko",
         "booth": "B4",
-        "slots": 6,
+        "slots": 8,
         "formats": [
           "one_to_one",
           "walk_in"
@@ -488,15 +488,27 @@
       },
       {
         "start": "10:00",
-        "end": "10:45",
+        "end": "10:30",
         "title": "Employer pitches",
         "kind": "pitch"
       },
       {
-        "start": "11:00",
-        "end": "14:00",
+        "start": "10:30",
+        "end": "13:30",
         "title": "1:1 video meetings",
         "kind": "one_to_one"
+      },
+      {
+        "start": "11:00",
+        "end": "11:30",
+        "title": "Workshop: talking about transferable skills",
+        "kind": "workshop"
+      },
+      {
+        "start": "13:30",
+        "end": "14:00",
+        "title": "Networking lounge open hour",
+        "kind": "lounge"
       }
     ],
     "capacity": 80,

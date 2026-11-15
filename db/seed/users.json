@@ -136,6 +136,15 @@
     "name": "Leena, Employment Espoo"
   },
   {
+    "id": "u-liisa",
+    "email": "liisa@example.com",
+    "phone": "+358 40 555 6600",
+    "password": "demo1234",
+    "role": "employer",
+    "name": "Liisa Repo",
+    "employer_id": "emp-lumo"
+  },
+  {
     "id": "u-talent01",
     "email": "talent01@example.com",
     "password": "demo1234",

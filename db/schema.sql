@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 13;
+PRAGMA user_version = 14;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -408,4 +408,25 @@ CREATE TABLE connection (
     PRIMARY KEY (user_a, user_b, event_id)
 );
 
-PRAGMA user_version = 13;
+-- virtual booth Q&A board (v14, online events §9.7)
+CREATE TABLE event_question (
+    id          TEXT PRIMARY KEY,
+    event_id    TEXT NOT NULL REFERENCES event(id),
+    employer_id TEXT NOT NULL REFERENCES employer(id),
+    user_id     TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    text        TEXT NOT NULL,
+    answer      TEXT,
+    answered_by TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    answered_at TEXT
+);
+
+-- networking lounge membership (v14, online events §9.7)
+CREATE TABLE lounge_member (
+    event_id  TEXT NOT NULL REFERENCES event(id),
+    user_id   TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    joined_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (event_id, user_id)
+);
+
+PRAGMA user_version = 14;

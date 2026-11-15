@@ -251,7 +251,7 @@ html[data-contrast="high"] .btn-primary { border: 2px solid #000; }
     white-space: nowrap;
   }
   .bottom-nav a.active { color: var(--color-ink); font-weight: 600; }
-  body { padding-bottom: 78px; }
+  body { padding-bottom: 90px; }
 }
 
 /* ---- v3: event booth plan, print sheets, RTL, photo start tiles ---- */
@@ -456,5 +456,18 @@ html[data-contrast="high"] .stepper-step { border-color: #000; }
 .stepper-text { display: flex; flex-direction: column; align-items: flex-start; }
 .stepper-lock {
   font-size: .72rem; color: var(--color-secondary); font-weight: 400;
+}
+
+/* mobile: compact horizontally scrollable stepper pills */
+@media (max-width: 767px) {
+  .stepper {
+    flex-wrap: nowrap; overflow-x: auto; gap: 6px;
+    scrollbar-width: none; padding-bottom: 4px;
+  }
+  .stepper::-webkit-scrollbar { display: none; }
+  .stepper li { flex-shrink: 0; }
+  .stepper-step { min-height: 40px; padding: 6px 10px; }
+  .stepper-text { flex-direction: row; }
+  .stepper-lock { display: none; }
 }
 .venue-map figcaption ol { line-height: 1.6; }

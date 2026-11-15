@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 13
+SCHEMA_VERSION = 14
 
 SEED_REQUIRED = [
     "events.json", "employers.json", "jobs.json", "users.json",
@@ -388,6 +388,21 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
             "created_at) VALUES (?,?,?,?)",
             (c["user_a"], c["user_b"], c["event_id"],
              c.get("created_at") or now.isoformat()))
+    for q in opt("event_questions.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO event_question (id,event_id,employer_id,"
+            "user_id,text,answer,answered_by,created_at,answered_at)"
+            " VALUES (?,?,?,?,?,?,?,?,?)",
+            (q["id"], q["event_id"], q["employer_id"], q["user_id"],
+             q["text"], q.get("answer"), q.get("answered_by"),
+             q.get("created_at") or now.isoformat(),
+             q.get("answered_at")))
+    for m in opt("lounge_members.json"):
+        conn.execute(
+            "INSERT OR IGNORE INTO lounge_member (event_id,user_id,"
+            "joined_at) VALUES (?,?,?)",
+            (m["event_id"], m["user_id"],
+             m.get("joined_at") or now.isoformat()))
 
 
 def rebuild_db() -> Path:
@@ -474,7 +489,8 @@ def new_id(conn: sqlite3.Connection, prefix: str) -> str:
              "u": "user", "emp": "employer", "et": "event_talk",
              "cred": "credential", "hire": "contract_hire",
              "mt": "event_meeting", "tr": "talent_registration",
-             "bd": "badge", "sc": "event_scan"}[prefix]
+             "bd": "badge", "sc": "event_scan",
+             "eq": "event_question"}[prefix]
     n = 0
     for r in conn.execute(
             "SELECT id FROM {} WHERE id LIKE ?".format(table),

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "eq-001",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-lumo",
+    "user_id": "u-pekka",
+    "text": "Is this job remote or at the office?",
+    "answer": "Two days remote, three at the Leppävaara office.",
+    "answered_by": "Sanna Virtanen",
+    "created_at": "2027-02-10T11:10:00",
+    "answered_at": "2027-02-10T11:40:00"
+  },
+  {
+    "id": "eq-002",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-lumo",
+    "user_id": "u-amira",
+    "text": "Do I need customer service experience?",
+    "answer": "No — we teach you. Finnish A2 is enough to start.",
+    "answered_by": "Sanna Virtanen",
+    "created_at": "2027-02-10T11:11:00",
+    "answered_at": "2027-02-10T11:41:00"
+  },
+  {
+    "id": "eq-003",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-lumo",
+    "user_id": "u-talent01",
+    "text": "What are the usual shift times?",
+    "answer": null,
+    "answered_by": null,
+    "created_at": "2027-02-10T11:12:00",
+    "answered_at": null
+  },
+  {
+    "id": "eq-004",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-otava",
+    "user_id": "u-talent02",
+    "text": "Can I work only daytime shifts?",
+    "answer": "Yes, most of our warehouse shifts are 7–15.",
+    "answered_by": "Mikael Sund",
+    "created_at": "2027-02-10T11:13:00",
+    "answered_at": "2027-02-10T11:43:00"
+  },
+  {
+    "id": "eq-005",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-koodikallio",
+    "user_id": "u-talent03",
+    "text": "Is the IT support job English-only?",
+    "answer": "English works; Finnish is a plus for some customers.",
+    "answered_by": "Aleksi Koodari",
+    "created_at": "2027-02-10T11:14:00",
+    "answered_at": "2027-02-10T11:44:00"
+  },
+  {
+    "id": "eq-006",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-koodikallio",
+    "user_id": "u-talent04",
+    "text": "Do you provide a laptop for remote days?",
+    "answer": null,
+    "answered_by": null,
+    "created_at": "2027-02-10T11:15:00",
+    "answered_at": null
+  },
+  {
+    "id": "eq-007",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-datavirta",
+    "user_id": "u-talent05",
+    "text": "Is there a mentor for the first weeks?",
+    "answer": "Every new person pairs with a named buddy for 6 weeks.",
+    "answered_by": "Noora Virtala",
+    "created_at": "2027-02-10T11:16:00",
+    "answered_at": "2027-02-10T11:46:00"
+  },
+  {
+    "id": "eq-008",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-linja",
+    "user_id": "u-talent06",
+    "text": "Can students work just weekends?",
+    "answer": null,
+    "answered_by": null,
+    "created_at": "2027-02-10T11:17:00",
+    "answered_at": null
+  },
+  {
+    "id": "eq-009",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-laguuni",
+    "user_id": "u-talent07",
+    "text": "Are the shifts fixed or rotating?",
+    "answer": "Rotating, published three weeks ahead.",
+    "answered_by": "Petra Laguna",
+    "created_at": "2027-02-10T11:18:00",
+    "answered_at": "2027-02-10T11:48:00"
+  },
+  {
+    "id": "eq-010",
+    "event_id": "ev-2027-02",
+    "employer_id": "emp-avara",
+    "user_id": "u-talent08",
+    "text": "Is the warehouse work heavy lifting?",
+    "answer": null,
+    "answered_by": null,
+    "created_at": "2027-02-10T11:19:00",
+    "answered_at": null
+  }
+]

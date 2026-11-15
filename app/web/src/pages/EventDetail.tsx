@@ -9,7 +9,7 @@ import type {
   Connection,
   EventAfterData,
   EventRecord,
-  EventDetailData, EventSummary, MyEventData,
+  EventDetailData, EventSummary, MyEventData, MyMeeting,
   NeedEntry, TalentCardData,
 } from '../types'
 import { DAYS, PARTS } from '../types'
@@ -18,6 +18,7 @@ import ScanBox from '../components/ScanBox'
 import CompanyLogo from '../components/CompanyLogo'
 import BoothPlan from '../components/BoothPlan'
 import VenueMap from '../components/VenueMap'
+import OnlineLobby from '../components/OnlineLobby'
 import NeedCardView from '../components/NeedCardView'
 import Stepper from '../components/Stepper'
 import CardChooser from '../components/CardChooser'
@@ -202,7 +203,9 @@ export default function EventDetail() {
   const [step, setStep] = useState(-1)
   const [respNote, setRespNote] = useState<Record<string, string>>({})
   const [respDlg, setRespDlg] = useState<string | null>(null)
+  const [mapHi, setMapHi] = useState('')
   const meetsRef = useRef<Record<string, number[]>>({})
+  const mapRef = useRef<HTMLDivElement | null>(null)
 
   const isResident = user?.role === 'resident'
 
@@ -497,16 +500,23 @@ export default function EventDetail() {
   ) : needsList
 
   /* ---- step 3: Your plan ---- */
+  const showOnMap = (booth: string) => {
+    setMapHi(booth)
+    mapRef.current?.scrollIntoView({ block: 'center' })
+  }
   const venueMap = !online && ev.employers.some((e) => e.booth) && (
-    <Section title={t('map.title')}>
-      <VenueMap
-        booths={ev.employers.map((e) => ({
-          id: e.employer_id, name: e.employer_name ?? '',
-          booth: e.booth, logo_color: e.logo_color, field: e.field }))}
-        route={meetings.filter((m) => meetingOf.has(m.employer_id))
-          .map((m) => ({ employer_id: m.employer_id,
-                         starts_at: m.starts_at }))} />
-    </Section>
+    <div ref={mapRef}>
+      <Section title={t('map.title')}>
+        <VenueMap
+          booths={ev.employers.map((e) => ({
+            id: e.employer_id, name: e.employer_name ?? '',
+            booth: e.booth, logo_color: e.logo_color, field: e.field }))}
+          highlight={mapHi}
+          route={meetings.filter((m) => meetingOf.has(m.employer_id))
+            .map((m) => ({ employer_id: m.employer_id,
+                           starts_at: m.starts_at }))} />
+      </Section>
+    </div>
   )
 
   const plan = (
@@ -587,42 +597,71 @@ export default function EventDetail() {
     (m) => m.status !== 'booked' ||
            Date.parse(m.starts_at) + slotMs <= now.getTime())
 
-  const nowCard = currentM && (
-    <div className="card p-4" style={{ borderColor: 'var(--color-yes)' }}>
-      <strong className="block">{t('ev.day.now')}</strong>
-      <p className="m-0 mt-1" style={{ fontSize: '1.15rem' }}>
-        {fmtTime(currentM.starts_at)} — {currentM.employer_name}
-        {currentM.booth ? ` · ${t('ev.booth')} ${currentM.booth}` : ''}
-      </p>
-      {currentM.video_url && (
-        <a className="btn btn-primary mt-2" href={currentM.video_url}
-           target="_blank" rel="noreferrer">
-          {t('ev.day.join')}</a>
-      )}
-    </div>
-  )
-  const nextCard = !currentM && nextM && (
-    <div className="card p-4" style={{ borderColor: 'var(--color-brand)' }}>
-      <strong className="block">{t('ev.day.next')}</strong>
-      <p className="m-0 mt-1" style={{ fontSize: '1.15rem' }}>
-        {t('ev.day.in', {
-          n: Math.max(0, Math.round(
-            (Date.parse(nextM.starts_at) - now.getTime()) / 60000)) })}
-        {' · '}
-        {nextM.booth ? `${t('ev.booth')} ${nextM.booth} · ` : ''}
-        {nextM.employer_name}
-      </p>
-      {nextM.video_url && (
-        <a className={`btn mt-2 ${Date.parse(nextM.starts_at) - now.getTime() <= 5 * 60000 ? 'btn-primary' : 'btn-secondary'}`}
-           href={nextM.video_url} target="_blank" rel="noreferrer"
-           aria-disabled={Date.parse(nextM.starts_at) - now.getTime() > 5 * 60000}>
-          {t('ev.day.join')}</a>
-      )}
-    </div>
-  )
+  const mtgCard = (m: MyMeeting, kind: 'now' | 'next') => {
+    const start = Date.parse(m.starts_at)
+    const endT = new Date(start + slotMs)
+    const endHm = `${String(endT.getHours()).padStart(2, '0')}:` +
+                  `${String(endT.getMinutes()).padStart(2, '0')}`
+    const inMin = Math.max(0, Math.round((start - now.getTime()) / 60000))
+    const joinOk = !!m.video_url &&
+      (start - now.getTime() <= 5 * 60000 || phase === 'live')
+    const emp = ev.employers.find((e) => e.employer_id === m.employer_id)
+    const prepare = (m.must_haves ?? [])[0]
+    return (
+      <div className="card p-4 grid gap-3" style={{
+        borderColor: kind === 'now' ? 'var(--color-yes)'
+                                   : 'var(--color-brand)',
+        borderWidth: 2 }}>
+        <strong style={{ fontSize: '1.05rem' }}>
+          {kind === 'now'
+            ? t('ev.day.until', { t: endHm })
+            : t('ev.day.in', { n: inMin })}
+        </strong>
+        <div className="flex gap-3 items-center flex-wrap">
+          {emp && (
+            <CompanyLogo
+              employer={{ name: m.employer_name,
+                          logo_color: emp.logo_color ?? undefined,
+                          field: emp.field ?? undefined }}
+              size={48} />
+          )}
+          <span style={{ fontSize: '1.2rem', fontWeight: 600 }}>
+            {m.employer_name}
+          </span>
+          {m.booth &&
+            <span className="chip">{t('ev.booth')} {m.booth}</span>}
+        </div>
+        {(m.first_week ?? []).length > 0 && (
+          <ul className="m-0 ps-5 text-secondary">
+            {(m.first_week ?? []).slice(0, 2).map((f, i2) => (
+              <li key={i2}>{f}</li>))}
+          </ul>
+        )}
+        {prepare &&
+          <p className="m-0 text-secondary">
+            {t('ev.plan.example', { x: prepare })}</p>}
+        <div className="flex gap-2 flex-wrap">
+          {m.booth && !online && (
+            <button type="button" className="btn btn-secondary"
+                    onClick={() => m.booth && showOnMap(m.booth)}>
+              {t('ev.day.showmap')}</button>
+          )}
+          {m.video_url && (
+            <a className={`btn ${joinOk ? 'btn-primary' : 'btn-secondary'}`}
+               href={joinOk ? m.video_url : undefined}
+               target="_blank" rel="noreferrer" aria-disabled={!joinOk}>
+              {t('ev.day.join')}</a>
+          )}
+        </div>
+      </div>
+    )
+  }
+  const nowCard = currentM && mtgCard(currentM, 'now')
+  const nextCard = !currentM && nextM && mtgCard(nextM, 'next')
 
   const day = (
     <div className="grid gap-4">
+      {online && <OnlineLobby ev={ev} now={now} employers={ev.employers} />}
       {nowCard}
       {nextCard}
       {!currentM && !nextM && meetings.length === 0 && (
@@ -707,9 +746,13 @@ export default function EventDetail() {
                 {tk.note &&
                   <span className="block text-secondary">{tk.note}</span>}
                 {tk.observed && tk.observed.length > 0 && (
-                  <ul className="m-0 ps-5 text-secondary">
-                    {tk.observed.map((o, i2) => <li key={i2}>{o}</li>)}
-                  </ul>
+                  <div>
+                    <span className="text-secondary">
+                      {t('ev.talk.seen')}</span>
+                    <ul className="m-0 ps-5 text-secondary">
+                      {tk.observed.map((o, i2) => <li key={i2}>{o}</li>)}
+                    </ul>
+                  </div>
                 )}
                 {tk.outcome === 'next_step' && !tk.talent_response && (
                   <div className="grid gap-2">
