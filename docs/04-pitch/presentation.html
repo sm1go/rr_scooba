@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espoo Work Map — Rethinking Recruitment</title>
+<style>
+  :root { --blue:#0050bb; --ink:#14213d; --muted:#5b6b82; --bg:#f5f7fb; --card:#fff; --accent:#00a37a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; font-family: "Inter", "Segoe UI", system-ui, sans-serif; color:var(--ink); background:#0b1730; }
+  .slide { position:absolute; inset:0; display:none; padding:6vh 7vw; background:var(--bg); flex-direction:column; justify-content:center; }
+  .slide.active { display:flex; }
+  .slide.dark { background:linear-gradient(135deg,#003a8c,#0050bb 60%,#1a73e8); color:#fff; }
+  .slide.dark p, .slide.dark li { color:#e3ecff; }
+  h1 { font-size:clamp(2.2rem,5vw,4rem); line-height:1.1; margin-bottom:.6em; }
+  h2 { font-size:clamp(1.6rem,3.2vw,2.6rem); margin-bottom:.8em; color:var(--blue); }
+  .dark h2 { color:#fff; }
+  p, li { font-size:clamp(1rem,1.6vw,1.35rem); line-height:1.5; color:var(--muted); }
+  ul { padding-left:1.2em; } li { margin:.35em 0; }
+  b { color:var(--ink); } .dark b { color:#fff; }
+  .kicker { text-transform:uppercase; letter-spacing:.12em; font-size:.9rem; opacity:.8; margin-bottom:1em; }
+  .grid { display:grid; gap:1.2rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  .card { background:var(--card); border-radius:14px; padding:1.2rem 1.4rem; box-shadow:0 2px 10px rgba(20,33,61,.08); border-top:4px solid var(--blue); }
+  .card h3 { font-size:1.15rem; margin-bottom:.5em; }
+  .card p, .card li { font-size:1rem; }
+  .big { font-size:clamp(2rem,4vw,3.2rem); font-weight:700; color:var(--blue); }
+  .flow { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:1.2rem 0 1.6rem; }
+  .step { background:var(--blue); color:#fff; border-radius:999px; padding:.55rem 1.1rem; font-weight:600; font-size:clamp(.9rem,1.4vw,1.15rem); }
+  .arrow { color:var(--muted); font-size:1.4rem; }
+  .quote { font-size:clamp(1.3rem,2.4vw,2rem); font-style:italic; color:#fff; border-left:4px solid #8fd3ff; padding-left:1rem; margin-top:1rem; }
+  code { background:#e8eef9; padding:.1em .35em; border-radius:4px; font-size:.95em; }
+  .footer { position:fixed; bottom:2.5vh; right:3vw; font-size:.85rem; color:#8a97ab; z-index:5; }
+  .nav { position:fixed; bottom:2vh; left:3vw; z-index:5; display:flex; gap:.4rem; }
+  .nav button { border:0; background:#ffffffcc; border-radius:8px; padding:.35rem .8rem; cursor:pointer; font-size:1rem; }
+</style>
+</head>
+<body>
+
+<section class="slide dark active">
+  <div class="kicker">Junction 2026 · City of Espoo · Rethinking Recruitment</div>
+  <h1>Espoo Work Map<br>proof, not prose</h1>
+  <p>A signal layer for City of Espoo recruitment events: before, during and after the event day.</p>
+  <p class="quote">Stronger signal, less noise.</p>
+</section>
+
+<section class="slide">
+  <h2>The problem</h2>
+  <p style="margin-bottom:1.2rem">CVs are written by AI and screened by AI, so both sides talk through machine-generated text instead of real understanding.</p>
+  <div class="grid">
+    <div class="card"><h3>Employers</h3><p>Describe their needs <b>late and vaguely</b>, often only in the presentation on the day. They get flooded with irrelevant approaches.</p></div>
+    <div class="card"><h3>Talent</h3><p>Can't show what they can <b>actually do</b>. Polished profiles all look alike. Language becomes a gate ("good Finnish") with no reason given.</p></div>
+    <div class="card"><h3>Organiser (City)</h3><p>Lots of registrations, <b>little insight</b> into real skills, queues instead of conversations, no visible follow-up.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Why it matters in Espoo</h2>
+  <div class="grid">
+    <div class="card"><div class="big">~19 000</div><p>unemployed people in Espoo, against roughly 650 open job ads</p></div>
+    <div class="card"><div class="big">1 300</div><p>people registered for TalentMatch 2024, with 40+ organisations. Employer time is the bottleneck</p></div>
+    <div class="card"><div class="big">2 weeks</div><p>before the event: the employer list appears. Real needs often only on the day</p></div>
+  </div>
+  <p style="margin-top:1.4rem">Two event families today: <b>TalentMatch</b> (international, English, 1:1 matching) and <b>Työnantajatreffit</b> (Finnish, walk-in interviews). We designed for both, in person and online.</p>
+</section>
+
+<section class="slide">
+  <h2>Our solution: one time-driven loop</h2>
+  <div class="flow">
+    <span class="step">1 Register</span><span class="arrow">→</span>
+    <span class="step">2 Choose</span><span class="arrow">→</span>
+    <span class="step">3 Your plan</span><span class="arrow">→</span>
+    <span class="step">4 Event day</span><span class="arrow">→</span>
+    <span class="step">5 Answers</span>
+  </div>
+  <ul>
+    <li>Employers file a <b>need card</b> before a deadline: what you will do in the first week, max 3 must-haves <i>with a reason</i>, and each language need as a task plus a CEFR level.</li>
+    <li>Talent writes <b>"3 things I have done", in their own words</b>. No CV.</li>
+    <li>Both sides choose with hard limits (talent: 5 employers; employer: as many invites as slots). <b>Mutual interest books a 1:1 talk automatically.</b></li>
+    <li>Event day: a <b>Now / Next</b> screen, a QR pass and a venue map with the route.</li>
+    <li>Within 7 days every talk gets an <b>answer</b>: a concrete next step (interview, work try-out, call) or "not this time" with a reason.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Three roles, one event</h2>
+  <div class="grid">
+    <div class="card"><h3>Talent: Aino, Pekka, Amira</h3><ul><li>Need cards shown one at a time, with a "Match!" moment</li><li>Personal plan with a "How to prepare" list built from the must-haves</li><li>Answers become records for future applications</li></ul></div>
+    <div class="card"><h3>Employer: Sanna</h3><ul><li>Need card checked by a wording checker</li><li>Anonymous cards in random order</li><li>Scan the QR, note what was seen at the talk, answer everyone</li></ul></div>
+    <div class="card"><h3>Organiser: Leena (City)</h3><ul><li>Need card status: on time / late / missing, plus reminders</li><li>Funnel: registered → chose → met → next step</li><li>Fairness panel by registration language</li></ul></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Online event</h2>
+  <div class="grid">
+    <div class="card"><h3>Video 1:1 talks</h3><p>Jitsi calls that open 5 minutes before the booked slot. The name is shown only when the call starts.</p></div>
+    <div class="card"><h3>Virtual booths</h3><p>Each employer has a booth with Q&amp;A, so people without a match can still ask questions.</p></div>
+    <div class="card"><h3>Stage &amp; lounge</h3><p>A lobby, stage programme and networking lounge for people who want to meet peers.</p></div>
+  </div>
+  <p style="margin-top:1.4rem">The same loop and rules as in person. Only the "place" changes.</p>
+</section>
+
+<section class="slide">
+  <h2>Responsible by design</h2>
+  <div class="grid">
+    <div class="card"><h3>No bias inputs</h3><p>Before the meeting, employers see <b>no name, country, photo, school, age or career dates</b>. Card order is random and nobody is ranked.</p></div>
+    <div class="card"><h3>AI only as a helper</h3><p>Optional (NVIDIA Build, OpenAI-compatible). It only restructures text the person wrote, and the person accepts or edits it. Rules-based fallback, every call audited. No scoring of people.</p></div>
+    <div class="card"><h3>Measured fairness</h3><p>Outcome rates by registration language. Groups under 10 people show no rates (k-anonymity).</p></div>
+    <div class="card"><h3>Privacy</h3><p>Synthetic data only. Badges are controlled by the person, and attendance or "hired" badges never affect matching.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Under the hood</h2>
+  <div class="grid">
+    <div class="card"><h3>Backend</h3><ul><li>Python <b>FastAPI</b> + SQLite</li><li>Deterministic rules: wording checker, slot scheduler, phase logic</li><li>One clock <code>app_now()</code>, phases registration → matched → live → after</li></ul></div>
+    <div class="card"><h3>Frontend</h3><ul><li><b>React 19</b> + Vite + TypeScript + Tailwind</li><li>Leaflet venue map, QR passes</li><li>Multilingual UI (i18n), accessible fonts</li></ul></div>
+    <div class="card"><h3>Demo engine</h3><ul><li>Demo clock moves the event through its phases</li><li>Simulates other employers (never the presenter)</li><li>One-click reset, re-seeded synthetic data</li></ul></div>
+  </div>
+  <div class="grid" style="margin-top:1.2rem">
+    <div class="card"><div class="big">~7.8k</div><p>lines of Python (API)</p></div>
+    <div class="card"><div class="big">~21k</div><p>lines of TypeScript (web)</p></div>
+    <div class="card"><div class="big">250+</div><p>automated tests (pytest)</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Demo in 3 minutes</h2>
+  <ol style="padding-left:1.2em">
+    <li><b>Sanna</b> (employer) files her need card: first-week tasks, must-haves with a reason, Finnish B1 "for customer phone calls".</li>
+    <li><b>Aino</b> (talent) registers with 3 things she has done, then picks employers one card at a time. Match!</li>
+    <li>Move the <b>demo clock</b> to "matching closed": her plan and her "How to prepare" list.</li>
+    <li>Event day: Now/Next, scan the QR, Sanna notes what she saw at the talk.</li>
+    <li>After: Sanna proposes a work try-out and Aino replies "Yes, I'll come".</li>
+    <li><b>Leena</b> (City) sees late need cards, the funnel and the fairness panel.</li>
+  </ol>
+</section>
+
+<section class="slide dark">
+  <h2>From hackathon to pilot</h2>
+  <ul>
+    <li>Run next to existing TalentMatch and Työnantajatreffit events, with no platform change needed.</li>
+    <li>Pilot one event: measure answers within 7 days and next steps per talk, by language group.</li>
+    <li>Self-hostable stack (FastAPI + SQLite + open models) fits public-sector procurement.</li>
+  </ul>
+  <p class="quote">Companies bring a real need, talent brings proof, Espoo sets the table.</p>
+  <p style="margin-top:2rem">github.com/sm1go/rr_scooba</p>
+</section>
+
+<div class="nav"><button onclick="go(-1)">&larr;</button><button onclick="go(1)">&rarr;</button></div>
+<div class="footer" id="counter"></div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  let i = 0;
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    document.getElementById('counter').textContent = (i + 1) + ' / ' + slides.length;
+  }
+  function go(d) { show(i + d); }
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) go(1);
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('.nav')) go(1); });
+  show(0);
+</script>
+</body>
+</html>

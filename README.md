@@ -33,6 +33,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 | `docs/01-research/` | Research and problem analysis: context, regulation, market, data sources |
 | `docs/02-ideation/` | Multi-agent ideation: method, Round 1 proposals, Round 2 cross-reviews, Round 3 votes |
 | `docs/03-product/` | Consolidated feature catalog, scoring outputs, shortlist |
+| `docs/04-pitch/` | Pitch material: short slide deck (`presentation.html`) |
 | `docs/decisions/` | Decision log |
 | `app/` | Application code — Espoo Work Map v2 (`app/api` FastAPI, `app/web` React) |
 | `db/` | Database schema, migrations, synthetic seed data |
@@ -46,6 +47,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 - [Ideation method](docs/02-ideation/README.md) · [Round 1 digest — all 58 raw ideas](docs/02-ideation/round-1-digest.md) · [Round 2 brief](docs/02-ideation/round-2-brief.md)
 - Product: [Feature catalogue F01–F20](docs/03-product/feature-catalog.md) · [Shortlist & MVP](docs/03-product/shortlist.md) · [Architecture](docs/03-product/architecture.md) · [Scoring](docs/03-product/scoring/summary.md)
 - Build contract: [App v2 spec (authoritative)](docs/03-product/app-v2-spec.md) · [API contract pointer](docs/03-product/api-contract.md) · [Finnish-style design guide](docs/03-product/design-guide.md) · [Event mode spec (v4, current)](docs/03-product/event-mode-spec.md)
+- Pitch: [Short slide deck](docs/04-pitch/presentation.html) (open in a browser, arrow keys to navigate)
 - [Decision log](docs/decisions/decision-log.md)
 
 ## Run the demo locally
