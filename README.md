@@ -118,7 +118,7 @@ docker run --rm -p 8080:8000 --env-file .env ewm        # with optional keys
 | `docs/01-research/` | Research: Espoo context, AI in hiring, regulation, current Espoo events, pro-employment practices in other cities |
 | `docs/02-ideation/` | Multi-agent ideation rounds |
 | `docs/03-product/` | Specifications; the current one is [event-mode-spec.md](docs/03-product/event-mode-spec.md) |
-| `docs/04-pitch/` | Pitch deck and submission texts |
+| `docs/04-pitch/` | Pitch deck and submission texts; rebuild the deck with the `/pitch-deck` skill (`.devin/skills/pitch-deck/`) |
 | `docs/decisions/` | [Decision log](docs/decisions/decision-log.md) |
 
 Key reading: [challenge brief](docs/00-challenge/challenge-brief.md) · [how Espoo events work today](docs/01-research/10-espoo-events-today.md) · [Espoo labour market 2026](docs/01-research/08-espoo-local-situation-2026.md) · [regulation](docs/01-research/03-regulatory-fact-sheet.md) · [pitch deck](docs/04-pitch/presentation.pdf)
