@@ -6,7 +6,7 @@
     const id = f.src.split('/embed/')[1];
     f.insertAdjacentHTML('afterend', `<a class="thumb" href="https://youtu.be/${id}"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="Demo video"><span>&#9654;</span></a>`);
   });
-  let i = 0;
+  let i = Math.max(0, Math.min(slides.length - 1, parseInt(location.hash.slice(1), 10) - 1 || 0));
   const show = n => {
     i = Math.max(0, Math.min(slides.length - 1, n));
     slides.forEach((s, k) => s.classList.toggle('active', k === i));
