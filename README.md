@@ -33,7 +33,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 | `docs/01-research/` | Research and problem analysis: context, regulation, market, data sources |
 | `docs/02-ideation/` | Multi-agent ideation: method, Round 1 proposals, Round 2 cross-reviews, Round 3 votes |
 | `docs/03-product/` | Consolidated feature catalog, scoring outputs, shortlist |
-| `docs/04-pitch/` | Pitch material: short slide deck (`presentation.html`) |
+| `docs/04-pitch/` | Pitch material: short slide deck (`presentation.html`); `team-projects/` decks for our other Junction projects (OtaPath, Muutto, Taimi) with sources |
 | `docs/decisions/` | Decision log |
 | `app/` | Application code — Espoo Work Map v2 (`app/api` FastAPI, `app/web` React) |
 | `db/` | Database schema, migrations, synthetic seed data |
@@ -48,6 +48,7 @@ and talent find relevant, genuine connections when CVs are AI-written and screen
 - Product: [Feature catalogue F01–F20](docs/03-product/feature-catalog.md) · [Shortlist & MVP](docs/03-product/shortlist.md) · [Architecture](docs/03-product/architecture.md) · [Scoring](docs/03-product/scoring/summary.md)
 - Build contract: [App v2 spec (authoritative)](docs/03-product/app-v2-spec.md) · [API contract pointer](docs/03-product/api-contract.md) · [Finnish-style design guide](docs/03-product/design-guide.md) · [Event mode spec (v4, current)](docs/03-product/event-mode-spec.md)
 - Pitch: [Short slide deck](docs/04-pitch/presentation.html) (open in a browser, arrow keys to navigate)
+- Other team projects: [OtaPath — Beyond the Clinic](docs/04-pitch/team-projects/otapath-beyond-the-clinic.html) · [Muutto — The Internet Butler](docs/04-pitch/team-projects/muutto-internet-butler.html) · [Taimi — Personal Economic Trainer](docs/04-pitch/team-projects/taimi-personal-economic-trainer.html) · [Sources and video transcripts](docs/04-pitch/team-projects/sources.md)
 - [Decision log](docs/decisions/decision-log.md)
 
 ## Run the demo locally
