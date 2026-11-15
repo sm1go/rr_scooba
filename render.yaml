@@ -1,0 +1,19 @@
+# Render Blueprint — one Docker web service serving API + frontend.
+# Enter the two API keys in the dashboard when prompted (both optional;
+# the app runs fine without them — AI/commute features stay hidden).
+services:
+  - type: web
+    name: espoo-work-map
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /api/config
+    envVars:
+      - key: DEMO_MODE
+        value: "1"
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: DIGITRANSIT_API_KEY
+        sync: false

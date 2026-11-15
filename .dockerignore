@@ -1,0 +1,13 @@
+.git
+.env*
+node_modules
+app/web/node_modules
+app/web/dist
+db/talentmatch.sqlite
+__pycache__
+**/__pycache__
+tests
+docs
+*.png
+.venv
+.pytest_cache
