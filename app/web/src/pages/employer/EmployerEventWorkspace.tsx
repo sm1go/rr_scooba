@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { api, ApiError } from '../../lib/api'
+import { useConfig } from '../../lib/config'
 import { fmtDate } from '../../lib/format'
 import { useI18n } from '../../i18n/i18n'
 import type { Key } from '../../i18n/en'
@@ -11,7 +12,6 @@ import Stepper from '../../components/Stepper'
 import CardChooser from '../../components/CardChooser'
 import type { Meeting } from '../../components/CardChooser'
 import ScanBox from '../../components/ScanBox'
-import EmployerEventPage from './EmployerEvent'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 const LANGS = ['Finnish', 'Swedish', 'English', 'Russian', 'Arabic', 'Estonian',
@@ -227,6 +227,24 @@ function CardTile({ c, onInvite, slotsLeft, districts, hideAction }: {
   )
 }
 
+/** Demo/real clock: fetch /api/demo/state once, tick every 30 s. */
+function useNow() {
+  const cfg = useConfig()
+  const [offset, setOffset] = useState(0)
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    if (!cfg.demo) return
+    api<{ now: string }>('/api/demo/state')
+      .then((d) => setOffset(Date.parse(d.now) - Date.now()))
+      .catch(() => {})
+  }, [cfg.demo])
+  useEffect(() => {
+    const i = setInterval(() => setTick((x) => x + 1), 30000)
+    return () => clearInterval(i)
+  }, [])
+  return new Date(Date.now() + offset)
+}
+
 function fmtTime(iso: string) {
   return iso.includes('T') ? iso.split('T')[1].slice(0, 5) : iso
 }
@@ -239,6 +257,9 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
   const [observed, setObserved] = useState<Set<string>>(new Set())
   const [note, setNote] = useState('')
   const [outcome, setOutcome] = useState<'next_step' | 'not_now'>('next_step')
+  const [nextKind, setNextKind] = useState('interview')
+  const [nextAt, setNextAt] = useState('')
+  const [nextPlace, setNextPlace] = useState('')
   const [err, setErr] = useState('')
 
   const load = () => api<EmployerDay>(`/api/employer/events/${id}/day`)
@@ -266,8 +287,12 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
     try {
       await api(`/api/employer/events/${id}/meetings/${next.id}/talk`,
         { body: { observed: [...observed], outcome,
-                  employer_note: note } })
+                  employer_note: note,
+                  ...(outcome === 'next_step' ? {
+                    next_kind: nextKind, next_at: nextAt,
+                    next_place: nextPlace } : {}) } })
       setObserved(new Set()); setNote(''); setName(''); setCode('')
+      setNextAt(''); setNextPlace('')
       load()
     } catch (e2) {
       setErr(e2 instanceof ApiError ? e2.message : t('common.error'))
@@ -367,6 +392,31 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
                 {t('ev.outcome.not_now')}
               </Toggle>
             </div>
+            {outcome === 'next_step' && (
+              <div className="grid gap-2">
+                <label className="grid gap-1">
+                  <span>{t('ev.emp.nextkind')}</span>
+                  <select className="input" style={{ maxWidth: 260 }}
+                          value={nextKind}
+                          onChange={(e) => setNextKind(e.target.value)}>
+                    <option value="interview">{t('ev.nextkind.interview')}</option>
+                    <option value="tryout">{t('ev.nextkind.tryout')}</option>
+                    <option value="call">{t('ev.nextkind.call')}</option>
+                  </select>
+                </label>
+                <label className="grid gap-1">
+                  <span>{t('ev.emp.nextat')}</span>
+                  <input type="datetime-local" className="input" required
+                         style={{ maxWidth: 260 }} value={nextAt}
+                         onChange={(e) => setNextAt(e.target.value)} />
+                </label>
+                <label className="grid gap-1">
+                  <span>{t('ev.emp.nextplace')}</span>
+                  <input className="input" value={nextPlace}
+                         onChange={(e) => setNextPlace(e.target.value)} />
+                </label>
+              </div>
+            )}
             {err && <ErrorBox>{err}</ErrorBox>}
             <div className="flex gap-2 flex-wrap">
               <button type="submit" className="btn btn-primary">
@@ -395,57 +445,104 @@ function BoothDay({ id, firstWeek }: { id: string; firstWeek: string[] }) {
   )
 }
 
-function AfterTalks({ talks, onDone }: {
-  talks: EventTalk[]; onDone: () => void
+function AfterTalks({ talks, onDone, answersDue }: {
+  talks: EventTalk[]; onDone: () => void; answersDue?: string
 }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const [note, setNote] = useState<Record<string, string>>({})
   const [out, setOut] = useState<Record<string, string>>({})
+  const [kind, setKind] = useState<Record<string, string>>({})
+  const [at, setAt] = useState<Record<string, string>>({})
+  const [place, setPlace] = useState<Record<string, string>>({})
+  const now = useNow()
   const waiting = talks.filter((tk) => tk.status === 'talked')
   const answered = talks.filter((tk) => tk.status === 'answered')
   if (talks.length === 0) {
     return <p className="text-secondary">{t('ev.talks.none')}</p>
   }
+  const daysLeft = answersDue
+    ? Math.ceil((Date.parse(answersDue) - now.getTime()) / 86400000) : null
   const answer = async (tk: EventTalk) => {
+    const o = out[tk.id] ?? 'next_step'
     try {
       await api(`/api/employer/event/talks/${tk.id}/answer`, {
-        body: { outcome: out[tk.id] ?? 'next_step',
-                employer_note: note[tk.id] ?? '' } })
+        body: { outcome: o,
+                employer_note: note[tk.id] ?? '',
+                ...(o === 'next_step' ? {
+                  next_kind: kind[tk.id] ?? 'interview',
+                  next_at: at[tk.id] ?? '',
+                  next_place: place[tk.id] ?? '' } : {}) } })
       onDone()
     } catch (e) { alert(e instanceof ApiError ? e.message : t('common.error')) }
   }
   return (
     <div className="grid gap-3">
+      {waiting.length > 0 && daysLeft != null && (
+        <p className="m-0 font-medium">
+          {daysLeft >= 0
+            ? t('ev.emp.due', { n: daysLeft })
+            : t('ev.emp.late', { d: fmtDate(answersDue!, lang) })}
+        </p>
+      )}
       {waiting.length > 0 && (
         <Section title={t('ev.emp.after.waiting')}>
           <ul className="grid gap-3 p-0 list-none">
-            {waiting.map((tk) => (
+            {waiting.map((tk) => {
+              const o = out[tk.id] ?? 'next_step'
+              return (
               <li key={tk.id} className="card p-3 grid gap-2">
                 <strong>{tk.person_name ?? tk.employer_name ?? tk.id}</strong>
                 <span className="text-secondary">
                   {t('ev.waitdays', { n: tk.days_waiting ?? 0 })}
                 </span>
                 <div className="flex gap-2 flex-wrap">
-                  <Toggle pressed={(out[tk.id] ?? 'next_step') === 'next_step'}
+                  <Toggle pressed={o === 'next_step'}
                           onClick={() => setOut({ ...out, [tk.id]: 'next_step' })}>
                     {t('ev.outcome.next_step')}
                   </Toggle>
-                  <Toggle pressed={out[tk.id] === 'not_now'}
+                  <Toggle pressed={o === 'not_now'}
                           onClick={() => setOut({ ...out, [tk.id]: 'not_now' })}>
                     {t('ev.outcome.not_now')}
                   </Toggle>
                 </div>
+                {o === 'next_step' && (
+                  <div className="grid gap-2">
+                    <label className="grid gap-1">
+                      <span className="text-secondary">{t('ev.emp.nextkind')}</span>
+                      <select className="input" style={{ maxWidth: 260 }}
+                              value={kind[tk.id] ?? 'interview'}
+                              onChange={(e) => setKind({ ...kind, [tk.id]: e.target.value })}>
+                        <option value="interview">{t('ev.nextkind.interview')}</option>
+                        <option value="tryout">{t('ev.nextkind.tryout')}</option>
+                        <option value="call">{t('ev.nextkind.call')}</option>
+                      </select>
+                    </label>
+                    <label className="grid gap-1">
+                      <span className="text-secondary">{t('ev.emp.nextat')}</span>
+                      <input type="datetime-local" className="input"
+                             style={{ maxWidth: 260 }}
+                             value={at[tk.id] ?? ''}
+                             onChange={(e) => setAt({ ...at, [tk.id]: e.target.value })} />
+                    </label>
+                    <label className="grid gap-1">
+                      <span className="text-secondary">{t('ev.emp.nextplace')}</span>
+                      <input className="input" value={place[tk.id] ?? ''}
+                             onChange={(e) => setPlace({ ...place, [tk.id]: e.target.value })} />
+                    </label>
+                  </div>
+                )}
                 <input className="input" required
                        placeholder={t('ev.emp.day.note')}
                        value={note[tk.id] ?? ''}
                        onChange={(e) => setNote({ ...note, [tk.id]: e.target.value })} />
                 <button type="button" className="btn btn-primary"
-                        disabled={!(note[tk.id] ?? '').trim()}
+                        disabled={!(note[tk.id] ?? '').trim() ||
+                                  (o === 'next_step' && !(at[tk.id] ?? ''))}
                         onClick={() => answer(tk)}>
                   {t('ev.emp.day.send')}
                 </button>
               </li>
-            ))}
+            )})}
           </ul>
         </Section>
       )}
@@ -455,8 +552,13 @@ function AfterTalks({ talks, onDone }: {
             {answered.map((tk) => (
               <li key={tk.id} className="card p-3">
                 <strong>{tk.person_name ?? tk.id}</strong>
+                {tk.simulated &&
+                  <span className="chip ms-2">{t('ev.simulated')}</span>}
                 <span className="block">
                   {tk.outcome ? t(`ev.outcome.${tk.outcome}` as Key) : ''}
+                  {tk.next_kind &&
+                    ` — ${t(`ev.nextkind.${tk.next_kind}` as Key)}`}
+                  {tk.next_at ? ` ${fmtTime(tk.next_at)}` : ''}
                 </span>
                 {tk.employer_note && (
                   <span className="block text-secondary">{tk.employer_note}</span>
@@ -485,6 +587,7 @@ export default function EmployerEventWorkspace() {
   const [formErr, setFormErr] = useState('')
   const [step, setStep] = useState(-1)
   const [evFull, setEvFull] = useState<EventDetailData | null>(null)
+  const now = useNow()
 
   const load = () => {
     setErr(null)
@@ -569,7 +672,7 @@ export default function EmployerEventWorkspace() {
           {t('ev.emp.deadline', {
             d: fmtDate(ev.need_deadline, lang),
             n: Math.max(0, Math.round(
-              (Date.parse(ev.need_deadline) - Date.now()) / 86400000)),
+              (Date.parse(ev.need_deadline) - now.getTime()) / 86400000)),
           })}
         </p>
       )}
@@ -654,33 +757,74 @@ export default function EmployerEventWorkspace() {
     </Section>
   )
 
-  const day = id === 'ev-2026-11' ? <EmployerEventPage /> : (
+  const day = (
     <BoothDay id={id!}
               firstWeek={ws.need?.card.first_week ?? []} />
   )
 
-  const after = id === 'ev-2026-11' ? <EmployerEventPage /> : (
-    <AfterTalks talks={ws.talks ?? []} onDone={load} />
+  const schedule = (
+    <Section title={t('ev.emp.schedule')}>
+      {(ws.meetings ?? []).length === 0 ? (
+        <p className="text-secondary">{t('ev.meetings.none')}</p>
+      ) : (
+        <ul className="grid gap-2 p-0 list-none">
+          {(ws.meetings ?? []).map((m) => (
+            <li key={m.id} className="card p-3">
+              <strong>{fmtTime(m.starts_at)}</strong>
+              {' — '}{t('ev.emp.anon')}
+              {m.video_url &&
+                <span className="chip ms-2">{t('ev.day.video')}</span>}
+              <span className="text-secondary">
+                {' · '}{t(`ev.day.st.${m.status}` as Key)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="m-0 text-secondary">{t('ev.emp.nameattalk')}</p>
+    </Section>
   )
 
-  // §8.1 employer defaults + §8.2 next step
+  const after = (
+    <AfterTalks talks={ws.talks ?? []} onDone={load}
+                answersDue={ev.answers_due} />
+  )
+
+  // §9.4 employer defaults + next step
   const unanswered = (ws.talks ?? []).filter((tk) => !tk.outcome).length
+  const phase = ev.phase
   const defaultStep = !ws.joined || !ws.need ? 0
-    : ev.phase === 'finished' ? 3
-    : ev.phase === 'today' ? 2 : 1
+    : phase === 'registration' ? 1
+    : phase === 'matched' ? 2
+    : phase === 'live' ? 3
+    : 4
   const active = step >= 0 ? step : defaultStep
   const invitesLeft = Math.max(0, (ws.slots ?? 0) - (ws.invites_used ?? 0))
+  const opensDay = t('ev.step.opens', { d: fmtDate(ev.starts_at.slice(0, 10)) })
+  const needLock = !ws.joined || !ws.need ? t('ev.emp.needfirst') : null
+  const locked: (string | null)[] = [
+    null,
+    needLock ?? (phase !== 'registration' ? null : null),
+    needLock,
+    needLock ?? (phase === 'registration' || phase === 'matched'
+                 ? opensDay : null),
+    needLock ?? (phase === 'registration' || phase === 'matched'
+                 ? opensDay : null),
+  ]
   const next = !ws.joined
     ? { text: t('ev.emp.join'), btn: t('ev.emp.join.btn'), to: 0 }
     : !ws.need
     ? { text: t('next.emp.need'), btn: t('next.emp.need.btn'), to: 0 }
-    : ev.phase === 'finished'
-    ? { text: t('next.emp.answer', { n: unanswered }),
-        btn: t('next.emp.answer.btn'), to: 3 }
-    : ev.phase === 'today'
-    ? { text: t('next.emp.meet'), btn: t('emp.step.meet'), to: 2 }
-    : { text: t('next.emp.choose', { n: invitesLeft }),
+    : phase === 'registration'
+    ? { text: t('next.emp.choose', { n: invitesLeft }),
         btn: t('next.emp.choose.btn'), to: 1 }
+    : phase === 'matched'
+    ? { text: t('next.emp.schedule', { n: ws.meetings?.length ?? 0 }),
+        btn: t('next.emp.schedule.btn'), to: 2 }
+    : phase === 'live'
+    ? { text: t('next.emp.meet'), btn: t('emp.step.day'), to: 3 }
+    : { text: t('next.emp.answer', { n: unanswered }),
+        btn: t('next.emp.answer.btn'), to: 4 }
 
   const about = evFull && (
     <details className="card p-4">
@@ -710,7 +854,7 @@ export default function EmployerEventWorkspace() {
     </details>
   )
 
-  const steps = [needStep, chooseStep, day, after]
+  const steps = [needStep, chooseStep, schedule, day, after]
 
   return (
     <div className="grid gap-4">
@@ -723,8 +867,10 @@ export default function EmployerEventWorkspace() {
                current={active}
                doneBefore={defaultStep}
                onSelect={setStep}
+               locked={locked}
                steps={[t('emp.step.need'), t('emp.step.choose'),
-                       t('emp.step.meet'), t('emp.step.answer')]} />
+                       t('emp.step.schedule'), t('emp.step.day'),
+                       t('emp.step.answer')]} />
       <div className="card p-4 flex gap-3 items-center flex-wrap"
            style={{ borderColor: 'var(--color-brand)' }}>
         <strong className="text-secondary uppercase"

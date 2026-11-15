@@ -17,28 +17,49 @@ import { ErrorBox, ErrorState, Section, Toggle } from '../components/ui'
 import ScanBox from '../components/ScanBox'
 import CompanyLogo from '../components/CompanyLogo'
 import BoothPlan from '../components/BoothPlan'
+import VenueMap from '../components/VenueMap'
 import NeedCardView from '../components/NeedCardView'
 import Stepper from '../components/Stepper'
 import CardChooser from '../components/CardChooser'
 import type { Meeting } from '../components/CardChooser'
 import PassInline from '../components/PassInline'
 import { useConfig } from '../lib/config'
-import EventPage from './EventPage'
 
 const CARD_LANGS = ['en', 'fi', 'sv', 'ru', 'ar', 'et', 'fa', 'sq', 'uk']
 
 function fmtDate(iso: string) {
   try {
-    return new Date(iso + 'T00:00:00').toLocaleDateString(
-      document.documentElement.lang || 'en',
-      { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(iso.includes('T') ? iso : iso + 'T00:00:00')
+      .toLocaleDateString(document.documentElement.lang || 'en',
+        { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   } catch { return iso }
 }
 function fmtTime(iso: string) {
   return iso.includes('T') ? iso.split('T')[1].slice(0, 5) : iso
 }
+function fmtDateTime(iso: string) {
+  return `${fmtDate(iso)} ${fmtTime(iso)}`
+}
 const toggleIn = (arr: string[], v: string) =>
   arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
+
+/** Demo/real clock: fetch /api/demo/state once, tick every 30 s. */
+function useNow() {
+  const cfg = useConfig()
+  const [offset, setOffset] = useState(0)
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    if (!cfg.demo) return
+    api<{ now: string }>('/api/demo/state')
+      .then((d) => setOffset(Date.parse(d.now) - Date.now()))
+      .catch(() => {})
+  }, [cfg.demo])
+  useEffect(() => {
+    const i = setInterval(() => setTick((x) => x + 1), 30000)
+    return () => clearInterval(i)
+  }, [])
+  return new Date(Date.now() + offset)
+}
 
 function RegisterForm({ ev, onDone }: {
   ev: EventSummary; onDone: (r: MyEventData['registration']) => void
@@ -169,6 +190,7 @@ export default function EventDetail() {
   const { id } = useParams()
   const { t } = useI18n()
   const { user } = useAuth()
+  const now = useNow()
   const [ev, setEv] = useState<EventDetailData | null>(null)
   const [needs, setNeeds] = useState<NeedEntry[] | null>(null)
   const [my, setMy] = useState<MyEventData | null>(null)
@@ -178,6 +200,8 @@ export default function EventDetail() {
   const [err, setErr] = useState<unknown>(null)
   const [showForm, setShowForm] = useState(false)
   const [step, setStep] = useState(-1)
+  const [respNote, setRespNote] = useState<Record<string, string>>({})
+  const [respDlg, setRespDlg] = useState<string | null>(null)
   const meetsRef = useRef<Record<string, number[]>>({})
 
   const isResident = user?.role === 'resident'
@@ -210,6 +234,13 @@ export default function EventDetail() {
   const reg = my?.registration ?? null
   const interestCount = my?.interests.length ?? 0
   const limit = my?.interest_limit ?? 5
+  const phase = ev.phase
+  const choosingOpen = phase === 'registration'
+  const matchingDone = phase !== 'registration'
+  const meetings = (my?.meetings ?? []).slice()
+    .sort((a, b) => a.starts_at.localeCompare(b.starts_at))
+  const meetingOf = new Map(meetings.map((m) => [m.employer_id, m]))
+  const online = ev.format === 'online'
 
   const refreshMy = async () => {
     const m = await api<MyEventData>(`/api/events/${id}/my`); setMy(m)
@@ -225,6 +256,7 @@ export default function EventDetail() {
           body: { meets: meetsRef.current[e.employer_id] ?? e.meets ?? [],
                   language_levels: {} } })
       await refreshMy()
+      if (interestCount + 1 >= limit) setStep(2)   // auto-advance at 5
       return r
     } catch (e2) {
       alert(e2 instanceof ApiError ? e2.message : t('common.error'))
@@ -240,10 +272,30 @@ export default function EventDetail() {
       alert(e2 instanceof ApiError ? e2.message : t('common.error'))
     }
   }
+  const takeBackByEmployer = async (employerId: string) => {
+    try {
+      await api(`/api/events/${id}/interests/${employerId}`,
+                { method: 'DELETE' })
+      await refreshMy()
+    } catch (e2) {
+      alert(e2 instanceof ApiError ? e2.message : t('common.error'))
+    }
+  }
   // list-view toggle on a card (same endpoints as the chooser)
   const toggleInterest = async (e: NeedEntry) => {
     if (e.interested) await takeBackInterest(e)
     else await chooseInterest(e)
+  }
+
+  const respond = async (talkId: string, response: string) => {
+    try {
+      await api(`/api/events/${id}/talks/${talkId}/response`, {
+        body: { response, note: respNote[talkId] ?? '' } })
+      setRespDlg(null)
+      await refreshMy()
+    } catch (e2) {
+      alert(e2 instanceof ApiError ? e2.message : t('common.error'))
+    }
   }
 
   const programmeSection = ev.programme.length > 0 && (
@@ -335,15 +387,20 @@ export default function EventDetail() {
     </div>
   )
 
+  /* ---- step 1: Register ---- */
   const registerBlock = (
     <div className="grid gap-4">
-      {isResident && !reg && !showForm && (
+      {isResident && !reg && !choosingOpen && (
+        <p className="text-secondary">{t('ev.register.closed')}</p>
+      )}
+      {isResident && !reg && choosingOpen && !showForm && (
         <button type="button" className="btn btn-primary" onClick={() => setShowForm(true)}>
           {t('ev.register')}
         </button>
       )}
-      {isResident && !reg && showForm && (
-        <RegisterForm ev={ev} onDone={() => { setShowForm(false); load() }} />
+      {isResident && !reg && choosingOpen && showForm && (
+        <RegisterForm ev={ev} onDone={() => {
+          setShowForm(false); setStep(1); load() }} />
       )}
       {isResident && reg && (
         <div className="card p-4 flex gap-3 items-center flex-wrap">
@@ -351,16 +408,160 @@ export default function EventDetail() {
           <span className="text-secondary">
             {t('ev.timegroup')}: {ev.time_groups.find((g) => g.id === reg.time_group)?.entry ?? reg.time_group}
           </span>
-          <button type="button" className="btn btn-secondary"
-                  onClick={async () => {
-                    await api(`/api/events/${id}/register`, { method: 'DELETE' })
-                    load()
-                  }}>{t('ev.cancel')}</button>
+          {choosingOpen && (
+            <button type="button" className="btn btn-secondary"
+                    onClick={async () => {
+                      await api(`/api/events/${id}/register`, { method: 'DELETE' })
+                      load()
+                    }}>{t('ev.cancel')}</button>
+          )}
         </div>
       )}
     </div>
   )
 
+  /* ---- "Your choices (n/5)" panel, shown in steps 2 and 3 ---- */
+  const choicesPanel = (my?.interests.length ?? 0) > 0 && (
+    <Section title={t('ev.choices', { n: interestCount, m: limit })}>
+      <ul className="grid gap-2 p-0 list-none">
+        {my!.interests.map((i) => {
+          const m = meetingOf.get(i.employer_id)
+          const state = m
+            ? t('ev.choice.match', { t: fmtTime(m.starts_at) })
+            : matchingDone
+            ? t(online ? 'ev.choice.nomatch.online' : 'ev.choice.nomatch')
+            : t('ev.choice.waiting', {
+                name: i.name, d: fmtDate(ev.matching_closes ?? '') })
+          return (
+            <li key={i.employer_id}
+                className="card p-3 flex gap-3 items-center flex-wrap">
+              <strong className="flex-1" style={{ minWidth: 140 }}>
+                {i.name}</strong>
+              <span className="text-secondary flex-1"
+                    style={{ minWidth: 200 }}>{state}</span>
+              {choosingOpen && !m && (
+                <button type="button" className="btn btn-secondary"
+                        onClick={() => takeBackByEmployer(i.employer_id)}>
+                  {t('ev.notinterested')}</button>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </Section>
+  )
+
+  /* ---- step 2: Choose ---- */
+  const choose = !choosingOpen ? (
+    <div className="grid gap-4">
+      <p className="text-secondary">
+        {t('ev.choose.closed', { d: fmtDate(ev.matching_closes ?? '') })}</p>
+      {choicesPanel}
+    </div>
+  ) : needs ? (
+    <div className="grid gap-4">
+      {choicesPanel}
+      <p className="m-0 text-secondary">{t('ev.limit', { n: limit })}</p>
+      <CardChooser<NeedEntry>
+        items={needs.filter((e) => !e.interested)}
+        chosen={needs.filter((e) => e.interested)}
+        idOf={(e) => e.employer_id}
+        storageKey={`ev-choose-${id}-${user!.id}`}
+        chosenCount={interestCount}
+        limit={limit}
+        chooseLabel={t('choose.meet')}
+        skipLabel={t('choose.skip')}
+        counter={(i, n) => t('choose.of', { i, n })}
+        counterChosen={(a, b) => t('choose.chosen', { a, b })}
+        listLabel={t('choose.list')}
+        cardsLabel={t('choose.cards')}
+        maxText={t('choose.max', { n: limit })}
+        renderCard={(e) => (
+          <NeedCardView e={e} registered
+                        onMeetsChange={(m) => {
+                          meetsRef.current[e.employer_id] = m }} />
+        )}
+        renderChosenRow={(e) => <>{e.employer_name}</>}
+        onChoose={chooseInterest}
+        onTakeBack={takeBackInterest}
+        listView={needsGrid}
+        match={(m, e) => ({
+          title: t('match.title'),
+          body: t('match.talent', {
+            name: e.employer_name ?? '',
+            d: fmtDate(m.starts_at.slice(0, 10)),
+            t: fmtTime(m.starts_at),
+            b: m.booth ?? e.booth ?? '' }) })}
+      />
+    </div>
+  ) : needsList
+
+  /* ---- step 3: Your plan ---- */
+  const venueMap = !online && ev.employers.some((e) => e.booth) && (
+    <Section title={t('map.title')}>
+      <VenueMap
+        booths={ev.employers.map((e) => ({
+          id: e.employer_id, name: e.employer_name ?? '',
+          booth: e.booth, logo_color: e.logo_color, field: e.field }))}
+        route={meetings.filter((m) => meetingOf.has(m.employer_id))
+          .map((m) => ({ employer_id: m.employer_id,
+                         starts_at: m.starts_at }))} />
+    </Section>
+  )
+
+  const plan = (
+    <div className="grid gap-4">
+      {choicesPanel}
+      {my?.entry && reg && (
+        <p className="m-0 font-medium card p-3">
+          {online
+            ? t('ev.plan.lobby', { t: my.entry })
+            : t('ev.day.entry', { t: my.entry, g: reg.time_group })}
+        </p>
+      )}
+      {meetings.length > 0 ? (
+        <Section title={t('ev.plan.talks')}>
+          <ul className="grid gap-3 p-0 list-none">
+            {meetings.map((m) => (
+              <li key={m.id} className="card p-4 grid gap-2">
+                <div className="flex gap-2 items-center flex-wrap">
+                  <strong>{fmtTime(m.starts_at)}</strong>
+                  <span>— {m.employer_name}</span>
+                  {m.booth &&
+                    <span className="chip">{t('ev.booth')} {m.booth}</span>}
+                  {m.video_url &&
+                    <span className="chip">{t('ev.day.video')}</span>}
+                </div>
+                {m.first_week && m.first_week.length > 0 && (
+                  <ul className="m-0 ps-5 text-secondary">
+                    {m.first_week.map((f, i2) => <li key={i2}>{f}</li>)}
+                  </ul>
+                )}
+                {m.must_haves && m.must_haves.length > 0 && (
+                  <div>
+                    <strong className="block">{t('ev.plan.prepare')}</strong>
+                    <ul className="m-0 ps-5">
+                      {m.must_haves.map((x, i2) => (
+                        <li key={i2}>{t('ev.plan.example', { x })}</li>
+                      ))}
+                      {(m.bring ?? []).map((x, i2) => (
+                        <li key={`b${i2}`}>{t('ev.plan.bring', { x })}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : (
+        <p className="text-secondary">{t('ev.plan.none')}</p>
+      )}
+      {venueMap}
+    </div>
+  )
+
+  /* ---- step 4: Event day (Now / Next) ---- */
   const queueJoin = async (employerId: string) => {
     try {
       await api(`/api/events/${id}/queue/${employerId}`, { method: 'PUT' })
@@ -372,71 +573,222 @@ export default function EventDetail() {
     api<MyEventData>(`/api/events/${id}/my`).then(setMy).catch(() => {})
   }
   const queued = new Set(my?.queue.map((q) => q.employer_id) ?? [])
+  const slotMs = (ev.slot_minutes || 20) * 60000
+  const upcoming = meetings.filter(
+    (m) => m.status === 'booked' &&
+           Date.parse(m.starts_at) + slotMs > now.getTime())
+  const currentM = meetings.find(
+    (m) => m.status === 'booked' &&
+           Date.parse(m.starts_at) <= now.getTime() &&
+           Date.parse(m.starts_at) + slotMs > now.getTime())
+  const nextM = !currentM ? upcoming[0] : upcoming.find(
+    (m) => Date.parse(m.starts_at) > now.getTime())
+  const pastM = meetings.filter(
+    (m) => m.status !== 'booked' ||
+           Date.parse(m.starts_at) + slotMs <= now.getTime())
 
-  const day = (
-    <div className="grid gap-4">
-      {id === 'ev-2026-11' ? <EventPage /> : !my ? (
-        <p className="text-secondary">{t('ev.signin.cta')}</p>
-      ) : (
-        <>
-          <PassInline eventId={id!} />
-          <ScanBox eventId={id!} />
-          {my.entry && my.registration && (
-            <p className="m-0 font-medium">
-              {t('ev.day.entry', { t: my.entry, g: my.registration.time_group })}
-            </p>
-          )}
-          {my.meetings.length > 0 && (
-            <Section title={t('ev.meetings')}>
-              <ul className="m-0 ps-5">
-                {my.meetings.map((m) => (
-                  <li key={m.id} className="mb-1">
-                    <strong>{fmtTime(m.starts_at)}</strong> — {m.employer_name}
-                    {m.booth ? ` (${t('ev.booth')} ${m.booth})` : ''}
-                    {m.need_line && (
-                      <span className="block text-secondary">{m.need_line}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </Section>
-          )}
-          <BoothPlan
-            employers={ev.employers.map((e) => ({
-              id: e.employer_id, name: e.employer_name ?? '',
-              booth: e.booth, field: e.field, logo_color: e.logo_color }))}
-            inPlan={new Set(my.interests.map((i) => i.employer_id))}
-          />
-          <Section title={t('ev.day.queue.title')}>
-            <ul className="grid gap-2 p-0 list-none">
-              {ev.employers.map((e) => (
-                <li key={e.employer_id}
-                    className="flex gap-2 items-center flex-wrap">
-                  <span className="flex-1" style={{ minWidth: 140 }}>
-                    {e.employer_name}{e.booth ? ` (${t('ev.booth')} ${e.booth})` : ''}
-                  </span>
-                  {queued.has(e.employer_id) ? (
-                    <button type="button" className="btn btn-secondary"
-                            onClick={() => queueLeave(e.employer_id)}>
-                      {t('ev.day.queue.leave')}
-                    </button>
-                  ) : (
-                    <button type="button" className="btn btn-secondary"
-                            onClick={() => queueJoin(e.employer_id)}>
-                      {t('ev.day.queue.join')}
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </Section>
-        </>
+  const nowCard = currentM && (
+    <div className="card p-4" style={{ borderColor: 'var(--color-yes)' }}>
+      <strong className="block">{t('ev.day.now')}</strong>
+      <p className="m-0 mt-1" style={{ fontSize: '1.15rem' }}>
+        {fmtTime(currentM.starts_at)} — {currentM.employer_name}
+        {currentM.booth ? ` · ${t('ev.booth')} ${currentM.booth}` : ''}
+      </p>
+      {currentM.video_url && (
+        <a className="btn btn-primary mt-2" href={currentM.video_url}
+           target="_blank" rel="noreferrer">
+          {t('ev.day.join')}</a>
+      )}
+    </div>
+  )
+  const nextCard = !currentM && nextM && (
+    <div className="card p-4" style={{ borderColor: 'var(--color-brand)' }}>
+      <strong className="block">{t('ev.day.next')}</strong>
+      <p className="m-0 mt-1" style={{ fontSize: '1.15rem' }}>
+        {t('ev.day.in', {
+          n: Math.max(0, Math.round(
+            (Date.parse(nextM.starts_at) - now.getTime()) / 60000)) })}
+        {' · '}
+        {nextM.booth ? `${t('ev.booth')} ${nextM.booth} · ` : ''}
+        {nextM.employer_name}
+      </p>
+      {nextM.video_url && (
+        <a className={`btn mt-2 ${Date.parse(nextM.starts_at) - now.getTime() <= 5 * 60000 ? 'btn-primary' : 'btn-secondary'}`}
+           href={nextM.video_url} target="_blank" rel="noreferrer"
+           aria-disabled={Date.parse(nextM.starts_at) - now.getTime() > 5 * 60000}>
+          {t('ev.day.join')}</a>
       )}
     </div>
   )
 
-  const after = (
+  const day = (
     <div className="grid gap-4">
+      {nowCard}
+      {nextCard}
+      {!currentM && !nextM && meetings.length === 0 && (
+        <p className="text-secondary">{t('ev.meetings.none')}</p>
+      )}
+      <PassInline eventId={id!} />
+      <p className="m-0 text-secondary">{t('ev.day.passtext')}</p>
+      <ScanBox eventId={id!} />
+      {pastM.length > 0 && (
+        <Section title={t('ev.day.done.list')}>
+          <ul className="m-0 ps-5">
+            {pastM.map((m) => (
+              <li key={m.id}>
+                {fmtTime(m.starts_at)} — {m.employer_name}
+                <span className="text-secondary">
+                  {' — '}
+                  {t('ev.day.done', { d: fmtDate(ev.answers_due ?? '') })}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      {!online && (
+        <Section title={t('ev.day.queue.title')}>
+          <ul className="grid gap-2 p-0 list-none">
+            {ev.employers.map((e) => (
+              <li key={e.employer_id}
+                  className="flex gap-2 items-center flex-wrap">
+                <span className="flex-1" style={{ minWidth: 140 }}>
+                  {e.employer_name}{e.booth ? ` (${t('ev.booth')} ${e.booth})` : ''}
+                </span>
+                {queued.has(e.employer_id) ? (
+                  <button type="button" className="btn btn-secondary"
+                          onClick={() => queueLeave(e.employer_id)}>
+                    {t('ev.day.queue.leave')}
+                  </button>
+                ) : (
+                  <button type="button" className="btn btn-secondary"
+                          onClick={() => queueJoin(e.employer_id)}>
+                    {t('ev.day.queue.join')}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      {venueMap}
+    </div>
+  )
+
+  /* ---- step 5: Answers ---- */
+  const answersDue = ev.answers_due ? Date.parse(ev.answers_due) : 0
+  const answers = (
+    <div className="grid gap-4">
+      <p className="m-0 text-secondary">{t('ev.answers.explain')}</p>
+      {my && my.talks.length > 0 ? (
+        <Section title={t('ev.talks')}>
+          <ul className="grid gap-3 p-0 list-none">
+            {my.talks.map((tk) => (
+              <li key={tk.id} className="card p-4 grid gap-2">
+                <div className="flex gap-2 items-center flex-wrap">
+                  <strong>{tk.employer_name}</strong>
+                  {tk.simulated &&
+                    <span className="chip">{t('ev.simulated')}</span>}
+                  {tk.status !== 'answered' && now.getTime() > answersDue &&
+                    <span className="chip" style={{ borderColor: 'var(--color-no, #c00)', color: 'var(--color-no, #c00)' }}>{t('ev.answers.late')}</span>}
+                </div>
+                <span>
+                  {tk.outcome
+                    ? t(`ev.outcome.${tk.outcome}` as Key)
+                    : t('ev.outcome.waiting')}
+                </span>
+                {tk.outcome === 'next_step' && tk.next_kind && (
+                  <span className="block">
+                    {t(`ev.nextkind.${tk.next_kind}` as Key)}
+                    {tk.next_at ? ` — ${fmtDateTime(tk.next_at)}` : ''}
+                    {tk.next_place ? ` · ${tk.next_place}` : ''}
+                  </span>
+                )}
+                {tk.note &&
+                  <span className="block text-secondary">{tk.note}</span>}
+                {tk.observed && tk.observed.length > 0 && (
+                  <ul className="m-0 ps-5 text-secondary">
+                    {tk.observed.map((o, i2) => <li key={i2}>{o}</li>)}
+                  </ul>
+                )}
+                {tk.outcome === 'next_step' && !tk.talent_response && (
+                  <div className="grid gap-2">
+                    <div className="flex gap-2 flex-wrap">
+                      <button type="button" className="btn btn-primary"
+                              onClick={() => respond(tk.id, 'confirmed')}>
+                        {t('ev.answer.confirm')}</button>
+                      <button type="button" className="btn btn-secondary"
+                              onClick={() => setRespDlg(tk.id)}>
+                        {t('ev.answer.othertime')}</button>
+                    </div>
+                    {respDlg === tk.id && (
+                      <div className="card p-3 grid gap-2">
+                        <input className="input" autoFocus
+                               placeholder={t('ev.answer.note')}
+                               value={respNote[tk.id] ?? ''}
+                               onChange={(e) => setRespNote({
+                                 ...respNote, [tk.id]: e.target.value })}
+                               onKeyDown={(e) => {
+                                 if (e.key === 'Escape') setRespDlg(null) }} />
+                        <div className="flex gap-2">
+                          <button type="button" className="btn btn-primary"
+                                  onClick={() => respond(tk.id, 'other_time')}>
+                            {t('ev.answer.othertime')}</button>
+                          <button type="button" className="btn btn-secondary"
+                                  onClick={() => setRespDlg(null)}>
+                            {t('common.cancel')}</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {tk.talent_response && (
+                  <span className="text-secondary">
+                    {tk.talent_response === 'confirmed'
+                      ? t('ev.answer.confirmed')
+                      : t('ev.answer.asked')}
+                    {tk.talent_response_note
+                      ? ` — ${tk.talent_response_note}` : ''}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : <p className="text-secondary">{t('ev.talks.none')}</p>}
+      {conns.filter((c) => c.event_id === id).length > 0 && (
+        <Section title={t('ev.after.met')}>
+          <ul className="grid gap-2 p-0 list-none">
+            {conns.filter((c) => c.event_id === id).map((c) => (
+              <li key={c.user_id} className="card p-3">
+                <strong>{c.name}</strong>
+                {c.company &&
+                  <span className="text-secondary"> — {c.company}</span>}
+                {(c.email || c.phone || c.public_link) && (
+                  <span className="block">
+                    {[c.email, c.phone, c.public_link]
+                      .filter(Boolean).join(' · ')}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      {records.length > 0 && (
+        <Section title={t('ev.after.seen')}>
+          <ul className="grid gap-2 p-0 list-none">
+            {records.map((r, i) => (
+              <li key={i} className="card p-3">
+                <strong>{r.employer}</strong>
+                <span className="block text-secondary">{fmtDate(r.date)}</span>
+                <ul className="m-0 ps-5">
+                  {r.observed.map((o, j) => <li key={j}>{o}</li>)}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
       {afterData?.mine && afterData.mine.length > 0 && (
         <Section title={t('ev.after.earlier')}>
           <div className="grid gap-3">
@@ -514,74 +866,43 @@ export default function EventDetail() {
           </ul>
         </Section>
       )}
-      {my && my.talks.length > 0 ? (
-        <Section title={t('ev.talks')}>
-          <ul className="grid gap-2 p-0 list-none">
-            {my.talks.map((tk) => (
-              <li key={tk.id} className="card p-3">
-                <strong>{tk.employer_name}</strong>
-                <span className="block">
-                  {tk.outcome ? t(`ev.outcome.${tk.outcome}` as Key) : t('ev.outcome.waiting')}
-                </span>
-                {tk.note && <span className="block text-secondary">{tk.note}</span>}
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : <p className="text-secondary">{t('ev.talks.none')}</p>}
-      {conns.filter((c) => c.event_id === id).length > 0 && (
-        <Section title={t('ev.after.met')}>
-          <ul className="grid gap-2 p-0 list-none">
-            {conns.filter((c) => c.event_id === id).map((c) => (
-              <li key={c.user_id} className="card p-3">
-                <strong>{c.name}</strong>
-                {c.company &&
-                  <span className="text-secondary"> — {c.company}</span>}
-                {(c.email || c.phone || c.public_link) && (
-                  <span className="block">
-                    {[c.email, c.phone, c.public_link]
-                      .filter(Boolean).join(' · ')}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
-      {records.length > 0 && (
-        <Section title={t('ev.after.seen')}>
-          <ul className="grid gap-2 p-0 list-none">
-            {records.map((r, i) => (
-              <li key={i} className="card p-3">
-                <strong>{r.employer}</strong>
-                <span className="block text-secondary">{fmtDate(r.date)}</span>
-                <ul className="m-0 ps-5">
-                  {r.observed.map((o, j) => <li key={j}>{o}</li>)}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
     </div>
   )
 
-  // §8.1 default step + §8.2 next step — same data drives both.
+  /* ---- stepper state (§9.3) ---- */
   const talksAnswered = my?.talks.filter((tk) => tk.outcome).length ?? 0
   const defaultStep = !reg ? 0
-    : ev.phase === 'finished' ? 3
-    : ev.phase === 'today' ? 2 : 1
+    : phase === 'registration' ? (interestCount >= limit ? 2 : 1)
+    : phase === 'matched' ? 2
+    : phase === 'live' ? 3
+    : 4
   const active = step >= 0 ? step : defaultStep
+  const opensDay = t('ev.step.opens', { d: fmtDate(ev.starts_at.slice(0, 10)) })
+  const locked: (string | null)[] = [
+    null,
+    !reg ? t('ev.step.registerfirst') : null,
+    !reg ? t('ev.step.registerfirst') : null,
+    !reg ? t('ev.step.registerfirst')
+         : phase === 'registration' || phase === 'matched' ? opensDay : null,
+    !reg ? t('ev.step.registerfirst')
+         : phase === 'registration' || phase === 'matched' ? opensDay : null,
+  ]
+
   const next = !reg
-    ? { text: t('next.register'), btn: t('next.register.btn'), to: 0 }
-    : ev.phase === 'finished'
-    ? { text: t('next.answers', { n: talksAnswered }),
-        btn: t('next.answers.btn'), to: 3 }
-    : ev.phase === 'today'
-    ? { text: t('next.meet', { n: my?.meetings.length ?? 0,
-                              d: fmtDate(ev.date) }),
-        btn: t('next.meet.btn'), to: 2 }
-    : { text: t('next.choose', { n: limit, c: interestCount }),
+    ? (choosingOpen
+       ? { text: t('next.register'), btn: t('next.register.btn'), to: 0 }
+       : { text: t('ev.register.closed'), btn: '', to: -1 })
+    : phase === 'registration'
+    ? { text: t('next.choose', { n: limit, c: interestCount }),
         btn: t('next.choose.btn'), to: 1 }
+    : phase === 'matched'
+    ? { text: t('next.plan', { n: meetings.length }),
+        btn: t('next.plan.btn'), to: 2 }
+    : phase === 'live'
+    ? { text: t('next.meet', { n: meetings.length, d: fmtDate(ev.date) }),
+        btn: t('next.meet.btn'), to: 3 }
+    : { text: t('next.answers', { n: talksAnswered }),
+        btn: t('next.answers.btn'), to: 4 }
 
   const about = (
     <details className="card p-4">
@@ -589,59 +910,19 @@ export default function EventDetail() {
       <div className="grid gap-6 mt-4">
         {programmeSection}
         {tilesSection}
-        <BoothPlan
-          employers={ev.employers.map((e) => ({
-            id: e.employer_id, name: e.employer_name ?? '',
-            booth: e.booth, field: e.field, logo_color: e.logo_color }))}
-          inPlan={new Set(my?.interests.map((i) => i.employer_id) ?? [])}
-        />
+        {!online && (
+          <BoothPlan
+            employers={ev.employers.map((e) => ({
+              id: e.employer_id, name: e.employer_name ?? '',
+              booth: e.booth, field: e.field, logo_color: e.logo_color }))}
+            inPlan={new Set(my?.interests.map((i) => i.employer_id) ?? [])}
+          />
+        )}
       </div>
     </details>
   )
 
-  const choose = needs ? (
-    <div className="grid gap-3">
-      <p className="m-0 text-secondary">{t('ev.limit', { n: limit })}</p>
-      <CardChooser<NeedEntry>
-        items={needs.filter((e) => !e.interested)}
-        chosen={needs.filter((e) => e.interested)}
-        idOf={(e) => e.employer_id}
-        storageKey={`ev-choose-${id}-${user!.id}`}
-        chosenCount={interestCount}
-        limit={limit}
-        chooseLabel={t('choose.meet')}
-        skipLabel={t('choose.skip')}
-        counter={(i, n) => t('choose.of', { i, n })}
-        counterChosen={(a, b) => t('choose.chosen', { a, b })}
-        listLabel={t('choose.list')}
-        cardsLabel={t('choose.cards')}
-        maxText={t('choose.max', { n: limit })}
-        renderCard={(e) => (
-          <NeedCardView e={e} registered
-                        onMeetsChange={(m) => {
-                          meetsRef.current[e.employer_id] = m }} />
-        )}
-        renderChosenRow={(e) => <>{e.employer_name}</>}
-        onChoose={chooseInterest}
-        onTakeBack={takeBackInterest}
-        listView={needsGrid}
-        match={(m, e) => ({
-          title: t('match.title'),
-          body: t('match.talent', {
-            name: e.employer_name ?? '',
-            d: fmtDate(m.starts_at.slice(0, 10)),
-            t: fmtTime(m.starts_at),
-            b: m.booth ?? e.booth ?? '' }) })}
-      />
-    </div>
-  ) : needsList
-
-  const steps = [
-    registerBlock,
-    choose,
-    day,
-    after,
-  ]
+  const steps = [registerBlock, choose, plan, day, answers]
 
   return (
     <div className="grid gap-4">
@@ -659,7 +940,6 @@ export default function EventDetail() {
       </div>
 
       {!isResident ? (
-        // §8.1 anonymous overview — no stepper, tiles stay open
         <div className="grid gap-6">
           {ev.description && (
             <p className="max-w-prose">{ev.description}</p>)}
@@ -674,8 +954,10 @@ export default function EventDetail() {
                    current={active}
                    doneBefore={defaultStep}
                    onSelect={setStep}
+                   locked={locked}
                    steps={[t('ev.step.register'), t('ev.step.choose'),
-                           t('ev.step.meet'), t('ev.step.answers')]} />
+                           t('ev.step.plan'), t('ev.step.day'),
+                           t('ev.step.answers')]} />
           <div className="card p-4 flex gap-3 items-center flex-wrap"
                style={{ borderColor: 'var(--color-brand)' }}>
             <strong className="text-secondary uppercase"
@@ -683,9 +965,11 @@ export default function EventDetail() {
               {t('next.title')}</strong>
             <span className="flex-1" style={{ minWidth: 160 }}>
               {next.text}</span>
-            <button type="button" className="btn btn-primary"
-                    onClick={() => setStep(next.to)}>
-              {next.btn}</button>
+            {next.to >= 0 && (
+              <button type="button" className="btn btn-primary"
+                      onClick={() => setStep(next.to)}>
+                {next.btn}</button>
+            )}
           </div>
           {active === 0 && ev.description && (
             <p className="max-w-prose m-0">{ev.description}</p>)}

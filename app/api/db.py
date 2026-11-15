@@ -24,7 +24,7 @@ DEFAULT_DB = DB_DIR / "talentmatch.sqlite"
 SCHEMA_SQL = DB_DIR / "schema.sql"
 SEED_DIR = DB_DIR / "seed"
 GENERATOR = ROOT / "scripts" / "generate_synthetic.py"
-SCHEMA_VERSION = 12
+SCHEMA_VERSION = 13
 
 SEED_REQUIRED = [
     "events.json", "employers.json", "jobs.json", "users.json",
@@ -87,16 +87,25 @@ def ensure_db(path: Path | None = None) -> Path:
 
 def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
     events = _load_seed("events.json", seed_dir)
+    ev_defaults = {"format": "in_person", "series": "", "language": "fi",
+                   "venue": "", "advisor_note": "", "address": "",
+                   "description": "", "capacity": 0, "slot_minutes": 10,
+                   "need_deadline": "", "publish_date": "",
+                   "registration_opens": "", "matching_closes": "",
+                   "answers_due": "", "starts_at": "", "ends_at": ""}
     for ev in events:
         conn.execute(
-            "INSERT INTO event (id,name,date,venue,advisor_note,format,"
+            "INSERT INTO event (id,name,date,venue,advisor_note,format,series,"
             "language,starts_at,ends_at,address,description,programme,"
-            "capacity,slot_minutes,need_deadline,publish_date,time_groups)"
-            " VALUES (:id,:name,:date,:venue,:advisor_note,:format,:language,"
-            ":starts_at,:ends_at,:address,:description,:programme,:capacity,"
-            ":slot_minutes,:need_deadline,:publish_date,:time_groups)",
-            {**ev, "programme": json.dumps(ev.get("programme", []),
-                                          ensure_ascii=False),
+            "capacity,slot_minutes,need_deadline,publish_date,"
+            "registration_opens,matching_closes,answers_due,time_groups)"
+            " VALUES (:id,:name,:date,:venue,:advisor_note,:format,:series,"
+            ":language,:starts_at,:ends_at,:address,:description,:programme,"
+            ":capacity,:slot_minutes,:need_deadline,:publish_date,"
+            ":registration_opens,:matching_closes,:answers_due,:time_groups)",
+            {**ev_defaults, **ev,
+             "programme": json.dumps(ev.get("programme", []),
+                                     ensure_ascii=False),
              "time_groups": json.dumps(ev.get("time_groups", []),
                                        ensure_ascii=False)})
         for ee in ev.get("employers", []):
@@ -138,11 +147,8 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
              "how_we_welcome": "", **e,
              "work_languages": json.dumps(e.get("work_languages", []),
                                           ensure_ascii=False)})
-        if e.get("booth"):
-            conn.execute(
-                "INSERT OR IGNORE INTO employer_event"
-                " (employer_id,event_id,booth) VALUES (?,?,?)",
-                (e["id"], "ev-2026-11", e["booth"]))
+        # employers' "booth" attribute is vestigial (from the removed
+        # treffit event); event membership comes from events.json only
 
     for j in _load_seed("jobs.json", seed_dir):
         confirmed = (now - timedelta(days=j.get("confirmed_days_ago", 0))).date()
@@ -245,6 +251,16 @@ def _seed(conn: sqlite3.Connection, seed_dir: Path, now: datetime) -> None:
 
     _seed_event(conn, seed_dir, now)
 
+    # demo clock starts at the registration stage: E1 starts − 21 days
+    e1 = next((e for e in events if e["id"] == "ev-2027-03"), None)
+    demo_now = now.isoformat(timespec="seconds")
+    if e1 and e1.get("starts_at"):
+        demo_now = (datetime.fromisoformat(e1["starts_at"])
+                    - timedelta(days=21)).isoformat(timespec="seconds")
+    conn.execute("INSERT OR REPLACE INTO demo_state (key,value)"
+                 " VALUES ('now',?)", (demo_now,))
+    conn.commit()
+
 
 def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
                 now: datetime) -> None:
@@ -276,8 +292,9 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
     for iv in opt("event_invites.json"):
         conn.execute(
             "INSERT OR IGNORE INTO event_invite (event_id,employer_id,"
-            "registration_id,created_at) VALUES (?,?,?,?)",
+            "registration_id,simulated,created_at) VALUES (?,?,?,?,?)",
             (iv["event_id"], iv["employer_id"], iv["registration_id"],
+             iv.get("simulated", 0),
              (now - timedelta(days=iv.get("days_ago", 0))).isoformat()))
     # mutual interest + invite -> meeting, computed by the real booking
     # function (file order is the booking order)
@@ -291,24 +308,38 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
                            reg["user_id"])
     conn.commit()
     for t in opt("event_talks.json"):
-        talked = now - timedelta(days=t.get("days_ago_talked", 0))
-        answered = (now - timedelta(days=t["days_ago_answered"])
-                    if t.get("days_ago_answered") is not None else None)
         meeting = conn.execute(
-            "SELECT id FROM event_meeting WHERE event_id=? AND employer_id=?"
-            " AND user_id=?", (t["event_id"], t["employer_id"],
-                              t.get("user_id"))).fetchone()
+            "SELECT id,starts_at FROM event_meeting WHERE event_id=?"
+            " AND employer_id=? AND user_id=?",
+            (t["event_id"], t["employer_id"],
+             t.get("user_id"))).fetchone()
+        if meeting and meeting["starts_at"]:
+            talked = datetime.fromisoformat(meeting["starts_at"])
+        else:   # walk-up talk: mid-event
+            e0 = conn.execute("SELECT starts_at FROM event WHERE id=?",
+                              (t["event_id"],)).fetchone()
+            talked = (datetime.fromisoformat(e0["starts_at"])
+                      + timedelta(minutes=90))
+        gap = (t.get("days_ago_talked", 0)
+               - (t["days_ago_answered"]
+                  if t.get("days_ago_answered") is not None else 0))
+        answered = (talked + timedelta(days=max(gap, 0))
+                    if t.get("days_ago_answered") is not None else None)
         conn.execute(
             "INSERT OR IGNORE INTO event_talk (id,event_id,user_id,employer_id,"
             "meeting_id,observed,status,outcome,employer_note,talked_at,"
-            "answered_at)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "answered_at,next_kind,next_at,next_place,talent_response,"
+            "talent_response_note,simulated)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (t["id"], t["event_id"], t.get("user_id"), t["employer_id"],
              meeting["id"] if meeting else None,
              json.dumps(t.get("observed", []), ensure_ascii=False),
              t["status"], t.get("outcome"), t.get("employer_note", ""),
              talked.isoformat(),
-             answered.isoformat() if answered else None))
+             answered.isoformat() if answered else None,
+             t.get("next_kind"), t.get("next_at"),
+             t.get("next_place", ""), t.get("talent_response"),
+             t.get("talent_response_note", ""), t.get("simulated", 0)))
     # meetings with a recorded talk count as held, except the demo
     # employer's booth stays bookable for the on-the-day walkthrough
     conn.execute(
@@ -357,6 +388,27 @@ def _seed_event(conn: sqlite3.Connection, seed_dir: Path,
             "created_at) VALUES (?,?,?,?)",
             (c["user_a"], c["user_b"], c["event_id"],
              c.get("created_at") or now.isoformat()))
+
+
+def rebuild_db() -> Path:
+    """Drop every table and re-seed in place (demo reset, §9.5)."""
+    path = ensure_db()
+    conn = sqlite3.connect(path)
+    conn.row_factory = sqlite3.Row
+    try:
+        conn.execute("PRAGMA foreign_keys = OFF")
+        for r in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+                " AND name != 'sqlite_sequence'"
+        ).fetchall():
+            conn.execute(f'DROP TABLE IF EXISTS "{r[0]}"')
+        conn.commit()
+        conn.executescript(SCHEMA_SQL.read_text(encoding="utf-8"))
+        _seed(conn, SEED_DIR, datetime.now(timezone.utc))
+        conn.commit()
+    finally:
+        conn.close()
+    return path
 
 
 def _write_profile(conn: sqlite3.Connection, user_id: str, p: dict) -> None:

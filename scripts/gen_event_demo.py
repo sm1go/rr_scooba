@@ -2,7 +2,7 @@
 """Event-mode demo data (spec v4 section 6). Deterministic: re-running
 writes byte-identical files.
 
-Writes: events.json (E1 TalentMatch + E2 treffit), talent_registrations.json,
+Writes: events.json (E1 TalentMatch + E3 online + E0 past), talent_registrations.json,
 event_invites.json, and E1 additions to users.json / event_plan.json /
 event_talks.json. Meetings are NOT written — the DB seeder computes them by
 calling the real book_if_mutual() for every seeded invite.
@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SEED = ROOT / "db" / "seed"
 
 E1 = "ev-2027-03"
-E2 = "ev-2026-11"
+E3 = "ev-2027-02"   # online event (spec §9.1)
 E0 = "ev-2026-10"
 
 
@@ -44,9 +44,12 @@ E1_EVENT = {
     "venue": "Aalto University metro square, Otaniemi (demo venue)",
     "advisor_note": "Advisors from Employment Espoo are there all day to "
                     "help you talk to employers.",
-    "format": "talentmatch", "language": "en",
+    "format": "in_person", "series": "talentmatch", "language": "en",
     "starts_at": "2027-03-19T13:00:00", "ends_at": "2027-03-19T17:30:00",
     "address": "Otaniementie 14, Espoo",
+    "registration_opens": "2027-02-01T09:00:00",
+    "matching_closes": "2027-03-14T23:59:00",
+    "answers_due": "2027-03-26T23:59:00",
     "description": "A recruitment event for people who want to show what "
                    "they can do — employers describe a real need, you meet "
                    "them by mutual interest.",
@@ -72,28 +75,49 @@ E1_EVENT = {
     ],
 }
 
-E2_EVENT = {
-    "id": E2,
-    "name": "Työnantajatreffit at Sello library (demo)",
-    "date": "2026-11-26",
-    "venue": "Leppävaara service point, Sello, 2nd floor",
-    "advisor_note": "Advisors from Employment Espoo are there all day to "
-                    "help you talk to employers.",
-    "format": "treffit", "language": "fi",
-    "starts_at": "2026-11-26T12:00:00", "ends_at": "2026-11-26T15:00:00",
-    "address": "Leppävaarankatu 3–9, Espoo",
-    "description": "Meet employers face to face. An employer presentation "
-                   "at 12:00, then walk-in conversations.",
+E3_EVENT = {
+    "id": E3,
+    "name": "Espoo TalentMatch Online — customer service & IT (demo)",
+    "date": "2027-02-10",
+    "venue": "Online — in the event lobby (demo)",
+    "advisor_note": "Advisors from Employment Espoo answer in the lobby "
+                    "all day.",
+    "format": "online", "series": "talentmatch", "language": "en",
+    "starts_at": "2027-02-10T10:00:00",
+    "ends_at": "2027-02-10T14:00:00",
+    "address": "",
+    "registration_opens": "2027-01-12T09:00:00",
+    "matching_closes": "2027-02-05T23:59:00",
+    "answers_due": "2027-02-17T23:59:00",
+    "description": "The same mutual-choice recruitment event, held "
+                   "online. Employers pitch on the stage, talks happen "
+                   "in video calls you can join from the lobby.",
     "programme": [
-        {"start": "12:00", "end": "12:30", "title": "Employer presentation",
+        {"start": "09:55", "end": "10:00", "title": "Lobby opens",
          "kind": "presentation"},
-        {"start": "12:30", "end": "15:00", "title": "Walk-in interviews",
-         "kind": "walk_in"},
+        {"start": "10:00", "end": "10:45", "title": "Employer pitches",
+         "kind": "pitch"},
+        {"start": "11:00", "end": "14:00", "title": "1:1 video meetings",
+         "kind": "one_to_one"},
     ],
-    "capacity": 0, "slot_minutes": 10,
-    "need_deadline": "", "publish_date": "",
-    "time_groups": [],
+    "capacity": 80, "slot_minutes": 15,
+    "need_deadline": "2027-01-30", "publish_date": "2027-01-26",
+    "time_groups": [
+        {"id": "A", "label": "Lobby entry", "entry": "09:55"},
+    ],
 }
+
+# 8 online employers (customer service & IT), V1..V8 virtual booths
+E3_EMPLOYERS = [
+    ("emp-lumo",       "V1", 8),
+    ("emp-otava",      "V2", 6),
+    ("emp-koodikallio","V3", 6),
+    ("emp-datavirta",  "V4", 6),
+    ("emp-linja",      "V5", 8),
+    ("emp-laguuni",    "V6", 8),
+    ("emp-avara",      "V7", 6),
+    ("emp-merituuli",  "V8", 6),
+]
 
 E0_EVENT = {
     "id": E0,
@@ -101,9 +125,12 @@ E0_EVENT = {
     "date": "2026-10-08",
     "venue": "Iso Omena library (demo)",
     "advisor_note": "",
-    "format": "treffit", "language": "fi",
+    "format": "in_person", "series": "treffit", "language": "fi",
     "starts_at": "2026-10-08T12:00:00", "ends_at": "2026-10-08T15:00:00",
     "address": "Suomenlahdentie 1, Espoo",
+    "registration_opens": "2026-09-01T09:00:00",
+    "matching_closes": "2026-10-03T23:59:00",
+    "answers_due": "2026-10-15T23:59:00",
     "description": "A past recruitment afternoon at Iso Omena library.",
     "programme": [
         {"start": "12:00", "end": "12:30", "title": "Employer presentation",
@@ -628,18 +655,13 @@ def _event_needs() -> None:
     from api.rules import lint
     events = _load("events.json")
     jobs = _load("jobs.json")
-    e2_ids = [e["id"] for e in _load("employers.json") if e.get("booth")]
     for ev in events:
-        if ev["id"] == E2:
-            ev["employers"] = [
-                {"employer_id": eid, "booth": b, "slots": 8,
-                 "formats": ["walk_in"],
-                 "need_card": _employer_need(eid, jobs, "fi"),
-                 "need_submitted_at": "2026-11-10",
-                 "need_by": "employer"}
-                for eid, b in
-                ((e["id"], e["booth"]) for e in _load("employers.json")
-                 if e.get("booth"))]
+        if ev["id"] == E3:
+            for ee in ev["employers"]:
+                ee["need_card"] = _employer_need(
+                    ee["employer_id"], jobs, "en")
+                ee["need_submitted_at"] = "2027-01-20"
+                ee["need_by"] = "employer"
         if ev["id"] == E0:
             for ee in ev["employers"]:
                 ee["need_card"] = _employer_need(
@@ -686,16 +708,14 @@ def main() -> int:
     _dump("users.json", users)
 
     # registrations: demo residents first, then talent01..40
+    # Aino is NOT registered in the upcoming events (spec §9.5) — the
+    # demo starts from zero and she goes through the real journey
     regs = [
-        {"id": "tr-e1-001", "event_id": E1, "user_id": "u-aino",
-         "time_group": "A", "status": "registered",
-         "card_language": "fi", "card": _special_card("u-aino"),
-         "days_ago": 20},
-        {"id": "tr-e1-002", "event_id": E1, "user_id": "u-pekka",
+        {"id": "tr-e1-001", "event_id": E1, "user_id": "u-pekka",
          "time_group": "B", "status": "registered",
          "card_language": "fi", "card": _special_card("u-pekka"),
          "days_ago": 19},
-        {"id": "tr-e1-003", "event_id": E1, "user_id": "u-amira",
+        {"id": "tr-e1-002", "event_id": E1, "user_id": "u-amira",
          "time_group": "C", "status": "registered",
          "card_language": "ar", "card": _special_card("u-amira"),
          "days_ago": 18},
@@ -704,16 +724,24 @@ def main() -> int:
     for i in range(40):
         lang = LANG_ORDER[i]
         regs.append({
-            "id": f"tr-e1-{i + 4:03d}", "event_id": E1,
+            "id": f"tr-e1-{i + 3:03d}", "event_id": E1,
             "user_id": f"u-talent{i + 1:02d}", "time_group": groups[i],
             "status": "registered", "card_language": lang,
             "card": _card_for(i, lang), "days_ago": 15 - (i % 12)})
-    for k, uid in enumerate(["u-aino", "u-pekka", "u-amira"]):
-        regs.append({"id": f"tr-e2-{k + 1:03d}", "event_id": E2,
-                     "user_id": uid, "time_group": "",
-                     "status": "registered",
-                     "card_language": "fi" if uid != "u-amira" else "ar",
-                     "card": _special_card(uid), "days_ago": 5})
+    # ~30 registrations for the online event (Aino is not one of them)
+    e3_people = (["u-pekka", "u-amira"]
+                 + [f"u-talent{i:02d}" for i in range(1, 29)])
+    for k, uid in enumerate(e3_people):
+        lang = ("fi" if uid == "u-pekka" else
+                "ar" if uid == "u-amira" else
+                LANG_ORDER[int(uid.rsplit('t', 1)[-1]) - 1])
+        regs.append({"id": f"tr-e3-{k + 1:03d}", "event_id": E3,
+                     "user_id": uid, "time_group": "A",
+                     "status": "registered", "card_language": lang,
+                     "card": _special_card(uid) if uid in
+                     ("u-pekka", "u-amira") else
+                     _card_for(int(uid.rsplit('t', 1)[-1]) - 1, lang),
+                     "days_ago": 8 - (k % 6)})
     for k, uid in enumerate(E0_TALENT):
         regs.append({"id": f"tr-e0-{k + 1:03d}", "event_id": E0,
                      "user_id": uid, "time_group": "",
@@ -733,24 +761,29 @@ def main() -> int:
          "last_reminder_at": "2027-02-20T10:00:00"
          if submitted is None else None}
         for eid, booth, slots, fmts, submitted in E1_EMPLOYERS]
+    e3 = dict(E3_EVENT)
+    e3["employers"] = [
+        {"employer_id": eid, "booth": booth, "slots": slots,
+         "formats": ["one_to_one"],
+         "need_card": None, "need_submitted_at": None,
+         "need_by": None}
+        for eid, booth, slots in E3_EMPLOYERS]
     e0 = dict(E0_EVENT)
     e0["employers"] = [{"employer_id": eid, "booth": f"B{i+1}",
                         "slots": 8, "formats": ["walk_in"],
                         "need_card": None, "need_submitted_at": None,
                         "need_by": None}
                        for i, eid in enumerate(E0_EMPLOYERS)]
-    _dump("events.json", [e1, dict(E2_EVENT), e0])
+    _dump("events.json", [e1, e3, e0])
 
     # interests ~70: reg index -> employer picks (deterministic)
     emp_ids = [e[0] for e in E1_EMPLOYERS]
-    plans = [p for p in _load("event_plan.json") if p["event_id"] != E1]
+    plans = [p for p in _load("event_plan.json")
+             if p["event_id"] not in (E1, E3)]
     e1_plans = []
     # demo residents are interested in the employers they will talk to
-    forced = [("u-aino", "emp-cafe-koivu"), ("u-pekka", "emp-freight"),
-              ("u-amira", "emp-aurora-care")]
-    # §8.5: an employer who invited Aino but she has not chosen it yet —
-    # choosing it in the demo produces the match moment
-    forced_inv = [("u-aino", "emp-market-olari")]
+    forced = [("u-pekka", "emp-freight"), ("u-amira", "emp-aurora-care")]
+    forced_inv: list = []
     for uid, eid in forced:
         mh = NEED.get(eid, {}).get("must_haves", [])
         e1_plans.append({"user_id": uid, "event_id": E1,
@@ -774,7 +807,28 @@ def main() -> int:
             e1_plans.append({"user_id": uid, "event_id": E1,
                              "employer_id": eid,
                              "meets": meets, "language_levels": langs})
-    _dump("event_plan.json", plans + e1_plans)
+    # E3 interests: each online registration picks 1–3 employers
+    e3_ids = [e[0] for e in E3_EMPLOYERS]
+    e3_plans = []
+    for ri, reg in enumerate(
+            r for r in regs if r["event_id"] == E3):
+        uid = reg["user_id"]
+        n = 1 + int(_rank(f"e3n{uid}")[:2], 16) % 3
+        order = sorted(e3_ids, key=lambda e: _rank(uid + e))
+        for eid in order[:n]:
+            e3_plans.append({"user_id": uid, "event_id": E3,
+                             "employer_id": eid,
+                             "meets": [], "language_levels": {}})
+    # §9.5: people who chose Sanna's café but are not invited, so her
+    # card chooser always has fresh candidates in the demo
+    for uid in ("u-talent02", "u-talent04", "u-talent10", "u-talent15"):
+        if (uid, "emp-cafe-koivu") not in {(p["user_id"],
+                                          p["employer_id"])
+                                         for p in e1_plans}:
+            e1_plans.append({"user_id": uid, "event_id": E1,
+                             "employer_id": "emp-cafe-koivu",
+                             "meets": [], "language_levels": {}})
+    _dump("event_plan.json", plans + e1_plans + e3_plans)
 
     # invites ~40: employers invite interested talents; a few outside for
     # mutuals that never become meetings
@@ -797,7 +851,21 @@ def main() -> int:
             invites.append({"event_id": E1, "employer_id": eid,
                             "registration_id": reg_by_user[uid],
                             "days_ago": 10})
-    invites = invites[:40]
+    # E3: employers invite some of the people who chose them -> the
+    # mutual ones get video meetings when seed booking runs
+    e3_reg_by_user = {r["user_id"]: r["id"] for r in regs
+                      if r["event_id"] == E3}
+    e3_interest = {(p["user_id"], p["employer_id"]) for p in e3_plans}
+    for eid, *_ in E3_EMPLOYERS:
+        cands = sorted(
+            (u for u, e in e3_interest if e == eid),
+            key=lambda u: _rank("e3" + eid + u))
+        for uid in cands[:2]:
+            invites.append({"event_id": E3, "employer_id": eid,
+                            "registration_id": e3_reg_by_user[uid],
+                            "days_ago": 6})
+    invites = invites[:40] + [iv for iv in invites[40:] if
+                              iv["event_id"] == E3]
     _dump("event_invites.json", invites)
 
     # talks for a subset of mutual pairs (meeting_id resolved at seed);
@@ -811,8 +879,7 @@ def main() -> int:
               if (next(r["user_id"] for r in regs
                        if r["id"] == iv["registration_id"]),
                   iv["employer_id"]) in interest_pairs]
-    want_pairs = [("emp-cafe-koivu", "u-aino"),
-                  ("emp-freight", "u-pekka"),
+    want_pairs = [("emp-freight", "u-pekka"),
                   ("emp-aurora-care", "u-amira")]
     rest = [m for m in mutual if (m[0], m[1]) not in want_pairs][:12]
     talk_pairs = want_pairs + rest
@@ -849,24 +916,31 @@ def main() -> int:
 
     # visitor codes for every E1 registration (4-digit, deterministic)
     vis = [v for v in _load("event_visitors.json")
-           if v["event_id"] != E1]
-    vis += [{"user_id": r["user_id"], "event_id": E1,
-             "code": f"{1000 + int(r['id'].rsplit('-', 1)[1]) * 37 % 9000:04d}"}
-            for r in regs if r["event_id"] == E1]
+           if v["event_id"] not in (E1, E3)]
+    for ev_id in (E1, E3):
+        vis += [{"user_id": r["user_id"], "event_id": ev_id,
+                 "code": f"{1000 + int(r['id'].rsplit('-', 1)[1]) * 37 % 9000:04d}"}
+                for r in regs
+                if r["event_id"] == ev_id and r["status"] == "registered"]
     _dump("event_visitors.json", vis)
 
     # --- people first: passes, badges, connections --------------------
     passes = []
     for r in regs:
-        if r["event_id"] == E1 and r["status"] == "registered":
-            passes.append({"token": _pass_token(E1, r["user_id"]),
-                           "event_id": E1, "user_id": r["user_id"]})
+        if r["event_id"] in (E1, E3) and r["status"] == "registered":
+            passes.append({"token": _pass_token(r["event_id"],
+                                              r["user_id"]),
+                           "event_id": r["event_id"],
+                           "user_id": r["user_id"]})
     for u in _load("users.json"):
-        if u["role"] == "employer" and any(
-                e["employer_id"] == u.get("employer_id")
-                for e in e1["employers"]):
-            passes.append({"token": _pass_token(E1, u["id"]),
-                           "event_id": E1, "user_id": u["id"]})
+        if u["role"] == "employer":
+            for ev_obj in (e1, e3):
+                if any(e["employer_id"] == u.get("employer_id")
+                       for e in ev_obj["employers"]):
+                    passes.append({"token": _pass_token(ev_obj["id"],
+                                                        u["id"]),
+                                   "event_id": ev_obj["id"],
+                                   "user_id": u["id"]})
     _dump("event_passes.json", passes)
 
     badges = []
@@ -916,13 +990,14 @@ def main() -> int:
     _enrich_employers()
     _event_needs()
 
-    n_mutual = sum(1 for m in mutual)
+    n_mutual = len(mutual)
     from collections import Counter
     langs = Counter(r["card_language"] for r in regs)
     print(f"events: {[e['id'] for e in _load('events.json')]}")
     print(f"registrations: {len(regs)} by language {dict(langs)}")
-    print(f"interests: {len(e1_plans)}, invites: {len(invites)}, "
-          f"mutual: {n_mutual}, talks: {len(talk_pairs)}")
+    print(f"interests: {len(e1_plans)}+{len(e3_plans)}, "
+          f"invites: {len(invites)}, mutual E1: {n_mutual}, "
+          f"talks: {len(talk_pairs)}")
     return 0
 
 

@@ -5,7 +5,7 @@ import json
 from app.api import db as db_mod
 
 E1 = "ev-2027-03"
-E2 = "ev-2026-11"
+E2 = "ev-2027-02"
 E0 = "ev-2026-10"
 
 PALETTE = {"#1e3a8a", "#14532d", "#7c2d12", "#4a044e",
@@ -160,9 +160,11 @@ def test_e0_summary_matches_db(client):
 
 
 def test_summary_rejects_unfinished_event(client):
-    # decision: 409 for unfinished events
-    for ev in (E1, E2):
-        assert client.get(f"/api/events/{ev}/summary").status_code == 409
+    # decision: 409 for unfinished events (demo clock at registration
+    # stage -> E1 still ahead, E2 already finished)
+    for ev, want in ((E1, 409), (E2, 200)):
+        r = client.get(f"/api/events/{ev}/summary")
+        assert r.status_code == want, (ev, r.status_code, r.text)
 
 
 def test_after_endpoint_history_for_aino(client, aino):

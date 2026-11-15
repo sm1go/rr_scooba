@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException
 
 from .. import db as db_mod
+from ..clock import app_now
 from ..auth import current_user
 from ..db import get_conn
 from ..models import TalkAnswerIn, TalkIn
@@ -29,7 +30,7 @@ def _employer(user):
 def _event(conn) -> sqlite3.Row | None:
     return conn.execute(
         "SELECT * FROM event WHERE ends_at >= ? ORDER BY date LIMIT 1",
-        (datetime.now(timezone.utc).isoformat(timespec="seconds"),)).fetchone()
+        (app_now(conn).isoformat(timespec="seconds"),)).fetchone()
 
 
 def _visitor_code(conn, user_id: str, event_id: str) -> str:
@@ -199,7 +200,7 @@ def record_talk(payload: TalkIn,
         raise HTTPException(409, "You already recorded a conversation "
                                  "with this visitor.")
     talk_id = db_mod.new_id(conn, "et")
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    now = app_now(conn).isoformat(timespec="seconds")
     conn.execute(
         "INSERT INTO event_talk (id,event_id,user_id,employer_id,status,"
         "talked_at) VALUES (?,?,?,?,'talked',?)",
@@ -224,11 +225,16 @@ def answer_talk(talk_id: str, payload: TalkAnswerIn,
         (talk_id, user["employer_id"])).fetchone()
     if not r:
         raise HTTPException(404, "Conversation not found.")
+    if payload.outcome == "next_step" and not (
+            payload.next_kind and payload.next_at):
+        raise HTTPException(422, "A next step needs a kind and a "
+                                 "date and time.")
     conn.execute(
         "UPDATE event_talk SET status='answered', outcome=?, employer_note=?,"
-        " answered_at=? WHERE id=?",
+        " answered_at=?, next_kind=?, next_at=?, next_place=? WHERE id=?",
         (payload.outcome, payload.employer_note,
-         datetime.now(timezone.utc).isoformat(timespec="seconds"), talk_id))
+         app_now(conn).isoformat(timespec="seconds"), payload.next_kind,
+         payload.next_at, payload.next_place or "", talk_id))
     from .events import _maybe_award_employer_answered
     _maybe_award_employer_answered(conn, r["event_id"], user["employer_id"])
     db_mod.audit(conn, user["id"], "event_talk_answered",

@@ -7,6 +7,7 @@ import json
 
 import pytest
 
+from app.api import db as db_mod
 from tests.conftest import login
 
 pytestmark = pytest.mark.usefixtures("client")
@@ -396,7 +397,7 @@ def test_employer_support_help_kind(client, sanna):
 
 def test_event_has_booths_and_jobs(client):
     ev = client.get("/api/event").json()
-    assert ev["event"]["id"] == "ev-2026-11"
+    assert ev["event"]["id"] == "ev-2027-03"
     emp = next(e for e in ev["employers"] if e["id"] == "emp-cafe-koivu")
     assert emp["booth"] == "A1" and emp["jobs"]
 
@@ -405,7 +406,7 @@ def test_event_plan_and_visitor_code(client, aino):
     r = client.get("/api/me/event-plan", headers=aino)
     assert r.status_code == 200
     out = r.json()
-    assert out["code"] == "5821"
+    assert out["code"].isdigit() and len(out["code"]) == 4
     assert [b["booth"] for b in out["booths"]] == \
         sorted(b["booth"] for b in out["booths"])
     employers = client.get("/api/event").json()["employers"]
@@ -420,9 +421,16 @@ def test_event_plan_and_visitor_code(client, aino):
 
 
 def test_talk_record_answer_and_privacy(client, sanna, register_resident):
-    # seeded: et-001 answered, et-002 talked -> code 9042 is a duplicate
+    # a seeded talk already exists for this visitor code -> duplicate 409
+    conn = db_mod.connect()
+    code = conn.execute(
+        "SELECT v.code FROM event_visitor v"
+        " JOIN event_talk t ON t.user_id=v.user_id AND t.event_id=v.event_id"
+        " WHERE v.event_id='ev-2027-03' AND t.employer_id='emp-cafe-koivu'"
+        " LIMIT 1").fetchone()["code"]
+    conn.close()
     r = client.post("/api/employer/event/talks", headers=sanna,
-                    json={"code": "9042"})
+                    json={"code": code})
     assert r.status_code == 409
     r = client.post("/api/employer/event/talks", headers=sanna,
                     json={"code": "0000"})
@@ -449,7 +457,10 @@ def test_talk_record_answer_and_privacy(client, sanna, register_resident):
     r = client.post(f"/api/employer/event/talks/{talk_id}/answer",
                     headers=sanna,
                     json={"outcome": "next_step",
-                          "employer_note": "Come Monday 9:00."})
+                          "employer_note": "Come Monday 9:00.",
+                          "next_kind": "interview",
+                          "next_at": "2027-03-30T09:00:00",
+                          "next_place": "The booth"})
     assert r.status_code == 200 and r.json()["status"] == "answered"
     # resident sees the answer + note on their tracker
     talks = client.get("/api/me/event-talks", headers=hdrs).json()["talks"]

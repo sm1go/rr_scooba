@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .. import auth as auth_mod
 from .. import db as db_mod
+from ..clock import app_now
 from ..db import get_conn
 from pydantic import BaseModel
 
@@ -324,7 +325,7 @@ def record_walkup_talk(payload: WalkupTalkIn,
         raise HTTPException(422, "Ask the visitor first: they must agree "
                                  "that their name and contact are shared "
                                  "with this employer.")
-    ev = conn.execute("SELECT id FROM event WHERE ends_at >= datetime('now') ORDER BY date LIMIT 1").fetchone()
+    ev = conn.execute("SELECT id FROM event WHERE ends_at >= ? ORDER BY date LIMIT 1", (app_now(conn).isoformat(timespec='seconds'),)).fetchone()
     if not ev or not conn.execute(
             "SELECT 1 FROM employer_event WHERE event_id=? AND employer_id=?",
             (ev["id"], payload.employer_id)).fetchone():
@@ -355,7 +356,7 @@ def event_overview(conn: sqlite3.Connection = Depends(get_conn),
                    user=Depends(auth_mod.current_user)):
     """Per-booth counts for the event organiser, in booth order."""
     _advisor(user)
-    ev = conn.execute("SELECT * FROM event WHERE ends_at >= datetime('now') ORDER BY date LIMIT 1").fetchone()
+    ev = conn.execute("SELECT * FROM event WHERE ends_at >= ? ORDER BY date LIMIT 1", (app_now(conn).isoformat(timespec='seconds'),)).fetchone()
     if not ev:
         return {"event": None, "employers": [], "totals": None}
 

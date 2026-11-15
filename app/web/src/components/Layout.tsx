@@ -7,6 +7,7 @@ import {
   Briefcase, Inbox, ClipboardList, Building2, ListChecks, CalendarDays, HandCoins, X,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
+import { api } from '../lib/api'
 import { useConfig } from '../lib/config'
 import { useA11y } from '../lib/a11y'
 import { useDialog } from '../lib/useDialog'
@@ -133,12 +134,21 @@ function LangSwitch() {
   )
 }
 
-/** Demo bar (§8.5): one-click sign-in as a demo persona. */
+/** Demo bar (§8.5 + §9.5): personas, demo clock and reset. */
 function DemoBar() {
   const { t } = useI18n()
   const { user, login, logout } = useAuth()
   const nav = useNavigate()
+  const loc = useLocation()
   const cfg = useConfig()
+  const [stage, setStage] = useState('')
+  const evM = loc.pathname.match(/^\/(?:events|employer\/events|advisor\/events)\/([^/]+)/)
+  const evId = evM?.[1] ?? (loc.pathname === '/' ? 'ev-2027-03' : null)
+  useEffect(() => {
+    if (!evId || !cfg.demo) return
+    api<{ stage: string }>(`/api/demo/state?event_id=${evId}`)
+      .then((d) => setStage(d.stage)).catch(() => {})
+  }, [evId, cfg.demo])
   if (!cfg.demo) return null
   const go = async (email: string, to: string) => {
     try {
@@ -155,6 +165,34 @@ function DemoBar() {
     { email: 'advisor@example.com', to: '/advisor/events/ev-2027-03',
       key: 'demo.organizer', role: 'advisor' },
   ]
+  const clocks: { stage: string; key: Key; phases: string[] }[] = [
+    { stage: 'registration', key: 'demo.stage.before',
+      phases: ['registration'] },
+    { stage: 'matching_closed', key: 'demo.stage.closed',
+      phases: ['matched'] },
+    { stage: 'live', key: 'demo.stage.day', phases: ['live'] },
+    { stage: 'after', key: 'demo.stage.after', phases: ['after', 'closed'] },
+  ]
+  const setClock = async (st: string) => {
+    try {
+      await api('/api/demo/clock',
+                { body: { stage: st, event_id: evId ?? 'ev-2027-03' } })
+      window.location.reload()
+    } catch { /* demo only */ }
+  }
+  const reset = async () => {
+    if (!window.confirm(t('demo.reset.confirm'))) return
+    try {
+      await api('/api/demo/reset', { method: 'POST', body: {} })
+      const p = personas.find((x) => x.role === user?.role)
+      if (user && p) {
+        await logout().catch(() => {})
+        await login(p.email, 'demo1234')
+        nav(p.to)
+      }
+      window.location.reload()
+    } catch { /* demo only */ }
+  }
   return (
     <div className="demo-bar" role="region" aria-label="Demo">
       <span>{t('demo.see')}</span>
@@ -167,6 +205,13 @@ function DemoBar() {
       <button type="button" aria-pressed={!user}
               onClick={() => go('', '/events/ev-2027-03')}>
         {t('demo.signedout')}</button>
+      {evId && clocks.map((c) => (
+        <button key={c.stage} type="button"
+                aria-pressed={c.phases.includes(stage)}
+                onClick={() => setClock(c.stage)}>
+          {t(c.key)}</button>
+      ))}
+      <button type="button" onClick={reset}>{t('demo.reset')}</button>
     </div>
   )
 }

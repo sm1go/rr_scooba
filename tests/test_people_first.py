@@ -35,14 +35,23 @@ def test_passes_exist_for_all_participants(client):
     conn.close()
 
 
+def _reg_aino(client, aino):
+    client.post(f"/api/events/{E1}/register", headers=aino,
+                json={"time_group": "A", "card": {
+                    "looking_for": "x", "done": [{"text": "y"}],
+                    "district": "", "availability": []}})
+
+
 def test_my_pass_endpoint(client, aino):
+    _reg_aino(client, aino)
     r = client.get(f"/api/me/events/{E1}/pass", headers=aino)
     assert r.status_code == 200
     assert len(r.json()["token"]) == 22
     assert r.json()["visitor_code"]
 
 
-def test_scanned_profile_access_rules(client, sanna, advisor):
+def test_scanned_profile_access_rules(client, sanna, advisor, aino):
+    _reg_aino(client, aino)
     conn = _db(client)
     tok = _pass_token(conn, E1, AINO)
     conn.close()
@@ -73,6 +82,7 @@ def test_scanned_profile_access_rules(client, sanna, advisor):
 
 
 def test_share_flags_gate_contact(client, aino, sanna):
+    _reg_aino(client, aino)
     conn = _db(client)
     tok = _pass_token(conn, E1, AINO)
     conn.close()
@@ -188,6 +198,7 @@ def test_kudos_rules(client, sanna, advisor):
 
 
 def test_hidden_badge_not_shown_to_scanners(client, aino, sanna):
+    _reg_aino(client, aino)
     conn = _db(client)
     tok = _pass_token(conn, E1, AINO)
     bid = conn.execute(
@@ -208,12 +219,15 @@ def test_hidden_badge_not_shown_to_scanners(client, aino, sanna):
                       json={"hidden": True}).status_code in (403, 404)
 
 
-def test_anonymous_cards_only_kudos(client, sanna):
+def test_anonymous_cards_only_kudos(client, sanna, aino):
+    _reg_aino(client, aino)
+    reg = client.get(f"/api/events/{E1}/my", headers=aino
+                     ).json()["registration"]
     r = client.get(f"/api/employer/events/{E1}/cards?all=true",
                    headers=sanna)
     assert r.status_code == 200
     aino_card = next(c for c in r.json()["cards"]
-                     if c["id"] == "tr-e1-001")
+                     if c["id"] == reg["id"])
     kudos = {k["label"]: k["count"] for k in aino_card["kudos"]}
     assert kudos == {"explains_clearly": 1, "helped_others": 1}
     blob = str(aino_card)

@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import pytest
 
+from app.api import db as db_mod
+
 ENDPOINTS = [
     ("get", "/api/advisor/employers-to-call", None),
     ("get", "/api/advisor/event-overview", None),
@@ -45,10 +47,14 @@ def test_outcome_panel_counts(client, advisor):
         assert o["interviews"] >= o["offers"]
         assert o["applications"] >= o["applications_by_advisor"]
     assert all_["applications"] >= o7["applications"]
-    # 2 seeded talks for ev-2026-11 + 15 for ev-2027-03
-    assert all_["event_talks"]["recorded"] == 32
-    assert all_["event_talks"]["answered"] == 26
-    assert all_["event_talks"]["unanswered"] == 6
+    conn = db_mod.connect()
+    row = conn.execute(
+        "SELECT COUNT(*) all_, SUM(answered_at IS NOT NULL) ans"
+        " FROM event_talk").fetchone()
+    conn.close()
+    assert all_["event_talks"]["recorded"] == row["all_"]
+    assert all_["event_talks"]["answered"] == row["ans"]
+    assert all_["event_talks"]["unanswered"] == row["all_"] - row["ans"]
     assert all_["employer_calls"]["no_answer"] == 0
 
     client.post("/api/advisor/applications", headers=advisor, json={
@@ -143,7 +149,9 @@ def test_walkup_talk_flow(client, advisor, sanna):
     assert tk["job_id"] == "job-cafe-weekend"
     # and can answer it like any other talk
     r = client.post(f"/api/employer/event/talks/{tid}/answer", headers=sanna,
-                    json={"outcome": "next_step", "employer_note": "Call Mon."})
+                    json={"outcome": "next_step", "employer_note": "Call Mon.",
+                          "next_kind": "call",
+                          "next_at": "2027-03-30T10:00:00"})
     assert r.status_code == 200
     assert r.json()["person_name"] == "Ville"
     # nothing personal in the audit log
@@ -191,11 +199,23 @@ def test_event_overview(client, advisor):
     assert booths == sorted(booths)
     cafe = next(e for e in body["employers"]
                 if e["employer_id"] == "emp-cafe-koivu")
-    assert cafe["talks"] == 2 and cafe["answered"] == 1
-    assert cafe["answered_pct"] == 50 and cafe["next_step"] == 1
-    assert body["totals"]["talks"] == 2
+    conn = db_mod.connect()
+    row = conn.execute(
+        "SELECT COUNT(*) c,"
+        " SUM(answered_at IS NOT NULL) ans,"
+        " SUM(outcome='next_step') ns FROM event_talk"
+        " WHERE employer_id='emp-cafe-koivu'"
+        " AND event_id='ev-2027-03'").fetchone()
+    tot = conn.execute("SELECT COUNT(*) c FROM event_talk"
+                       " WHERE event_id='ev-2027-03'").fetchone()["c"]
+    conn.close()
+    assert cafe["talks"] == row["c"] and cafe["answered"] == row["ans"]
+    assert cafe["next_step"] == row["ns"]
+    assert body["totals"]["talks"] == tot
     client.post("/api/advisor/event/talks", headers=advisor, json=WALKUP)
     cafe = next(e for e in client.get("/api/advisor/event-overview",
                                       headers=advisor).json()["employers"]
                 if e["employer_id"] == "emp-cafe-koivu")
-    assert cafe["talks"] == 3 and cafe["answered_pct"] == 33
+    assert cafe["talks"] == row["c"] + 1
+    assert cafe["answered_pct"] == round(
+        100 * (row["ans"] or 0) / (row["c"] + 1))

@@ -1,7 +1,7 @@
 -- Espoo Work Map — SQLite schema (spec section 2). Synthetic data only.
 -- Bump `PRAGMA user_version` in app/api/db.py when this file changes.
 
-PRAGMA user_version = 12;
+PRAGMA user_version = 13;
 
 CREATE TABLE user (
     id            TEXT PRIMARY KEY,
@@ -62,8 +62,9 @@ CREATE TABLE event (
     date         TEXT NOT NULL,
     venue        TEXT NOT NULL DEFAULT '',
     advisor_note TEXT NOT NULL DEFAULT '',
-    format       TEXT NOT NULL DEFAULT 'treffit'
-                 CHECK (format IN ('talentmatch','treffit')),
+    format       TEXT NOT NULL DEFAULT 'in_person'
+                 CHECK (format IN ('in_person','online')),
+    series       TEXT NOT NULL DEFAULT '',
     language     TEXT NOT NULL DEFAULT 'fi',
     starts_at    TEXT NOT NULL DEFAULT '',
     ends_at      TEXT NOT NULL DEFAULT '',
@@ -74,6 +75,9 @@ CREATE TABLE event (
     slot_minutes INTEGER NOT NULL DEFAULT 10,
     need_deadline TEXT NOT NULL DEFAULT '',
     publish_date TEXT NOT NULL DEFAULT '',
+    registration_opens TEXT NOT NULL DEFAULT '',
+    matching_closes  TEXT NOT NULL DEFAULT '',
+    answers_due      TEXT NOT NULL DEFAULT '',
     time_groups  TEXT NOT NULL DEFAULT '[]'
 );
 
@@ -110,6 +114,7 @@ CREATE TABLE event_invite (
     event_id        TEXT NOT NULL REFERENCES event(id),
     employer_id     TEXT NOT NULL REFERENCES employer(id),
     registration_id TEXT NOT NULL REFERENCES talent_registration(id),
+    simulated       INTEGER NOT NULL DEFAULT 0,
     created_at      TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (event_id, employer_id, registration_id)
 );
@@ -122,6 +127,7 @@ CREATE TABLE event_meeting (
     user_id     TEXT NOT NULL REFERENCES user(id),
     registration_id TEXT REFERENCES talent_registration(id),
     starts_at   TEXT NOT NULL,
+    video_url   TEXT NOT NULL DEFAULT '',
     status      TEXT NOT NULL CHECK (status IN
                 ('booked','done','no_show','cancelled'))
 );
@@ -325,12 +331,24 @@ CREATE TABLE event_talk (
     consent       INTEGER NOT NULL DEFAULT 0,
     status        TEXT NOT NULL CHECK (status IN ('talked','answered')),
     outcome       TEXT CHECK (outcome IN ('next_step','not_now')),
+    next_kind     TEXT CHECK (next_kind IN ('interview','tryout','call')),
+    next_at       TEXT,
+    next_place    TEXT NOT NULL DEFAULT '',
+    talent_response TEXT CHECK (talent_response IN ('confirmed','other_time')),
+    talent_response_note TEXT NOT NULL DEFAULT '',
     meeting_id    TEXT REFERENCES event_meeting(id),
     observed      TEXT NOT NULL DEFAULT '[]',
     employer_note TEXT NOT NULL DEFAULT '',
+    simulated     INTEGER NOT NULL DEFAULT 0,
     talked_at     TEXT NOT NULL,
     answered_at   TEXT,
     UNIQUE (event_id, user_id, employer_id)
+);
+
+-- demo clock (v13): demo mode reads "now" from here
+CREATE TABLE demo_state (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL
 );
 
 -- walk-in queue at a booth (v10)
@@ -390,4 +408,4 @@ CREATE TABLE connection (
     PRIMARY KEY (user_a, user_b, event_id)
 );
 
-PRAGMA user_version = 12;
+PRAGMA user_version = 13;

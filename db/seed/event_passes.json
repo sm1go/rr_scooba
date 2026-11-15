@@ -1,10 +1,5 @@
 [
   {
-    "token": "5cee044d564028471a8a58",
-    "event_id": "ev-2027-03",
-    "user_id": "u-aino"
-  },
-  {
     "token": "3af98408ee2f2b99428201",
     "event_id": "ev-2027-03",
     "user_id": "u-pekka"
@@ -213,6 +208,156 @@
     "token": "76308875dcfaa3b5dc4d87",
     "event_id": "ev-2027-03",
     "user_id": "u-talent40"
+  },
+  {
+    "token": "60b23b05f5500f2c7a300e",
+    "event_id": "ev-2027-02",
+    "user_id": "u-pekka"
+  },
+  {
+    "token": "ae6c803eb537755f31d8f8",
+    "event_id": "ev-2027-02",
+    "user_id": "u-amira"
+  },
+  {
+    "token": "aedf5a0c09c1089e918402",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent01"
+  },
+  {
+    "token": "0e3d630704ebdeca774066",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent02"
+  },
+  {
+    "token": "c5d9826eb21ac715e847e5",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent03"
+  },
+  {
+    "token": "de64b2a27e8daca9243c16",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent04"
+  },
+  {
+    "token": "50dd10bc27be54cf7f0a4c",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent05"
+  },
+  {
+    "token": "48fdde89dda0731861b3ec",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent06"
+  },
+  {
+    "token": "9e15779e46692f1afe7ec2",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent07"
+  },
+  {
+    "token": "fc72a4536d37f3fb622071",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent08"
+  },
+  {
+    "token": "c040ff7887c8d31287e7bb",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent09"
+  },
+  {
+    "token": "ad35772916d4273076c3c4",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent10"
+  },
+  {
+    "token": "bd67dd2c03144c6054fc1d",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent11"
+  },
+  {
+    "token": "758a5e6b3981f96988f03f",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent12"
+  },
+  {
+    "token": "fd03c90ca74556bfc979dc",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent13"
+  },
+  {
+    "token": "e885feb83d8900a6fa6bc3",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent14"
+  },
+  {
+    "token": "6a72ec5049b405869ec862",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent15"
+  },
+  {
+    "token": "cd8b7cece4a8d0326f413c",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent16"
+  },
+  {
+    "token": "40b822a335197938817668",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent17"
+  },
+  {
+    "token": "c6523bd6b9bcd0def04b89",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent18"
+  },
+  {
+    "token": "99d036822ec0f836dfcd9e",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent19"
+  },
+  {
+    "token": "488a8b7f7210879a022a3e",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent20"
+  },
+  {
+    "token": "4f4316a3f36d20ddc90fe4",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent21"
+  },
+  {
+    "token": "a640c118806cd9d61cecae",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent22"
+  },
+  {
+    "token": "1b5c9131ffd468a210baf8",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent23"
+  },
+  {
+    "token": "116c1e159c88bc55b85ce4",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent24"
+  },
+  {
+    "token": "5850b1943743f3e5b144f0",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent25"
+  },
+  {
+    "token": "1cb42f4c3a1837e15c2309",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent26"
+  },
+  {
+    "token": "37ec353849345dddcee8a6",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent27"
+  },
+  {
+    "token": "bf0fb18a380676ba57123b",
+    "event_id": "ev-2027-02",
+    "user_id": "u-talent28"
   },
   {
     "token": "2fc282791afc0b9ebf8d6d",

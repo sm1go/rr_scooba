@@ -36,6 +36,12 @@ def _sanna_meeting(client, sanna):
     return [m for m in day["meetings"] if m["status"] == "booked"]
 
 
+def _live(client):
+    r = client.post("/api/demo/clock",
+                    json={"stage": "live", "event_id": E1})
+    assert r.status_code == 200, r.text
+
+
 # --- anonymity: no card_language anywhere in employer cards --------------
 
 def test_employer_cards_have_no_card_language(client, sanna):
@@ -57,6 +63,11 @@ def test_booth_next_card_has_no_card_language(client, sanna):
 # --- queue -----------------------------------------------------------------
 
 def test_queue_join_twice_one_entry_and_leave(client, aino):
+    client.post(f"/api/events/{E1}/register", headers=aino,
+                json={"time_group": "A", "card": {
+                    "looking_for": "x",
+                    "done": [{"text": "y"}],
+                    "district": "", "availability": []}})
     r = client.put(f"/api/events/{E1}/queue/{SANNA}", headers=aino)
     assert r.status_code == 201, r.text
     r = client.put(f"/api/events/{E1}/queue/{SANNA}", headers=aino)
@@ -76,6 +87,7 @@ def test_queue_join_twice_one_entry_and_leave(client, aino):
 # --- employer records talk on a meeting ------------------------------------
 
 def test_record_talk_observed_subset_note_status(client, sanna):
+    _live(client)
     m = _sanna_meeting(client, sanna)[0]
     ws = client.get(f"/api/employer/events/{E1}",
                     headers=sanna).json()
@@ -93,12 +105,15 @@ def test_record_talk_observed_subset_note_status(client, sanna):
         headers=sanna, json={"observed": [first_week[0]],
                              "outcome": "next_step", "employer_note": ""})
     assert r.status_code == 422
-    # valid
+    # valid (§9.4: next step carries kind + date-time + place)
     r = client.post(
         f"/api/employer/events/{E1}/meetings/{m['id']}/talk",
         headers=sanna, json={"observed": [first_week[0]],
                              "outcome": "next_step",
-                             "employer_note": "Trial next week"})
+                             "employer_note": "Trial next week",
+                             "next_kind": "tryout",
+                             "next_at": "2027-03-26T10:00:00",
+                             "next_place": "Cafe Koivu, Tapiola"})
     assert r.status_code == 201, r.text
     ms = {x["id"]: x for x in _sanna_meeting(client, sanna)} | {
         x["id"]: x for x in client.get(
@@ -115,6 +130,7 @@ def test_record_talk_observed_subset_note_status(client, sanna):
 
 def test_no_show_and_other_employer_cannot_record(client, sanna,
                                                 register_employer):
+    _live(client)
     ms = _sanna_meeting(client, sanna)
     m1, m2 = ms[0], ms[1]
     r = client.post(
@@ -133,6 +149,11 @@ def test_no_show_and_other_employer_cannot_record(client, sanna,
 
 
 def test_visitor_code_reveal(client, sanna, aino):
+    client.post(f"/api/events/{E1}/register", headers=aino,
+                json={"time_group": "A", "card": {
+                    "looking_for": "x",
+                    "done": [{"text": "y"}],
+                    "district": "", "availability": []}})
     my = client.get(f"/api/events/{E1}/my", headers=aino).json()
     assert my["visitor_code"]
     r = client.post(f"/api/employer/events/{E1}/reveal",

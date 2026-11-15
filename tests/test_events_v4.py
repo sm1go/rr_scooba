@@ -13,7 +13,7 @@ from app.api import db as db_mod
 
 pytestmark = pytest.mark.usefixtures("client")
 
-E1, E2 = "ev-2027-03", "ev-2026-11"
+E1, E2 = "ev-2027-03", "ev-2027-02"
 
 
 def _card(**kw):
@@ -55,26 +55,37 @@ def test_events_lists_both_with_phase(client):
     assert r.status_code == 200
     ids = {e["id"]: e for e in r.json()["events"]}
     assert E1 in ids and E2 in ids
-    assert ids[E1]["phase"] in ("registration", "needs_published",
-                                "today", "finished")
-    assert ids[E2]["format"] == "treffit"
+    assert ids[E1]["phase"] in ("registration", "matched", "live",
+                                "after", "closed")
+    assert ids[E2]["format"] == "online"
 
 
 def test_event_detail_public_anonymous(client):
+    conn = db_mod.connect()
+    conn.execute("UPDATE demo_state SET value='2027-03-06T12:00:00'"
+                 " WHERE key='now'")
+    conn.commit(); conn.close()
     r = client.get(f"/api/events/{E1}")
     assert r.status_code == 200
     d = r.json()
     assert d["id"] == E1 and len(d["employers"]) == 12
-    assert d["needs_published"] is False           # publish_date is in the future
-    assert all(e["need"] is None for e in d["employers"])
+    assert d["needs_published"] is True            # demo now > publish_date
+    # 3 employers are seeded without a submitted need card (demo state)
+    assert sum(1 for e in d["employers"] if e["need"]) == 9
 
 
-def test_needs_hidden_before_publish_then_open(client, monkeypatch):
-    from app.api.routers import events as ev_mod
+def test_needs_hidden_before_publish_then_open(client):
+    # the demo clock drives the publish gate (spec §9.2)
+    conn = db_mod.connect()
+    conn.execute("UPDATE demo_state SET value='2027-02-20T00:00:00'"
+                 " WHERE key='now'")
+    conn.commit()
     r = client.get(f"/api/events/{E1}/needs")
     assert r.status_code == 403
-    future = date.fromisoformat("2027-03-10")
-    monkeypatch.setattr(ev_mod, "_today", lambda: future)
+    conn.execute("UPDATE demo_state SET value='2027-03-10T00:00:00'"
+                 " WHERE key='now'")
+    conn.commit()
+    conn.close()
     r = client.get(f"/api/events/{E1}/needs")
     assert r.status_code == 200
     assert len(r.json()["cards"]) == 9              # 9 submitted need cards
@@ -129,6 +140,9 @@ def test_resident_cannot_use_organizer_endpoints(client, aino):
 # --- registration -----------------------------------------------------------------
 
 def test_second_registration_conflict(client, aino):
+    r = client.post(f"/api/events/{E1}/register", headers=aino,
+                    json={"time_group": "A", "card": _card()})
+    assert r.status_code == 201
     r = client.post(f"/api/events/{E1}/register", headers=aino,
                     json={"time_group": "A", "card": _card()})
     assert r.status_code == 409
@@ -278,7 +292,7 @@ def test_organizer_board_and_reminder(client, advisor):
                     json={"employer_id": "emp-hymy"})
     assert r.status_code == 200
     assert r.json()["reminders_sent"] == before + 1
-    assert d["talent"]["meetings"] == 39
+    assert d["talent"]["meetings"] == 40
 
 
 # --- AI card helper ----------------------------------------------------------------
@@ -352,21 +366,21 @@ def test_config_has_demo_flag(client):
     assert isinstance(body.get("demo"), bool)
 
 
-def test_seed_aino_has_unchosen_inviter_and_cards(client, aino):
-    """§8 demo seed: Aino can trigger a match and has ≥4 cards to swipe."""
+def test_seed_aino_unregistered_and_cards(client, aino):
+    """§9.5 demo seed: Aino is not registered anywhere upcoming and the
+    event still has ≥4 need cards she can choose."""
     conn = db_mod.connect()
-    chosen = {r["employer_id"] for r in conn.execute(
-        "SELECT employer_id FROM event_plan WHERE event_id=? AND user_id=?",
-        (E1, "u-aino"))}
-    invited = [r["employer_id"] for r in conn.execute(
-        "SELECT i.employer_id FROM event_invite i"
-        " JOIN talent_registration r ON r.id=i.registration_id"
-        " WHERE i.event_id=? AND r.user_id=?", (E1, "u-aino"))]
-    assert any(e not in chosen for e in invited)
+    for ev in (E1, E2):
+        n = conn.execute(
+            "SELECT COUNT(*) c FROM talent_registration"
+            " WHERE event_id=? AND user_id=? AND status='registered'",
+            (ev, "u-aino")).fetchone()["c"]
+        assert n == 0, f"Aino registered in {ev}"
     cards = [r["employer_id"] for r in conn.execute(
         "SELECT employer_id FROM employer_event WHERE event_id=?"
         " AND need_card IS NOT NULL", (E1,))]
-    assert len([e for e in cards if e not in chosen]) >= 4
+    assert len(cards) >= 4
+    conn.close()
 
 
 def test_seed_sanna_has_unchosen_fan_and_invites_left(client, sanna):
@@ -390,18 +404,21 @@ def test_seed_sanna_has_unchosen_fan_and_invites_left(client, sanna):
     assert len(invited) < slots
 
 
-def test_aino_choosing_seeded_inviter_returns_meeting(client, aino):
-    """The seeded invite makes Aino's choice book a real meeting."""
+def test_aino_choosing_after_invite_returns_meeting(client, aino):
+    """Aino registers, an employer invites her (Sanna), and her choice
+    books a real meeting through book_if_mutual."""
+    client.post(f"/api/events/{E1}/register", headers=aino,
+                json={"time_group": "A", "card": _card()})
+    reg = client.get(f"/api/events/{E1}/my", headers=aino
+                     ).json()["registration"]
     conn = db_mod.connect()
-    chosen = {r["employer_id"] for r in conn.execute(
-        "SELECT employer_id FROM event_plan WHERE event_id=? AND user_id=?",
-        (E1, "u-aino"))}
-    target = next(r["employer_id"] for r in conn.execute(
-        "SELECT i.employer_id FROM event_invite i"
-        " JOIN talent_registration r ON r.id=i.registration_id"
-        " WHERE i.event_id=? AND r.user_id=?", (E1, "u-aino"))
-        if r["employer_id"] not in chosen)
-    r = client.put(f"/api/events/{E1}/interests/{target}", headers=aino,
+    conn.execute("INSERT INTO event_invite"
+                 " (event_id,employer_id,registration_id)"
+                 " VALUES (?,?,?)",
+                 (E1, "emp-cafe-koivu", reg["id"]))
+    conn.commit(); conn.close()
+    r = client.put(f"/api/events/{E1}/interests/emp-cafe-koivu",
+                   headers=aino,
                    json={"meets": [], "language_levels": {}})
     assert r.status_code == 201, r.text
     m = r.json()["meeting"]

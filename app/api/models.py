@@ -203,6 +203,14 @@ class TalkIn(BaseModel):
 class TalkAnswerIn(BaseModel):
     outcome: Literal["next_step", "not_now"]
     employer_note: str = Field(min_length=1)
+    next_kind: Optional[Literal["interview", "tryout", "call"]] = None
+    next_at: Optional[str] = None
+    next_place: Optional[str] = None
+
+
+class TalkResponseIn(BaseModel):
+    response: Literal["confirmed", "other_time"]
+    note: str = Field(default="", max_length=300)
 
 
 class CallOutcomeIn(BaseModel):
@@ -287,6 +295,9 @@ class MeetingTalkIn(BaseModel):
     observed: list[str] = []
     outcome: Literal["next_step", "not_now"]
     employer_note: str = Field(min_length=1)
+    next_kind: Optional[Literal["interview", "tryout", "call"]] = None
+    next_at: Optional[str] = None
+    next_place: Optional[str] = None
 
 
 class VisitorCodeIn(BaseModel):

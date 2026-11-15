@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, ApiError } from '../../lib/api'
+import { useConfig } from '../../lib/config'
 import { useI18n } from '../../i18n/i18n'
 import type { Key } from '../../i18n/en'
 import type { AdvisorBoard, OrganizerDay, OrganizerReport } from '../../types'
 import { ErrorState, Section } from '../../components/ui'
 import { Tabs } from '../../components/Tabs'
-import EventPage from '../EventPage'
 import { EMPTY_NEED, NeedCardForm } from '../employer/EmployerEventWorkspace'
 import type { NeedCardDraft } from '../employer/EmployerEventWorkspace'
 
@@ -23,8 +23,21 @@ function fmtDate(iso: string) {
   } catch { return iso }
 }
 
-function daysUntil(iso: string) {
-  const ms = new Date(iso + 'T00:00:00').getTime() - Date.now()
+/** Demo/real clock: fetch /api/demo/state once (no ticking needed). */
+function useNow() {
+  const cfg = useConfig()
+  const [offset, setOffset] = useState(0)
+  useEffect(() => {
+    if (!cfg.demo) return
+    api<{ now: string }>('/api/demo/state')
+      .then((d) => setOffset(Date.parse(d.now) - Date.now()))
+      .catch(() => {})
+  }, [cfg.demo])
+  return new Date(Date.now() + offset)
+}
+
+function daysUntil(iso: string, now: Date) {
+  const ms = new Date(iso + 'T00:00:00').getTime() - now.getTime()
   return Math.max(0, Math.ceil(ms / 86400000))
 }
 
@@ -231,6 +244,7 @@ export default function AdvisorEvent() {
   const [draft, setDraft] = useState<NeedCardDraft>(EMPTY_NEED)
   const [busy, setBusy] = useState(false)
   const [formErr, setFormErr] = useState('')
+  const now = useNow()
 
   const load = () => {
     setErr(null)
@@ -288,7 +302,7 @@ export default function AdvisorEvent() {
 
       <Section title={t('ev.org.employers')}>
         {ev.need_deadline && (
-          <p className="text-secondary">{t('ev.emp.deadline', { n: daysUntil(ev.need_deadline), d: fmtDate(ev.need_deadline) })}</p>
+          <p className="text-secondary">{t('ev.emp.deadline', { n: daysUntil(ev.need_deadline, now), d: fmtDate(ev.need_deadline) })}</p>
         )}
         <div className="overflow-x-auto">
           <table className="w-full" style={{ borderCollapse: 'collapse' }}>
@@ -374,7 +388,7 @@ export default function AdvisorEvent() {
 
   const day = (
     <div className="grid gap-4">
-      {id === 'ev-2026-11' ? <EventPage /> : <LiveBoard id={id!} />}
+      <LiveBoard id={id!} />
     </div>
   )
 
@@ -393,9 +407,15 @@ export default function AdvisorEvent() {
         <h1 data-page-title tabIndex={-1} className="mb-1">{ev.name}</h1>
         <p className="m-0">{fmtDate(ev.date)} · {fmtTime(ev.starts_at)}–{fmtTime(ev.ends_at)} · {ev.venue}</p>
         <p className="m-0 text-secondary">{t(`ev.phase.${ev.phase}` as Key)}</p>
+        <p className="m-0 text-secondary">
+          {ev.matching_closes &&
+            `${t('ev.org.matchby')} ${fmtDate(ev.matching_closes.slice(0, 10))}`}
+          {ev.answers_due &&
+            ` · ${t('ev.org.ansby')} ${fmtDate(ev.answers_due.slice(0, 10))}`}
+        </p>
       </div>
       <Tabs label={ev.name}
-            initial={ev.phase === 'today' ? 1 : ev.phase === 'finished' ? 2 : 0}
+            initial={ev.phase === 'live' ? 1 : (ev.phase === 'after' || ev.phase === 'closed') ? 2 : 0}
             labels={[t('ev.tab.before'), t('ev.tab.day'), t('ev.tab.after')]}>
         {[before, day, after]}
       </Tabs>

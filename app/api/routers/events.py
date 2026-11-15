@@ -19,9 +19,11 @@ from .. import db as db_mod
 from ..auth import current_user, optional_user
 from ..db import SEED_DIR, get_conn
 from ..models import (MeetingTalkIn, VisitorCodeIn,EventCardNeedIn, EventInviteIn, EventRegisterIn,
-                      InterestIn, OrgNeedIn, RegistrationPatch)
+                      InterestIn, OrgNeedIn, RegistrationPatch,
+                      TalkResponseIn)
 from ..rules import lint
 from ..rules.labels import haversine_km
+from ..clock import app_now, event_phase as _phase
 
 router = APIRouter(prefix="/api", tags=["events"])
 
@@ -29,9 +31,9 @@ INTEREST_LIMIT = 5
 CEFR = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
 
-def _today() -> date:
-    """Module-level so tests can freeze 'today' via monkeypatch."""
-    return date.today()
+def _matching_closed(conn, ev) -> bool:
+    mc = ev["matching_closes"]
+    return bool(mc) and app_now(conn) >= datetime.fromisoformat(mc)
 
 
 def _resident(user):
@@ -56,17 +58,9 @@ def _get_event(conn, event_id: str) -> sqlite3.Row:
     return ev
 
 
-def event_phase(ev: sqlite3.Row, today: date | None = None) -> str:
-    """registration | needs_published | today | finished."""
-    today = today or _today()
-    day = date.fromisoformat(ev["date"])
-    if today > day:
-        return "finished"
-    if today == day:
-        return "today"
-    if ev["publish_date"] and today >= date.fromisoformat(ev["publish_date"]):
-        return "needs_published"
-    return "registration"
+def event_phase(ev: sqlite3.Row, conn=None) -> str:
+    """registration | matched | live | after | closed (spec §9.2)."""
+    return _phase(ev, conn)
 
 
 def _event_out(ev: sqlite3.Row, conn) -> dict:
@@ -85,8 +79,12 @@ def _event_out(ev: sqlite3.Row, conn) -> dict:
             "capacity": ev["capacity"], "slot_minutes": ev["slot_minutes"],
             "need_deadline": ev["need_deadline"],
             "publish_date": ev["publish_date"],
+            "registration_opens": ev["registration_opens"],
+            "matching_closes": ev["matching_closes"],
+            "answers_due": ev["answers_due"],
+            "series": ev["series"],
             "time_groups": json.loads(ev["time_groups"] or "[]"),
-            "phase": event_phase(ev), "employer_count": employers,
+            "phase": event_phase(ev, conn), "employer_count": employers,
             "registered": registered}
 
 
@@ -98,10 +96,10 @@ def _need_out(ee: sqlite3.Row) -> dict | None:
             "by": ee["need_by"]}
 
 
-def _published(ev: sqlite3.Row) -> bool:
+def _published(conn, ev: sqlite3.Row) -> bool:
     if not ev["publish_date"]:
         return True                  # no publish gate on this event
-    return _today() >= date.fromisoformat(ev["publish_date"])
+    return app_now(conn).date() >= date.fromisoformat(ev["publish_date"])
 
 
 def _registration(conn, event_id: str, user_id: str):
@@ -192,12 +190,16 @@ def book_if_mutual(conn: sqlite3.Connection, event_id: str,
             continue
         mid = db_mod.new_id(conn, "mt")
         starts = f"{ev['date']}T{slot}:00"
+        video = (f"https://meet.jit.si/EspooTM-{event_id}-{mid}"
+                 if ev["format"] == "online" else "")
         conn.execute(
             "INSERT INTO event_meeting (id,event_id,employer_id,user_id,"
-            "registration_id,starts_at,status)"
-            " VALUES (?,?,?,?,?,?,'booked')",
-            (mid, event_id, employer_id, user_id, reg["id"], starts))
-        return {"id": mid, "starts_at": starts, "status": "booked"}
+            "registration_id,starts_at,video_url,status)"
+            " VALUES (?,?,?,?,?,?,?,'booked')",
+            (mid, event_id, employer_id, user_id, reg["id"], starts,
+             video))
+        return {"id": mid, "starts_at": starts, "status": "booked",
+                "video_url": video}
     return None                           # mutual, no free slot
 
 
@@ -262,7 +264,7 @@ def list_events(conn: sqlite3.Connection = Depends(get_conn)):
 
 
 def _can_see_needs(conn, ev, user) -> bool:
-    if _published(ev):
+    if _published(conn, ev):
         return True
     if not user:
         return False
@@ -309,7 +311,7 @@ def event_detail(event_id: str,
     if not _can_see_needs(conn, ev, user):
         for e in employers:
             e["need"] = None
-    return {**_event_out(ev, conn), "needs_published": _published(ev),
+    return {**_event_out(ev, conn), "needs_published": _published(conn, ev),
             "employers": employers}
 
 
@@ -360,7 +362,7 @@ def register(event_id: str, payload: EventRegisterIn,
              user=Depends(current_user)):
     _resident(user)
     ev = _get_event(conn, event_id)
-    if event_phase(ev) in ("today", "finished"):
+    if event_phase(ev, conn) != "registration":
         raise HTTPException(409, "Registration for this event has closed.")
     if _registration(conn, event_id, user["id"]):
         raise HTTPException(409, "You are already registered for this event.")
@@ -382,6 +384,20 @@ def register(event_id: str, payload: EventRegisterIn,
         (reg_id, event_id, user["id"], payload.time_group, status,
          payload.card_language, json.dumps(card, ensure_ascii=False),
          datetime.now(timezone.utc).isoformat(timespec="seconds")))
+    # every registered visitor gets a pass and a 4-digit visitor code
+    _issue_pass(conn, event_id, user["id"])
+    n = conn.execute(
+        "SELECT COUNT(*) c FROM event_visitor WHERE event_id=?",
+        (event_id,)).fetchone()["c"]
+    for i in range(9000):
+        code = f"{1000 + (n + i) * 37 % 9000:04d}"
+        if not conn.execute(
+                "SELECT 1 FROM event_visitor WHERE event_id=? AND code=?",
+                (event_id, code)).fetchone():
+            conn.execute(
+                "INSERT INTO event_visitor (user_id,event_id,code)"
+                " VALUES (?,?,?)", (user["id"], event_id, code))
+            break
     db_mod.audit(conn, user["id"], "event_registered",
                  f"{event_id}:{status}")
     conn.commit()
@@ -454,6 +470,10 @@ def my_event(event_id: str,
         ee = _ee(conn, event_id, m["employer_id"])
         card = json.loads(ee["need_card"]) if ee and ee["need_card"] else {}
         m["need_line"] = (card.get("first_week") or [""])[0]
+        m["first_week"] = card.get("first_week") or []
+        m["must_haves"] = [x["text"] for x in
+                           card.get("must_haves") or []]
+        m["bring"] = card.get("documents") or []
     queue = [dict(r) for r in conn.execute(
         "SELECT q.employer_id, q.status, q.joined_at, e.name employer_name"
         " FROM event_queue q JOIN employer e ON e.id=q.employer_id"
@@ -468,7 +488,10 @@ def my_event(event_id: str,
     talks = []
     for tr in conn.execute(
             "SELECT t.id, t.employer_id, t.status, t.outcome,"
-            " t.employer_note, e.name employer_name FROM event_talk t"
+            " t.employer_note, t.observed, t.talked_at, t.answered_at,"
+            " t.next_kind, t.next_at, t.next_place, t.talent_response,"
+            " t.talent_response_note, t.simulated,"
+            " e.name employer_name FROM event_talk t"
             " JOIN employer e ON e.id=t.employer_id"
             " WHERE t.event_id=? AND t.user_id=?"
             " ORDER BY t.talked_at", (event_id, user["id"])):
@@ -476,7 +499,16 @@ def my_event(event_id: str,
                       "employer_name": tr["employer_name"],
                       "status": tr["status"],
                       "outcome": tr["outcome"],
-                      "note": tr["employer_note"]})
+                      "note": tr["employer_note"],
+                      "observed": json.loads(tr["observed"] or "[]"),
+                      "talked_at": tr["talked_at"],
+                      "answered_at": tr["answered_at"],
+                      "next_kind": tr["next_kind"],
+                      "next_at": tr["next_at"],
+                      "next_place": tr["next_place"],
+                      "talent_response": tr["talent_response"],
+                      "talent_response_note": tr["talent_response_note"],
+                      "simulated": bool(tr["simulated"])})
     return {"event": _event_out(_get_event(conn, event_id), conn),
             "registration": _reg_out(conn, reg["id"]) if reg else None,
             "interests": interests, "meetings": meetings, "talks": talks,
@@ -499,6 +531,7 @@ def _my_meetings(conn, event_id: str, user_id: str) -> list[dict]:
         out.append({"id": m["id"], "employer_id": m["employer_id"],
                     "employer_name": m["employer_name"],
                     "booth": m["booth"], "starts_at": m["starts_at"],
+                    "video_url": m["video_url"],
                     "status": m["status"]})
     return out
 
@@ -508,7 +541,9 @@ def add_interest(event_id: str, employer_id: str, payload: InterestIn,
                  conn: sqlite3.Connection = Depends(get_conn),
                  user=Depends(current_user)):
     _resident(user)
-    _get_event(conn, event_id)
+    ev = _get_event(conn, event_id)
+    if _matching_closed(conn, ev):
+        raise HTTPException(409, "Matching has closed.")
     if not _registration(conn, event_id, user["id"]):
         raise HTTPException(403, "Register for the event first.")
     ee = conn.execute(
@@ -545,8 +580,34 @@ def remove_interest(event_id: str, employer_id: str,
                     conn: sqlite3.Connection = Depends(get_conn),
                     user=Depends(current_user)):
     _resident(user)
+    if _matching_closed(conn, _get_event(conn, event_id)):
+        raise HTTPException(409, "Matching has closed.")
     conn.execute("DELETE FROM event_plan WHERE event_id=? AND employer_id=?"
                  " AND user_id=?", (event_id, employer_id, user["id"]))
+    conn.commit()
+    return {"ok": True}
+
+
+@router.post("/events/{event_id}/talks/{talk_id}/response")
+def talk_response(event_id: str, talk_id: str, payload: TalkResponseIn,
+                  conn: sqlite3.Connection = Depends(get_conn),
+                  user=Depends(current_user)):
+    """Talent answers a next-step proposal: confirmed / ask another time."""
+    _resident(user)
+    t = conn.execute(
+        "SELECT * FROM event_talk WHERE id=? AND event_id=?",
+        (talk_id, event_id)).fetchone()
+    if not t or t["user_id"] != user["id"]:
+        raise HTTPException(404, "Answer not found.")
+    if t["outcome"] != "next_step" or not t["answered_at"]:
+        raise HTTPException(409, "Only a next-step proposal can be "
+                                 "answered.")
+    conn.execute(
+        "UPDATE event_talk SET talent_response=?, talent_response_note=?"
+        " WHERE id=?",
+        (payload.response, payload.note, talk_id))
+    db_mod.audit(conn, user["id"], "event_talk_response",
+                 f"{talk_id}:{payload.response}")
     conn.commit()
     return {"ok": True}
 
@@ -722,6 +783,8 @@ def invite(event_id: str, payload: EventInviteIn,
            user=Depends(current_user)):
     _employer(user)
     ev = _get_event(conn, event_id)
+    if _matching_closed(conn, ev):
+        raise HTTPException(409, "Matching has closed.")
     ee = _ee(conn, event_id, user["employer_id"])
     if not ee:
         raise HTTPException(404, "Join the event first.")
@@ -772,19 +835,21 @@ def employer_workspace(event_id: str,
         "SELECT COUNT(*) c FROM event_invite WHERE event_id=?"
         " AND employer_id=?", (event_id, user["employer_id"])).fetchone()["c"]
     meetings = [dict(r) for r in conn.execute(
-        "SELECT m.id,m.starts_at,m.status FROM event_meeting m"
+        "SELECT m.id,m.starts_at,m.status,m.video_url FROM event_meeting m"
         " WHERE m.event_id=? AND m.employer_id=? AND m.status != 'cancelled'"
         " ORDER BY m.starts_at", (event_id, user["employer_id"]))]
     talks = []
     for tr in conn.execute(
             "SELECT t.id,t.status,t.outcome,t.employer_note,t.talked_at,"
-            " t.meeting_id, u.name person_name FROM event_talk t"
+            " t.meeting_id,t.next_kind,t.next_at,t.next_place,t.simulated,"
+            " u.name person_name FROM event_talk t"
             " LEFT JOIN user u ON u.id=t.user_id"
             " WHERE t.event_id=? AND t.employer_id=? ORDER BY t.talked_at",
             (event_id, user["employer_id"])):
         d = dict(tr)
         d["days_waiting"] = (
-            _today() - date.fromisoformat(d["talked_at"][:10])).days
+            app_now(conn).date()
+            - date.fromisoformat(d["talked_at"][:10])).days
         talks.append(d)
     return {"event": _event_out(ev, conn), "joined": True,
             "booth": ee["booth"], "slots": ee["slots"],
@@ -801,7 +866,7 @@ def organizer_board(event_id: str,
                     user=Depends(current_user)):
     _advisor(user)
     ev = _get_event(conn, event_id)
-    today = _today()
+    today = app_now(conn).date()
     deadline = (date.fromisoformat(ev["need_deadline"])
                 if ev["need_deadline"] else None)
     employers = []
@@ -1056,6 +1121,14 @@ def record_meeting_talk(event_id: str, meeting_id: str,
         raise HTTPException(404, "Meeting not found.")
     if m["status"] != "booked":
         raise HTTPException(409, "This meeting is already closed.")
+    if event_phase(_get_event(conn, event_id), conn) in (
+            "registration", "matched"):
+        raise HTTPException(409, "Talks can be recorded from the "
+                                 "event day.")
+    if payload.outcome == "next_step" and not (
+            payload.next_kind and payload.next_at):
+        raise HTTPException(422, "A next step needs a kind and a "
+                                 "date and time.")
     ee = _ee(conn, event_id, user["employer_id"])
     card = json.loads(ee["need_card"]) if ee["need_card"] else {}
     first_week = card.get("first_week") or []
@@ -1072,20 +1145,24 @@ def record_meeting_talk(event_id: str, meeting_id: str,
         conn.execute(
             "UPDATE event_talk SET status='answered', outcome=?,"
             " meeting_id=?, observed=?, employer_note=?,"
-            " answered_at=? WHERE id=?",
+            " answered_at=?, next_kind=?, next_at=?, next_place=?"
+            " WHERE id=?",
             (payload.outcome, meeting_id,
              json.dumps(payload.observed, ensure_ascii=False),
-             payload.employer_note, now, talk_id))
+             payload.employer_note, now, payload.next_kind,
+             payload.next_at, payload.next_place or "", talk_id))
     else:
         talk_id = db_mod.new_id(conn, "et")
         conn.execute(
             "INSERT INTO event_talk (id,event_id,user_id,employer_id,"
             "status,outcome,meeting_id,observed,employer_note,talked_at,"
-            "answered_at) VALUES (?,?,?,?,'answered',?,?,?,?,?,?)",
+            "answered_at,next_kind,next_at,next_place)"
+            " VALUES (?,?,?,?,'answered',?,?,?,?,?,?,?,?,?)",
             (talk_id, event_id, m["user_id"], user["employer_id"],
              payload.outcome, meeting_id,
              json.dumps(payload.observed, ensure_ascii=False),
-             payload.employer_note, now, now))
+             payload.employer_note, now, now, payload.next_kind,
+             payload.next_at, payload.next_place or ""))
     conn.execute(
         "UPDATE event_meeting SET status='done' WHERE id=?",
         (meeting_id,))
@@ -1787,7 +1864,7 @@ def qr_talk(event_id: str, payload: dict,
     if t:
         return {"talk_id": t["id"]}
     tid = db_mod.new_id(conn, "et")
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    now = app_now(conn).isoformat(timespec="seconds")
     conn.execute(
         "INSERT INTO event_talk (id,event_id,user_id,employer_id,status,"
         "talked_at) VALUES (?,?,?,?,'talked',?)",
@@ -1871,8 +1948,8 @@ def _employer_profile(conn, eid: str) -> dict:
         events.append({
             "event_id": ee["id"], "name": ee["name"], "date": ee["date"],
             "booth": ee["booth"],
-            "past": ee["ends_at"] < datetime.now(
-                timezone.utc).isoformat(timespec="seconds"),
+            "past": ee["ends_at"] < app_now(conn)
+                .isoformat(timespec="seconds"),
             "need_card": json.loads(ee["need_card"])
             if ee["need_card"] else None})
     commitments = sorted({
@@ -1935,8 +2012,7 @@ def _event_summary(conn, ev) -> dict:
 def event_summary(event_id: str,
                   conn: sqlite3.Connection = Depends(get_conn)):
     ev = _get_event(conn, event_id)
-    if ev["ends_at"] >= datetime.now(timezone.utc).isoformat(
-            timespec="seconds"):
+    if ev["ends_at"] >= app_now(conn).isoformat(timespec="seconds"):
         raise HTTPException(409, "The event has not finished yet.")
     return _event_summary(conn, ev)
 
@@ -1948,7 +2024,7 @@ def event_after(event_id: str,
     """After tab data: aggregate summaries of all finished events plus
     the signed-in person's own history at earlier events."""
     ev = _get_event(conn, event_id)
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    now = app_now(conn).isoformat(timespec="seconds")
     finished = conn.execute(
         "SELECT * FROM event WHERE ends_at < ? ORDER BY date DESC",
         (now,)).fetchall()

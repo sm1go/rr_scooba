@@ -450,3 +450,11 @@ html[data-contrast="high"] .stepper-step { border-color: #000; }
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap;
 }
+
+/* §9.3 locked steps + §9.6 venue map */
+.stepper-step.locked { opacity: .6; cursor: not-allowed; }
+.stepper-text { display: flex; flex-direction: column; align-items: flex-start; }
+.stepper-lock {
+  font-size: .72rem; color: var(--color-secondary); font-weight: 400;
+}
+.venue-map figcaption ol { line-height: 1.6; }

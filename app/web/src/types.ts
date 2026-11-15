@@ -220,6 +220,10 @@ export interface EventTalk {
   employer_note: string
   talked_at: string
   answered_at: string | null
+  next_kind?: 'interview' | 'tryout' | 'call' | null
+  next_at?: string | null
+  next_place?: string | null
+  simulated?: boolean
   employer_name?: string
   person_name?: string
   person_contact_method?: string
@@ -384,6 +388,8 @@ export interface EventSummary {
   starts_at: string; ends_at: string; venue: string; address: string
   description: string; capacity: number; slot_minutes: number
   need_deadline: string; publish_date: string; phase: string
+  registration_opens?: string; matching_closes?: string
+  answers_due?: string; series?: string
   employer_count: number; registered: number
   programme: { kind: string; start: string; end?: string; title?: string }[]
   time_groups: { id: string; label?: string; entry: string }[]
@@ -420,7 +426,8 @@ export interface MyRegistration {
 export interface MyMeeting {
   id: string; employer_id: string; employer_name: string
   booth: string | null; starts_at: string; status: string
-  need_line?: string
+  need_line?: string; video_url?: string | null
+  first_week?: string[]; must_haves?: string[]; bring?: string[]
 }
 export interface MyEventInterest {
   employer_id: string; name: string; meets: number[]
@@ -432,7 +439,14 @@ export interface MyEventData {
   interests: MyEventInterest[]
   meetings: MyMeeting[]
   talks: { id: string; employer_id: string; employer_name: string;
-           status: string; outcome: string | null; note: string | null }[]
+           status: string; outcome: string | null; note: string | null
+           observed?: string[]; talked_at?: string | null
+           answered_at?: string | null
+           next_kind?: 'interview' | 'tryout' | 'call' | null
+           next_at?: string | null; next_place?: string | null
+           talent_response?: 'confirmed' | 'other_time' | null
+           talent_response_note?: string | null
+           simulated?: boolean }[]
   visitor_code: string | null
   interest_limit: number
   queue: { employer_id: string; status: string; joined_at: string;
@@ -453,7 +467,8 @@ export interface EmployerWorkspace {
   slots?: number; formats?: string[]
   need?: { card: NeedCard; submitted_at: string; need_by: string } | null
   invites_used?: number
-  meetings?: { id: string; starts_at: string; status: string }[]
+  meetings?: { id: string; starts_at: string; status: string;
+               video_url?: string | null }[]
   talks?: EventTalk[]
 }
 export interface EmployerDay {
